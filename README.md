@@ -8,7 +8,7 @@ We present MocapNET, an ensemble of SNN encoders that estimates the 3D human bod
 MocapNET provides an efficient divide and conquer strategy for supervised learning. It
 outputs skeletal information directly into the BVH format which can be rendered
 in real-time or imported without any additional processing in most popular 3D anima-
-tion software.   The proposed architecture achieves very fast (300Hz) 3D human pose
+tion software.   The proposed architecture achieves very fast (400Hz) 3D human pose
 estimations using only CPU processing.
 
 This is a placeholder for the creation of the repository of our BMVC 2019 paper 
