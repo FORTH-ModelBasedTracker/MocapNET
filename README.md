@@ -14,6 +14,12 @@ estimations using only CPU processing.
 This is a placeholder for the creation of the repository of our BMVC 2019 paper 
 
 
+## Youtube Video
+------------------------------------------------------------------ 
+
+[![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtubevideolink.jpg)  ](https://www.youtube.com/watch?v=fH5e-KMBvM0)
+
+
 ## Building
 ------------------------------------------------------------------ 
 
