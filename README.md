@@ -11,6 +11,17 @@ This is a placeholder for the creation of the repository of our BMVC 2019 paper
 
 [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtubevideolink.jpg)  ](https://www.youtube.com/watch?v=fH5e-KMBvM0)
 
+## System Requirements and Dependencies
+------------------------------------------------------------------ 
+MocapNET is a high performance 2D to 3D pose estimator.
+This code base targets recent Linux (Ubuntu) machines, and relies on Tensorflow and OpenCV. 
+
+Tensorflow is the Neural Network framework used and OpenCV is used to enable acquire images from webcams or video files as well as provide a visualization.
+
+Due to the fast processing speed and in order to enable an easy to use demo we use the VNect 2D joint estimator that is automatically downloaded using the initialize.sh script.  WebcamJointBIN tries to initialize 2D Joint estimation on GPU and 3D estimation on the system CPU. Since there are many GPU compatibility issues with Tensorflow since recent versions have dropped CUDA 9.0 as well as compute capabilities that might be required by your system, you can edit initialize.sh and change the variable TENSORFLOW_VERSION according to your needs. If you want CUDA 9.0 you should se it to 1.12.0. If you want CUDA 9.0 and have a card with older compute capabilities (5.2) then choose version 1.11.0.
+
+If you are interested in acquiring the data
+
 
 ## Building
 ------------------------------------------------------------------ 
