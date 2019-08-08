@@ -13,12 +13,12 @@ This is a placeholder for the creation of the repository of our BMVC 2019 paper
 
 ## System Requirements and Dependencies
 ------------------------------------------------------------------ 
-MocapNET is a high performance 2D to 3D pose estimator.
+MocapNET is a high performance 2D to 3D single person pose estimator.
 This code base targets recent Linux (Ubuntu) machines, and relies on Tensorflow and OpenCV. 
 
-Tensorflow is the Neural Network framework used and OpenCV is used to enable acquire images from webcams or video files as well as provide a visualization.
+Tensorflow is the Neural Network framework used and OpenCV is used to enable the acquisition of images from webcams or video files as well as provide an easy visualization.
 
-Due to the fast processing speed and in order to enable an easy to use demo we use the VNect 2D joint estimator that is automatically downloaded using the initialize.sh script.  WebcamJointBIN tries to initialize 2D Joint estimation on GPU and 3D estimation on the system CPU. Since there are many GPU compatibility issues with Tensorflow since recent versions have dropped CUDA 9.0 as well as compute capabilities that might be required by your system, you can edit initialize.sh and change the variable TENSORFLOW_VERSION according to your needs. If you want CUDA 9.0 you should se it to 1.12.0. If you want CUDA 9.0 and have a card with older compute capabilities (5.2) then choose version 1.11.0.
+In order to enable an easy to use demo with as few dependencies as possible the MocapNETBenchmark utility will run even without OpenCV to give you a performance estimation of MocapNET for your system. We have also packaged in a live demo ( WebcamJointBIN binary ) that will use the VNect 2D joint estimator that automatically downloaded using the initialize.sh script. However in order to achieve better estimations you are advised to set up OpenPose (https://github.com/CMU-Perceptual-Computing-Lab/openpose) and use it to acquire JSON files that can be subsequently converted from 2D to 3D BVH files using the MocapNETJSON binary.  tries to initialize 2D Joint estimation on GPU and 3D estimation on the system CPU. Since there are many GPU compatibility issues with Tensorflow since recent versions have dropped CUDA 9.0 as well as compute capabilities that might be required by your system, you can edit initialize.sh and change the variable TENSORFLOW_VERSION according to your needs. If you want CUDA 9.0 you should se it to 1.12.0. If you want CUDA 9.0 and have a card with older compute capabilities (5.2) then choose version 1.11.0.
 
 If you are interested in acquiring the data
 
