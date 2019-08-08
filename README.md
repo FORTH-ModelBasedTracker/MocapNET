@@ -59,4 +59,8 @@ To test the library using a video file issue :
 ./WebcamJointBIN --from /path/to/yourfile.mp4
 ```
 
+The output window of WebcamJointBIN contains a heatmap depicting the 2D Joint estimations, an RGB image cropped and centered on the observed person, a 2D overlay of the 2D Skeleton as well as a window that has the 3D output retrieved by our method as seen in the following image.
+
+![WebcamJointBin](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoview.jpg)
+
 
