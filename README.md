@@ -35,3 +35,17 @@ To test the library performance on your computer CPU issue :
 ```
 ./MocapNETBenchmark --cpu
 ```
+
+To test the library using a webcam issue :
+
+```
+./WebcamJointBIN --from /dev/video0 --live
+```
+
+To test the library using a video file issue :
+
+```
+./WebcamJointBIN --from /path/to/yourfile.mp4
+```
+
+

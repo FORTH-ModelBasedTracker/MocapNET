@@ -1,0 +1,79 @@
+#include "tools.h"
+
+#include <sys/time.h>
+#include <unistd.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+
+unsigned long tickBaseMN = 0;
+
+
+int executeCommandLineNum(const char *  command , char * what2GetBack , unsigned int what2GetBackMaxSize,unsigned int lineNumber)
+{
+ /* Open the command for reading. */
+ FILE * fp = popen(command, "r");
+ if (fp == 0 )
+       {
+         fprintf(stderr,"Failed to run command (%s) \n",command);
+         return 0;
+       }
+
+ /* Read the output a line at a time - output it. */
+  unsigned int i=0;
+  while (fgets(what2GetBack, what2GetBackMaxSize , fp) != 0)
+    {
+        ++i;
+        if (lineNumber==i) { break; }
+    }
+  /* close */
+  pclose(fp);
+  return 1;
+}
+
+unsigned long GetTickCountMicrosecondsMN()
+{
+   struct timespec ts;
+   if ( clock_gettime(CLOCK_MONOTONIC,&ts) != 0) { return 0; }
+
+   if (tickBaseMN==0)
+   {
+     tickBaseMN = ts.tv_sec*1000000 + ts.tv_nsec/1000;
+     return 0;
+   }
+
+   return ( ts.tv_sec*1000000 + ts.tv_nsec/1000 ) - tickBaseMN;
+}
+
+
+unsigned long GetTickCountMillisecondsMN()
+{
+   return (unsigned long) GetTickCountMicrosecondsMN()/1000;
+}
+
+
+
+
+int getImageWidthHeight(const char * filename,unsigned int * width , unsigned int * height)
+{
+   char commandToExecute[1024]={0};
+   char result[1024]={0};
+   int  results=0;
+
+   snprintf(commandToExecute,1024,"identify -format \"%%w\" %s",filename);
+   if ( executeCommandLineNum(commandToExecute,result,1024,0) )
+   {
+     *width = atof(result);
+     ++results;
+   }
+
+   snprintf(commandToExecute,1024,"identify -format \"%%h\" %s",filename);
+   if ( executeCommandLineNum(commandToExecute,result,1024,0) )
+   {
+     *height = atof(result);
+     ++results;
+   }
+
+   return (results==2);
+}

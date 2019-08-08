@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+ <html>
+<head> 
+     <title> $NAME_OF_THIS_MYLOADER_FILE$ @ $NAME_OF_THIS_MYLOADER_SERVER$ </title>
+     <link rel="stylesheet" type="text/css" href="myloader.css" />
+ <script>   
+     function goRandomMyLoader() 
+          {
+           var randomnumber=Math.floor(Math.random()*100000);
+           window.location.href = "random.html?t="+randomnumber; 
+          }
+ 
+     document.onkeypress = function (e) 
+    {
+      e = e || window.event;
+      var keypressed=(e.keyCode || e.which);
+      if (  keypressed == 114  ) //r
+      {
+       goRandomMyLoader();  
+      }
+    };
+ </script> 
+</head>
+ <body>   
+         <table width=192 height=128 style="position: absolute; top: 0px; left: 0px;" >
+          <tr>
+            <td>
+              <h2>MyLoader</h2>
+               <a href="index.html"><img src="images/link.png"></a>
+             </td> 
+          </tr>
+         </table>
+
+         <center>
+             <br>
+             <a href="random.html?t=$RANDOMNUMBERS$">See More Random Files!</a> &nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;
+             <a href="index.html?t=$RANDOMNUMBERS$">Return to MyLoader!</a>
+             <br><br>
+              $PLACE_TO_EMBED_CONTENT$
+             <br><br>
+              <a href="$PLACE_TO_EMBED_PERMALINK$">Permanent link</a> : <input value="$PLACE_TO_EMBED_PERMALINK$" size="64"></input>        
+             <br><br><br><br><br><br>
+              <a href="index.html?t=$RANDOMNUMBERS$">Return to MyLoader!</a>   
+          </center>
+</body>
+</html>
