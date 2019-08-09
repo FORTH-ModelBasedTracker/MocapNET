@@ -34,7 +34,11 @@ fi
 
 if [ ! -f combinedModel/vnect_sm_pafs_8.1k.pb ]; then
   wget http://ammar.gr/datasets/combinedModel/vnect_sm_pafs_8.1k.pb
-fi 
+fi
+
+#if [ ! -f combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb ]; then
+#  wget http://ammar.gr/datasets/combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb
+#fi
  
 cd "$DIR"
 
@@ -66,6 +70,7 @@ if [ ! -f RGBDAcquisition ]; then
 fi
 
 
+
 if [ ! -f AmmarServer ]; then
  git clone https://github.com/AmmarkoV/AmmarServer
  cd AmmarServer
@@ -75,8 +80,8 @@ if [ ! -f AmmarServer ]; then
  make 
  cd "$DIR"
 fi
-  
-
+ 
+ 
 #Now that we have everything lets build..
 cd "$DIR"
 mkdir build

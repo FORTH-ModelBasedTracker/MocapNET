@@ -364,6 +364,7 @@ int main(int argc, char *argv[])
     if (strcmp(argv[i],"--openposemini")==0)   { networkPath=(char*) networkPathOpenPoseMiniStatic; joint2DSensitivity=0.4; } else
     if (strcmp(argv[i],"--vnect")==0)          { networkPath = (char*) networkPathVnectStatic;      joint2DSensitivity=0.15; } else
     if (strcmp(argv[i],"--2dmodel")==0)        { networkPath=argv[i+1]; } else
+    if (strcmp(argv[i],"--frames")==0)         { frameLimit=atoi(argv[i+1]); } else
     //if (strcmp(argv[i],"--cpu")==0)  { setenv("CUDA_VISIBLE_DEVICES", "", 1); } else //Alternate way to force CPU everywhere
     if (strcmp(argv[i],"--cpu")==0)            { forceCPUMocapNET=1; forceCPU2DJointEstimation=1; } else
     if (strcmp(argv[i],"--gpu")==0)            { forceCPUMocapNET=0; forceCPU2DJointEstimation=0; } else
