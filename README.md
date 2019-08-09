@@ -124,6 +124,21 @@ The output window of WebcamJointBIN contains a heatmap depicting the 2D Joint es
 BVH output files can be easily viewed using a variety of compatible applicatons. We suggest [BVHacker](https://www.bvhacker.com/) that is free for download and compatible with [Wine](https://wiki.winehq.org/)
 
 
+------------------------------------------------------------------ 
+
+In order to get higher accuracy output compared to the live demo which is more performance oriented, you can use OpenPose and the 2D output JSON files produced by it. The MocapNETJSON application will convert them to a BVH file. After getting [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) and building it you can generate 2D JSON body pose data by running :
+
+```
+build/examples/openpose/openpose.bin -number_people_max 1 --hand --write_json /path/to/outputJSONDirectory/ -video /path/to/yourVideoFile.mp4
+```
+
+This will create files in the following fashion /path/to/outputJSONDirectory/yourVideoFile_XXXXXXXXXXXX_keypoints.json
+
+You can convert them to a BVH file by issuing :
+```
+./MocapNETJSON --from /path/to/outputJSONDirectory/ --label yourVideoFile --seriallength 12 --size 1920 1080
+```
+
 
 
 ## License
