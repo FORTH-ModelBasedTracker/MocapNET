@@ -12,8 +12,9 @@
 
 int main(int argc, char *argv[])
 {
-  unsigned int width=1920 , height=1080 , frameLimit=10000 , visualize = 0, useCPUOnly=1;
+  unsigned int width=1920 , height=1080 , frameLimit=10000 , visualize = 0, useCPUOnly=1 , serialLength=5;
   const char * path=0;
+  const char * label=0;
 
   if (initializeBVHConverter())
     {
@@ -23,13 +24,15 @@ int main(int argc, char *argv[])
 
   for (int i=0; i<argc; i++)
   {
-    if (strcmp(argv[i],"-v")==0)            { visualize=1; } else
-    if (strcmp(argv[i],"--visualize")==0)   { visualize=1; } else
-    if (strcmp(argv[i],"--maxFrames")==0)   { frameLimit=atoi(argv[i+1]); } else
-    //if (strcmp(argv[i],"--cpu")==0)         { setenv("CUDA_VISIBLE_DEVICES", "", 1); } else
-    if (strcmp(argv[i],"--gpu")==0)         { useCPUOnly=0; } else
-    if (strcmp(argv[i],"--from")==0)        { path = argv[i+1];  } else
-    if (strcmp(argv[i],"--size")==0)        { width = atoi(argv[i+1]); height = atoi(argv[i+2]); }
+    if (strcmp(argv[i],"-v")==0)             { visualize=1; } else
+    if (strcmp(argv[i],"--visualize")==0)    { visualize=1; } else
+    if (strcmp(argv[i],"--maxFrames")==0)    { frameLimit=atoi(argv[i+1]); } else
+    //if (strcmp(argv[i],"--cpu")==0)        { setenv("CUDA_VISIBLE_DEVICES", "", 1); } else
+    if (strcmp(argv[i],"--gpu")==0)          { useCPUOnly=0; } else
+    if (strcmp(argv[i],"--from")==0)         { path = argv[i+1];  } else
+    if (strcmp(argv[i],"--label")==0)        { label = argv[i+1];  } else
+    if (strcmp(argv[i],"--seriallength")==0) { serialLength = atoi(argv[i+1]);  } else
+    if (strcmp(argv[i],"--size")==0)         { width = atoi(argv[i+1]); height = atoi(argv[i+2]); }
   }
 
   if (path==0)
@@ -38,6 +41,10 @@ int main(int argc, char *argv[])
    }
 
 
+  if (label==0)
+   {
+     label="colorFrame_0_";
+   }
 
 
 
@@ -61,10 +68,16 @@ int main(int argc, char *argv[])
    std::vector<std::vector<float> > bvhFrames;
    struct skeletonCOCO skeleton={0};
 
+
+   char formatString[128]={0};
+   snprintf(formatString,128,"%%s/%%s_%%0%u_keypoints.json",serialLength);
+
+
    unsigned int frameID=0;
    while (frameID<frameLimit)
     {
-     snprintf(filePathOfJSONFile,1024,"%s/colorFrame_0_%05u_keypoints.json",path,frameID);
+
+     snprintf(filePathOfJSONFile,1024,formatString,path,frameID);
 
      if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton))
        {
