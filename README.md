@@ -16,11 +16,13 @@ This is a placeholder for the creation of the repository of our BMVC 2019 paper
 MocapNET is a high performance 2D to 3D single person pose estimator.
 This code base targets recent Linux (Ubuntu) machines, and relies on the Tensorflow C-API and OpenCV. 
 
-Tensorflow is used as the Neural Network framework for our work and OpenCV is used to enable the acquisition of images from webcams or video files as well as provide an easy visualization method.
+Tensorflow is used as the Neural Network framework for our work and OpenCV is used to enable the acquisition of images from webcams or video files as well as to provide an easy visualization method.
 
 We have provided an [initialization script](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) that automatically handle most dependencies.
 
-In order to enable an easy to use demo with as few dependencies as possible the MocapNETBenchmark utility will run even without OpenCV to give you a performance estimation of MocapNET for your system. We have also packaged in a live demo ( WebcamJointBIN binary ) that will use the VNect 2D joint estimator that automatically downloaded using the [initialize.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) script. However in order to achieve better estimations you are advised to set up [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) and use it to acquire JSON files that can be subsequently converted from 2D to 3D BVH files using the MocapNETJSON binary and will provide superior accuracy. Our live demo will try to initialize the Vnect 2D Joint estimation on your GPU and MocapNET 3D estimation on the system CPU to achieve a combined framerate of over 70fps. Unfortunately there are many GPU compatibility issues with Tensorflow C-API builds since recent versions have dropped CUDA 9.0 support as well as compute capabilities that might be required by your system, you can edit the [initialize.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) script and change the variable TENSORFLOW_VERSION according to your needs. If you want CUDA 9.0 you should se it to 1.12.0. If you want CUDA 9.0 and have a card with older compute capabilities (5.2) then choose version 1.11.0.
+Any issues not automatically resolved by it can be reported on the [issues](https://github.com/FORTH-ModelBasedTracker/MocapNET/issues) section of this repository.
+
+In order to enable an easy to use demo with as few dependencies as possible we have included a MocapNETBenchmark utility which has hardcoded [input](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/MocapNETSimpleBenchmark/testCodeInput.hpp) and [output](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/MocapNETSimpleBenchmark/testCodeOutput.hpp) that can run even in a system without OpenCV to give you a performance estimation of our method. If you have OpenCV available you can use our live demo ( WebcamJointBIN binary ) that will use the VNect 2D joint estimator automatically downloaded using the [initialize.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) script. However in order to achieve better estimations you are advised to set up [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) and use it to acquire JSON files that can be subsequently converted from 2D to 3D BVH files using the MocapNETJSON binary and will provide superior accuracy. Our live demo will try to initialize the Vnect 2D Joint estimation on your GPU and MocapNET 3D estimation on the system CPU to achieve a combined framerate of over 70fps. Unfortunately there are many GPU compatibility issues with Tensorflow C-API builds since recent versions have dropped CUDA 9.0 support as well as compute capabilities that might be required by your system, you can edit the [initialize.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) script and change the variable TENSORFLOW_VERSION according to your needs. If you want CUDA 9.0 you should se it to 1.12.0. If you want CUDA 9.0 and have a card with older compute capabilities (5.2) then choose version 1.11.0.
 
 If you are interested in generating the training data we have also provided the code that handles randomization and pose perturbation which is accessible using the scripts  [createRandomizedDataset.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/createRandomizedDataset.sh) and [createTestDataset.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/createTestDataset.sh). All BVH manipulation code is imported from a secondary [github project](https://github.com/AmmarkoV/RGBDAcquisition/tree/master/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader) that is automatically included and built using the initialization script.
 
@@ -53,6 +55,13 @@ To test the library using a webcam issue :
 ```
 ./WebcamJointBIN --from /dev/video0 --live
 ```
+
+To dump 5000 frames from the webcam to out.bvh instead of the live directive issue :
+
+```
+./WebcamJointBIN --from /dev/video0 --frames 5000
+```
+
 
 To test the library using a video file issue :
 
