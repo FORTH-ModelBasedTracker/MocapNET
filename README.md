@@ -50,7 +50,20 @@ To test the library performance on your computer CPU issue :
 ./MocapNETBenchmark --cpu
 ```
 
-To test the library using a webcam issue :
+The output should provide you with a model name of your CPU as well as the average framerate for 1000 samples evaluated.
+
+![MocapNETBenchmark](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/benchmarkview.png)
+
+
+
+To test your webcam issue :
+```
+./WebcamBIN --from /dev/video0 
+```
+This test only uses OpenCV (it can be compiled even without Tensorflow or any other dependencies) and is intended as a test that can help debug configuration problems on your system.
+
+
+To do a live test the MocapNET library using a webcam issue :
 
 ```
 ./WebcamJointBIN --from /dev/video0 --live
@@ -63,7 +76,7 @@ To dump 5000 frames from the webcam to out.bvh instead of the live directive iss
 ```
 
 
-To test the library using a video file issue :
+To test the library using a pre recorded video file issue :
 
 ```
 ./WebcamJointBIN --from /path/to/yourfile.mp4
@@ -72,5 +85,11 @@ To test the library using a video file issue :
 The output window of WebcamJointBIN contains a heatmap depicting the 2D Joint estimations, an RGB image cropped and centered on the observed person, a 2D overlay of the 2D Skeleton as well as a window that has the 3D output retrieved by our method as seen in the following image.
 
 ![WebcamJointBin](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoview.jpg)
+
+
+
+
+
+
 
 

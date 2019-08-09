@@ -223,6 +223,14 @@ int main(int argc, char *argv[])
        fprintf(stderr,"Sample %u/%u - %0.4fms - mae %0.4f \n" NORMAL, i , MocapNETTestInputNumberOfSamples , sampleTime , mae);
       }
      }
+     
+     //Also printout the name of our CPU
+     int i=system("cat /proc/cpuinfo | grep \"model name\" | uniq");
+     if (i!=0)
+       {
+         std::cerr<<"Could not get our CPU model name\n";
+       }
+
 
      float averageTime=(float) totalTime/(numberOfRepetitions*MocapNETTestInputNumberOfSamples);
      if (averageTime==0.0) { averageTime=0.000001; } //Take care of division by zero
