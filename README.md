@@ -11,6 +11,31 @@ This is a placeholder for the creation of the repository of our BMVC 2019 paper
 
 [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtubevideolink.jpg)  ](https://www.youtube.com/watch?v=fH5e-KMBvM0)
 
+
+
+## Citation
+------------------------------------------------------------------ 
+
+Please cite the [following paper](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf) if this work helps your research :
+
+```
+@inproceedings{Qammaz2019,
+  author = {Qammaz, Ammar and Argyros, Antonis A},
+  title = {MocapNET: Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images},
+  booktitle = {British Machine Vision Conference (BMVC 2019) (to appear)},
+  publisher = {BMVA},
+  year = {2019},
+  month = {September},
+  address = {Cardiff, UK},
+  url = {http://users.ics.forth.gr/ argyros/res_mocapnet.html},
+  projects =  {CO4ROBOTS,MINGEI},
+  pdflink = {http://users.ics.forth.gr/ argyros/mypapers/2019_09_BMVC_mocapnet.pdf},
+  videolink = {https://youtu.be/fH5e-KMBvM0}
+}
+
+```
+
+
 ## System Requirements and Dependencies
 ------------------------------------------------------------------ 
 MocapNET is a high performance 2D to 3D single person pose estimator.
@@ -96,30 +121,9 @@ The output window of WebcamJointBIN contains a heatmap depicting the 2D Joint es
 BVH output files can be easily viewed using a variety of compatible applicatons. We suggest [BVHacker](https://www.bvhacker.com/) that is free for download and compatible with [Wine](https://wiki.winehq.org/)
 
 
-## Citation
------------------------------------------------------------------- 
-
-Please cite the following paper if this work helps your research :
-
-```
-@inproceedings{Qammaz2019,
-  author = {Qammaz, Ammar and Argyros, Antonis A},
-  title = {MocapNET: Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images},
-  booktitle = {British Machine Vision Conference (BMVC 2019) (to appear)},
-  publisher = {BMVA},
-  year = {2019},
-  month = {September},
-  address = {Cardiff, UK},
-  url = {http://users.ics.forth.gr/ argyros/res_mocapnet.html},
-  projects =  {CO4ROBOTS,MINGEI},
-  pdflink = {http://users.ics.forth.gr/ argyros/mypapers/2019_09_BMVC_mocapnet.pdf},
-  videolink = {https://youtu.be/fH5e-KMBvM0}
-}
-
-```
 
 
 ## License
 ------------------------------------------------------------------ 
-
+This library is provided under the [FORTH license](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/license.txt)
 
