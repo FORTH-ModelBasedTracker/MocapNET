@@ -56,6 +56,8 @@ If you are interested in generating BVH training data we have also provided the 
 To compile the library issue :
 
 ```
+ sudo apt-get install build-essential cmake libopencv-dev 
+
 ./initialize.sh
 
 mkdir build 
