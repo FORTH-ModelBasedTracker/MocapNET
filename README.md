@@ -80,6 +80,7 @@ The output should provide you with a model name of your CPU as well as the avera
 ![MocapNETBenchmark](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/benchmarkview.png)
 
 
+------------------------------------------------------------------ 
 
 To test OpenCV support of your webcam issue :
 ```
@@ -93,6 +94,8 @@ To test OpenCV support of your video files issue :
 
 These tests only use OpenCV (without Tensorflow or any other dependencies) and are intended as a quick test that can help identify and debug configuration problems on your system.
 
+
+------------------------------------------------------------------ 
 
 Assuming that the WecamBIN executable is working correctly, to do a live test of the MocapNET library using a webcam issue :
 
@@ -116,6 +119,7 @@ To test the library using a pre recorded video file issue :
 The output window of WebcamJointBIN contains a heatmap depicting the 2D Joint estimations, an RGB image cropped and centered on the observed person, a 2D overlay of the 2D Skeleton as well as a window that has the 3D output retrieved by our method as seen in the following image.
 
 ![WebcamJointBin](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoview.jpg)
+
 
 BVH output files can be easily viewed using a variety of compatible applicatons. We suggest [BVHacker](https://www.bvhacker.com/) that is free for download and compatible with [Wine](https://wiki.winehq.org/)
 
