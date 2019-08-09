@@ -101,19 +101,25 @@ BVH output files can be easily viewed using a variety of compatible applicatons.
 
 Please cite the following paper if this work helps your research :
 
-    @inproceedings{Qammaz2019,
-      author = {Qammaz, Ammar and Argyros, Antonis A},
-      title = {MocapNET: Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images},
-      booktitle = {British Machine Vision Conference (BMVC 2019) (to appear)},
-      publisher = {BMVA},
-      year = {2019},
-      month = {September},
-      address = {Cardiff, UK},
-      url = {http://users.ics.forth.gr/ argyros/res_mocapnet.html},
-      projects =  {CO4ROBOTS,MINGEI},
-      pdflink = {http://users.ics.forth.gr/ argyros/mypapers/2019_09_BMVC_mocapnet.pdf},
-      videolink = {https://youtu.be/fH5e-KMBvM0}
-    }
+```
+@inproceedings{Qammaz2019,
+  author = {Qammaz, Ammar and Argyros, Antonis A},
+  title = {MocapNET: Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images},
+  booktitle = {British Machine Vision Conference (BMVC 2019) (to appear)},
+  publisher = {BMVA},
+  year = {2019},
+  month = {September},
+  address = {Cardiff, UK},
+  url = {http://users.ics.forth.gr/ argyros/res_mocapnet.html},
+  projects =  {CO4ROBOTS,MINGEI},
+  pdflink = {http://users.ics.forth.gr/ argyros/mypapers/2019_09_BMVC_mocapnet.pdf},
+  videolink = {https://youtu.be/fH5e-KMBvM0}
+}
 
+```
+
+
+## License
+------------------------------------------------------------------ 
 
 
