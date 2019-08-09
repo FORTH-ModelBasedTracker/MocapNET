@@ -18,7 +18,7 @@ This code base targets recent Linux (Ubuntu) machines, and relies on the Tensorf
 
 Tensorflow is used as the Neural Network framework for our work and OpenCV is used to enable the acquisition of images from webcams or video files as well as to provide an easy visualization method.
 
-We have provided an [initialization script](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) that automatically handle most dependencies.
+We have provided an [initialization script](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) that automatically handle most dependencies, as well as download pretrained models ready for use.
 
 Any issues not automatically resolved by it can be reported on the [issues](https://github.com/FORTH-ModelBasedTracker/MocapNET/issues) section of this repository.
 
