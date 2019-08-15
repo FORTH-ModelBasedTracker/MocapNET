@@ -27,6 +27,15 @@ cd build
 cmake -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=$DIR/opencv_contrib-3.2.0/modules ..
 make -j5
 
+echo "Do you want to install OpenCV to your system ? " 
+echo
+echo -n " (Y/N)?"
+read answer
+if test "$answer" != "N" -a "$answer" != "n";
+ then
+   sudo make install
+fi
+
 echo "Done"
 
 exit 0
