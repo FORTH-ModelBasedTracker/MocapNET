@@ -48,7 +48,7 @@ Any issues not automatically resolved by the script can be reported on the [issu
 
 In order to enable an easy to use demo with as few dependencies as possible we have included a MocapNETBenchmark utility which has hardcoded [input](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/MocapNETSimpleBenchmark/testCodeInput.hpp) and [output](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/MocapNETSimpleBenchmark/testCodeOutput.hpp) that can run even in a system without OpenCV to give you a performance estimation of our method. If you have OpenCV available you can use our live demo ( WebcamJointBIN binary ) that will use the VNect 2D joint estimator automatically downloaded using the [initialize.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) script. However in order to achieve higher accuracy estimations you are advised to set up [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) and use it to acquire JSON files with 2D detections that can be subsequently converted to 3D BVH files using the MocapNETJSON binary. They will provide superior accuracy compared to the VNect 2D joint detector which is used for faster performance in the live demo since 2D estimation is the bottleneck of the application. Our live demo will try to run the Vnect 2D Joint estimation on your GPU and MocapNET 3D estimation on the system CPU to achieve a combined framerate of over 60fps. Unfortunately there are many GPU compatibility issues with Tensorflow C-API builds since recent versions have dropped CUDA 9.0 support as well as compute capabilities that might be required by your system, you can edit the [initialize.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) script and change the variable TENSORFLOW_VERSION according to your needs. If you want CUDA 9.0 you should se it to 1.12.0. If you want CUDA 9.0 and have a card with older compute capabilities (5.2) then choose version 1.11.0. If all else fails you can always [recompile the tensorflow C-API](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/lib_package/README.md) to match your specific hardware configuration.
 
-If you are interested in generating BVH training data we have also provided the code that handles randomization and pose perturbation which is accessible using the scripts  [createRandomizedDataset.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/createRandomizedDataset.sh) and [createTestDataset.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/createTestDataset.sh). All BVH manipulation code is imported from a secondary [github project](https://github.com/AmmarkoV/RGBDAcquisition/tree/master/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader) that is automatically downloaded, included and built using the initialization script. These two scripts will populate the dataset/ directory with csv files that contain valid training samples based on the CMU dataset.
+If you are interested in generating BVH training data for your research, we have also provided the code that handles randomization and pose perturbation from the CMU dataset. After a successful compilation, dataset generation is accessible using the scripts  [createRandomizedDataset.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/createRandomizedDataset.sh) and [createTestDataset.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/createTestDataset.sh). All BVH manipulation code is imported from a secondary [github project](https://github.com/AmmarkoV/RGBDAcquisition/tree/master/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader) that is automatically downloaded, included and built using the [initialize.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) script. These [createRandomizedDataset.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/createRandomizedDataset.sh) and [createTestDataset.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/createTestDataset.sh) scripts will populate the dataset/ directory with CSV files that contain valid training samples based on the CMU dataset. It is [trivial](https://pythonspot.com/reading-csv-files-in-python/) to load these files using python. After loading them using them as training samples in conjunction with a deep learning framework like [Keras](https://keras.io/) you can facilitate learning of 2D to 3D BVH. 
 
 ## Building
 ------------------------------------------------------------------ 
@@ -60,12 +60,16 @@ To compile the library issue :
 
 ./initialize.sh
 
-mkdir build 
+```
+ 
+After performing changes to the source code, you do not need to rerun the initialization script. You can recompile the code by using : 
+
+```
 cd build 
 cmake .. 
 make 
+cd ..
 ```
- 
 
 
 ## Testing
@@ -84,7 +88,7 @@ The output should provide you with a model name of your CPU as well as the avera
 
 ------------------------------------------------------------------ 
 
-To test OpenCV support of your webcam issue :
+To test your environment and OpenCV installation as well as support of your webcam issue :
 ```
 ./WebcamBIN --from /dev/video0 
 ```
@@ -99,7 +103,7 @@ These tests only use OpenCV (without Tensorflow or any other dependencies) and a
 
 ------------------------------------------------------------------ 
 
-Assuming that the WecamBIN executable is working correctly, to do a live test of the MocapNET library using a webcam issue :
+Assuming that the WecamBIN executable is working correctly with your input, to do a live test of the MocapNET library using a webcam issue :
 
 ```
 ./WebcamJointBIN --from /dev/video0 --live
@@ -128,13 +132,13 @@ BVH output files can be easily viewed using a variety of compatible applicatons.
 
 ------------------------------------------------------------------ 
 
-In order to get higher accuracy output compared to the live demo which is more performance oriented, you can use OpenPose and the 2D output JSON files produced by it. The MocapNETJSON application will convert them to a BVH file. After getting [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) and building it you can generate 2D JSON body pose data by running :
+In order to get higher accuracy output compared to the live demo which is more performance oriented, you can use OpenPose and the 2D output JSON files produced by it. The MocapNETJSON application can convert them to a BVH file. After downloading [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) and building it you can use it to acquire 2D JSON body pose data by running :
 
 ```
 build/examples/openpose/openpose.bin -number_people_max 1 --hand --write_json /path/to/outputJSONDirectory/ -video /path/to/yourVideoFile.mp4
 ```
 
-This will create files in the following fashion /path/to/outputJSONDirectory/yourVideoFile_XXXXXXXXXXXX_keypoints.json
+This will create files in the following fashion /path/to/outputJSONDirectory/yourVideoFile_XXXXXXXXXXXX_keypoints.json Notice that there are 12 X characters in filenames which correspond to the serial number of each json file.
 
 You can convert them to a BVH file by issuing :
 ```
