@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
 
-if [ ! -f ./MotionCapture ]; then
+if [ ! -f MotionCapture/READMEFIRST.txt ]; then
 echo "Could not find MotionCapture"
 wget http://ammar.gr/datasets/CMUMotionCaptureDatasets.zip
 unzip CMUMotionCaptureDatasets.zip
@@ -16,27 +16,27 @@ QUALITY="1.0" #1.0 , 1.5 , 2.0
 
 mkdir combinedModel
 cd combinedModel
-if [ ! -f combinedModel/all.pb ]; then
+if [ ! -f all.pb ]; then
   wget http://ammar.gr/datasets/combinedModel/$QUALITY/all.pb
 fi
 
-if [ ! -f combinedModel/back.pb ]; then
+if [ ! -f back.pb ]; then
   wget http://ammar.gr/datasets/combinedModel/$QUALITY/back.pb
 fi
 
-if [ ! -f combinedModel/front.pb ]; then
+if [ ! -f front.pb ]; then
   wget http://ammar.gr/datasets/combinedModel/$QUALITY/front.pb
 fi
 
-if [ ! -f combinedModel/openpose_model.pb ]; then
+if [ ! -f openpose_model.pb ]; then
   wget http://ammar.gr/datasets/combinedModel/openpose_model.pb
 fi
 
-if [ ! -f combinedModel/vnect_sm_pafs_8.1k.pb ]; then
+if [ ! -f vnect_sm_pafs_8.1k.pb ]; then
   wget http://ammar.gr/datasets/combinedModel/vnect_sm_pafs_8.1k.pb
 fi
 
-#if [ ! -f combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb ]; then
+#if [ ! -f mobnet2_tiny_vnect_sm_1.9k.pb ]; then
 #  wget http://ammar.gr/datasets/combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb
 #fi
  

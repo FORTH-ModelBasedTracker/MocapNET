@@ -338,6 +338,10 @@ int main(int argc, char *argv[])
   float joint2DSensitivity=0.15;
   const char * webcam = 0;
 
+  int yawValue = 0;
+  int pitchValue = 0;
+  int rollValue = 0;
+
 
   //2D Joint Detector Configuration
   unsigned int inputWidth2DJointDetector = 368;
@@ -504,9 +508,9 @@ int main(int argc, char *argv[])
            bvhOutput[MOCAPNET_OUTPUT_HIP_XPOSITION]=0.0;
            bvhOutput[MOCAPNET_OUTPUT_HIP_YPOSITION]=0.0;
            bvhOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-120.0;
-           bvhOutput[MOCAPNET_OUTPUT_HIP_ZROTATION]=0.0;
-           bvhOutput[MOCAPNET_OUTPUT_HIP_YROTATION]=0.0;
-           bvhOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=0.0;
+           bvhOutput[MOCAPNET_OUTPUT_HIP_ZROTATION]=(float) pitchValue;
+           bvhOutput[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) yawValue;
+           bvhOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) rollValue;
           }
          }
 
@@ -548,6 +552,13 @@ int main(int argc, char *argv[])
               cv::moveWindow("BGR",0,inputHeight2DJointDetector);
               cv::moveWindow("DETECTION",inputWidth2DJointDetector,0);
              }
+
+
+             //Create trackbar to change 3D orientation..
+             createTrackbar("Yaw", "3D Points Output", &yawValue, 360);
+             //createTrackbar("Pitch", "3D Points Output", &pitchValue, 360);
+             //createTrackbar("Roll", "3D Points Output", &rollValue, 360);
+
 
              visualizePoints("3D Points Output",frameNumber,fps2DJointDetector,fpsMocapNET,visWidth,visHeight,bvhOutput);
 
