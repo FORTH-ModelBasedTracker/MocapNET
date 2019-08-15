@@ -14,7 +14,7 @@ using namespace cv;
 #define GREEN   "\033[32m"      /* Green */
 #define YELLOW  "\033[33m"      /* Yellow */
 
-int visualizePoints(const char* windowName,unsigned int frameNumber,float joint2DEstimator,float fpsMocapNET,unsigned int width,unsigned int height,std::vector<float> mocapNETOutput)
+int visualizePoints(const char* windowName,unsigned int frameNumber,float fpsAcquisition,float joint2DEstimator,float fpsMocapNET,unsigned int width,unsigned int height,std::vector<float> mocapNETOutput)
 {
 #if USE_OPENCV
  if (mocapNETOutput.size()==0)
@@ -96,10 +96,22 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,float joint2
            }
         }
 
-  snprintf(textInfo,512,"Frame %u - 2D Joint Detector : %0.2f fps - MocapNET : %0.2f fps",frameNumber,joint2DEstimator,fpsMocapNET);
+  snprintf(textInfo,512,"Frame %u",frameNumber);
   cv::Point txtPosition; txtPosition.x=20; txtPosition.y=50;
   int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
   cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
+  cv::putText(img,textInfo,txtPosition,fontUsed,1.0,color,4,8);
+
+  txtPosition.y=90;
+  snprintf(textInfo,512,"Acquisition : %0.2f fps",fpsAcquisition);
+  cv::putText(img,textInfo,txtPosition,fontUsed,1.0,color,4,8);
+
+  txtPosition.y=130;
+  snprintf(textInfo,512,"2D Joint Detector : %0.2f fps",joint2DEstimator);
+  cv::putText(img,textInfo,txtPosition,fontUsed,1.0,color,4,8);
+
+  txtPosition.y=170;
+  snprintf(textInfo,512,"MocapNET : %0.2f fps",fpsMocapNET);
   cv::putText(img,textInfo,txtPosition,fontUsed,1.0,color,4,8);
 
   cv::imshow(windowName,img);

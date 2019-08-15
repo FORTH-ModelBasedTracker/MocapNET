@@ -320,6 +320,13 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
 }
 
 
+float convertStartEndTimeFromMicrosecondsToFPS(unsigned long startTime, unsigned long endTime)
+{
+ float timeInMilliseconds =  (float) (endTime-startTime)/1000;
+ if (timeInMilliseconds ==0.0) { timeInMilliseconds=0.00001; } //Take care of division by null..
+ return (float) 1000/timeInMilliseconds;
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -341,6 +348,7 @@ int main(int argc, char *argv[])
   int yawValue = 0;
   int pitchValue = 0;
   int rollValue = 0;
+  int distance = 0;
 
 
   //2D Joint Detector Configuration
@@ -425,9 +433,14 @@ int main(int argc, char *argv[])
       while ( (live) || (frameNumber<frameLimit) )
       {
         // Get Image
+        unsigned long acquisitionStart = GetTickCountMicroseconds();
         cap >> frame; // get a new frame from camera
         unsigned int frameWidth  =  frame.size().width;  //frame.cols
         unsigned int frameHeight =  frame.size().height; //frame.rows
+        unsigned long acquisitionEnd = GetTickCountMicroseconds();
+
+
+        float fpsAcquisition = convertStartEndTimeFromMicrosecondsToFPS(acquisitionStart,acquisitionEnd);
 
          //------------------------------------------------------------------------
          // If cropping is enabled
@@ -486,13 +499,9 @@ int main(int argc, char *argv[])
          bvhOutput = runMocapNET(&mnet,flatAndNormalizedPoints);
          unsigned long endTime = GetTickCountMicroseconds();
 
+         float fpsMocapNET = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
 
-         //Get Framerate of MocapNET evaluation..
-         float mocapNETComputationTimeInMilliseconds =  (float) (endTime-startTime)/1000;
-         if (mocapNETComputationTimeInMilliseconds==0.0) { mocapNETComputationTimeInMilliseconds=0.00001; } //Take care of division by null..
-         float fpsMocapNET = (float) 1000000/(endTime-startTime);
-
-         std::cerr<<"MocapNET 3DSkeleton @ "<<mocapNETComputationTimeInMilliseconds<<" ms \n";
+         std::cerr<<"MocapNET 3DSkeleton @ "<<fpsMocapNET<<" fps \n";
 
          //If we are not running live ( aka not from a webcam with no fixed frame limit )
          //Then we record the current bvh frame in order to save a .bvh file in the end..
@@ -507,10 +516,10 @@ int main(int argc, char *argv[])
           {
            bvhOutput[MOCAPNET_OUTPUT_HIP_XPOSITION]=0.0;
            bvhOutput[MOCAPNET_OUTPUT_HIP_YPOSITION]=0.0;
-           bvhOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-120.0;
-           bvhOutput[MOCAPNET_OUTPUT_HIP_ZROTATION]=(float) pitchValue;
+           bvhOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-120.0 - (float) distance;
+           bvhOutput[MOCAPNET_OUTPUT_HIP_ZROTATION]=(float) rollValue;
            bvhOutput[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) yawValue;
-           bvhOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) rollValue;
+           bvhOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) pitchValue;
           }
          }
 
@@ -548,6 +557,7 @@ int main(int argc, char *argv[])
 
             if (frameNumber==0)
              {
+              cv::namedWindow("3D Control");
               cv::moveWindow("BG",0,0);
               cv::moveWindow("BGR",0,inputHeight2DJointDetector);
               cv::moveWindow("DETECTION",inputWidth2DJointDetector,0);
@@ -555,12 +565,14 @@ int main(int argc, char *argv[])
 
 
              //Create trackbar to change 3D orientation..
-             createTrackbar("Yaw", "3D Points Output", &yawValue, 360);
-             //createTrackbar("Pitch", "3D Points Output", &pitchValue, 360);
-             //createTrackbar("Roll", "3D Points Output", &rollValue, 360);
+             createTrackbar("Distance ", "3D Control", &distance,  150);
+             createTrackbar("Yaw      ", "3D Control", &yawValue,  360);
+             createTrackbar("Pitch    ", "3D Control", &pitchValue,360);
+             createTrackbar("Roll     ", "3D Control", &rollValue, 360);
 
 
-             visualizePoints("3D Points Output",frameNumber,fps2DJointDetector,fpsMocapNET,visWidth,visHeight,bvhOutput);
+
+             visualizePoints("3D Points Output",frameNumber,fpsAcquisition,fps2DJointDetector,fpsMocapNET,visWidth,visHeight,bvhOutput);
 
             if (frameNumber==0)
              {
