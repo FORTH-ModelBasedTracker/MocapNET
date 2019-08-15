@@ -98,12 +98,12 @@ To test OpenCV support of your video files issue :
 ./WebcamBIN --from /path/to/yourfile.mp4
 ```
 
-These tests only use OpenCV (without Tensorflow or any other dependencies) and are intended as a quick test that can help identify and debug configuration problems on your system.
-
-
+These tests only use OpenCV (without Tensorflow or any other dependencies) and are intended as a quick method that can identify and debug configuration problems on your system.
+In case of problems playing back video files or your webcam you might want to consider compiling OpenCV yourself. The [getOpenCV3.2.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/getOpenCV3.2.sh) script has been included to automatically fetch and make OpenCV 3.2 for your convinience. You should first remove the package manager version of OpenCV and keep track of the changes performed. 
+ 
 ------------------------------------------------------------------ 
 
-Assuming that the WecamBIN executable is working correctly with your input, to do a live test of the MocapNET library using a webcam issue :
+Assuming that the WecamBIN executable is working correctly with your input source, to do a live test of the MocapNET library using a webcam issue :
 
 ```
 ./WebcamJointBIN --from /dev/video0 --live
