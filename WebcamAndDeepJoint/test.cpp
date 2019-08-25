@@ -1,3 +1,9 @@
+/** @file test.cpp
+ *  @brief This is an all-in-one live demo. It combines data acquisition using OpenCV, 2D Joint estimation using Tensorflow ( via VNECT/OpenPose/FORTH estimators ),
+ *  and 3D BVH output using MocapNET.
+ *  @author Ammar Qammaz (AmmarkoV)
+ */
+
 #include "opencv2/opencv.hpp"
 using namespace cv;
 
@@ -16,6 +22,9 @@ using namespace cv;
 #define DISPLAY_ALL_HEATMAPS 0
 
 
+/**
+ * @brief A structure to hold a bounding box
+ */
 struct boundingBox
 {
    char populated;
@@ -26,6 +35,13 @@ struct boundingBox
 };
 
 
+
+/**
+ * @brief This function performs 2D estimation.. You give her a Tensorflow instance of a 2D estimator, a BGR image some thresholds and sizes and it will yield a vector of 2D points.
+ * @ingroup demo
+ * @bug This code is oriented to a single 2D skeleton detected, Multiple skeletons will confuse it and there is no logic to handle them
+ * @retval A 2D Skeleton detected in the bgr OpenCV image
+ */
 std::vector<cv::Point_<int> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
                                                                             struct TensorflowInstance * net,
                                                                             const cv::Mat &bgr ,
@@ -100,12 +116,18 @@ std::vector<cv::Point_<int> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
   }
   #endif // DISPLAY_ALL_HEATMAPS
 
-
-
   return dj_getNeuralNetworkDetectionsForColorImage(bgr,heatmaps,minThreshold,visualize);
 }
 
 
+
+/**
+ * @brief In order to have the best possible quality we can crop the input frame to only perform detection around the area of the previous skeleton
+ * This code performs this crop and tries to get the best detection window
+ * @ingroup demo
+ * @bug This code is oriented to a single 2D skeleton detected, Multiple skeletons will confuse it and there is no logic to handle them
+ * @retval 1=Success/0=Failure
+ */
 int getBestCropWindow(
                        unsigned int * x,
                        unsigned int * y,

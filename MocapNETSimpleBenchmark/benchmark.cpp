@@ -29,7 +29,13 @@
 #define YELLOW  "\033[33m"      /* Yellow */
 
 
-
+/**
+ * @brief This function performs an internal test to see if the compression of the JSON input to NSDM matrices is performed correctly.
+ * In order not to require any external dependencies the array MocapNETTestJSONRawInput and MocapNETTestJSONRawOutput is used which is declared in testCodeJSONInput.hpp
+ * and testCodeJSONOutput.hpp  . This was needed during the development of the MocapNET library since the original code is python based
+ * @ingroup benchmark
+ * @retval 1=Success/0=Failure
+ */
 int testMocapNETJSONCompression()
 {
  unsigned int errors=0;
@@ -83,6 +89,17 @@ int testMocapNETJSONCompression()
 }
 //-------------------------------------------------------------------------------------------------
 
+
+
+
+
+/**
+ * @brief This function performs an internal test to see if the compression of the JSON input to NSDM matrices is performed correctly.
+ * In order not to require any external dependencies the array MocapNETTestInput and MocapNETTestOutput is used which is declared in testCodeInput.hpp
+ * and testCodeOutput.hpp  . This was needed during the development of the MocapNET library since the original code is python based
+ * @ingroup benchmark
+ * @retval 1=Success/0=Failure
+ */
 int testMocapNETCompression()
 {
   unsigned int errors=0;
@@ -141,6 +158,19 @@ int testMocapNETCompression()
 
 
 
+/**
+ * @brief Simple way to cout our CPU model name..
+ * @retval 1=Success/0=Failure
+ */
+void printCPUName()
+{
+     //Also printout the name of our CPU
+     int i=system("cat /proc/cpuinfo | grep \"model name\" | uniq");
+     if (i!=0)
+       {
+         std::cerr<<"Could not get our CPU model name\n";
+       }
+}
 
 
 
@@ -149,6 +179,9 @@ int testMocapNETCompression()
 
 int main(int argc, char *argv[])
 {
+//-------------------------------------------------------------------------------------------------
+//     Parse command-line options, switch CPU/GPU execution and pick which benchmark to run
+//-------------------------------------------------------------------------------------------------
   int useCPUOnly=1;
   for (int i=0; i<argc; i++)
   {
@@ -157,6 +190,8 @@ int main(int argc, char *argv[])
     if (strcmp(argv[i],"--test")==0)     { testMocapNETCompression(); exit(0);     } else
     if (strcmp(argv[i],"--testJSON")==0) { testMocapNETJSONCompression(); exit(0); }
   }
+//-------------------------------------------------------------------------------------------------
+
 
   struct MocapNET mnet={0};
   if ( loadMocapNET(&mnet,"test",useCPUOnly) )
@@ -165,11 +200,19 @@ int main(int argc, char *argv[])
    std::vector<float> outputValuesExpected;
    if (MocapNETTestInputNumberOfSamples!=MocapNETTestOutputNumberOfSamples)
    {
-     std::cerr<<"Wrong number of input/output samples .. \n";
-   } else
+     std::cerr<<"Wrong number of input/output samples.. \n";
+     std::cerr<<"There has been a mistake during packaging of MocapNET or you have done something weird with the hardcoded input/output samples\n";
+     std::cerr<<"Feel free to revert to master or open a ticket here https://github.com/FORTH-ModelBasedTracker/MocapNET/issues\n";
+   }
+     else
    {
+    //Number of repetitions performed on the test to get a more representative average framerate
     unsigned int numberOfRepetitions=5;
-    float totalTime=0.0;
+
+
+    float totalTime=0.0; //This will count the total time elapsed for all samples
+
+    //We repeat tests enough times to get a better average
     for (int u=0; u<numberOfRepetitions; u++)
      {
       unsigned int inputCounter=0;
@@ -192,23 +235,27 @@ int main(int argc, char *argv[])
          ++outputCounter;
        }
 
+
+
        long startTime = GetTickCountMicrosecondsMN();
        //--------------------------------------------------------
         std::vector<float>  result = runMocapNET(&mnet,inputValues);
        //--------------------------------------------------------
        long endTime = GetTickCountMicrosecondsMN();
-
        float sampleTime = (float) (endTime-startTime)/1000;
-       totalTime+=sampleTime;
+       totalTime+=sampleTime; // Add the time needed to evaluate this sample to the total time
 
-        float mae=0.0;
+
+
+
+       float mae=0.0;
        //--------------------------------------------------------
         for (int z=0; z<MocapNETTestOutputElementsPerSample; z++)
         {
           float roundedExpected = round(outputValuesExpected[z]*1000)/1000;
           float roundedResult = round(result[z]*1000)/1000;
 
-          if (z!=4) //Ignore 4th because it has orientation trick..
+          if (z!=4) //Ignore 4th coordinate because it has the orientation trick, and there is no reason to rewrite all of the flip logic here..
            {
             float difference = roundedExpected-roundedResult;
             difference = difference * difference;
@@ -223,15 +270,14 @@ int main(int argc, char *argv[])
        fprintf(stderr,"Sample %u/%u - %0.4fms - mae %0.4f \n" NORMAL, i , MocapNETTestInputNumberOfSamples , sampleTime , mae);
       }
      }
-     
-     //Also printout the name of our CPU
-     int i=system("cat /proc/cpuinfo | grep \"model name\" | uniq");
-     if (i!=0)
-       {
-         std::cerr<<"Could not get our CPU model name\n";
-       }
+
+     //Also Printout the name of our CPU
+     //---------------------------------
+     printCPUName();
+     //---------------------------------
 
 
+     //Do the final calculation for the average framerate
      float averageTime=(float) totalTime/(numberOfRepetitions*MocapNETTestInputNumberOfSamples);
      if (averageTime==0.0) { averageTime=0.000001; } //Take care of division by zero
      std::cerr<<"\nTotal "<<totalTime<<"ms for "<<(numberOfRepetitions*MocapNETTestInputNumberOfSamples)<<" samples - Average "<<averageTime<<"ms - "<<1000/averageTime<<" fps\n";

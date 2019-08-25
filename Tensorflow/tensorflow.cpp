@@ -1,3 +1,13 @@
+/** @file tensorflow.cpp
+ *  @brief This is a Tensorflow C-API wrapper.. Since Tensorflow is pretty volatile this whole file is kind of
+ *  half-finished and will probably have to change to reflect changes to the tensorflow project. This code needs a serious cleanup when the Tensorflow C API is
+ *  completely stable.
+ *  If you are not familiar with Tensorflow for C check https://github.com/iwatake2222/CNN_NumberDetector/tree/master/03_Tensorflow_C
+ *  @bug Tensorflow and the TF_GraphGetTensorShape ( https://github.com/tensorflow/tensorflow/blob/master/tensorflow/c/c_api.h#L239 ) returns -1,-1 as the dimensions of some tensors. In order to work around this the expected dimensions are given as variables
+ *  from the MocapNET client applications
+ *  @author Ammar Qammaz (AmmarkoV)
+ */
+
 #include "tensorflow.hpp"
 #include "tf_utils.hpp"
 #include <stdio.h>

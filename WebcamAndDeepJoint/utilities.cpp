@@ -1,3 +1,10 @@
+/** @file utilities.cpp
+ *  @brief This is a suite of utilities that facilitate extracting 2D points from heatmaps. This is needed since 2D estimators output heatmaps, while MocapNET operates on
+ *  2D point input. This code does not utilize PAFs so although some care is taken to get subpixel accuracy from the heatmap maxima it is still less accurate than the
+ *  original OpenPose implementation etc.
+ *  @author Damien Michel, Pashalis Padeleris, Ammar Qammaz (AmmarkoV)
+ */
+
 #include "utilities.hpp"
 
 /*=======================================================================================================*/

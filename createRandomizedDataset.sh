@@ -27,7 +27,7 @@ MAXIMUM_POSITION="1400 300 $MAXIMUM_DEPTH"
 MAXIMUM_ROTATION="25 178 35"
   
 MIRROR_DATASET_HANDS=""
-ITERATIONS="1" 
+ITERATIONS="2" 
 
 #We are also mirroring so bear in mind that this will effectively be doubled 
 #MIRROR_DATASET_HANDS="--mirror lCollar rCollar"
