@@ -1,7 +1,5 @@
 #include "bvh.hpp"
 
-#define USE_BVH 1
-
 #if USE_BVH
  #include "../RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_loader.h"
  #include "../RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_project.h"
@@ -9,6 +7,8 @@
  struct BVH_MotionCapture bvhMotion={0};
  struct BVH_Transform bvhTransform={0};
  int haveBVHInit=0;
+#else
+ #warning "BVH code not included.."
 #endif // USE_BVH
 
 int initializeBVHConverter()

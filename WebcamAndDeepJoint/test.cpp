@@ -186,6 +186,15 @@ int getBestCropWindow(
 }
 
 
+
+
+
+/**
+ * @brief Retrieve MocapNET output vector from an image
+ * @ingroup demo
+ * @bug This code is oriented to a single 2D skeleton detected, Multiple skeletons will confuse it and there is no logic to handle them
+ * @retval Vector of MocapNET output, in case of error it might be empty..!
+ */
 std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
                                                             struct TensorflowInstance * net,
                                                             const cv::Mat &bgr,
@@ -342,6 +351,11 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
 }
 
 
+/**
+ * @brief Convert start and end time to a framerate ( frames per second )
+ * @ingroup demo
+ * @retval Will return a framerate from two millisecond timestamps, if no time duration has been passed there is no division by zero.
+ */
 float convertStartEndTimeFromMicrosecondsToFPS(unsigned long startTime, unsigned long endTime)
 {
  float timeInMilliseconds =  (float) (endTime-startTime)/1000;

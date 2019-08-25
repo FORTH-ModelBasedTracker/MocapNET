@@ -48,6 +48,9 @@ TENSORFLOW_VERSION="1.14.0" # 1.12.0 for CUDA 9.0 / 1.11.0 for CUDA9 with  older
 if [ ! -f /usr/local/libtensorflow.so ]; then
  echo "Did not find tensorflow"
  wget https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
+ #Is the Google link down ? we have a mirror :)
+ #wget https://ammar.gr/mocapnet/libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
+ 
  echo "Please give me sudo permissions to install Tensorflow $TENSORFLOW_VERSION C Bindings.."
  sudo tar -C /usr/local -xzf libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
 fi

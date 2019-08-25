@@ -1,17 +1,27 @@
 #ifndef JSONCOCOSKELETON_H_INCLUDED
 #define JSONCOCOSKELETON_H_INCLUDED
-
+/** @file jsonCocoSkeleton.hpp
+ *  @brief This is the code needed to hold a skeleton.
+ *  @author Ammar Qammaz (AmmarkoV)
+ */
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
+
+/**
+ * @brief A C struct to hold a 2D coordinate
+ */
 struct point2D
 {
     float x,y;
 };
 
+/**
+ * @brief A C struct to hold a 3D coordinate
+ */
 struct point3D
 {
     float x,y,z;
@@ -19,6 +29,9 @@ struct point3D
 
 
 
+/**
+ * @brief This is an array of names for all the old COCO body parts.
+ */
 static const char * COCOOldBodyNames[] =
 {
   "Nose",        //0
@@ -44,6 +57,11 @@ static const char * COCOOldBodyNames[] =
   "End of Joint Names"
 };
 
+
+
+/**
+ * @brief An enumerator of coco skeleton joints
+ */
 //https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/media/keypoints_pose_18.png
 enum COCOOldSkeletonJoints
 {
@@ -71,8 +89,9 @@ enum COCOOldSkeletonJoints
 };
 
 
-
-
+/**
+ * @brief An array of indexes to the parents of coco skeleton joints
+ */
 static const int COCOSkeletonJointsParentRelationMap[] =
 {
     // Parent                        Joint
@@ -98,6 +117,10 @@ static const int COCOSkeletonJointsParentRelationMap[] =
 };
 
 
+
+/**
+ * @brief This is an array of names for all the new BODY25 body parts.
+ */
 static const char * Body25BodyNames[] =
 {
   "Nose",        //0
@@ -132,6 +155,9 @@ static const char * Body25BodyNames[] =
 
 
 
+/**
+ * @brief An enumerator of BODY 25 skeleton joints
+ */
 enum Body25SkeletonJoints
 {
   BODY25_Nose=0,
@@ -167,6 +193,9 @@ enum Body25SkeletonJoints
 
 
 
+/**
+ * @brief An array of indexes to the parents of BODY25 skeleton joints
+ */
 static const int Body25SkeletonJointsParentRelationMap[] =
 {
     // Parent                             Joint
@@ -199,6 +228,9 @@ static const int Body25SkeletonJointsParentRelationMap[] =
 };
 
 
+/**
+ * @brief An enumerator of COCO Hand joints
+ */
 //https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/media/keypoints_hand.png
 enum COCOHandJoints
 {
@@ -224,6 +256,9 @@ enum COCOHandJoints
 
 
 
+/**
+ * @brief A C struct to hold a hand. It contains its 2D points, its 3D points and some flags that signal
+ */
 struct handCOCO
 {
     int isLeft;
@@ -236,11 +271,13 @@ struct handCOCO
 };
 
 
+/**
+ * @brief A C struct to hold a skeleton. It contains its 2D points, its 3D points and some flags that signal
+ */
 struct skeletonCOCO
 {
     unsigned int observationNumber , observationTotal;
     unsigned int userID;
-
 
     struct point2D joint2D[BODY25_PARTS];
     float  jointAccuracy[BODY25_PARTS];
@@ -253,7 +290,16 @@ struct skeletonCOCO
 };
 
 
-int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel);
+/**
+ * @brief Parse a JSON file and retrieve a skeleton
+ * @param Path to JSON file
+ * @param Pointer to a struct skeletonCOCO that will hold the information loaded
+ * @retval 1=Success/0=Failure
+ */
+int parseJsonCOCOSkeleton(
+                          const char * filename ,
+                          struct skeletonCOCO * skel
+                         );
 
 
 #ifdef __cplusplus
