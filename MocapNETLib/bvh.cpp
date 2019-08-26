@@ -136,3 +136,78 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
  #endif // USE_BVH
  return result;
 }
+
+
+
+
+
+
+
+//TODO: under construction
+std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,float yaw,unsigned int width, unsigned int height)
+{
+ std::vector<std::vector<float> > result;
+ #if USE_BVH
+  struct simpleRenderer renderer={0};
+  simpleRendererDefaults(
+                          &renderer,
+                           width,
+                           height,
+                           570.0,
+                           570.0
+                          );
+  simpleRendererInitialize(&renderer);
+
+
+  float pos3D[4]={0};
+
+  float center[4]={0};
+  signed int x,y,z;
+  float position2DX,position2DY,position2DW;
+
+  y=-5;
+  for (z=-10; z<10; z++)
+  {
+   //for (y=-10; y<10; y++)
+   {
+    for (x=-10; x<10; x++)
+    {
+       pos3D[0]=x;
+       pos3D[1]=y;
+       pos3D[2]=z;
+
+       simpleRendererRender(
+                            &renderer ,
+                            pos3D,
+                            center,
+                            0,
+                            0,
+                            &center[0],
+                            &center[1],
+                            &center[2],
+                            &position2DX,
+                            &position2DY,
+                            &position2DW
+                           );
+
+        std::vector<float> point;
+        point.clear();
+        point.push_back((float) position2DX);
+        point.push_back((float) position2DY);
+        result.push_back(point);
+
+
+    }
+   }
+  }
+
+
+
+
+ #else
+   std::cerr<<"BVH code is not compiled in this version of MocapNET\n";
+
+ #endif // USE_BVH
+ return result;
+}
+

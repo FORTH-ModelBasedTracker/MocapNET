@@ -28,6 +28,36 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,float fpsAcq
  std::vector<std::vector<float> > points2D = convertBVHFrameTo2DPoints(mocapNETOutput,width,height);
  cv::Mat img(height,width, CV_8UC3, Scalar(0,0,0));
 
+
+
+#define DRAW_FLOOR 0
+ //------------------------------------------------------------------------------------------
+ //Draw floor
+ //------------------------------------------------------------------------------------------
+ #if DRAW_FLOOR
+ std::vector<std::vector<float> > gridPoints2D = convert3DGridTo2DPoints(
+                                                                          mocapNETOutput[3],
+                                                                          mocapNETOutput[4],
+                                                                          mocapNETOutput[5],
+                                                                          width,
+                                                                          height
+                                                                        );
+ for (int jointID=0; jointID<gridPoints2D.size(); jointID++)
+        {
+          float jointPointX = gridPoints2D[jointID][0];
+          float jointPointY = gridPoints2D[jointID][1];
+
+          if ( (jointPointX!=0) && (jointPointY!=0) )
+           {
+             cv::Point jointPoint(jointPointX,jointPointY);
+             cv::circle(img,jointPoint,5,cv::Scalar(0,255,0),3,8,0);
+           }
+         }
+ #endif
+ //------------------------------------------------------------------------------------------
+
+
+
  if (points2D.size()==0)
  {
    fprintf(stderr,"Can't visualize empty 2D projecte points for frame %u ..\n",frameNumber);
@@ -68,7 +98,6 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,float fpsAcq
 
           }
         }
-
 
 
  //Just the points and text ( foreground )

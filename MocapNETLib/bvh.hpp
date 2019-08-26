@@ -49,3 +49,16 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(
 
 
 
+/**
+ * @brief Generate 2D points for a grid
+ * @param  The width of the 2D frame that will hold the 2D Points
+ * @param  The height of the 2D frame that will hold the 2D Points
+ * @retval Vector of 2D points
+ */
+std::vector<std::vector<float> > convert3DGridTo2DPoints(
+                                                         float roll,
+                                                         float pitch,
+                                                         float yaw,
+                                                         unsigned int width,
+                                                         unsigned int height
+                                                        );
