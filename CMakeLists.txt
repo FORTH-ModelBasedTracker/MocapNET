@@ -85,10 +85,10 @@ ENDIF(OpenCV_FOUND)
 
 
 #If ammarserver is present then use it..
-IF(EXISTS "${CMAKE_SOURCE_DIR}/AmmarServer/src/AmmServerlib")
- add_subdirectory (AmmarServer/)
- add_subdirectory (MocapNETHTTP/)
-ENDIF()
+#IF(EXISTS "${CMAKE_SOURCE_DIR}/AmmarServer/src/AmmServerlib")
+# add_subdirectory (AmmarServer/)
+# add_subdirectory (MocapNETHTTP/)
+#ENDIF()
 
 
 # TODO FIX INSTALLATION DIRECTORIES 

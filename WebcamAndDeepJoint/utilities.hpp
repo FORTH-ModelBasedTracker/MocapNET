@@ -1,4 +1,10 @@
 #pragma once
+/** @file utilities.hpp
+ *  @brief These are the headers of the utilities that facilitate extracting 2D points from heatmaps. This is needed since 2D estimators output heatmaps, while MocapNET operates on
+ *  2D point input. This code does not utilize PAFs so although some care is taken to get subpixel accuracy from the heatmap maxima it is still less accurate than the
+ *  original OpenPose implementation etc.
+ *  @author Damien Michel, Pashalis Padeleris, Ammar Qammaz (AmmarkoV)
+ */
 
 #include <string>
 #include <memory>
@@ -9,6 +15,9 @@
 using namespace std;
 
 
+/**
+ * @brief This is an array of names for the input Joints expected from the utilities.
+ */
 static const char * UT_COCOBodyNames[] =
 {
   "Nose",        //0
@@ -35,6 +44,10 @@ static const char * UT_COCOBodyNames[] =
 };
 
 
+/**
+ * @brief This is a programmer friendly enumerator of joint names expected from the utilities ( hence the prefix UT_ ) .
+ * Please notice that these are not necessarily the same when converting to different data formats ( COCO / BODY25 / MocapNET etc )
+ */
 enum UT_COCOSkeletonJoints
 {
   UT_COCO_Nose=0,
@@ -61,6 +74,9 @@ enum UT_COCOSkeletonJoints
 };
 
 
+/**
+ * @brief This is the parent relation map of COCO skeleton joints , we can easily find a joints parent using this enumerator
+ */
 static const int UT_COCOSkeletonJointsParentRelationMap[] =
 {
     // Parent                        Joint
@@ -90,7 +106,21 @@ static const int UT_COCOSkeletonJointsParentRelationMap[] =
 
 
 
-std::vector<cv::Point> dj_getNeuralNetworkDetectionsForColorImage( cv::Mat colorImageOriginal , std::vector<cv::Mat> heatmaps ,  float minThreshold  , int visualize );
+/**
+ * @brief This function converts receives an RGB image and a vector of heatmaps and returns a vector of 2D Points with the peaks of the heatmaps
+ * @ingroup utilities
+ * @param An OpenCV RGB Color Image to give us the resolution and maybe used for visualization..
+ * @param A vector of OpenCV Heatmaps where 1 is high and 0 is low detection
+ * @param The minimum threshold for detections, smaller values mean more noisy input, more means less detections
+ * @param Flag that controls visualization
+ * @retval A vector of 2D Points that contains detections for each of the joints, A point marked as 0,0 means no detection
+ */
+std::vector<cv::Point> dj_getNeuralNetworkDetectionsForColorImage(
+                                                                   cv::Mat colorImageOriginal ,
+                                                                   std::vector<cv::Mat> heatmaps ,
+                                                                   float minThreshold  ,
+                                                                   int visualize
+                                                                 );
 
 
 

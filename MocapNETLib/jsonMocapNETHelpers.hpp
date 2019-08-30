@@ -1,5 +1,8 @@
 #pragma once
-
+/** @file jsonMocapNETHelpers.hpp
+ *  @brief This file contains helpers to facilitate conversion between different skeleton formats.
+ *  @author Ammar Qammaz (AmmarkoV)
+ */
 #include "jsonCocoSkeleton.h"
 #include <vector>
 

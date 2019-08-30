@@ -1,14 +1,15 @@
 #include "bvh.hpp"
 
-#define USE_BVH 1
-
 #if USE_BVH
+ #include "../RGBDAcquisition/tools/AmMatrix/matrix4x4Tools.h"
  #include "../RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_loader.h"
  #include "../RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_project.h"
  #include "../RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_transform.h"
  struct BVH_MotionCapture bvhMotion={0};
  struct BVH_Transform bvhTransform={0};
  int haveBVHInit=0;
+#else
+ #warning "BVH code not included.."
 #endif // USE_BVH
 
 int initializeBVHConverter()
@@ -136,3 +137,89 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
  #endif // USE_BVH
  return result;
 }
+
+
+
+
+
+
+//#define USE_BVH 1
+//TODO: under construction
+std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,float yaw,unsigned int width, unsigned int height)
+{
+ std::vector<std::vector<float> > result;
+ #if USE_BVH
+  struct simpleRenderer renderer={0};
+  simpleRendererDefaults(
+                          &renderer,
+                           width,
+                           height,
+                           570.0,
+                           570.0
+                          );
+  simpleRendererInitialize(&renderer);
+
+  double m[16];
+  float center[4]={0};
+
+  float rotation[3];
+  rotation[0]=roll;
+  rotation[1]=yaw;
+  rotation[2]=pitch;
+
+
+  float pos3D[4]={0};
+
+  signed int x,y,z;
+  float position2DX,position2DY,position2DW;
+
+  y=-5;
+  for (z=-10; z<10; z++)
+  {
+   //for (y=-10; y<10; y++)
+   {
+    for (x=-10; x<10; x++)
+    {
+       pos3D[0]=x;
+       pos3D[1]=y;
+       pos3D[2]=z;
+
+       if (
+            simpleRendererRender(
+                                 &renderer ,
+                                 pos3D,
+                                 center,
+                                 rotation,
+                                 ROTATION_ORDER_RPY,
+                                 &center[0],
+                                 &center[1],
+                                 &center[2],
+                                 &position2DX,
+                                 &position2DY,
+                                 &position2DW
+                                )
+           )
+        {
+         if (position2DY>height/2)
+         {
+          std::vector<float> point;
+          point.clear();
+          point.push_back((float) position2DX);
+          point.push_back((float) position2DY);
+          result.push_back(point);
+         }
+        }
+    }
+   }
+  }
+
+
+
+
+ #else
+   std::cerr<<"BVH code is not compiled in this version of MocapNET\n";
+
+ #endif // USE_BVH
+ return result;
+}
+

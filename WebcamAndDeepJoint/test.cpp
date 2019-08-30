@@ -1,3 +1,9 @@
+/** @file test.cpp
+ *  @brief This is an all-in-one live demo. It combines data acquisition using OpenCV, 2D Joint estimation using Tensorflow ( via VNECT/OpenPose/FORTH estimators ),
+ *  and 3D BVH output using MocapNET.
+ *  @author Ammar Qammaz (AmmarkoV)
+ */
+
 #include "opencv2/opencv.hpp"
 using namespace cv;
 
@@ -16,6 +22,9 @@ using namespace cv;
 #define DISPLAY_ALL_HEATMAPS 0
 
 
+/**
+ * @brief A structure to hold a bounding box
+ */
 struct boundingBox
 {
    char populated;
@@ -26,6 +35,13 @@ struct boundingBox
 };
 
 
+
+/**
+ * @brief This function performs 2D estimation.. You give her a Tensorflow instance of a 2D estimator, a BGR image some thresholds and sizes and it will yield a vector of 2D points.
+ * @ingroup demo
+ * @bug This code is oriented to a single 2D skeleton detected, Multiple skeletons will confuse it and there is no logic to handle them
+ * @retval A 2D Skeleton detected in the bgr OpenCV image
+ */
 std::vector<cv::Point_<int> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
                                                                             struct TensorflowInstance * net,
                                                                             const cv::Mat &bgr ,
@@ -100,18 +116,26 @@ std::vector<cv::Point_<int> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
   }
   #endif // DISPLAY_ALL_HEATMAPS
 
-
-
   return dj_getNeuralNetworkDetectionsForColorImage(bgr,heatmaps,minThreshold,visualize);
 }
 
 
+
+/**
+ * @brief In order to have the best possible quality we can crop the input frame to only perform detection around the area of the previous skeleton
+ * This code performs this crop and tries to get the best detection window
+ * @ingroup demo
+ * @bug This code is oriented to a single 2D skeleton detected, Multiple skeletons will confuse it and there is no logic to handle them
+ * @retval 1=Success/0=Failure
+ */
 int getBestCropWindow(
                        unsigned int * x,
                        unsigned int * y,
                        unsigned int * width,
                        unsigned int * height,
                        struct boundingBox * bbox,
+                       unsigned int inputWidth2DJointDetector,
+                       unsigned int inputHeight2DJointDetector,
                        unsigned int fullFrameWidth,
                        unsigned int fullFrameHeight
                      )
@@ -128,15 +152,27 @@ int getBestCropWindow(
     }
 
    float bodyWidth = bbox->maximumX - bbox->minimumX;
+   float bodyHeight = bbox->maximumY - bbox->minimumY;
    //fprintf(stderr,"Body starts at %0.2f and ends at %0.2f for a total of %0.2f pixels\n", bbox->minimumX , bbox->maximumX , bbox->maximumX-bbox->minimumX);
    if (fullFrameWidth>=fullFrameHeight) {
                                          //fprintf(stderr,"Since the whole frame has %u pixels\n",fullFrameWidth);
                                          //fprintf(stderr,"And we will use the dimension of the Y axis aka %u pixels to crop a rectangle\n",fullFrameHeight);
-                                         *width=fullFrameHeight;
-                                         *height=fullFrameHeight;
 
                                          if (bbox->populated)
                                          {
+                                           unsigned int dimension = fullFrameHeight;
+                                           //TODO:
+                                           //if (bodyHeight<dimension) { dimension = bodyHeight; }
+                                           //if (dimension<inputHeight2DJointDetector) { dimension = inputHeight2DJointDetector; }
+
+                                           *width=dimension;
+                                           *height=dimension;
+
+                                           //-------------------------------------------------------------------------------------------------------
+                                           //-------------------------------------------------------------------------------------------------------
+                                           //                                         Center on X axis..
+                                           //-------------------------------------------------------------------------------------------------------
+                                           //-------------------------------------------------------------------------------------------------------
                                            float bodyCenterX =  bbox->minimumX+ (float) bodyWidth/2;
                                            //fprintf(stderr,"The center X of the body lies at %0.2f\n",bodyCenterX);
 
@@ -153,10 +189,39 @@ int getBestCropWindow(
                                               *x = (unsigned int) cropStartX;
                                              }
                                            //fprintf(stderr,"This means starting at %u and ending at %u\n",(unsigned int) *x, *x+*width);
+
+/*
+                                           //-------------------------------------------------------------------------------------------------------
+                                           //-------------------------------------------------------------------------------------------------------
+                                           //                                         Center on Y axis..
+                                           //-------------------------------------------------------------------------------------------------------
+                                           //-------------------------------------------------------------------------------------------------------
+                                           float bodyCenterY =  bbox->minimumY+ (float) bodyHeight/2;
+                                           //fprintf(stderr,"The center X of the body lies at %0.2f\n",bodyCenterX);
+
+                                           //fprintf(stderr,"We can afford %u pixels up and down of the body center \n",(unsigned int) *height/2);
+                                           float cropStartY = bodyCenterY - *height/2;
+
+                                           if (cropStartY<0) { cropStartY=0; } //Overflow..
+                                           if (cropStartY>fullFrameHeight) { cropStartY=fullFrameHeight; }
+
+                                           //Neural Networks cause flicker, if we don't have exactly the same
+                                           //bounding box it's ok just keep the previous, it will help with flicker a lot..
+                                           if ( abs(*y - (unsigned int) cropStartY) > 4 )
+                                             {
+                                              *y = (unsigned int) cropStartY;
+                                             }
+
+*/
+
+
                                          } else
                                          {
                                            //No skeleton? just crop in the center..
                                            *x=(fullFrameWidth-fullFrameHeight)/2;
+                                           *y=0;
+                                           *width=fullFrameHeight;
+                                           *height=fullFrameHeight;
                                          }
                                       }
 
@@ -164,6 +229,15 @@ int getBestCropWindow(
 }
 
 
+
+
+
+/**
+ * @brief Retrieve MocapNET output vector from an image
+ * @ingroup demo
+ * @bug This code is oriented to a single 2D skeleton detected, Multiple skeletons will confuse it and there is no logic to handle them
+ * @retval Vector of MocapNET output, in case of error it might be empty..!
+ */
 std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
                                                             struct TensorflowInstance * net,
                                                             const cv::Mat &bgr,
@@ -320,6 +394,18 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
 }
 
 
+/**
+ * @brief Convert start and end time to a framerate ( frames per second )
+ * @ingroup demo
+ * @retval Will return a framerate from two millisecond timestamps, if no time duration has been passed there is no division by zero.
+ */
+float convertStartEndTimeFromMicrosecondsToFPS(unsigned long startTime, unsigned long endTime)
+{
+ float timeInMilliseconds =  (float) (endTime-startTime)/1000;
+ if (timeInMilliseconds ==0.0) { timeInMilliseconds=0.00001; } //Take care of division by null..
+ return (float) 1000/timeInMilliseconds;
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -337,6 +423,11 @@ int main(int argc, char *argv[])
   unsigned int live=0,frameNumber=0,frameLimit=5000,visualize=1,doCrop=1,constrainPositionRotation=1;
   float joint2DSensitivity=0.15;
   const char * webcam = 0;
+
+  int yawValue = 0;
+  int pitchValue = 0;
+  int rollValue = 0;
+  int distance = 0;
 
 
   //2D Joint Detector Configuration
@@ -421,9 +512,14 @@ int main(int argc, char *argv[])
       while ( (live) || (frameNumber<frameLimit) )
       {
         // Get Image
+        unsigned long acquisitionStart = GetTickCountMicroseconds();
         cap >> frame; // get a new frame from camera
         unsigned int frameWidth  =  frame.size().width;  //frame.cols
         unsigned int frameHeight =  frame.size().height; //frame.rows
+        unsigned long acquisitionEnd = GetTickCountMicroseconds();
+
+
+        float fpsAcquisition = convertStartEndTimeFromMicrosecondsToFPS(acquisitionStart,acquisitionEnd);
 
          //------------------------------------------------------------------------
          // If cropping is enabled
@@ -440,6 +536,8 @@ int main(int argc, char *argv[])
                              &croppedDimensionWidth,
                              &croppedDimensionHeight,
                              &cropBBox,
+                             inputWidth2DJointDetector,
+                             inputHeight2DJointDetector,
                              frameWidth,
                              frameHeight
                             );
@@ -482,13 +580,9 @@ int main(int argc, char *argv[])
          bvhOutput = runMocapNET(&mnet,flatAndNormalizedPoints);
          unsigned long endTime = GetTickCountMicroseconds();
 
+         float fpsMocapNET = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
 
-         //Get Framerate of MocapNET evaluation..
-         float mocapNETComputationTimeInMilliseconds =  (float) (endTime-startTime)/1000;
-         if (mocapNETComputationTimeInMilliseconds==0.0) { mocapNETComputationTimeInMilliseconds=0.00001; } //Take care of division by null..
-         float fpsMocapNET = (float) 1000000/(endTime-startTime);
-
-         std::cerr<<"MocapNET 3DSkeleton @ "<<mocapNETComputationTimeInMilliseconds<<" ms \n";
+         std::cerr<<"MocapNET 3DSkeleton @ "<<fpsMocapNET<<" fps \n";
 
          //If we are not running live ( aka not from a webcam with no fixed frame limit )
          //Then we record the current bvh frame in order to save a .bvh file in the end..
@@ -503,10 +597,10 @@ int main(int argc, char *argv[])
           {
            bvhOutput[MOCAPNET_OUTPUT_HIP_XPOSITION]=0.0;
            bvhOutput[MOCAPNET_OUTPUT_HIP_YPOSITION]=0.0;
-           bvhOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-120.0;
-           bvhOutput[MOCAPNET_OUTPUT_HIP_ZROTATION]=0.0;
-           bvhOutput[MOCAPNET_OUTPUT_HIP_YROTATION]=0.0;
-           bvhOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=0.0;
+           bvhOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-120.0 - (float) distance;
+           bvhOutput[MOCAPNET_OUTPUT_HIP_ZROTATION]=(float) rollValue;
+           bvhOutput[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) yawValue;
+           bvhOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) pitchValue;
           }
          }
 
@@ -544,12 +638,22 @@ int main(int argc, char *argv[])
 
             if (frameNumber==0)
              {
+              cv::namedWindow("3D Control");
               cv::moveWindow("BG",0,0);
               cv::moveWindow("BGR",0,inputHeight2DJointDetector);
               cv::moveWindow("DETECTION",inputWidth2DJointDetector,0);
              }
 
-             visualizePoints("3D Points Output",frameNumber,fps2DJointDetector,fpsMocapNET,visWidth,visHeight,bvhOutput);
+
+             //Create trackbar to change 3D orientation..
+             createTrackbar("Distance ", "3D Control", &distance,  150);
+             createTrackbar("Yaw      ", "3D Control", &yawValue,  360);
+             createTrackbar("Pitch    ", "3D Control", &pitchValue,360);
+             createTrackbar("Roll     ", "3D Control", &rollValue, 360);
+
+
+
+             visualizePoints("3D Points Output",frameNumber,fpsAcquisition,fps2DJointDetector,fpsMocapNET,visWidth,visHeight,bvhOutput);
 
             if (frameNumber==0)
              {

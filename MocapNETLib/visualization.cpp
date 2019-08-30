@@ -14,7 +14,8 @@ using namespace cv;
 #define GREEN   "\033[32m"      /* Green */
 #define YELLOW  "\033[33m"      /* Yellow */
 
-int visualizePoints(const char* windowName,unsigned int frameNumber,float joint2DEstimator,float fpsMocapNET,unsigned int width,unsigned int height,std::vector<float> mocapNETOutput)
+//#define USE_OPENCV 1
+int visualizePoints(const char* windowName,unsigned int frameNumber,float fpsAcquisition,float joint2DEstimator,float fpsMocapNET,unsigned int width,unsigned int height,std::vector<float> mocapNETOutput)
 {
 #if USE_OPENCV
  if (mocapNETOutput.size()==0)
@@ -27,6 +28,50 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,float joint2
 
  std::vector<std::vector<float> > points2D = convertBVHFrameTo2DPoints(mocapNETOutput,width,height);
  cv::Mat img(height,width, CV_8UC3, Scalar(0,0,0));
+
+
+
+//#define DRAW_FLOOR 1
+ //------------------------------------------------------------------------------------------
+ //Draw floor
+ //------------------------------------------------------------------------------------------
+ #if DRAW_FLOOR
+ std::vector<std::vector<float> > gridPoints2D = convert3DGridTo2DPoints(
+                                                                          mocapNETOutput[3],
+                                                                          mocapNETOutput[4],
+                                                                          mocapNETOutput[5],
+                                                                          width,
+                                                                          height
+                                                                        );
+ cv::Point parentPoint(gridPoints2D[0][0],gridPoints2D[0][1]);
+ cv::Point verticalPoint(gridPoints2D[0][0],gridPoints2D[0][1]);
+ for (int jointID=0; jointID<gridPoints2D.size(); jointID++)
+        {
+          float jointPointX = gridPoints2D[jointID][0];
+          float jointPointY = gridPoints2D[jointID][1];
+          cv::Point jointPoint(jointPointX,jointPointY);
+
+          if (jointID+20<gridPoints2D.size())
+          {
+           verticalPoint.x=gridPoints2D[jointID+20][0];
+           verticalPoint.y=gridPoints2D[jointID+20][1];
+          }
+          if ( (jointPointX!=0) && (jointPointY!=0) )
+           {
+             cv::circle(img,jointPoint,2,cv::Scalar(255,255,0),3,8,0);
+             cv::line(img,jointPoint,verticalPoint, cv::Scalar(255,255,0), 1.0);
+           }
+
+           if (jointID%20!=0)
+            {
+             cv::line(img,jointPoint,parentPoint, cv::Scalar(255,255,0), 1.0);
+            }
+           parentPoint = jointPoint;
+         }
+ #endif
+ //------------------------------------------------------------------------------------------
+
+
 
  if (points2D.size()==0)
  {
@@ -70,7 +115,6 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,float joint2
         }
 
 
-
  //Just the points and text ( foreground )
  for (int jointID=0; jointID<points2D.size(); jointID++)
         {
@@ -96,10 +140,22 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,float joint2
            }
         }
 
-  snprintf(textInfo,512,"Frame %u - 2D Joint Detector : %0.2f fps - MocapNET : %0.2f fps",frameNumber,joint2DEstimator,fpsMocapNET);
+  snprintf(textInfo,512,"Frame %u",frameNumber);
   cv::Point txtPosition; txtPosition.x=20; txtPosition.y=50;
   int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
   cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
+  cv::putText(img,textInfo,txtPosition,fontUsed,1.0,color,4,8);
+
+  txtPosition.y=90;
+  snprintf(textInfo,512,"Acquisition : %0.2f fps",fpsAcquisition);
+  cv::putText(img,textInfo,txtPosition,fontUsed,1.0,color,4,8);
+
+  txtPosition.y=130;
+  snprintf(textInfo,512,"2D Joint Detector : %0.2f fps",joint2DEstimator);
+  cv::putText(img,textInfo,txtPosition,fontUsed,1.0,color,4,8);
+
+  txtPosition.y=170;
+  snprintf(textInfo,512,"MocapNET : %0.2f fps",fpsMocapNET);
   cv::putText(img,textInfo,txtPosition,fontUsed,1.0,color,4,8);
 
   cv::imshow(windowName,img);

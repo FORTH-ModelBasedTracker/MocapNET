@@ -57,6 +57,9 @@ unsigned long GetTickCountMillisecondsMN()
 
 int getImageWidthHeight(const char * filename,unsigned int * width , unsigned int * height)
 {
+   unsigned int retrievedWidth=0;
+   unsigned int retrievedHeight=0;
+
    char commandToExecute[1024]={0};
    char result[1024]={0};
    int  results=0;
@@ -64,16 +67,27 @@ int getImageWidthHeight(const char * filename,unsigned int * width , unsigned in
    snprintf(commandToExecute,1024,"identify -format \"%%w\" %s",filename);
    if ( executeCommandLineNum(commandToExecute,result,1024,0) )
    {
-     *width = atof(result);
+     retrievedWidth = atoi(result);
      ++results;
    }
 
    snprintf(commandToExecute,1024,"identify -format \"%%h\" %s",filename);
    if ( executeCommandLineNum(commandToExecute,result,1024,0) )
    {
-     *height = atof(result);
+     retrievedHeight = atoi(result);
      ++results;
    }
+
+   if (
+        (retrievedWidth!=0) &&
+        (retrievedHeight!=0)
+      )
+   {
+     *width  = retrievedWidth;
+     *height = retrievedHeight;
+   }
+
+
 
    return (results==2);
 }
