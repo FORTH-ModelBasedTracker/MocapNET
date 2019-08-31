@@ -15,7 +15,7 @@ using namespace cv;
 #define YELLOW  "\033[33m"      /* Yellow */
 
 //#define USE_OPENCV 1
-int visualizePoints(const char* windowName,unsigned int frameNumber,float fpsAcquisition,float joint2DEstimator,float fpsMocapNET,unsigned int width,unsigned int height,std::vector<float> mocapNETOutput)
+int visualizePoints(const char* windowName,unsigned int frameNumber,float fpsTotal,float fpsAcquisition,float joint2DEstimator,float fpsMocapNET,unsigned int width,unsigned int height,std::vector<float> mocapNETOutput)
 {
 #if USE_OPENCV
  if (mocapNETOutput.size()==0)
@@ -31,7 +31,7 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,float fpsAcq
 
 
 
-//#define DRAW_FLOOR 1
+#define DRAW_FLOOR 1
  //------------------------------------------------------------------------------------------
  //Draw floor
  //------------------------------------------------------------------------------------------
@@ -56,15 +56,21 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,float fpsAcq
            verticalPoint.x=gridPoints2D[jointID+20][0];
            verticalPoint.y=gridPoints2D[jointID+20][1];
           }
-          if ( (jointPointX!=0) && (jointPointY!=0) )
+          if ( (jointPointX>0.0) && (jointPointY>0.0) )
            {
              cv::circle(img,jointPoint,2,cv::Scalar(255,255,0),3,8,0);
-             cv::line(img,jointPoint,verticalPoint, cv::Scalar(255,255,0), 1.0);
+             if ( (verticalPoint.x>0.0) && (verticalPoint.y>0.0) )
+             { 
+              cv::line(img,jointPoint,verticalPoint, cv::Scalar(255,255,0), 1.0); 
+             }
            }
 
            if (jointID%20!=0)
             {
-             cv::line(img,jointPoint,parentPoint, cv::Scalar(255,255,0), 1.0);
+              if ( (jointPointX>0.0) && (jointPointY>0.0) && (verticalPoint.x>0.0) && (verticalPoint.y>0.0) ) 
+               {
+                cv::line(img,jointPoint,parentPoint, cv::Scalar(255,255,0), 1.0);
+               }
             }
            parentPoint = jointPoint;
          }
@@ -157,6 +163,11 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,float fpsAcq
   txtPosition.y=170;
   snprintf(textInfo,512,"MocapNET : %0.2f fps",fpsMocapNET);
   cv::putText(img,textInfo,txtPosition,fontUsed,1.0,color,4,8);
+
+  txtPosition.y=210;
+  snprintf(textInfo,512,"Total : %0.2f fps",fpsTotal);
+  cv::putText(img,textInfo,txtPosition,fontUsed,1.0,color,4,8);
+
 
   cv::imshow(windowName,img);
   cv::waitKey(1);

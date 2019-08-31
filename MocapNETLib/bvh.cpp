@@ -141,10 +141,6 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
 
 
 
-
-
-//#define USE_BVH 1
-//TODO: under construction
 std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,float yaw,unsigned int width, unsigned int height)
 {
  std::vector<std::vector<float> > result;
@@ -158,6 +154,12 @@ std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,
                            570.0
                           );
   simpleRendererInitialize(&renderer);
+
+
+  std::vector<float> emptyPoint;
+          emptyPoint.clear();
+          emptyPoint.push_back((float) 0.0);
+          emptyPoint.push_back((float) 0.0);
 
   double m[16];
   float center[4]={0};
@@ -200,14 +202,20 @@ std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,
                                 )
            )
         {
-         if (position2DY>height/2)
+         if (position2DW>0.0)
          {
           std::vector<float> point;
           point.clear();
           point.push_back((float) position2DX);
           point.push_back((float) position2DY);
           result.push_back(point);
+         } else
+         {
+          result.push_back(emptyPoint); 
          }
+        }else
+        {
+         result.push_back(emptyPoint); 
         }
     }
    }

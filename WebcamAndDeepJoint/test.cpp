@@ -99,20 +99,23 @@ std::vector<cv::Point_<int> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
 
   //This code segment will display every returned heatmap in it's own window..
   #if DISPLAY_ALL_HEATMAPS
+  if (visualize)
+  {
   unsigned int x=0;
   unsigned int y=0;
   char windowLabel[512];
   for(int i=0;i<18;++i)
-  {
-   snprintf(windowLabel,512,"Heatmap %u",i);
-   if (frameNumber==0)
+   {
+    snprintf(windowLabel,512,"Heatmap %u",i);
+    if (frameNumber==0)
      {
       cv::namedWindow(windowLabel,1);
       cv::moveWindow(windowLabel, x,y);
      }
-   cv::imshow(windowLabel,heatmaps[i]);
-   y=y+rows+30;
-   if (y>700) { x=x+cols; y=0; }
+    cv::imshow(windowLabel,heatmaps[i]);
+    y=y+rows+30;
+    if (y>700) { x=x+cols; y=0; }
+   } 
   }
   #endif // DISPLAY_ALL_HEATMAPS
 
@@ -436,6 +439,8 @@ int main(int argc, char *argv[])
   unsigned int heatmapWidth2DJointDetector = 46;
   unsigned int heatmapHeight2DJointDetector = 46;
   unsigned int numberOfHeatmaps = 19;
+  const char   outputPathStatic[]="out.bvh";
+  char * outputPath = (char*) outputPathStatic;
   const char   networkPathOpenPoseMiniStatic[]="combinedModel/openpose_model.pb";
   const char   networkPathVnectStatic[]="combinedModel/vnect_sm_pafs_8.1k.pb";
   char * networkPath = (char*) networkPathVnectStatic;
@@ -456,6 +461,8 @@ int main(int argc, char *argv[])
     if (strcmp(argv[i],"--openposemini")==0)    { networkPath=(char*) networkPathOpenPoseMiniStatic; joint2DSensitivity=0.4; } else
     if (strcmp(argv[i],"--vnect")==0)           { networkPath = (char*) networkPathVnectStatic;      joint2DSensitivity=0.15; } else
     if (strcmp(argv[i],"--2dmodel")==0)         { networkPath=argv[i+1]; } else
+    if (strcmp(argv[i],"--output")==0)          { outputPath=argv[i+1]; } else 
+    if (strcmp(argv[i],"-o")==0)                { outputPath=argv[i+1]; } else 
     if (strcmp(argv[i],"--frames")==0)          { frameLimit=atoi(argv[i+1]); } else
     //if (strcmp(argv[i],"--cpu")==0)  { setenv("CUDA_VISIBLE_DEVICES", "", 1); } else //Alternate way to force CPU everywhere
     if (strcmp(argv[i],"--cpu")==0)             { forceCPUMocapNET=1; forceCPU2DJointEstimation=1; } else
@@ -623,7 +630,11 @@ int main(int argc, char *argv[])
                 );
          }
 
+         
+        unsigned long totalTimeEnd = GetTickCountMicroseconds();        
+        float fpsTotal = convertStartEndTimeFromMicrosecondsToFPS(acquisitionStart,totalTimeEnd);
 
+        
          //OpenCV Visualization stuff
          //---------------------------------------------------
          if (visualize)
@@ -653,8 +664,18 @@ int main(int argc, char *argv[])
              createTrackbar("Roll     ", "3D Control", &rollValue, 360);
 
 
+             visualizePoints(
+                             "3D Points Output",
+                             frameNumber,
+                             fpsTotal,
+                             fpsAcquisition,
+                             fps2DJointDetector,
+                             fpsMocapNET,
+                             visWidth,
+                             visHeight,
+                             bvhOutput
+                            );
 
-             visualizePoints("3D Points Output",frameNumber,fpsAcquisition,fps2DJointDetector,fpsMocapNET,visWidth,visHeight,bvhOutput);
 
             if (frameNumber==0)
              {
@@ -675,11 +696,10 @@ int main(int argc, char *argv[])
 
       if (!live)
       {
-       if (//just use BVH header
-           writeBVHFile( "out.bvh",0,bvhFrames)
-          )
-          { std::cerr<<"Successfully wrote "<<bvhFrames.size()<<" frames to bvh file.. \n";  } else
-          { std::cerr<<"Failed to write "<<bvhFrames.size()<<" frames to bvh file.. \n";  }
+       //just use BVH header   
+       if ( writeBVHFile(outputPath,0,bvhFrames) )
+            { std::cerr<<"Successfully wrote "<<bvhFrames.size()<<" frames to bvh file.. \n";  } else
+            { std::cerr<<"Failed to write "<<bvhFrames.size()<<" frames to bvh file.. \n";  }
       } else
       { std::cerr<<"Did not record a bvh file since live sessions can be arbitrarily long..\n"; }
     } else

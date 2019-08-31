@@ -24,6 +24,7 @@
 int visualizePoints(
                      const char* windowName,
                      unsigned int frameNumber,
+                     float fpsTotal,
                      float fpsAcquisition,
                      float joint2DEstimator,
                      float fpsMocapNET,
