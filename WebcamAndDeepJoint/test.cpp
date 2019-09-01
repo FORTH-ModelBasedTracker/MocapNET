@@ -16,23 +16,12 @@ using namespace cv;
 #include "../MocapNETLib/mocapnet.hpp"
 #include "../MocapNETLib/bvh.hpp"
 #include "../MocapNETLib/visualization.hpp"
+
+#include "cameraControl.hpp"
 #include "utilities.hpp"
 
 
 #define DISPLAY_ALL_HEATMAPS 0
-
-
-/**
- * @brief A structure to hold a bounding box
- */
-struct boundingBox
-{
-   char populated;
-   float minimumX;
-   float maximumX;
-   float minimumY;
-   float maximumY;
-};
 
 
 
@@ -124,115 +113,6 @@ std::vector<cv::Point_<int> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
 
 
 
-/**
- * @brief In order to have the best possible quality we can crop the input frame to only perform detection around the area of the previous skeleton
- * This code performs this crop and tries to get the best detection window
- * @ingroup demo
- * @bug This code is oriented to a single 2D skeleton detected, Multiple skeletons will confuse it and there is no logic to handle them
- * @retval 1=Success/0=Failure
- */
-int getBestCropWindow(
-                       unsigned int * x,
-                       unsigned int * y,
-                       unsigned int * width,
-                       unsigned int * height,
-                       struct boundingBox * bbox,
-                       unsigned int inputWidth2DJointDetector,
-                       unsigned int inputHeight2DJointDetector,
-                       unsigned int fullFrameWidth,
-                       unsigned int fullFrameHeight
-                     )
-{
-   //fprintf(stderr,"Previous crop started at %u,%u\n", *x,*y);
-   if (bbox->populated)
-    {
-     //fprintf(stderr,"This means that the bounding box (%0.2f,%0.2f) -> (%0.2f,%0.2f)\n",bbox->minimumX,bbox->minimumY,bbox->maximumX,bbox->maximumY);
-     bbox->minimumX+=(float) *x;
-     bbox->maximumX+=(float) *x;
-     bbox->minimumY+=(float) *y;
-     bbox->maximumY+=(float) *y;
-     //fprintf(stderr,"is actually (%0.2f,%0.2f) -> (%0.2f,%0.2f)\n",bbox->minimumX,bbox->minimumY,bbox->maximumX,bbox->maximumY);
-    }
-
-   float bodyWidth = bbox->maximumX - bbox->minimumX;
-   float bodyHeight = bbox->maximumY - bbox->minimumY;
-   //fprintf(stderr,"Body starts at %0.2f and ends at %0.2f for a total of %0.2f pixels\n", bbox->minimumX , bbox->maximumX , bbox->maximumX-bbox->minimumX);
-   if (fullFrameWidth>=fullFrameHeight) {
-                                         //fprintf(stderr,"Since the whole frame has %u pixels\n",fullFrameWidth);
-                                         //fprintf(stderr,"And we will use the dimension of the Y axis aka %u pixels to crop a rectangle\n",fullFrameHeight);
-
-                                         if (bbox->populated)
-                                         {
-                                           unsigned int dimension = fullFrameHeight;
-                                           //TODO:
-                                           //if (bodyHeight<dimension) { dimension = bodyHeight; }
-                                           //if (dimension<inputHeight2DJointDetector) { dimension = inputHeight2DJointDetector; }
-
-                                           *width=dimension;
-                                           *height=dimension;
-
-                                           //-------------------------------------------------------------------------------------------------------
-                                           //-------------------------------------------------------------------------------------------------------
-                                           //                                         Center on X axis..
-                                           //-------------------------------------------------------------------------------------------------------
-                                           //-------------------------------------------------------------------------------------------------------
-                                           float bodyCenterX =  bbox->minimumX+ (float) bodyWidth/2;
-                                           //fprintf(stderr,"The center X of the body lies at %0.2f\n",bodyCenterX);
-
-                                           //fprintf(stderr,"We can afford %u pixels left and right of the body center \n",(unsigned int) *width/2);
-                                           float cropStartX = bodyCenterX - *width/2;
-
-                                           if (cropStartX<0) { cropStartX=0; } //Overflow..
-                                           if (cropStartX>fullFrameWidth-fullFrameHeight) { cropStartX=fullFrameWidth-fullFrameHeight; }
-
-                                           //Neural Networks cause flicker, if we don't have exactly the same
-                                           //bounding box it's ok just keep the previous, it will help with flicker a lot..
-                                           if ( abs(*x - (unsigned int) cropStartX) > 4 )
-                                             {
-                                              *x = (unsigned int) cropStartX;
-                                             }
-                                           //fprintf(stderr,"This means starting at %u and ending at %u\n",(unsigned int) *x, *x+*width);
-
-/*
-                                           //-------------------------------------------------------------------------------------------------------
-                                           //-------------------------------------------------------------------------------------------------------
-                                           //                                         Center on Y axis..
-                                           //-------------------------------------------------------------------------------------------------------
-                                           //-------------------------------------------------------------------------------------------------------
-                                           float bodyCenterY =  bbox->minimumY+ (float) bodyHeight/2;
-                                           //fprintf(stderr,"The center X of the body lies at %0.2f\n",bodyCenterX);
-
-                                           //fprintf(stderr,"We can afford %u pixels up and down of the body center \n",(unsigned int) *height/2);
-                                           float cropStartY = bodyCenterY - *height/2;
-
-                                           if (cropStartY<0) { cropStartY=0; } //Overflow..
-                                           if (cropStartY>fullFrameHeight) { cropStartY=fullFrameHeight; }
-
-                                           //Neural Networks cause flicker, if we don't have exactly the same
-                                           //bounding box it's ok just keep the previous, it will help with flicker a lot..
-                                           if ( abs(*y - (unsigned int) cropStartY) > 4 )
-                                             {
-                                              *y = (unsigned int) cropStartY;
-                                             }
-
-*/
-
-
-                                         } else
-                                         {
-                                           //No skeleton? just crop in the center..
-                                           *x=(fullFrameWidth-fullFrameHeight)/2;
-                                           *y=0;
-                                           *width=fullFrameHeight;
-                                           *height=fullFrameHeight;
-                                         }
-                                      }
-
-  return 1;
-}
-
-
-
 
 
 /**
@@ -260,10 +140,10 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
                                                             unsigned int numberOfHeatmaps
                                                           )
 {
-  unsigned int frameWidth =  bgr.size().width; //frame.cols
+  unsigned int frameWidth  =  bgr.size().width; //frame.cols
   unsigned int frameHeight =  bgr.size().height; //frame.rows
 
-  unsigned long startTime = GetTickCountMicroseconds();
+  unsigned long startTime  = GetTickCountMicroseconds();
   std::vector<cv::Point_<int> > points = predictAndReturnSingleSkeletonOf2DCOCOJoints(
                                                                                        net,
                                                                                        bgr,
@@ -424,7 +304,7 @@ int main(int argc, char *argv[])
   unsigned int forceCPU2DJointEstimation=0;
 
   unsigned int live=0,frameNumber=0,frameLimit=5000,visualize=1,doCrop=1,constrainPositionRotation=1;
-  float joint2DSensitivity=0.15;
+  float joint2DSensitivity=0.20;
   const char * webcam = 0;
 
   int yawValue = 0;
@@ -459,20 +339,18 @@ int main(int argc, char *argv[])
 
     if (strcmp(argv[i],"--novisualization")==0) { visualize=0; } else
     if (strcmp(argv[i],"--openposemini")==0)    { networkPath=(char*) networkPathOpenPoseMiniStatic; joint2DSensitivity=0.4; } else
-    if (strcmp(argv[i],"--vnect")==0)           { networkPath = (char*) networkPathVnectStatic;      joint2DSensitivity=0.15; } else
+    if (strcmp(argv[i],"--vnect")==0)           { networkPath = (char*) networkPathVnectStatic;      joint2DSensitivity=0.20; } else
     if (strcmp(argv[i],"--2dmodel")==0)         { networkPath=argv[i+1]; } else
     if (strcmp(argv[i],"--output")==0)          { outputPath=argv[i+1]; } else 
     if (strcmp(argv[i],"-o")==0)                { outputPath=argv[i+1]; } else 
     if (strcmp(argv[i],"--frames")==0)          { frameLimit=atoi(argv[i+1]); } else
-    //if (strcmp(argv[i],"--cpu")==0)  { setenv("CUDA_VISIBLE_DEVICES", "", 1); } else //Alternate way to force CPU everywhere
+    //if (strcmp(argv[i],"--cpu")==0)           { setenv("CUDA_VISIBLE_DEVICES", "", 1); } else //Alternate way to force CPU everywhere
     if (strcmp(argv[i],"--cpu")==0)             { forceCPUMocapNET=1; forceCPU2DJointEstimation=1; } else
     if (strcmp(argv[i],"--gpu")==0)             { forceCPUMocapNET=0; forceCPU2DJointEstimation=0; } else
     if (strcmp(argv[i],"--unconstrained")==0)   { constrainPositionRotation=0; } else
     if (strcmp(argv[i],"--nocrop")==0)          { doCrop=0; } else
     if (strcmp(argv[i],"--live")==0)            { live=1; } else
-    if (strcmp(argv[i],"--from")==0)            {
-                                                 if (argc>i+1) { webcam = argv[i+1]; }
-                                                }
+    if (strcmp(argv[i],"--from")==0)            { if (argc>i+1) { webcam = argv[i+1]; } }
   }
 
 
@@ -605,7 +483,7 @@ int main(int argc, char *argv[])
           {
            bvhOutput[MOCAPNET_OUTPUT_HIP_XPOSITION]=0.0;
            bvhOutput[MOCAPNET_OUTPUT_HIP_YPOSITION]=0.0;
-           bvhOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-120.0 - (float) distance;
+           bvhOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-140.0 - (float) distance;
            bvhOutput[MOCAPNET_OUTPUT_HIP_ZROTATION]=(float) rollValue;
            bvhOutput[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) yawValue;
            bvhOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) pitchValue;
@@ -642,11 +520,13 @@ int main(int argc, char *argv[])
              unsigned int visWidth=frameWidth;
              unsigned int visHeight=frameHeight;
              //If our input window is small enlarge it a little..
-             if (visWidth<800)
+             if (visWidth<700)
               {
                 visWidth=(unsigned int) frameWidth*2.0;
                 visHeight=(unsigned int) frameHeight*2.0;
               }
+            visWidth=1280;
+            visHeight=768;
 
             if (frameNumber==0)
              {
@@ -696,12 +576,13 @@ int main(int argc, char *argv[])
 
       if (!live)
       {
+       std::cerr<<"Will now write BVH file to "<<outputPath<<"\n";   
        //just use BVH header   
        if ( writeBVHFile(outputPath,0,bvhFrames) )
             { std::cerr<<"Successfully wrote "<<bvhFrames.size()<<" frames to bvh file.. \n";  } else
-            { std::cerr<<"Failed to write "<<bvhFrames.size()<<" frames to bvh file.. \n";  }
+            { std::cerr<<"Failed to write "<<bvhFrames.size()<<" frames to bvh file.. \n";     }
       } else
-      { std::cerr<<"Did not record a bvh file since live sessions can be arbitrarily long..\n"; }
+      { std::cerr<<"Will not record a bvh file since live sessions can be arbitrarily long..\n"; }
     } else
     { std::cerr<<"Was not able to load Tensorflow model for 2D joint detection..\n"; }
    } else
