@@ -16,11 +16,8 @@ using namespace cv;
 
  
 
-
-
-
 //#define USE_OPENCV 1
-int visualizePoints(const char* windowName,unsigned int frameNumber,float fpsTotal,float fpsAcquisition,float joint2DEstimator,float fpsMocapNET,unsigned int width,unsigned int height,std::vector<float> mocapNETOutput)
+int visualizePoints(const char* windowName,unsigned int frameNumber,unsigned int skippedFrames,float fpsTotal,float fpsAcquisition,float joint2DEstimator,float fpsMocapNET,unsigned int width,unsigned int height,std::vector<float> mocapNETOutput)
 {
 #if USE_OPENCV
  if (mocapNETOutput.size()==0)
@@ -165,24 +162,34 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,float fpsTot
   cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
   cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
 
+
+  if (skippedFrames>0)
+   { 
+    txtPosition.y+=30;
+    snprintf(textInfo,512,"Skipped/Corrupted Frames %u",skippedFrames);
+    cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
+   }
+
+
 //  txtPosition.y+=40;
 //  snprintf(textInfo,512,"Input Quality : %s",fpsAcquisition);
 //  cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,4,8);
 
 
-  txtPosition.y+=40;
+  txtPosition.y+=30;
   snprintf(textInfo,512,"Acquisition : %0.2f fps",fpsAcquisition);
   cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
 
-  txtPosition.y+=40;
+
+  txtPosition.y+=30;
   snprintf(textInfo,512,"2D Joint Detector : %0.2f fps",joint2DEstimator);
   cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
 
-  txtPosition.y+=40;
+  txtPosition.y+=30;
   snprintf(textInfo,512,"MocapNET : %0.2f fps",fpsMocapNET);
   cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
 
-  txtPosition.y+=40;
+  txtPosition.y+=30;
   snprintf(textInfo,512,"Total : %0.2f fps",fpsTotal);
   cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
 

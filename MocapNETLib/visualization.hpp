@@ -24,6 +24,7 @@
 int visualizePoints(
                      const char* windowName,
                      unsigned int frameNumber,
+                     unsigned int skippedFrames,
                      float fpsTotal,
                      float fpsAcquisition,
                      float joint2DEstimator,

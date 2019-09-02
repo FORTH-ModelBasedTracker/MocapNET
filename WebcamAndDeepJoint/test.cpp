@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
   unsigned int forceCPUMocapNET=1;
   unsigned int forceCPU2DJointEstimation=0;
 
-  unsigned int live=0,frameNumber=0,frameLimit=5000,visualize=1,constrainPositionRotation=1;
+  unsigned int live=0,frameNumber=0,skippedFrames=0,frameLimit=5000,visualize=1,constrainPositionRotation=1;
   float joint2DSensitivity=0.20;
   const char * webcam = 0;
 
@@ -287,7 +287,10 @@ int main(int argc, char *argv[])
      }
 
   if (!cap.isOpened())  // check if succeeded to connect to the camera
-          { std::cerr<<"Openning camera failed\n"; return 1; }
+          { 
+            std::cerr<<"Openning input stream  `"<<webcam<<" ` failed\n"; 
+            return 1;
+           }
 
   cv::Mat frame;
   struct boundingBox cropBBox={0};
@@ -320,9 +323,13 @@ int main(int argc, char *argv[])
       {
         // Get Image
         unsigned long acquisitionStart = GetTickCountMicroseconds();
+        
         cap >> frame; // get a new frame from camera
+        
         unsigned int frameWidth  =  frame.size().width;  //frame.cols
         unsigned int frameHeight =  frame.size().height; //frame.rows
+        if ( (frameWidth!=0)  && (frameHeight!=0)  ) 
+        { 
         unsigned long acquisitionEnd = GetTickCountMicroseconds();
 
 
@@ -451,12 +458,13 @@ int main(int argc, char *argv[])
 
             if (frameNumber==0)
              {
-              cv::namedWindow("3D Control");
+              cv::namedWindow("3D Control",WINDOW_NORMAL);
+              cv::resizeWindow("3D Control",inputWidth2DJointDetector,inputHeight2DJointDetector);
               cv::namedWindow("3D Points Output");
-              cv::moveWindow("BG",0,0);
+              cv::moveWindow("2D NN Heatmaps",0,0);
               cv::moveWindow("BGR",0,inputHeight2DJointDetector);
               cv::moveWindow("3D Control",inputWidth2DJointDetector,inputHeight2DJointDetector);
-              cv::moveWindow("DETECTION",inputWidth2DJointDetector,0);
+              cv::moveWindow("2D Detections",inputWidth2DJointDetector,0);
              }
 
 
@@ -471,6 +479,7 @@ int main(int argc, char *argv[])
              visualizePoints(
                                             "3D Points Output",
                                             frameNumber,
+                                            skippedFrames,
                                             fpsTotal,
                                             fpsAcquisition,
                                             fps2DJointDetector,
@@ -482,22 +491,26 @@ int main(int argc, char *argv[])
 
 
             if (frameNumber==0)
-             {
-             // cv::moveWindow("3D Points Output",1920-visWidth,1080-visHeight);
+             { 
               cv::moveWindow("3D Points Output",inputWidth2DJointDetector*2,0);
              }
-           } else
-           {
             //Window Event Loop Time..
-            waitKey(1);
-           }
+            cv::waitKey(1);
+           } 
          //---------------------------------------------------
         }
 
 
 
         ++frameNumber;
+      } else
+      { 
+          std::cerr<<"OpenCV failed to snap frame "<<frameNumber<<"from your input source ( "<<webcam<<") \n"; 
+          std::cerr<<"Skipped frames  "<<skippedFrames<<" / "<<frameNumber<<" \n"; 
+           ++skippedFrames;
       }
+     
+ } //Master While Frames Exist loop
       
       //After beeing done with the frames gathered the bvhFrames vector should be full of our data, so maybe we want to write it to a file..!
       if (!live)
@@ -507,6 +520,8 @@ int main(int argc, char *argv[])
        if ( writeBVHFile(outputPath,0,bvhFrames) )
             { std::cerr<<"Successfully wrote "<<bvhFrames.size()<<" frames to bvh file.. \n";  } else
             { std::cerr<<"Failed to write "<<bvhFrames.size()<<" frames to bvh file.. \n";     }
+        if (skippedFrames>0)
+            { std::cerr<<"Please note that while getting input "<<skippedFrames<<"  frames where skipped due to OpenCV related errors\n"; }    
       } else
       { std::cerr<<"Will not record a bvh file since live sessions can be arbitrarily long..\n"; }
     } else

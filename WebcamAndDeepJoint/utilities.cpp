@@ -179,7 +179,7 @@ void dj_drawExtractedSkeletons(
              parentPoint.x = parentPoint.x   * factorX;
              parentPoint.y = parentPoint.y   * factorY;
              
-             cv::line(img,jointPoint,parentPoint, cv::Scalar(0,255,0), 5.0);
+             cv::line(img,jointPoint,parentPoint, cv::Scalar(0,255,0), 4.0);
            }
 
           }
@@ -191,12 +191,14 @@ void dj_drawExtractedSkeletons(
           unsigned int jointID = i%18;
           cv::Point_<float> jointPoint = skeletons[jointID];
 
+          jointPoint.x = jointPoint.x   * factorX;
+          jointPoint.y = jointPoint.y   * factorY;
 
           if ( (jointPoint.x>0) && (jointPoint.y>0) )
            {
              cv::circle(img,jointPoint,5,cv::Scalar(255,0,0),3,8,0);
              snprintf(textInfo,512,"%s(%u)",UT_COCOBodyNames[i],i);
-             cv::putText(img, textInfo  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 1.0, cv::Scalar::all(255), 1,8);
+             cv::putText(img, textInfo  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.2, cv::Scalar::all(255), 1,8);
            }
         }
 }
@@ -254,7 +256,7 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
 
         if (visualize)
         {
-         cv::imshow("BG",bgRes);
+         cv::imshow("2D NN Heatmaps",bgRes);
          
          //Do not taint input image..
          #define BIG_WINDOW 0
@@ -262,7 +264,7 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
          #if BIG_WINDOW
            cv::Mat visualizationImage2DSkeleton = colorImageOriginal.clone(); 
            dj_drawExtractedSkeletons(visualizationImage2DSkeleton,skeletons,1.0,1.0);
-           cv::imshow("DETECTION",visualizationImage2DSkeleton); 
+           cv::imshow("2D Detections",visualizationImage2DSkeleton); 
          #else
            cv::Mat visualizationImage2DSkeleton = colorImageSmall.clone();
            float factorX =   (float) colorImageSmall.cols  / colorImageOriginal.cols ;
@@ -275,10 +277,9 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
                                                                     factorY
                                                                   );
                                                                   
-           cv::imshow("DETECTION",visualizationImage2DSkeleton);  
+           cv::imshow("2D Detections",visualizationImage2DSkeleton);  
          #endif
-         
-         
+          
          int k = cv::waitKey(1);
         }
 

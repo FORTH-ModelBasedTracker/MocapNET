@@ -260,9 +260,10 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
       } else
   if (input.size()==171)
       {
+          //This is the default case so dont issue any warnings..
          //std::cerr<<"MocapNET: COCO input has "<<input.size()<<" elements (should be 171)\n";
          mnetInput = prepareMocapNETInputFromUncompressedInput(input);
-         std::cerr<<"MocapNET: COCO 171 input has been converted in to MocapNET input with "<<mnetInput.size()<<" elements (should be 749)\n";
+         //std::cerr<<"MocapNET: COCO 171 input has been converted in to MocapNET input with "<<mnetInput.size()<<" elements (should be 749)\n";
       } else
   if (input.size()!=171)
       {
@@ -303,12 +304,11 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
 
 int unloadMocapNET(struct MocapNET * mnet)
 {
-
   return (
-           ( unloadTensorflow(&mnet->allModel  ) ) &&
-           ( unloadTensorflow(&mnet->frontModel) ) &&
-           ( unloadTensorflow(&mnet->backModel) )
-         );
+                   ( unloadTensorflow(&mnet->allModel  ) ) &&
+                   ( unloadTensorflow(&mnet->frontModel) ) &&
+                   ( unloadTensorflow(&mnet->backModel) )
+                );
 }
 
 
