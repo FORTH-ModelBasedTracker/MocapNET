@@ -31,7 +31,7 @@ using namespace cv;
  * @bug This code is oriented to a single 2D skeleton detected, Multiple skeletons will confuse it and there is no logic to handle them
  * @retval A 2D Skeleton detected in the bgr OpenCV image
  */
-std::vector<cv::Point_<int> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
+std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
                                                                             struct TensorflowInstance * net,
                                                                             const cv::Mat &bgr ,
                                                                             float minThreshold,
@@ -49,10 +49,11 @@ std::vector<cv::Point_<int> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
   float scaleY = (float) inputHeight2DJointDetector/bgr.rows;
   cv::Mat fr_res;
   cv::resize(bgr, fr_res, cv::Size(0,0), scaleX, scaleY);
+  cv::Mat smallBGR = fr_res.clone();
 
   if (visualize)
         {
-         cv::imshow("BGR",fr_res);
+         cv::imshow("BGR",fr_res); 
         }
   fr_res.convertTo(fr_res,CV_32FC3);
   // pass the frame to the Estimator
@@ -108,7 +109,7 @@ std::vector<cv::Point_<int> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
   }
   #endif // DISPLAY_ALL_HEATMAPS
 
-  return dj_getNeuralNetworkDetectionsForColorImage(bgr,heatmaps,minThreshold,visualize);
+  return dj_getNeuralNetworkDetectionsForColorImage(bgr,smallBGR,heatmaps,minThreshold,visualize);
 }
 
 
@@ -144,7 +145,7 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
   unsigned int frameHeight =  bgr.size().height; //frame.rows
 
   unsigned long startTime  = GetTickCountMicroseconds();
-  std::vector<cv::Point_<int> > points = predictAndReturnSingleSkeletonOf2DCOCOJoints(
+  std::vector<cv::Point_<float> > points = predictAndReturnSingleSkeletonOf2DCOCOJoints(
                                                                                        net,
                                                                                        bgr,
                                                                                        minThreshold,
@@ -169,102 +170,20 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
   if (points.size()>=(UT_COCO_PARTS-1))
   {
     // Extract bounding box..
-    if (bbox!=0)
-     { //----------------------------------------
-      bbox->populated=0;
-
-      if (points.size()>0)
-      {
-       bbox->populated=1;
-       bbox->minimumX=100000;
-       bbox->maximumX=0.0;
-       bbox->minimumY=100000;
-       bbox->maximumY=0.0;
-       for (i=0; i<points.size()-1; i++)
-       {
-        if ( (points[i].x!=0) && (points[i].y!=0) )
-        {
-         if (bbox->minimumX > points[i].x) { bbox->minimumX=points[i].x; }
-         if (bbox->maximumX < points[i].x) { bbox->maximumX=points[i].x; }
-         if (bbox->minimumY > points[i].y) { bbox->minimumY=points[i].y; }
-         if (bbox->maximumY < points[i].y) { bbox->maximumY=points[i].y; }
-        }
-       }
-      }
-     } //----------------------------------------
-
-  for (i=0; i<points.size()-1; i++)
-       {
+    
+    populateBoundingBox(
+                        bbox,
+                        points
+                       );
+ 
+    for (i=0; i<points.size()-1; i++)
+         {
           points[i].x+=offsetX;
           points[i].y+=offsetY;
-       }
+         }
 
-
-  sk.joint2D[BODY25_Nose].x = points[UT_COCO_Nose].x;
-  sk.joint2D[BODY25_Nose].y = points[UT_COCO_Nose].y;
-
-  sk.joint2D[BODY25_Neck].x = points[UT_COCO_Neck].x;
-  sk.joint2D[BODY25_Neck].y = points[UT_COCO_Neck].y;
-
-  sk.joint2D[BODY25_RShoulder].x = points[UT_COCO_RShoulder].x;
-  sk.joint2D[BODY25_RShoulder].y = points[UT_COCO_RShoulder].y;
-
-  sk.joint2D[BODY25_RElbow].x = points[UT_COCO_RElbow].x;
-  sk.joint2D[BODY25_RElbow].y = points[UT_COCO_RElbow].y;
-
-  sk.joint2D[BODY25_RWrist].x = points[UT_COCO_RWrist].x;
-  sk.joint2D[BODY25_RWrist].y = points[UT_COCO_RWrist].y;
-
-  sk.joint2D[BODY25_LShoulder].x = points[UT_COCO_LShoulder].x;
-  sk.joint2D[BODY25_LShoulder].y = points[UT_COCO_LShoulder].y;
-
-  sk.joint2D[BODY25_LElbow].x = points[UT_COCO_LElbow].x;
-  sk.joint2D[BODY25_LElbow].y = points[UT_COCO_LElbow].y;
-
-  sk.joint2D[BODY25_LWrist].x = points[UT_COCO_LWrist].x;
-  sk.joint2D[BODY25_LWrist].y = points[UT_COCO_LWrist].y;
-
-  if (
-       (points[UT_COCO_RHip].x!=0) && (points[UT_COCO_LHip].x!=0) &&
-       (points[UT_COCO_RHip].y!=0) && (points[UT_COCO_LHip].y!=0)
-     )
-  {
-   sk.joint2D[BODY25_MidHip].x = (points[UT_COCO_RHip].x+points[UT_COCO_LHip].x)/2;
-   sk.joint2D[BODY25_MidHip].y = (points[UT_COCO_RHip].y+points[UT_COCO_LHip].y)/2;
-  }
-
-  sk.joint2D[BODY25_RHip].x = points[UT_COCO_RHip].x;
-  sk.joint2D[BODY25_RHip].y = points[UT_COCO_RHip].y;
-
-  sk.joint2D[BODY25_RKnee].x = points[UT_COCO_RKnee].x;
-  sk.joint2D[BODY25_RKnee].y = points[UT_COCO_RKnee].y;
-
-  sk.joint2D[BODY25_RAnkle].x = points[UT_COCO_RAnkle].x;
-  sk.joint2D[BODY25_RAnkle].y = points[UT_COCO_RAnkle].y;
-
-  sk.joint2D[BODY25_LHip].x = points[UT_COCO_LHip].x;
-  sk.joint2D[BODY25_LHip].y = points[UT_COCO_LHip].y;
-
-  sk.joint2D[BODY25_LKnee].x = points[UT_COCO_LKnee].x;
-  sk.joint2D[BODY25_LKnee].y = points[UT_COCO_LKnee].y;
-
-  sk.joint2D[BODY25_LAnkle].x = points[UT_COCO_LAnkle].x;
-  sk.joint2D[BODY25_LAnkle].y = points[UT_COCO_LAnkle].y;
-
-  sk.joint2D[BODY25_REye].x = points[UT_COCO_REye].x;
-  sk.joint2D[BODY25_REye].y = points[UT_COCO_REye].y;
-
-  sk.joint2D[BODY25_LEye].x = points[UT_COCO_LEye].x;
-  sk.joint2D[BODY25_LEye].y = points[UT_COCO_LEye].y;
-
-  sk.joint2D[BODY25_REar].x = points[UT_COCO_REar].x;
-  sk.joint2D[BODY25_REar].y = points[UT_COCO_REar].y;
-
-  sk.joint2D[BODY25_LEar].x = points[UT_COCO_LEar].x;
-  sk.joint2D[BODY25_LEar].y = points[UT_COCO_LEar].y;
-
-  sk.joint2D[BODY25_Bkg].x = points[UT_COCO_Bkg].x;
-  sk.joint2D[BODY25_Bkg].y = points[UT_COCO_Bkg].y;
+   convertUtilitiesSkeletonFormatToBODY25(&sk,points); 
+  
   } else
   {
     std::cerr<<"Cannot Flatten Empty Skeleton (Got "<<points.size()<<" points and had to have at least "<<(UT_COCO_PARTS-1)<<")...\n";
@@ -303,14 +222,16 @@ int main(int argc, char *argv[])
   unsigned int forceCPUMocapNET=1;
   unsigned int forceCPU2DJointEstimation=0;
 
-  unsigned int live=0,frameNumber=0,frameLimit=5000,visualize=1,doCrop=1,constrainPositionRotation=1;
+  unsigned int live=0,frameNumber=0,frameLimit=5000,visualize=1,constrainPositionRotation=1;
   float joint2DSensitivity=0.20;
   const char * webcam = 0;
 
+
+  int doCrop=1;
   int yawValue = 0;
   int pitchValue = 0;
   int rollValue = 0;
-  int distance = 0;
+  int distance = 0; 
 
 
   //2D Joint Detector Configuration
@@ -483,7 +404,7 @@ int main(int argc, char *argv[])
           {
            bvhOutput[MOCAPNET_OUTPUT_HIP_XPOSITION]=0.0;
            bvhOutput[MOCAPNET_OUTPUT_HIP_YPOSITION]=0.0;
-           bvhOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-140.0 - (float) distance;
+           bvhOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-160.0 - (float) distance;
            bvhOutput[MOCAPNET_OUTPUT_HIP_ZROTATION]=(float) rollValue;
            bvhOutput[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) yawValue;
            bvhOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) pitchValue;
@@ -525,41 +446,45 @@ int main(int argc, char *argv[])
                 visWidth=(unsigned int) frameWidth*2.0;
                 visHeight=(unsigned int) frameHeight*2.0;
               }
-            visWidth=1280;
+            visWidth=1024;
             visHeight=768;
 
             if (frameNumber==0)
              {
               cv::namedWindow("3D Control");
+              cv::namedWindow("3D Points Output");
               cv::moveWindow("BG",0,0);
               cv::moveWindow("BGR",0,inputHeight2DJointDetector);
+              cv::moveWindow("3D Control",inputWidth2DJointDetector,inputHeight2DJointDetector);
               cv::moveWindow("DETECTION",inputWidth2DJointDetector,0);
              }
 
 
              //Create trackbar to change 3D orientation..
-             createTrackbar("Distance ", "3D Control", &distance,  150);
-             createTrackbar("Yaw      ", "3D Control", &yawValue,  360);
-             createTrackbar("Pitch    ", "3D Control", &pitchValue,360);
-             createTrackbar("Roll     ", "3D Control", &rollValue, 360);
+             createTrackbar("Distance  ", "3D Control", &distance,  150);
+             createTrackbar("Yaw            ", "3D Control", &yawValue,  360);
+             createTrackbar("Pitch          ", "3D Control", &pitchValue,360);
+             createTrackbar("Roll            ", "3D Control", &rollValue, 360);
+             createTrackbar("Auto Crop", "3D Control", &doCrop, 1);
 
 
              visualizePoints(
-                             "3D Points Output",
-                             frameNumber,
-                             fpsTotal,
-                             fpsAcquisition,
-                             fps2DJointDetector,
-                             fpsMocapNET,
-                             visWidth,
-                             visHeight,
-                             bvhOutput
-                            );
+                                            "3D Points Output",
+                                            frameNumber,
+                                            fpsTotal,
+                                            fpsAcquisition,
+                                            fps2DJointDetector,
+                                            fpsMocapNET,
+                                            visWidth,
+                                            visHeight,
+                                            bvhOutput
+                                          );
 
 
             if (frameNumber==0)
              {
-              cv::moveWindow("3D Points Output",1920-visWidth,1080-visHeight);
+             // cv::moveWindow("3D Points Output",1920-visWidth,1080-visHeight);
+              cv::moveWindow("3D Points Output",inputWidth2DJointDetector*2,0);
              }
            } else
            {
@@ -573,7 +498,8 @@ int main(int argc, char *argv[])
 
         ++frameNumber;
       }
-
+      
+      //After beeing done with the frames gathered the bvhFrames vector should be full of our data, so maybe we want to write it to a file..!
       if (!live)
       {
        std::cerr<<"Will now write BVH file to "<<outputPath<<"\n";   

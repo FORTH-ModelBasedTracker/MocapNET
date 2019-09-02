@@ -60,5 +60,6 @@ std::vector<std::vector<float> > convert3DGridTo2DPoints(
                                                          float pitch,
                                                          float yaw,
                                                          unsigned int width,
-                                                         unsigned int height
+                                                         unsigned int height,
+                                                         unsigned int dimensions
                                                         );

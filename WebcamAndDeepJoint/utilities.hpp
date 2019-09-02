@@ -115,14 +115,15 @@ static const int UT_COCOSkeletonJointsParentRelationMap[] =
  * @param Flag that controls visualization
  * @retval A vector of 2D Points that contains detections for each of the joints, A point marked as 0,0 means no detection
  */
-std::vector<cv::Point> dj_getNeuralNetworkDetectionsForColorImage(
-                                                                   cv::Mat colorImageOriginal ,
-                                                                   std::vector<cv::Mat> heatmaps ,
-                                                                   float minThreshold  ,
-                                                                   int visualize
-                                                                 );
+std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
+                                                                                                                                                           cv::Mat colorImageOriginal ,
+                                                                                                                                                           cv::Mat colorImageSmall,
+                                                                                                                                                           std::vector<cv::Mat> heatmaps ,
+                                                                                                                                                           float minThreshold  ,
+                                                                                                                                                           int visualize
+                                                                                                                                                         );
 
 
-
+void convertUtilitiesSkeletonFormatToBODY25(struct skeletonCOCO * sk, std::vector<cv::Point_<float> > points);
 
 

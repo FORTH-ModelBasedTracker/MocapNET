@@ -141,7 +141,7 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
 
 
 
-std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,float yaw,unsigned int width, unsigned int height)
+std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,float yaw,unsigned int width, unsigned int height,unsigned int dimensions)
 {
  std::vector<std::vector<float> > result;
  #if USE_BVH
@@ -157,14 +157,14 @@ std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,
 
 
   std::vector<float> emptyPoint;
-          emptyPoint.clear();
-          emptyPoint.push_back((float) 0.0);
-          emptyPoint.push_back((float) 0.0);
+  emptyPoint.clear();
+  emptyPoint.push_back((float) 0.0);
+  emptyPoint.push_back((float) 0.0);
 
-  double m[16];
+
   float center[4]={0};
-
   float rotation[3];
+  
   rotation[0]=roll;
   rotation[1]=yaw;
   rotation[2]=pitch;
@@ -176,11 +176,15 @@ std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,
   float position2DX,position2DY,position2DW;
 
   y=-5;
-  for (z=-10; z<10; z++)
+  unsigned int halfDimension = (unsigned int) dimensions / 2;
+  signed int negativeStart=(signed int) -1 * halfDimension;
+  signed int positiveEnd=(signed int) halfDimension;
+  
+  for (z=negativeStart; z<positiveEnd; z++)
   {
-   //for (y=-10; y<10; y++)
+   //for (y=-negativeStart; y<positiveEnd; y++)
    {
-    for (x=-10; x<10; x++)
+    for (x=negativeStart; x<positiveEnd; x++)
     {
        pos3D[0]=x;
        pos3D[1]=y;

@@ -3,6 +3,46 @@
 #include <cstdlib>
 
 
+int populateBoundingBox(
+                        struct boundingBox *bbox,
+                        std::vector<cv::Point_<float> > points
+                       )
+{
+ if (bbox!=0)
+     { //----------------------------------------
+      bbox->populated=0;
+
+      if (points.size()>0)
+      {
+       bbox->populated=1;
+       bbox->minimumX=100000;
+       bbox->maximumX=0.0;
+       bbox->minimumY=100000;
+       bbox->maximumY=0.0;
+       int i;
+       
+       for (i=0; i<points.size()-1; i++)
+       {
+        if ( (points[i].x!=0) && (points[i].y!=0) )
+        {
+         if (bbox->minimumX > points[i].x) { bbox->minimumX=points[i].x; }
+         if (bbox->maximumX < points[i].x) { bbox->maximumX=points[i].x; }
+         if (bbox->minimumY > points[i].y) { bbox->minimumY=points[i].y; }
+         if (bbox->maximumY < points[i].y) { bbox->maximumY=points[i].y; }
+        }
+       }
+        return 1;
+      }
+     } //----------------------------------------
+  return 0;   
+}
+
+
+
+
+
+
+
 /**
  * @brief In order to have the best possible quality we can crop the input frame to only perform detection around the area of the previous skeleton
  * This code performs this crop and tries to get the best detection window
