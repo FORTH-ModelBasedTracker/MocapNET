@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
   const char * webcam = 0;
 
   int constrainPositionRotation=1;
-  int doCrop=1;
+  int doCrop=1,tryForMaximumCrop=0,drawFloor=1;
   int yawValue = 0;
   int pitchValue = 0;
   int rollValue = 0;
@@ -278,7 +278,7 @@ int main(int argc, char *argv[])
     if (strcmp(argv[i],"--from")==0)            { if (argc>i+1) { webcam = argv[i+1]; } }
   }
 
-  cv::Mat controlMat = Mat(Size(inputWidth2DJointDetector,30),CV_8UC3);
+  cv::Mat controlMat = Mat(Size(inputWidth2DJointDetector,2),CV_8UC3, Scalar(0,0,0));
  
   VideoCapture cap(webcam); // open the default camera
   if (webcam==0)
@@ -350,6 +350,7 @@ int main(int argc, char *argv[])
            // Try to crop around the last closest
            //------------------------------------------------------------------------
            getBestCropWindow(
+                            tryForMaximumCrop,
                              &offsetX,
                              &offsetY,
                              &croppedDimensionWidth,
@@ -466,21 +467,22 @@ int main(int argc, char *argv[])
 
             if (frameNumber==0)
              {
-              cv::namedWindow("3D Control",WINDOW_NORMAL);
-              cv::resizeWindow("3D Control",inputWidth2DJointDetector,inputHeight2DJointDetector);
-              cv::namedWindow("3D Points Output");
-              cv::moveWindow("2D NN Heatmaps",0,0);
-              cv::moveWindow("BGR",0,inputHeight2DJointDetector);
-              cv::moveWindow("3D Control",inputWidth2DJointDetector,inputHeight2DJointDetector);
-              cv::moveWindow("2D Detections",inputWidth2DJointDetector,0);
-              
-             
-             createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 1);
-             createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
-             createTrackbar("Distance  ", "3D Control", &distance,  150);
-             createTrackbar("Yaw            ", "3D Control", &yawValue,  360);
-             createTrackbar("Pitch          ", "3D Control", &pitchValue,360);
-             createTrackbar("Roll            ", "3D Control", &rollValue, 360);
+               cv::imshow("3D Control",controlMat); 
+               createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 1);
+               createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
+               createTrackbar("Draw Floor", "3D Control", &drawFloor, 1);
+               createTrackbar("Distance  ", "3D Control", &distance,  150);
+               createTrackbar("Yaw            ", "3D Control", &yawValue,  360);
+               createTrackbar("Pitch          ", "3D Control", &pitchValue,360);
+               createTrackbar("Roll            ", "3D Control", &rollValue, 360);
+               
+               
+                
+               cv::namedWindow("3D Points Output");
+               cv::moveWindow("3D Control",inputWidth2DJointDetector,inputHeight2DJointDetector);
+               cv::moveWindow("2D NN Heatmaps",0,0);
+               cv::moveWindow("BGR",0,inputHeight2DJointDetector);
+               //cv::moveWindow("2D Detections",inputWidth2DJointDetector,0);
              }
 
 
@@ -490,22 +492,25 @@ int main(int argc, char *argv[])
 
 
              visualizePoints(
-                                            "3D Points Output",
-                                            frameNumber,
-                                            skippedFrames,
-                                            fpsTotal,
-                                            fpsAcquisition,
-                                            fps2DJointDetector,
-                                            fpsMocapNET,
-                                            visWidth,
-                                            visHeight,
-                                            bvhOutput
-                                          );
+                                                "3D Points Output",
+                                                frameNumber,
+                                                skippedFrames,
+                                                drawFloor,
+                                                fpsTotal,
+                                                fpsAcquisition,
+                                                fps2DJointDetector,
+                                                fpsMocapNET,
+                                                visWidth,
+                                                visHeight,
+                                                bvhOutput
+                                              );
 
 
             if (frameNumber==0)
              { 
-              cv::moveWindow("3D Points Output",inputWidth2DJointDetector*2,0);
+               cv::resizeWindow("3D Control",inputWidth2DJointDetector,inputHeight2DJointDetector);
+               cv::moveWindow("3D Points Output",inputWidth2DJointDetector*2,0);
+               cv::moveWindow("2D Detections",inputWidth2DJointDetector,0);
              }
             //Window Event Loop Time..
             cv::waitKey(1);
@@ -518,7 +523,7 @@ int main(int argc, char *argv[])
         ++frameNumber;
       } else
       { 
-          std::cerr<<"OpenCV failed to snap frame "<<frameNumber<<"from your input source ( "<<webcam<<") \n"; 
+          std::cerr<<"OpenCV failed to snap frame "<<frameNumber<<" from your input source ( "<<webcam<<") \n"; 
           std::cerr<<"Skipped frames  "<<skippedFrames<<" / "<<frameNumber<<" \n"; 
            ++skippedFrames;
       }

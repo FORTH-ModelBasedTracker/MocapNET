@@ -17,7 +17,7 @@ using namespace cv;
  
 
 //#define USE_OPENCV 1
-int visualizePoints(const char* windowName,unsigned int frameNumber,unsigned int skippedFrames,float fpsTotal,float fpsAcquisition,float joint2DEstimator,float fpsMocapNET,unsigned int width,unsigned int height,std::vector<float> mocapNETOutput)
+int visualizePoints(const char* windowName,unsigned int frameNumber,unsigned int skippedFrames,int drawFloor,float fpsTotal,float fpsAcquisition,float joint2DEstimator,float fpsMocapNET,unsigned int width,unsigned int height,std::vector<float> mocapNETOutput)
 {
 #if USE_OPENCV
  if (mocapNETOutput.size()==0)
@@ -32,12 +32,12 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,unsigned int
  cv::Mat img(height,width, CV_8UC3, Scalar(0,0,0));
 
 
-
-#define DRAW_FLOOR 1
+ 
+ if (drawFloor)
  //------------------------------------------------------------------------------------------
  //Draw floor
  //------------------------------------------------------------------------------------------
- #if DRAW_FLOOR
+ {
  unsigned int floorDimension=20;
  std::vector<std::vector<float> > gridPoints2D = convert3DGridTo2DPoints(
                                                                                                                                                                       mocapNETOutput[3],
@@ -83,7 +83,7 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,unsigned int
             }
            parentPoint = jointPoint;
          }
- #endif
+ }
  //------------------------------------------------------------------------------------------
 
 

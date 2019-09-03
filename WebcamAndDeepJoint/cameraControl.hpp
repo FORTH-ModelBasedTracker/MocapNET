@@ -18,18 +18,19 @@ struct boundingBox
 
 
 int populateBoundingBox(
-                        struct boundingBox *bbox,
-                        std::vector<cv::Point_<float> > points
-                       );
-
+                                                         struct boundingBox *bbox,
+                                                         std::vector<cv::Point_<float> > points
+                                                        );
+ 
 int getBestCropWindow(
-                       unsigned int * x,
-                       unsigned int * y,
-                       unsigned int * width,
-                       unsigned int * height,
-                       struct boundingBox * bbox,
-                       unsigned int inputWidth2DJointDetector,
-                       unsigned int inputHeight2DJointDetector,
-                       unsigned int fullFrameWidth,
-                       unsigned int fullFrameHeight
-                     );
+                                                      int maximumCrop,
+                                                      unsigned int * x,
+                                                     unsigned int * y,
+                                                      unsigned int * width,
+                                                      unsigned int * height,
+                                                      struct boundingBox * bbox,
+                                                      unsigned int inputWidth2DJointDetector,
+                                                      unsigned int inputHeight2DJointDetector,
+                                                      unsigned int fullFrameWidth,
+                                                      unsigned int fullFrameHeight
+                                                    );

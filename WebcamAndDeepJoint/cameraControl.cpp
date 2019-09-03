@@ -42,6 +42,27 @@ int populateBoundingBox(
 
 
 
+/**
+ * @brief In order to have the best possible quality we can crop the input frame to only perform detection around the area of the previous skeleton
+ * This code performs this crop and tries to get the best detection window
+ * @ingroup demo
+ * @bug This code is oriented to a single 2D skeleton detected, Multiple skeletons will confuse it and there is no logic to handle them
+ * @retval 1=Success/0=Failure
+ */
+int getMaximumCropWindow(
+                                                                  unsigned int * x,
+                                                                  unsigned int * y,
+                                                                  unsigned int * width,
+                                                                  unsigned int * height,
+                                                                  struct boundingBox * bbox,
+                                                                  unsigned int inputWidth2DJointDetector,
+                                                                  unsigned int inputHeight2DJointDetector,
+                                                                  unsigned int fullFrameWidth,
+                                                                  unsigned int fullFrameHeight
+                                                                )
+{
+}
+
 
 /**
  * @brief In order to have the best possible quality we can crop the input frame to only perform detection around the area of the previous skeleton
@@ -51,16 +72,17 @@ int populateBoundingBox(
  * @retval 1=Success/0=Failure
  */
 int getBestCropWindow(
-                       unsigned int * x,
-                       unsigned int * y,
-                       unsigned int * width,
-                       unsigned int * height,
-                       struct boundingBox * bbox,
-                       unsigned int inputWidth2DJointDetector,
-                       unsigned int inputHeight2DJointDetector,
-                       unsigned int fullFrameWidth,
-                       unsigned int fullFrameHeight
-                     )
+                                                      int maximumCrop,
+                                                      unsigned int * x,
+                                                      unsigned int * y,
+                                                      unsigned int * width,
+                                                      unsigned int * height,
+                                                      struct boundingBox * bbox,
+                                                      unsigned int inputWidth2DJointDetector,
+                                                      unsigned int inputHeight2DJointDetector,
+                                                      unsigned int fullFrameWidth,
+                                                      unsigned int fullFrameHeight
+                                                    )
 {
    //fprintf(stderr,"Previous crop started at %u,%u\n", *x,*y);
    if ( (bbox!=0) && (bbox->populated) )
@@ -73,7 +95,22 @@ int getBestCropWindow(
      //fprintf(stderr,"is actually (%0.2f,%0.2f) -> (%0.2f,%0.2f)\n",bbox->minimumX,bbox->minimumY,bbox->maximumX,bbox->maximumY);
     }
 
- 
+   if (maximumCrop)
+   {
+       return  getMaximumCropWindow(
+                                                                                   x,
+                                                                                   y,
+                                                                                   width,
+                                                                                   height,
+                                                                                   bbox,
+                                                                                   inputWidth2DJointDetector,
+                                                                                   inputHeight2DJointDetector,
+                                                                                   fullFrameWidth,
+                                                                                   fullFrameHeight
+                                                                              );
+   }
+   
+   
    unsigned int dimension = fullFrameHeight;
    float bodyWidth  = bbox->maximumX - bbox->minimumX;
    float bodyHeight = bbox->maximumY - bbox->minimumY;
