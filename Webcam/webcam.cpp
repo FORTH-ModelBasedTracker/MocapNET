@@ -41,7 +41,13 @@ int main(int argc, char *argv[])
     {
         Mat frame;
         cap >> frame;
-        imshow("feed", frame);
+          if ( (frame.size().width>0) && (frame.size().height>0) )
+           {
+             imshow("feed", frame);
+           } else
+           {
+            std::cerr<<"Broken frame.. \n";
+           }
         waitKey(1);
     }
     // the camera will be deinitialized automatically in VideoCapture destructor

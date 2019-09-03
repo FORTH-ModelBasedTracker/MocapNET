@@ -159,7 +159,11 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
                                                                                      );
   unsigned long endTime = GetTickCountMicroseconds();
   unsigned long openPoseComputationTimeInMilliseconds = (unsigned long) (endTime-startTime)/1000;
-  std::cerr<<"OpenPose 2DSkeleton @ "<<openPoseComputationTimeInMilliseconds<<" ms \n";
+           if (!visualize)
+           { //If we don't visualize using OpenCV output performance 
+             std::cerr<<"OpenPose 2DSkeleton @ "<<openPoseComputationTimeInMilliseconds<<" ms \n";
+           }
+           
   *fps = (float) 1000000/(endTime-startTime);
 
 
@@ -222,11 +226,11 @@ int main(int argc, char *argv[])
   unsigned int forceCPUMocapNET=1;
   unsigned int forceCPU2DJointEstimation=0;
 
-  unsigned int live=0,frameNumber=0,skippedFrames=0,frameLimit=5000,visualize=1,constrainPositionRotation=1;
+  unsigned int live=0,frameNumber=0,skippedFrames=0,frameLimit=5000,visualize=1;
   float joint2DSensitivity=0.20;
   const char * webcam = 0;
 
-
+  int constrainPositionRotation=1;
   int doCrop=1;
   int yawValue = 0;
   int pitchValue = 0;
@@ -274,7 +278,8 @@ int main(int argc, char *argv[])
     if (strcmp(argv[i],"--from")==0)            { if (argc>i+1) { webcam = argv[i+1]; } }
   }
 
-
+  cv::Mat controlMat = Mat(Size(inputWidth2DJointDetector,30),CV_8UC3);
+ 
   VideoCapture cap(webcam); // open the default camera
   if (webcam==0)
      {
@@ -395,8 +400,11 @@ int main(int argc, char *argv[])
          unsigned long endTime = GetTickCountMicroseconds();
 
          float fpsMocapNET = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
-
-         std::cerr<<"MocapNET 3DSkeleton @ "<<fpsMocapNET<<" fps \n";
+         
+         if (!visualize)
+           { //If we don't visualize using OpenCV output performance
+             std::cerr<<"MocapNET 3DSkeleton @ "<<fpsMocapNET<<" fps \n";
+           }
 
          //If we are not running live ( aka not from a webcam with no fixed frame limit )
          //Then we record the current bvh frame in order to save a .bvh file in the end..
@@ -465,15 +473,20 @@ int main(int argc, char *argv[])
               cv::moveWindow("BGR",0,inputHeight2DJointDetector);
               cv::moveWindow("3D Control",inputWidth2DJointDetector,inputHeight2DJointDetector);
               cv::moveWindow("2D Detections",inputWidth2DJointDetector,0);
-             }
-
-
-             //Create trackbar to change 3D orientation..
+              
+             
+             createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 1);
+             createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
              createTrackbar("Distance  ", "3D Control", &distance,  150);
              createTrackbar("Yaw            ", "3D Control", &yawValue,  360);
              createTrackbar("Pitch          ", "3D Control", &pitchValue,360);
              createTrackbar("Roll            ", "3D Control", &rollValue, 360);
-             createTrackbar("Auto Crop", "3D Control", &doCrop, 1);
+             }
+
+
+             //Get rid of GLib-GObject-CRITICAL **: 10:36:18.934: g_object_unref: assertion 'G_IS_OBJECT (object)' failed opencv
+             //by displaying an empty cv Mat on the window besides the trackbars
+             cv::imshow("3D Control",controlMat);
 
 
              visualizePoints(
