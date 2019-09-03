@@ -17,7 +17,20 @@ using namespace cv;
  
 
 //#define USE_OPENCV 1
-int visualizePoints(const char* windowName,unsigned int frameNumber,unsigned int skippedFrames,int drawFloor,float fpsTotal,float fpsAcquisition,float joint2DEstimator,float fpsMocapNET,unsigned int width,unsigned int height,std::vector<float> mocapNETOutput)
+int visualizePoints(
+                     const char* windowName,
+                     unsigned int frameNumber,
+                     unsigned int skippedFrames,
+                     signed int totalNumberOfFrames,
+                     int drawFloor,
+                     float fpsTotal,
+                     float fpsAcquisition,
+                     float joint2DEstimator,
+                     float fpsMocapNET,
+                     unsigned int width,
+                     unsigned int height,
+                     std::vector<float> mocapNETOutput
+                    )
 {
 #if USE_OPENCV
  if (mocapNETOutput.size()==0)
@@ -154,8 +167,16 @@ int visualizePoints(const char* windowName,unsigned int frameNumber,unsigned int
              cv::putText(img, textInfo  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(255), 0.2, 8 );
            }
         }
-
-  snprintf(textInfo,512,"Frame %u",frameNumber);
+  
+  
+  if (totalNumberOfFrames>0)
+  {
+    snprintf(textInfo,512,"Frame %u/%u",frameNumber,totalNumberOfFrames);     
+  } else
+  {
+    snprintf(textInfo,512,"Frame %u",frameNumber);     
+  }    
+  
   cv::Point txtPosition; txtPosition.x=20; txtPosition.y=50;
   float thickness=1;
   int fontUsed=cv::FONT_HERSHEY_SIMPLEX;

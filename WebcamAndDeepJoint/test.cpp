@@ -296,7 +296,11 @@ int main(int argc, char *argv[])
             std::cerr<<"Openning input stream  `"<<webcam<<" ` failed\n"; 
             return 1;
            }
-
+   
+  signed int totalNumberOfFrames = cap.get(CV_CAP_PROP_FRAME_COUNT); 
+  std::cerr<<"totalNumberOfFrames in "<<webcam<<" is "<<totalNumberOfFrames<<" \n"; 
+  //exit(0);
+   
   cv::Mat frame;
   struct boundingBox cropBBox={0};
   unsigned int croppedDimensionWidth=0,croppedDimensionHeight=0,offsetX=0,offsetY=0;
@@ -330,6 +334,7 @@ int main(int argc, char *argv[])
         unsigned long acquisitionStart = GetTickCountMicroseconds();
         
         cap >> frame; // get a new frame from camera
+        cv::Mat frameOriginal = frame.clone();
         
         unsigned int frameWidth  =  frame.size().width;  //frame.cols
         unsigned int frameHeight =  frame.size().height; //frame.rows
@@ -470,6 +475,7 @@ int main(int argc, char *argv[])
                cv::imshow("3D Control",controlMat); 
                createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 1);
                createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
+               createTrackbar("Maximize Crop", "3D Control", &tryForMaximumCrop, 1);
                createTrackbar("Draw Floor", "3D Control", &drawFloor, 1);
                createTrackbar("Distance  ", "3D Control", &distance,  150);
                createTrackbar("Yaw            ", "3D Control", &yawValue,  360);
@@ -490,20 +496,25 @@ int main(int argc, char *argv[])
              //by displaying an empty cv Mat on the window besides the trackbars
              cv::imshow("3D Control",controlMat);
 
+             /* Visualize Cropping 
+             cv::rectangle(frameOriginal,cv::Point(offsetX,offsetY),cv::Point(offsetX+croppedDimensionWidth,offsetY+croppedDimensionHeight),cv::Scalar(0,0,255),4,8,0);  
+             cv::imshow("Crop",frameOriginal); 
+             */
 
              visualizePoints(
-                                                "3D Points Output",
-                                                frameNumber,
-                                                skippedFrames,
-                                                drawFloor,
-                                                fpsTotal,
-                                                fpsAcquisition,
-                                                fps2DJointDetector,
-                                                fpsMocapNET,
-                                                visWidth,
-                                                visHeight,
-                                                bvhOutput
-                                              );
+                             "3D Points Output",
+                             frameNumber,
+                             skippedFrames,
+                             totalNumberOfFrames,
+                             drawFloor,
+                             fpsTotal,
+                             fpsAcquisition,
+                             fps2DJointDetector,
+                             fpsMocapNET,
+                             visWidth,
+                             visHeight,
+                             bvhOutput
+                            );
 
 
             if (frameNumber==0)
@@ -514,7 +525,7 @@ int main(int argc, char *argv[])
              }
             //Window Event Loop Time..
             cv::waitKey(1);
-           } 
+           }
          //---------------------------------------------------
         }
 
@@ -524,11 +535,26 @@ int main(int argc, char *argv[])
       } else
       { 
           std::cerr<<"OpenCV failed to snap frame "<<frameNumber<<" from your input source ( "<<webcam<<") \n"; 
+           
+          if (totalNumberOfFrames>0)
+          { 
+           if (skippedFrames+frameNumber>=totalNumberOfFrames)
+            {
+             std::cerr<<"Stopping.. \n"; 
+             break;  
+            } else
+            {
+             ++skippedFrames;   
+            }  
+          } else
+          {
+            ++skippedFrames;   
+          }
+          
           std::cerr<<"Skipped frames  "<<skippedFrames<<" / "<<frameNumber<<" \n"; 
-           ++skippedFrames;
       }
      
- } //Master While Frames Exist loop
+    } //Master While Frames Exist loop
       
       //After beeing done with the frames gathered the bvhFrames vector should be full of our data, so maybe we want to write it to a file..!
       if (!live)

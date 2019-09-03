@@ -43,7 +43,7 @@ fi
 cd "$DIR"
 
 #If you have an old GPU then use older version 
-TENSORFLOW_VERSION="1.14.0" # 1.12.0 for CUDA 9.0 / 1.11.0 for CUDA9 with  older compute capabilities (5.2) ..
+TENSORFLOW_VERSION="1.14.0" # 1.12.0 for CUDA 9.0 / 1.11.0 for CUDA9 with  older compute capabilities (5.2) .. / 1.4.1 for CUDA 8 
 #https://www.tensorflow.org/install/lang_c
 if [ ! -f /usr/local/libtensorflow.so ]; then
  echo "Did not find tensorflow"
@@ -62,13 +62,15 @@ if [ ! -f RGBDAcquisition ]; then
  mkdir build
  cd build
  cmake ..
- make 
+ #We dont need to make it 
+ #make 
  cd "$DIR"
  cd ../opengl_acquisition_shared_library/opengl_depth_and_color_renderer
  mkdir build
  cd build
  cmake ..
- make 
+ #We dont need to make it 
+ #make 
  cd "$DIR"
 fi
 

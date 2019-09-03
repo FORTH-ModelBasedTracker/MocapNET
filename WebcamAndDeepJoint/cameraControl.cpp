@@ -14,10 +14,9 @@ int populateBoundingBox(
 
       if (points.size()>0)
       {
-       bbox->populated=1;
-       bbox->minimumX=100000;
+       bbox->minimumX=100000.0;
        bbox->maximumX=0.0;
-       bbox->minimumY=100000;
+       bbox->minimumY=100000.0;
        bbox->maximumY=0.0;
        int i;
        
@@ -25,10 +24,10 @@ int populateBoundingBox(
        {
         if ( (points[i].x!=0) && (points[i].y!=0) )
         {
-         if (bbox->minimumX > points[i].x) { bbox->minimumX=points[i].x; }
-         if (bbox->maximumX < points[i].x) { bbox->maximumX=points[i].x; }
-         if (bbox->minimumY > points[i].y) { bbox->minimumY=points[i].y; }
-         if (bbox->maximumY < points[i].y) { bbox->maximumY=points[i].y; }
+         if (bbox->minimumX > points[i].x) { bbox->minimumX=points[i].x; bbox->populated=1; }
+         if (bbox->maximumX < points[i].x) { bbox->maximumX=points[i].x; bbox->populated=1; }
+         if (bbox->minimumY > points[i].y) { bbox->minimumY=points[i].y; bbox->populated=1; }
+         if (bbox->maximumY < points[i].y) { bbox->maximumY=points[i].y; bbox->populated=1; }
         }
        }
         return 1;
@@ -50,17 +49,65 @@ int populateBoundingBox(
  * @retval 1=Success/0=Failure
  */
 int getMaximumCropWindow(
-                                                                  unsigned int * x,
-                                                                  unsigned int * y,
-                                                                  unsigned int * width,
-                                                                  unsigned int * height,
-                                                                  struct boundingBox * bbox,
-                                                                  unsigned int inputWidth2DJointDetector,
-                                                                  unsigned int inputHeight2DJointDetector,
-                                                                  unsigned int fullFrameWidth,
-                                                                  unsigned int fullFrameHeight
-                                                                )
+                         unsigned int * x,
+                         unsigned int * y,
+                         unsigned int * width,
+                         unsigned int * height,
+                         struct boundingBox * bboxExternal,
+                         unsigned int inputWidth2DJointDetector,
+                         unsigned int inputHeight2DJointDetector,
+                         unsigned int fullFrameWidth,
+                         unsigned int fullFrameHeight
+                        )
 {
+     //Make a local copy in case of failure
+     struct boundingBox bboxLocal = *bboxExternal;
+     struct boundingBox * bbox = &bboxLocal;
+     
+     float extraSizeWidth=100;
+     float extraSizeHeight=150;
+     
+     if ( (bbox!=0) && (bbox->populated) )
+      {
+       std::cerr<<"Previous Bounding Box was "<<*x<<","<<*y<<" to "<<*x+*width<<","<<*y+*height<<" \n";
+ 
+       bbox->minimumX+=(float) *x - (float) extraSizeWidth;
+       bbox->maximumX+=(float) *x + (float) extraSizeWidth; 
+       bbox->minimumY+=(float) *y - (float) extraSizeHeight;
+       bbox->maximumY+=(float) *y + (float) extraSizeHeight;
+       
+       if (bbox->minimumX < 0 ) { bbox->minimumX = 0; }
+       if (bbox->minimumY < 0 ) { bbox->minimumY = 0; }
+       if (bbox->maximumX > fullFrameWidth )  { bbox->maximumX = fullFrameWidth; }
+       if (bbox->maximumY > fullFrameHeight ) { bbox->maximumY = fullFrameHeight; }
+       
+       float bodyWidth  = bbox->maximumX - bbox->minimumX;
+       float bodyHeight = bbox->maximumY - bbox->minimumY;
+       float bodyCenterX =  bbox->minimumX + (float) bodyWidth/2;   
+       float bodyCenterY =  bbox->minimumY + (float) bodyHeight/2;   
+       
+       *x=(unsigned int) bbox->minimumX ;
+       *y=(unsigned int) bbox->minimumY ;
+       *width = (unsigned int) bodyWidth;
+       *height= (unsigned int) bodyHeight;
+       std::cerr<<"New MAX Bounding Box is "<<*x<<","<<*y<<" to "<<*x+*width<<","<<*y+*height<<" \n";   
+       
+       int tooSmall=0;
+       if (*width<inputWidth2DJointDetector)   { *width=inputWidth2DJointDetector;   tooSmall=1; }  
+       if (*height<inputHeight2DJointDetector) { *height=inputHeight2DJointDetector; tooSmall=1; }  
+       
+       if (tooSmall)
+       {
+         std::cerr<<"It was too small, new MAX Bounding Box is "<<*x<<","<<*y<<" to "<<*x+*width<<","<<*y+*height<<" \n";     
+       }
+        
+       if  ( (*width!=0) && (*height!=0) ) 
+       {
+         *bboxExternal=bboxLocal;
+         return 1;
+       }
+      }
+     return 0; 
 }
 
 
@@ -72,18 +119,35 @@ int getMaximumCropWindow(
  * @retval 1=Success/0=Failure
  */
 int getBestCropWindow(
-                                                      int maximumCrop,
-                                                      unsigned int * x,
-                                                      unsigned int * y,
-                                                      unsigned int * width,
-                                                      unsigned int * height,
-                                                      struct boundingBox * bbox,
-                                                      unsigned int inputWidth2DJointDetector,
-                                                      unsigned int inputHeight2DJointDetector,
-                                                      unsigned int fullFrameWidth,
-                                                      unsigned int fullFrameHeight
-                                                    )
-{
+                      int maximumCrop,
+                      unsigned int * x,
+                      unsigned int * y,
+                      unsigned int * width,
+                      unsigned int * height,
+                      struct boundingBox * bbox,
+                      unsigned int inputWidth2DJointDetector,
+                      unsigned int inputHeight2DJointDetector,
+                      unsigned int fullFrameWidth,
+                      unsigned int fullFrameHeight
+                     )
+{ 
+   if (maximumCrop)
+   {
+       if (  getMaximumCropWindow(
+                                                                                   x,
+                                                                                   y,
+                                                                                   width,
+                                                                                   height,
+                                                                                   bbox,
+                                                                                   inputWidth2DJointDetector,
+                                                                                   inputHeight2DJointDetector,
+                                                                                   fullFrameWidth,
+                                                                                   fullFrameHeight
+                                                                      )
+            ) { return 1; }
+            //If we fail to get Maximum Crop Window we will settle with normal crop window
+   }
+   
    //fprintf(stderr,"Previous crop started at %u,%u\n", *x,*y);
    if ( (bbox!=0) && (bbox->populated) )
     {
@@ -95,21 +159,6 @@ int getBestCropWindow(
      //fprintf(stderr,"is actually (%0.2f,%0.2f) -> (%0.2f,%0.2f)\n",bbox->minimumX,bbox->minimumY,bbox->maximumX,bbox->maximumY);
     }
 
-   if (maximumCrop)
-   {
-       return  getMaximumCropWindow(
-                                                                                   x,
-                                                                                   y,
-                                                                                   width,
-                                                                                   height,
-                                                                                   bbox,
-                                                                                   inputWidth2DJointDetector,
-                                                                                   inputHeight2DJointDetector,
-                                                                                   fullFrameWidth,
-                                                                                   fullFrameHeight
-                                                                              );
-   }
-   
    
    unsigned int dimension = fullFrameHeight;
    float bodyWidth  = bbox->maximumX - bbox->minimumX;
@@ -134,7 +183,7 @@ int getBestCropWindow(
                                            //                                         Center on X axis..
                                            //-------------------------------------------------------------------------------------------------------
                                            //-------------------------------------------------------------------------------------------------------
-                                           float bodyCenterX =  bbox->minimumX+ (float) bodyWidth/2;
+                                           float bodyCenterX =  bbox->minimumX + (float) bodyWidth/2;
                                            //fprintf(stderr,"The center X of the body lies at %0.2f\n",bodyCenterX);
 
                                            //fprintf(stderr,"We can afford %u pixels left and right of the body center \n",(unsigned int) *width/2);
@@ -174,7 +223,8 @@ int getBestCropWindow(
                                              } 
 */
 
-
+                                             
+                                             std::cerr<<"Normal Bounding Box derived "<<*x<<","<<*y<<" to "<<*x+*width<<","<<*y+*height<<" \n";   
                                          } else
                                          {
                                            //No skeleton? just crop in the center..
@@ -187,7 +237,7 @@ int getBestCropWindow(
    if (fullFrameWidth<fullFrameHeight) {
                                          if  ( (bbox!=0) && (bbox->populated) )
                                          {
-                                            //TODO : Implelemnt rotated stream logic  
+                                            //TODO : Implement rotated stream logic  
                                          } else
                                          {
                                            //No skeleton? just crop in the center..
