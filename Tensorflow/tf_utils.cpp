@@ -71,17 +71,17 @@ static TF_Buffer* ReadBufferFromFile(const char* file)
 
 TF_Graph* LoadGraph(const char* graphPath)
 {
-    std::cerr << "LoadGraph "<<graphPath<<" using TensorFlow Version: " << TF_Version() << std::endl;
+    fprintf(stderr,"LoadGraph %s using TensorFlow Version: %s\n",graphPath,TF_Version());
     if (graphPath == nullptr)
     {
-        std::cerr<<"Cannot load graph with null path..\n";
+        fprintf(stderr,"Cannot load graph with null path..\n");
         return nullptr;
     }
 
     TF_Buffer* buffer = ReadBufferFromFile(graphPath);
     if (buffer == nullptr)
     {
-        std::cerr<<"Cannot read buffer from file "<<graphPath<<"..\n";
+        fprintf(stderr,"Cannot read buffer from file %s ..\n",graphPath);
         return nullptr;
     }
 
@@ -95,10 +95,10 @@ TF_Graph* LoadGraph(const char* graphPath)
 
     if (TF_GetCode(status) != TF_OK)
     {
-        std::cerr<<"Error importing graph definition..  ("<<TF_GetCode(status)<<")..\n";
+        fprintf(stderr,"Error importing graph definition..  (%u)\n",TF_GetCode(status));
         switch  (TF_GetCode(status))
          {
-           case TF_INVALID_ARGUMENT : std::cerr<<"Invalid Argument in graph..\n"; break;
+           case TF_INVALID_ARGUMENT : fprintf(stderr,"Invalid Argument in graph..\n"); break;
          };
         TF_DeleteGraph(graph);
         graph = nullptr;

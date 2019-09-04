@@ -48,10 +48,11 @@ int listNodesMN(const char * label , TF_Graph* graph)
 {
   size_t pos = 0;
   TF_Operation* oper;
-  std::cout << "Nodes list : \n";
+  fprintf(stdout, "Nodes list : \n");
   while ((oper = TF_GraphNextOperation(graph, &pos)) != nullptr)
   {
-     std::cout << label<<" - "<<TF_OperationName(oper)<<" "<< std::endl;
+     fprintf(stderr," %s - %s \n",label,TF_OperationName(oper)); 
+     //std::cout << label<<" - "<<TF_OperationName(oper)<<" "<< std::endl;
   }
  return 1;
 }
@@ -66,7 +67,7 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,unsigned int force
 
   if (result)
   {
-   std::cerr<<"Caching networks after initialization to be ready for use..\n";
+   fprintf(stderr,"Caching networks after initialization to be ready for use..\n");
    std::vector<float> emptyValues;
    for (int i=0; i<749; i++)
     {
@@ -255,7 +256,7 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
 
   if (input.size()==749)
       {
-         std::cerr<<"MocapNET: Input was given precompressed\n";
+         fprintf(stderr,"MocapNET: Input was given precompressed\n");
          mnetInput = input;
       } else
   if (input.size()==171)
@@ -267,32 +268,32 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
       } else
   if (input.size()!=171)
       {
-         std::cerr<<"MocapNET: Incorrect size of COCO input  was "<<input.size()<<" (but should be 171) \n";
+         fprintf(stderr,"MocapNET: Incorrect size of COCO input  was %lu (but should be 171) \n",input.size());
          return emptyResult;
       }
 
-  if (mnetInput.size()!=749) { std::cerr<<"MocapNET: Incorrect size of MocapNET input .. \n"; return emptyResult; }
+  if (mnetInput.size()!=749) { fprintf(stderr,"MocapNET: Incorrect size of MocapNET input .. \n"); return emptyResult; }
 
   std::vector<float> direction = predictTensorflow(&mnet->allModel,mnetInput);
 
   if (direction.size()>0)
   {
-   std::cerr<<"Direction is : "<<direction[0]<<" ";
+   fprintf(stderr,NORMAL "Direction is : %0.2f " NORMAL , direction[0] );
    if ( (direction[0]<-90) || (direction[0]>90) )
    { //Back ----------------------------------------------=
-    std::cerr<<"Back\n";
+    fprintf(stderr,"Back\n");
     std::vector<float> result = predictTensorflow(&mnet->backModel,mnetInput);
     result[4]=undoOrientationTrickForBackOrientation(result[4]);
     return result;
    } else
    { //Front ----------------------------------------------
-    std::cerr<<"Front\n";
+    fprintf(stderr,"Front\n");
     std::vector<float> result = predictTensorflow(&mnet->frontModel,mnetInput);
     return result;
    }
   } else
   {
-    std::cerr<<"Unable to predict pose direction..\n";
+    fprintf(stderr,"Unable to predict pose direction..\n");
   }
 
  //-----------------

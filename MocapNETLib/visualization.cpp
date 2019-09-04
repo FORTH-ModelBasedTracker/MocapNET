@@ -134,7 +134,7 @@ int visualizePoints(
             }
            } else
            {
-             std::cerr<<"Joint Out Of Bounds..";
+             fprintf(stderr,"Joint Out Of Bounds..");
            }
 
           }

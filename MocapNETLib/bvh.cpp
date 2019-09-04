@@ -21,10 +21,10 @@ int initializeBVHConverter()
      return 1;
    } else
    {
-      std::cerr<<"initializeBVHConverter: Failed to bvh_loadBVH(header.bvh)..\n";
+      fprintf(stderr,"initializeBVHConverter: Failed to bvh_loadBVH(header.bvh)..\n");
    }
  #else
-   std::cerr<<"initializeBVHConverter:  BVH code not compiled in..\n";
+   fprintf(stderr,"initializeBVHConverter:  BVH code not compiled in..\n");
  #endif // USE_BVH
  return 0;
 }
@@ -118,21 +118,21 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
           } //-----------------
           else
           {
-             std::cerr<<"bvh_loadTransformForMotionBuffer failed..\n";
+             fprintf(stderr,"bvh_loadTransformForMotionBuffer failed..\n");
           }
      free(motionBuffer);
     } else
     {
-     std::cerr<<"Could not allocate enough memory..\n";
+     fprintf(stderr,"Could not allocate enough memory..\n");
     }
   } else
   {
-     std::cerr<<"Could not initialize BVH subsystem..\n";
+     fprintf(stderr,"Could not initialize BVH subsystem..\n");
   }
 
 
  #else
-   std::cerr<<"BVH code is not compiled in this version of MocapNET\n";
+   fprintf(stderr,"BVH code is not compiled in this version of MocapNET\n");
 
  #endif // USE_BVH
  return result;
@@ -229,7 +229,7 @@ std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,
 
 
  #else
-   std::cerr<<"BVH code is not compiled in this version of MocapNET\n";
+   fprintf(stderr,"BVH code is not compiled in this version of MocapNET\n");
 
  #endif // USE_BVH
  return result;

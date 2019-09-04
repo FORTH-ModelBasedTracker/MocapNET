@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
   if (initializeBVHConverter())
     {
-     std::cerr<<"BVH code initalization successfull..\n";
+      fprintf(stderr,"BVH code initalization successfull..\n");
     }
 
 
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
        } else
        {
-         std::cerr<<"Done.. \n";
+         fprintf(stderr,"Done.. \n");
          break;
        }
 
@@ -123,13 +123,13 @@ int main(int argc, char *argv[])
     {
       char * bvhHeaderToWrite=0;
       if ( writeBVHFile("out.bvh",bvhHeaderToWrite, bvhFrames) )
-              { std::cerr<<"Successfully wrote "<<bvhFrames.size()<<" frames to bvh file.. \n";  } else
-              { std::cerr<<"Failed to write "<<bvhFrames.size()<<" frames to bvh file.. \n";     }
+              { fprintf(stderr,"Successfully wrote %lu frames to bvh file.. \n",bvhFrames.size());  } else
+              { fprintf(stderr,"Failed to write %lu frames to bvh file.. \n",bvhFrames.size());     }
 
 
 
       float averageTime=(float) totalTime/totalSamples;
-      std::cerr<<"\nTotal "<<totalTime<<"ms for "<<totalSamples<<" samples - Average "<<averageTime<<"ms - "<<1000/averageTime<<" fps\n";
+      fprintf(stderr,"\nTotal %0.2f ms for %u samples - Average %0.2f ms - %0.2f fps\n",totalTime,totalSamples,averageTime,(float) 1000/averageTime);
     }
 
 

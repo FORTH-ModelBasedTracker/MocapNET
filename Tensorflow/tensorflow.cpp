@@ -259,16 +259,14 @@ std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
                                                                    )
 {
   //std::cout << "Input image : cols/width = "<<width<<", rows/height "<<height<<" "<<std::endl;
-  std::vector<std::vector<float> > matrix;
+  
+   std::vector<std::vector<float> > matrix; //This function output 
+   
 
   TF_Tensor* output_tensor = nullptr;
   std::vector<std::int64_t> input_dims = {1,height,width,3};
-/*
-  input_dims.push_back((int64_t) 1);
-  input_dims.push_back((int64_t) height);
-  input_dims.push_back((int64_t) width);
-  input_dims.push_back((int64_t) 3);
-*/
+
+
   TF_Tensor* input_tensor = tf_utils::CreateTensor(
                                                    TF_FLOAT,
                                                    input_dims.data(), 4,
@@ -308,6 +306,7 @@ std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
   }
 
 /*
+ * Attempting to retreive the correct shape ..
   //===============================================================================
   TF_Operation *operation  = TF_GraphOperationByName(net->graph, net->outputLayerName);
   TF_Output operation_out = {operation, 0};
@@ -325,8 +324,10 @@ std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
 //  std::cout << "TF_OperationNumOutputs "<<num_outputs<<"\n";
 
 
-  float * out_p = static_cast<float*>(TF_TensorData(output_tensor));
 
+ //Retreive output..
+
+  float * out_p = static_cast<float*>(TF_TensorData(output_tensor));
   if (out_p!=nullptr)
   {
    //Rows and columns should be automatically extracted,however
@@ -336,20 +337,24 @@ std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
    unsigned int cols = heatmapHeight; //outputSizeA[2];
    unsigned int hm   = outputSizeA[3];
 
-   for(int i=0; i<hm; ++i)
-   {
+   //For each of the output heatmaps
+   for(int i=0; i<hm; ++i) 
+   {  
      std::vector<float> heatmap(rows*cols);
+     //For each of the rows of a particular heatmap
      for(int r=0;r<rows;++r)
      {
+     //For each of the cols of a particular heatmap
       for(int c=0;c<cols;++c)
       {
         int pos = (r*cols+c) * hm + i;
         heatmap[r*cols+c] = out_p[pos];
       }
      }
+    //Retreive the values in our matrix
     matrix.push_back(heatmap);
    }
-  }
+  } //We have output..
 
  tf_utils::DeleteTensor(input_tensor);
  return matrix;

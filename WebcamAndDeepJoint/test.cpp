@@ -161,7 +161,8 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
   unsigned long openPoseComputationTimeInMilliseconds = (unsigned long) (endTime-startTime)/1000;
            if (!visualize)
            { //If we don't visualize using OpenCV output performance 
-             std::cerr<<"OpenPose 2DSkeleton @ "<<openPoseComputationTimeInMilliseconds<<" ms \n";
+             fprintf(stderr,"OpenPose 2DSkeleton @ %lu ms \n",openPoseComputationTimeInMilliseconds);
+             
            }
            
   *fps = (float) 1000000/(endTime-startTime);
@@ -190,7 +191,7 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
   
   } else
   {
-    std::cerr<<"Cannot Flatten Empty Skeleton (Got "<<points.size()<<" points and had to have at least "<<(UT_COCO_PARTS-1)<<")...\n";
+    fprintf(stderr,"Cannot Flatten Empty Skeleton (Got %lu points and had to have at least %u)...\n",points.size(),(UT_COCO_PARTS-1));
     std::vector<float> emptyVector;
     return emptyVector;
   }
@@ -216,11 +217,11 @@ float convertStartEndTimeFromMicrosecondsToFPS(unsigned long startTime, unsigned
 int main(int argc, char *argv[])
 {
   //int i=system("killall firefox thunderbird"); //Don't run out of RAM..
-  std::cerr<<"Attempting to open input device\n";
+  fprintf(stderr,"Attempting to open input device\n");
 
   if (initializeBVHConverter())
     {
-     std::cerr<<"BVH allocation happened we are going to have BVH visualization \n";
+     fprintf(stderr,"BVH allocation happened we are going to have BVH visualization \n");
     }
 
   unsigned int forceCPUMocapNET=1;
@@ -283,22 +284,22 @@ int main(int argc, char *argv[])
   VideoCapture cap(webcam); // open the default camera
   if (webcam==0)
      {
-      std::cerr<<"Trying to open webcam\n";
+      fprintf(stderr,"Trying to open webcam\n");
       cap.set(CV_CAP_PROP_FRAME_WIDTH,640);
       cap.set(CV_CAP_PROP_FRAME_HEIGHT,480);
      } else
      {
-      std::cerr<<"Trying to open "<<webcam<<"\n";
+      fprintf(stderr,"Trying to open %s\n",webcam);
      }
 
   if (!cap.isOpened())  // check if succeeded to connect to the camera
           { 
-            std::cerr<<"Openning input stream  `"<<webcam<<" ` failed\n"; 
+            fprintf(stderr,"Openning input stream `%s` failed\n",webcam); 
             return 1;
            }
    
   signed int totalNumberOfFrames = cap.get(CV_CAP_PROP_FRAME_COUNT); 
-  std::cerr<<"totalNumberOfFrames in "<<webcam<<" is "<<totalNumberOfFrames<<" \n"; 
+  fprintf(stderr,"totalNumberOfFrames in %s is %u \n",webcam,totalNumberOfFrames); 
   //exit(0);
    
   cv::Mat frame;
@@ -354,6 +355,7 @@ int main(int argc, char *argv[])
           {
            // Try to crop around the last closest
            //------------------------------------------------------------------------
+           if (
            getBestCropWindow(
                             tryForMaximumCrop,
                              &offsetX,
@@ -365,11 +367,17 @@ int main(int argc, char *argv[])
                              inputHeight2DJointDetector,
                              frameWidth,
                              frameHeight
-                            );
-
-           cv::Rect rectangleROI(offsetX,offsetY,croppedDimensionWidth,croppedDimensionHeight);
-           frame = frame(rectangleROI);
-           cropBBox.populated=0;
+                            )
+                   )         
+                   {
+                       if (croppedDimensionWidth!=croppedDimensionHeight)
+                       {
+                         fprintf(stderr,"Bounding box produced was not a rectangle (%ux%u)..!\n",croppedDimensionWidth,croppedDimensionHeight);  
+                       }
+                       cv::Rect rectangleROI(offsetX,offsetY,croppedDimensionWidth,croppedDimensionHeight);
+                       frame = frame(rectangleROI);
+                       cropBBox.populated=0; 
+                   }
           } else
           {
            fprintf(stderr,"Haven't detected a person, so seeking a skeleton in the full image, regardless of distortion..\n");
@@ -409,7 +417,7 @@ int main(int argc, char *argv[])
          
          if (!visualize)
            { //If we don't visualize using OpenCV output performance
-             std::cerr<<"MocapNET 3DSkeleton @ "<<fpsMocapNET<<" fps \n";
+             fprintf(stderr,"MocapNET 3DSkeleton @ %0.2f fps \n",fpsMocapNET);
            }
 
          //If we are not running live ( aka not from a webcam with no fixed frame limit )
@@ -533,14 +541,12 @@ int main(int argc, char *argv[])
 
         ++frameNumber;
       } else
-      { 
-          std::cerr<<"OpenCV failed to snap frame "<<frameNumber<<" from your input source ( "<<webcam<<") \n"; 
-           
+      {
           if (totalNumberOfFrames>0)
           { 
            if (skippedFrames+frameNumber>=totalNumberOfFrames)
-            {
-             std::cerr<<"Stopping.. \n"; 
+            { 
+             fprintf(stderr,GREEN "Stream appears to have ended..\n" NORMAL);
              break;  
             } else
             {
@@ -551,28 +557,32 @@ int main(int argc, char *argv[])
             ++skippedFrames;   
           }
           
-          std::cerr<<"Skipped frames  "<<skippedFrames<<" / "<<frameNumber<<" \n"; 
+          fprintf(stderr,YELLOW "OpenCV failed to snap frame %u from your input source (%s)\n" NORMAL,frameNumber,webcam);
+          fprintf(stderr,NORMAL "Skipped frames %u/%u\n" NORMAL,skippedFrames,frameNumber);
       }
      
     } //Master While Frames Exist loop
       
       //After beeing done with the frames gathered the bvhFrames vector should be full of our data, so maybe we want to write it to a file..!
       if (!live)
-      {
-       std::cerr<<"Will now write BVH file to "<<outputPath<<"\n";   
+      { 
+       fprintf(stderr,"Will now write BVH file to %s.. \n",outputPath); 
        //just use BVH header   
        if ( writeBVHFile(outputPath,0,bvhFrames) )
-            { std::cerr<<"Successfully wrote "<<bvhFrames.size()<<" frames to bvh file.. \n";  } else
-            { std::cerr<<"Failed to write "<<bvhFrames.size()<<" frames to bvh file.. \n";     }
+            { fprintf(stderr,GREEN "Successfully wrote %lu frames to bvh file.. \n" NORMAL,bvhFrames.size()); } else
+            { fprintf(stderr,RED "Failed to write %lu frames to bvh file.. \n" NORMAL,bvhFrames.size());      }
         if (skippedFrames>0)
-            { std::cerr<<"Please note that while getting input "<<skippedFrames<<"  frames where skipped due to OpenCV related errors\n"; }    
+            { fprintf(stderr,"Please note that while getting input %u frames where skipped due to OpenCV related errors\n",skippedFrames); }    
       } else
-      { std::cerr<<"Will not record a bvh file since live sessions can be arbitrarily long..\n"; }
+      { fprintf(stderr,"Will not record a bvh file since live sessions can be arbitrarily long..\n"); }
     } else
-    { std::cerr<<"Was not able to load Tensorflow model for 2D joint detection..\n"; }
+    { fprintf(stderr,"Was not able to load Tensorflow model for 2D joint detection..\n"); }
    } else
-   { std::cerr<<"Was not able to load MocapNET, please make sure you have the appropriate models downloaded..\n"; }
+   { fprintf(stderr,"Was not able to load MocapNET, please make sure you have the appropriate models downloaded..\n"); }
     // the camera will be deinitialized automatically in VideoCapture destructor
+    
+    
+    fprintf(stderr,NORMAL "MocapNET Live Demo finished.\n" NORMAL);
     return 0;
 }
 

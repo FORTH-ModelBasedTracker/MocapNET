@@ -168,7 +168,7 @@ void printCPUName()
      int i=system("cat /proc/cpuinfo | grep \"model name\" | uniq");
      if (i!=0)
        {
-         std::cerr<<"Could not get our CPU model name\n";
+         fprintf(stderr,"Could not get our CPU model name\n");
        }
 }
 
@@ -200,9 +200,9 @@ int main(int argc, char *argv[])
    std::vector<float> outputValuesExpected;
    if (MocapNETTestInputNumberOfSamples!=MocapNETTestOutputNumberOfSamples)
    {
-     std::cerr<<"Wrong number of input/output samples.. \n";
-     std::cerr<<"There has been a mistake during packaging of MocapNET or you have done something weird with the hardcoded input/output samples\n";
-     std::cerr<<"Feel free to revert to master or open a ticket here https://github.com/FORTH-ModelBasedTracker/MocapNET/issues\n";
+     fprintf(stderr,"Wrong number of input/output samples.. \n");
+     fprintf(stderr,"There has been a mistake during packaging of MocapNET or you have done something weird with the hardcoded input/output samples\n");
+     fprintf(stderr,"Feel free to revert to master or open a ticket here https://github.com/FORTH-ModelBasedTracker/MocapNET/issues\n");
    }
      else
    {
@@ -280,7 +280,7 @@ int main(int argc, char *argv[])
      //Do the final calculation for the average framerate
      float averageTime=(float) totalTime/(numberOfRepetitions*MocapNETTestInputNumberOfSamples);
      if (averageTime==0.0) { averageTime=0.000001; } //Take care of division by zero
-     std::cerr<<"\nTotal "<<totalTime<<"ms for "<<(numberOfRepetitions*MocapNETTestInputNumberOfSamples)<<" samples - Average "<<averageTime<<"ms - "<<1000/averageTime<<" fps\n";
+     fprintf(stderr,"\nTotal %0.2f ms for %u samples - Average %0.2f ms - %0.2f fps\n",totalTime,(numberOfRepetitions*MocapNETTestInputNumberOfSamples),averageTime,(float) 1000/averageTime);
    }
 
    unloadMocapNET(&mnet);

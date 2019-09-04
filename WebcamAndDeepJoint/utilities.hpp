@@ -14,6 +14,12 @@
 
 using namespace std;
 
+#define NORMAL   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
+
 
 /**
  * @brief This is an array of names for the input Joints expected from the utilities.
