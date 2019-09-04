@@ -238,7 +238,7 @@ int main(int argc, char *argv[])
   int rollValue = 0;
   int distance = 0; 
 
-
+  unsigned int quitAfterNSkippedFrames = 10000;
   //2D Joint Detector Configuration
   unsigned int inputWidth2DJointDetector = 368;
   unsigned int inputHeight2DJointDetector = 368;
@@ -263,6 +263,8 @@ int main(int argc, char *argv[])
     //If you want to force everything on GPU use --gpu
     //If you want to force everything on CPU use --cpu
 
+
+    if (strcmp(argv[i],"--maxskippedframes")==0){ quitAfterNSkippedFrames=atoi(argv[i+1]); } else
     if (strcmp(argv[i],"--novisualization")==0) { visualize=0; } else
     if (strcmp(argv[i],"--openposemini")==0)    { networkPath=(char*) networkPathOpenPoseMiniStatic; joint2DSensitivity=0.4; } else
     if (strcmp(argv[i],"--vnect")==0)           { networkPath = (char*) networkPathVnectStatic;      joint2DSensitivity=0.20; } else
@@ -559,6 +561,13 @@ int main(int argc, char *argv[])
           
           fprintf(stderr,YELLOW "OpenCV failed to snap frame %u from your input source (%s)\n" NORMAL,frameNumber,webcam);
           fprintf(stderr,NORMAL "Skipped frames %u/%u\n" NORMAL,skippedFrames,frameNumber);
+          
+          if (skippedFrames>quitAfterNSkippedFrames)
+          {
+             fprintf(stderr,RED "We have encountered %u skipped frames so quitting ..\n" NORMAL,quitAfterNSkippedFrames);
+             fprintf(stderr,RED "If you don't want this to happen consider using the flag --maxskippedframes and providing a bigger value ..\n" NORMAL);
+             break;   
+          }
       }
      
     } //Master While Frames Exist loop
