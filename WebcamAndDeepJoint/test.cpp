@@ -235,10 +235,11 @@ int main(int argc, char *argv[])
   unsigned int forceCPUMocapNET=1;
   unsigned int forceCPU2DJointEstimation=0;
 
-  unsigned int live=0,stop=0,frameNumber=0,skippedFrames=0,frameLimit=5000,visualize=1;
+  unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,visualize=1;
   float joint2DSensitivity=0.40;
   const char * webcam = 0;
-
+  
+  int live=0,stop=0;
   int constrainPositionRotation=1;
   int doCrop=1,tryForMaximumCrop=0,drawFloor=1;
   int yawValue = 0;
@@ -517,6 +518,8 @@ int main(int argc, char *argv[])
             if (frameNumber==0)
              {
                cv::imshow("3D Control",controlMat); 
+               
+               createTrackbar("Stop Demo", "3D Control", &stop, 1);
                createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 1);
                createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
                createTrackbar("Maximize Crop", "3D Control", &tryForMaximumCrop, 1);
