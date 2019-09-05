@@ -4,6 +4,21 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
 
+ 
+echo "Generating shortcut"
+echo "[Desktop Entry]" > mocapnet.desktop
+echo "Type=Application" >> mocapnet.desktop
+echo "Name=MocapNET Demo" >> mocapnet.desktop
+echo "Version=1.0" >> mocapnet.desktop
+echo "GenericName=MocapNET" >> mocapnet.desktop
+echo "Icon=$ORIG_DIR/doc/icon.png" >> mocapnet.desktop
+echo "Exec=$ORIG_DIR/WebcamJointBIN --from /dev/video0 --live" >> mocapnet.desktop
+echo "Terminal=false" >> mocapnet.desktop
+echo "StartupNotify=false" >> mocapnet.desktop
+echo "Categories=Application;Graphics;3DGraphics;2DGraphics;" >> mocapnet.desktop
+ 
+
+
 if [ ! -f MotionCapture/READMEFIRST.txt ]; then
 echo "Could not find MotionCapture"
 wget http://ammar.gr/datasets/CMUMotionCaptureDatasets.zip
