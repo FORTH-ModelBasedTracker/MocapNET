@@ -126,7 +126,8 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
                                                                                                                                                            cv::Mat colorImageSmall,
                                                                                                                                                            std::vector<cv::Mat> heatmaps ,
                                                                                                                                                            float minThreshold  ,
-                                                                                                                                                           int visualize
+                                                                                                                                                           int visualize,
+                                                                                                                                                           unsigned int handleMessages
                                                                                                                                                          );
 
 

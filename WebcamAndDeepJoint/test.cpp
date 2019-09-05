@@ -109,7 +109,7 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
   }
   #endif // DISPLAY_ALL_HEATMAPS
 
-  return dj_getNeuralNetworkDetectionsForColorImage(bgr,smallBGR,heatmaps,minThreshold,visualize);
+  return dj_getNeuralNetworkDetectionsForColorImage(bgr,smallBGR,heatmaps,minThreshold,visualize,0);
 }
 
 
@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
   unsigned int forceCPUMocapNET=1;
   unsigned int forceCPU2DJointEstimation=0;
 
-  unsigned int live=0,frameNumber=0,skippedFrames=0,frameLimit=5000,visualize=1;
+  unsigned int live=0,stop=0,frameNumber=0,skippedFrames=0,frameLimit=5000,visualize=1;
   float joint2DSensitivity=0.20;
   const char * webcam = 0;
 
@@ -331,7 +331,7 @@ int main(int argc, char *argv[])
       )
    {
       frameNumber=0;
-      while ( (live) || (frameNumber<frameLimit) )
+      while ( ( (live) || (frameNumber<frameLimit) ) &&  (!stop) )
       {
         // Get Image
         unsigned long acquisitionStart = GetTickCountMicroseconds();
@@ -524,6 +524,7 @@ int main(int argc, char *argv[])
                              fpsMocapNET,
                              visWidth,
                              visHeight,
+                             0,
                              bvhOutput
                             );
 
@@ -534,9 +535,28 @@ int main(int argc, char *argv[])
                cv::moveWindow("3D Points Output",inputWidth2DJointDetector*2,0);
                cv::moveWindow("2D Detections",inputWidth2DJointDetector,0);
              }
-            //Window Event Loop Time..
-            cv::waitKey(1);
-           }
+            
+            
+            //Window Event Loop Time and  Receiving Key Presses..
+            //----------------------------------------------------------------------------------------------------------
+            int key = cv::waitKey(1) ;
+            key = 0x000000FF & key;
+
+             if (key!=255)
+                 {
+                     fprintf(stderr,"Keypress = %u \n",key);            
+                    if  (
+                           (key == 113) ||
+                           (key == 81)
+                          )  
+                           { 
+                               fprintf(stderr,"Stopping MocapNET after keypress..\n");
+                               stop=1;
+                            } // stop capturing by pressing q                 
+                  }
+            //----------------------------------------------------------------------------------------------------------
+
+          }
          //---------------------------------------------------
         }
 

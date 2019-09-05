@@ -30,6 +30,7 @@ int visualizePoints(
                      float fpsMocapNET,
                      unsigned int width,
                      unsigned int height,
+                     unsigned int handleMessages,
                      std::vector<float> mocapNETOutput
                     )
 {
@@ -220,7 +221,8 @@ int visualizePoints(
 
 
   cv::imshow(windowName,img);
-  cv::waitKey(1);
+   if (handleMessages)
+         { cv::waitKey(1); }
   return 1;
   #else
    fprintf(stderr,"OpenCV code not present in this build, cannot show visualization..\n");

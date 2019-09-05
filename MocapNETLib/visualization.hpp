@@ -34,5 +34,6 @@ int visualizePoints(
                      float fpsMocapNET,
                      unsigned int width,
                      unsigned int height,
+                     unsigned int handleMessages,
                      std::vector<float> mocapNETOutput
                    );
