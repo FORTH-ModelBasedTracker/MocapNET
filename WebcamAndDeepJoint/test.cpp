@@ -230,13 +230,7 @@ float convertStartEndTimeFromMicrosecondsToFPS(unsigned long startTime, unsigned
 
 int main(int argc, char *argv[])
 {
-  //int i=system("killall firefox thunderbird"); //Don't run out of RAM..
-  fprintf(stderr,"Attempting to open input device\n");
-
-  if (initializeBVHConverter())
-    {
-     fprintf(stderr,"BVH allocation happened we are going to have BVH visualization \n");
-    }
+  fprintf(stderr,"Welcome to the MocapNET demo\n");
 
   unsigned int forceCPUMocapNET=1;
   unsigned int forceCPU2DJointEstimation=0;
@@ -313,6 +307,13 @@ int main(int argc, char *argv[])
     if (strcmp(argv[i],"--from")==0)              { if (argc>i+1) { webcam = argv[i+1]; } }
   }
 
+
+  if (initializeBVHConverter())
+    {
+     fprintf(stderr,"BVH allocation happened we are going to have BVH visualization \n");
+    }
+
+  fprintf(stderr,"Attempting to open input device\n");
   cv::Mat controlMat = Mat(Size(inputWidth2DJointDetector,2),CV_8UC3, Scalar(0,0,0));
  
   VideoCapture cap(webcam); // open the default camera

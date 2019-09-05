@@ -16,7 +16,7 @@ echo "Exec=$ORIG_DIR/WebcamJointBIN --from /dev/video0 --live --dir \"$ORIG_DIR\
 echo "Terminal=false" >> mocapnet.desktop
 echo "StartupNotify=false" >> mocapnet.desktop
 echo "Categories=Application;Graphics;3DGraphics;2DGraphics;" >> mocapnet.desktop
- 
+chmod +x mocapnet.desktop
 
 
 if [ ! -f MotionCapture/READMEFIRST.txt ]; then
