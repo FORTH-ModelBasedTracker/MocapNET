@@ -22,6 +22,7 @@ int visualizePoints(
                      unsigned int frameNumber,
                      unsigned int skippedFrames,
                      signed int totalNumberOfFrames,
+                     unsigned int numberOfFramesToGrab,
                      int drawFloor,
                      float fpsTotal,
                      float fpsAcquisition,
@@ -169,21 +170,26 @@ int visualizePoints(
         }
   
   
-  if (totalNumberOfFrames>0)
-  {
-    snprintf(textInfo,512,"Frame %u/%u",frameNumber,totalNumberOfFrames);     
-  } else
-  {
-    snprintf(textInfo,512,"Frame %u",frameNumber);     
-  }    
-  
-  cv::Point txtPosition; txtPosition.x=20; txtPosition.y=50;
+  cv::Point txtPosition; txtPosition.x=20; txtPosition.y=20;
   float thickness=1;
   int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
   cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
+  
+  if (numberOfFramesToGrab>0)
+   {  snprintf(textInfo,512,"Grabber will stop after collecting  %u frames",numberOfFramesToGrab); } else
+   { snprintf(textInfo,512,"Live mode, looping forever will not produce a bvh file"); }
+  txtPosition.y+=30;
+  cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
+  
+  
+  if (totalNumberOfFrames>0)
+  { snprintf(textInfo,512,"Frame %u/%u",frameNumber,totalNumberOfFrames); } else
+  { snprintf(textInfo,512,"Frame %u",frameNumber); }    
+  txtPosition.y+=30;
   cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
 
-
+   
+   
   if (skippedFrames>0)
    { 
     txtPosition.y+=30;
@@ -191,11 +197,9 @@ int visualizePoints(
     cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
    }
 
-
 //  txtPosition.y+=40;
 //  snprintf(textInfo,512,"Input Quality : %s",fpsAcquisition);
 //  cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,4,8);
-
 
   txtPosition.y+=30;
   snprintf(textInfo,512,"Acquisition : %0.2f fps",fpsAcquisition);

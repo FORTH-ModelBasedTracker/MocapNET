@@ -277,8 +277,8 @@ int main(int argc, char *argv[])
     if (strcmp(argv[i],"--gpu")==0)             { forceCPUMocapNET=0; forceCPU2DJointEstimation=0; } else
     if (strcmp(argv[i],"--unconstrained")==0)   { constrainPositionRotation=0; } else
     if (strcmp(argv[i],"--nocrop")==0)          { doCrop=0; } else
-    if (strcmp(argv[i],"--live")==0)            { live=1; } else
-    if (strcmp(argv[i],"--from")==0)            { if (argc>i+1) { webcam = argv[i+1]; } }
+    if (strcmp(argv[i],"--live")==0)                  { live=1; frameLimit=0; } else
+    if (strcmp(argv[i],"--from")==0)              { if (argc>i+1) { webcam = argv[i+1]; } }
   }
 
   cv::Mat controlMat = Mat(Size(inputWidth2DJointDetector,2),CV_8UC3, Scalar(0,0,0));
@@ -516,6 +516,7 @@ int main(int argc, char *argv[])
                              frameNumber,
                              skippedFrames,
                              totalNumberOfFrames,
+                             frameLimit,
                              drawFloor,
                              fpsTotal,
                              fpsAcquisition,

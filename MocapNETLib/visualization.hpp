@@ -26,6 +26,7 @@ int visualizePoints(
                      unsigned int frameNumber,
                      unsigned int skippedFrames,
                      signed int totalNumberOfFrames,
+                     unsigned int numberOfFramesToGrab,
                      int drawFloor,
                      float fpsTotal,
                      float fpsAcquisition,
