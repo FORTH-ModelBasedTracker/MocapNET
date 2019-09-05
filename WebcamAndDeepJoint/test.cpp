@@ -51,7 +51,7 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
   float scaleY = (float) inputHeight2DJointDetector/bgr.rows;
   cv::Mat fr_res;
   cv::resize(bgr, fr_res, cv::Size(0,0), scaleX, scaleY);
-  cv::Mat smallBGR = fr_res.clone();
+  cv::Mat smallBGR = fr_res;//ECONOMY .clone();
 
   if (visualize)
         {
@@ -371,7 +371,7 @@ int main(int argc, char *argv[])
         unsigned long acquisitionStart = GetTickCountMicroseconds();
         
         cap >> frame; // get a new frame from camera
-        cv::Mat frameOriginal = frame.clone();
+        cv::Mat frameOriginal = frame; //ECONOMY .clone();
         
         unsigned int frameWidth  =  frame.size().width;  //frame.cols
         unsigned int frameHeight =  frame.size().height; //frame.rows
