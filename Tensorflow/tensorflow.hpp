@@ -104,7 +104,8 @@ std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
                                                                      unsigned int height ,
                                                                      float * data,
                                                                      unsigned int heatmapWidth,
-                                                                     unsigned int heatmapHeight
+                                                                     unsigned int heatmapHeight,
+                                                                     unsigned int numberOfOutputTensors
                                                                    );
 
 

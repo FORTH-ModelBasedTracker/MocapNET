@@ -41,7 +41,8 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
                                                                             unsigned int inputHeight2DJointDetector,
                                                                             unsigned int heatmapWidth2DJointDetector,
                                                                             unsigned int heatmapHeight2DJointDetector,
-                                                                            unsigned int numberOfHeatmaps
+                                                                            unsigned int numberOfHeatmaps,
+                                                                            unsigned int numberOfOutputTensors 
                                                                           )
 {
   // preprocess image. Actually resize
@@ -65,9 +66,19 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
                                                                               (unsigned int) fr_res.rows,
                                                                               (float*) fr_res.data,
                                                                                heatmapWidth2DJointDetector,
-                                                                               heatmapHeight2DJointDetector
+                                                                               heatmapHeight2DJointDetector,
+                                                                               numberOfOutputTensors
                                                                              );
 
+  if (result.size()<3)
+  {
+     fprintf(stderr,"Our 2D neural network did not produce an array of 2D heatmaps..\n"); 
+     fprintf(stderr,"Cannot continue with this output...\n"); 
+     std::vector<cv::Point_<float> > emptyVectorOfPoints;
+     return emptyVectorOfPoints; 
+  }
+  
+  
   unsigned int rows = heatmapWidth2DJointDetector;
   unsigned int cols = heatmapHeight2DJointDetector;
   unsigned int hm = numberOfHeatmaps;
@@ -138,7 +149,8 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
                                                             unsigned int inputHeight2DJointDetector,
                                                             unsigned int heatmapWidth2DJointDetector,
                                                             unsigned int heatmapHeight2DJointDetector,
-                                                            unsigned int numberOfHeatmaps
+                                                            unsigned int numberOfHeatmaps,
+                                                            unsigned int numberOfOutputTensors
                                                           )
 {
   unsigned int frameWidth  =  bgr.size().width; //frame.cols
@@ -155,7 +167,8 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
                                                                                        inputHeight2DJointDetector,
                                                                                        heatmapWidth2DJointDetector,
                                                                                        heatmapHeight2DJointDetector,
-                                                                                       numberOfHeatmaps
+                                                                                       numberOfHeatmaps,
+                                                                                       numberOfOutputTensors
                                                                                      );
   unsigned long endTime = GetTickCountMicroseconds();
   unsigned long openPoseComputationTimeInMilliseconds = (unsigned long) (endTime-startTime)/1000;
@@ -228,7 +241,7 @@ int main(int argc, char *argv[])
   unsigned int forceCPU2DJointEstimation=0;
 
   unsigned int live=0,stop=0,frameNumber=0,skippedFrames=0,frameLimit=5000,visualize=1;
-  float joint2DSensitivity=0.20;
+  float joint2DSensitivity=0.40;
   const char * webcam = 0;
 
   int constrainPositionRotation=1;
@@ -250,13 +263,11 @@ int main(int argc, char *argv[])
   const char   networkPathOpenPoseMiniStatic[]="combinedModel/openpose_model.pb";
   const char   networkPathVnectStatic[]="combinedModel/vnect_sm_pafs_8.1k.pb";
   const char   networkPathFORTHStatic[]="combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb";
-  char * networkPath = (char*) networkPathVnectStatic;
   
   char   networkInputLayer[]="input_1";
-  char   networkOutputLayer[]="k2tfout_1";
-  //const char   networkPath[]="combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb",
-  //const char   networkInputLayer[]="input_1",
-  //const char   networkOutputLayer[]="k2tfout_0"
+  char   networkOutputLayer[]="k2tfout_0";
+  unsigned int numberOfOutputTensors = 3;
+  char * networkPath = (char*) networkPathFORTHStatic; 
   //-------------------------------
 
   for (int i=0; i<argc; i++)
@@ -265,12 +276,28 @@ int main(int argc, char *argv[])
     //If you want to force everything on GPU use --gpu
     //If you want to force everything on CPU use --cpu
 
-
+    //Switch between different 2D detectors --------------------------------------------------------
+    if (strcmp(argv[i],"--openpose")==0)         { 
+                                                  networkPath=(char*) networkPathOpenPoseMiniStatic; 
+                                                  networkOutputLayer[8]='1';  
+                                                  joint2DSensitivity=0.4; 
+                                                  numberOfOutputTensors = 4;
+                                                 } else
+    if (strcmp(argv[i],"--forth")==0)            { 
+                                                   networkPath=(char*) networkPathFORTHStatic; 
+                                                   networkOutputLayer[8]='0';  
+                                                   joint2DSensitivity=0.4;  
+                                                   numberOfOutputTensors = 3;
+                                                 } else
+    if (strcmp(argv[i],"--vnect")==0)            { 
+                                                   networkPath = (char*) networkPathVnectStatic;  
+                                                   networkOutputLayer[8]='1';      
+                                                   joint2DSensitivity=0.20; 
+                                                   numberOfOutputTensors = 4;
+                                                 } else
+    // Various other switches -------------------------------------------------------------------
     if (strcmp(argv[i],"--maxskippedframes")==0){ quitAfterNSkippedFrames=atoi(argv[i+1]); } else
     if (strcmp(argv[i],"--novisualization")==0) { visualize=0; } else
-    if (strcmp(argv[i],"--openposemini")==0)    { networkPath=(char*) networkPathOpenPoseMiniStatic; joint2DSensitivity=0.4; } else
-    if (strcmp(argv[i],"--forth")==0)    { networkPath=(char*) networkPathFORTHStatic; networkOutputLayer[8]='0';  joint2DSensitivity=0.4; } else
-    if (strcmp(argv[i],"--vnect")==0)           { networkPath = (char*) networkPathVnectStatic;      joint2DSensitivity=0.20; } else
     if (strcmp(argv[i],"--2dmodel")==0)         { networkPath=argv[i+1]; } else
     if (strcmp(argv[i],"--output")==0)          { outputPath=argv[i+1]; } else 
     if (strcmp(argv[i],"-o")==0)                { outputPath=argv[i+1]; } else 
@@ -410,7 +437,8 @@ int main(int argc, char *argv[])
                                                                             inputHeight2DJointDetector,
                                                                             heatmapWidth2DJointDetector,
                                                                             heatmapHeight2DJointDetector,
-                                                                            numberOfHeatmaps
+                                                                            numberOfHeatmaps,
+                                                                            numberOfOutputTensors
                                                                            );
 
          // Get MocapNET prediction

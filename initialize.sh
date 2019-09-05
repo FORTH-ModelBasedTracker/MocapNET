@@ -36,9 +36,9 @@ if [ ! -f vnect_sm_pafs_8.1k.pb ]; then
   wget http://ammar.gr/datasets/combinedModel/vnect_sm_pafs_8.1k.pb
 fi
 
-#if [ ! -f mobnet2_tiny_vnect_sm_1.9k.pb ]; then
-#  wget http://ammar.gr/datasets/combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb
-#fi
+if [ ! -f mobnet2_tiny_vnect_sm_1.9k.pb ]; then
+  wget http://ammar.gr/datasets/combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb
+fi
  
 cd "$DIR"
 

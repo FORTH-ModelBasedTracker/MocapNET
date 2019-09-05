@@ -122,14 +122,17 @@ int loadTensorflowInstance(
    //--------------------------------------------------------------------------------------------------------------
    net->status      = TF_NewStatus();
    net->options     = TF_NewSessionOptions();
-/*
-   net->session = tf.ConfigProto(
-                                  device_count={'CPU' : 1, 'GPU' : 0},
-                                  allow_soft_placement=True,
-                                  log_device_placement=False
-                                 );*/
   if (forceCPU)
-  { //How do you end up with this byte array ?
+  { 
+      //How do you end up with this byte array you might ask ?
+      //You use the python code and extract the configuration bytes and copy paste them here..
+     // https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/Tensorflow/createTensorflowConfigurationForC.py
+    /*net->session = tf.ConfigProto(
+                                                                          device_count={'CPU' : 1, 'GPU' : 0},
+                                                                          allow_soft_placement=True,
+                                                                          log_device_placement=False
+                                 );*/
+
     uint8_t config[] = { 0xa,0x7,0xa,0x3,0x43,0x50,0x55,0x10,0x1,0xa,0x7,0xa,0x3,0x47,0x50,0x55,0x10,0x0,0x38,0x1};
     TF_SetConfig(net->options, (void*)config,  20 , net->status);
   }
@@ -251,7 +254,7 @@ std::vector<float> predictTensorflow(struct TensorflowInstance * net,std::vector
 }
 
 
-
+ 
 
 
 std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
@@ -260,13 +263,11 @@ std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
                                                                      unsigned int height ,
                                                                      float * data,
                                                                      unsigned int heatmapWidth,
-                                                                     unsigned int heatmapHeight
+                                                                     unsigned int heatmapHeight,
+                                                                     unsigned int numberOfOutputTensors
                                                                    )
 {
-  //std::cout << "Input image : cols/width = "<<width<<", rows/height "<<height<<" "<<std::endl;
-  
    std::vector<std::vector<float> > matrix; //This function output 
-   
 
   TF_Tensor* output_tensor = nullptr;
   std::vector<std::int64_t> input_dims = {1,height,width,3};
@@ -295,35 +296,33 @@ if (output_tensor==nullptr)
 }
 
 
+/*
+  TF_Output outputO = TF_Output{net->operation, 0};
+  TF_Status* s = TF_NewStatus();
+  //TF_Output feed_out_0 = TF_Output{output_tensor, 0};
+  int num_dims;
 
-  //===============================================================================
+  // Fetch the shape, it should be completely unknown.
+  num_dims = TF_GraphGetTensorNumDims(net->graph,outputO, s);
+  fprintf(stderr,"Number of dimensions is %u \n",num_dims);
+ */
+  
+  //=============================================================================== 
   int64_t outputSizeA[32]={0};
   TF_GraphGetTensorShape(
                          net->graph,
                          net->output_operation,
-                         outputSizeA, 4,
+                         outputSizeA, numberOfOutputTensors,
                          net->status
                         );
+                        
+                        
   if (TF_GetCode(net->status) != TF_OK) 
        {   
-           fprintf(stderr,RED "Error TF_GraphGetTensorShape for output\n" NORMAL); 
-           
-           //TEST CONTINUING..
-           
-           //TF_DeleteStatus(net->status); 
-           //tf_utils::DeleteTensor(input_tensor); 
-           //return matrix; 
-           
-           fprintf(stderr,"Let's see how big the output is \n"); 
-           float * out_p = static_cast<float*>(TF_TensorData(output_tensor));
-           std::vector<float> heatmapRAW;
-           unsigned int pos=0;
-           while (pos<18 * 46 * 46) 
-           {
-               fprintf(stderr, " %u ",pos );
-               heatmapRAW.push_back(out_p[pos]);
-               pos++;
-           }
+           fprintf(stderr,RED "Error TF_GraphGetTensorShape for output, numberOfOutputTensors is probably wrong..! \n" NORMAL); 
+           TF_DeleteStatus(net->status); 
+           tf_utils::DeleteTensor(input_tensor); 
+           return matrix;  
         }
 
 
@@ -357,16 +356,15 @@ if (output_tensor==nullptr)
 
 
  //Retreive output..
-
   float * out_p = static_cast<float*>(TF_TensorData(output_tensor));
   if (out_p!=nullptr)
   {
    //Rows and columns should be automatically extracted,however
    //tensorflow and TF_GraphGetTensorShape returns -1,-1 as their dimensions
    //https://github.com/tensorflow/tensorflow/blob/master/tensorflow/c/c_api.h#L239
-   unsigned int rows = heatmapWidth; //outputSizeA[1];
-   unsigned int cols = heatmapHeight; //outputSizeA[2];
-   unsigned int hm   = outputSizeA[3];
+   unsigned int rows = heatmapWidth; //outputSizeA[numberOfOutputTensors-3];
+   unsigned int cols = heatmapHeight; //outputSizeA[numberOfOutputTensors-2];
+   unsigned int hm   = outputSizeA[numberOfOutputTensors-1];
 
    //For each of the output heatmaps
    for(int i=0; i<hm; ++i) 
@@ -386,7 +384,6 @@ if (output_tensor==nullptr)
     matrix.push_back(heatmap);
    }
   } //We have output..
-
  tf_utils::DeleteTensor(input_tensor);
  return matrix;
 }
