@@ -8,6 +8,7 @@
 using namespace cv;
 
 #include <cstdlib>
+#include <unistd.h>
 
 #include "../MocapNETLib/jsonCocoSkeleton.h"
 #include "../MocapNETLib/jsonMocapNETHelpers.cpp"
@@ -296,6 +297,7 @@ int main(int argc, char *argv[])
                                                    numberOfOutputTensors = 4;
                                                  } else
     // Various other switches -------------------------------------------------------------------
+    if (strcmp(argv[i],"--dir")==0)             { chdir(argv[i+1]); } else
     if (strcmp(argv[i],"--maxskippedframes")==0){ quitAfterNSkippedFrames=atoi(argv[i+1]); } else
     if (strcmp(argv[i],"--novisualization")==0) { visualize=0; } else
     if (strcmp(argv[i],"--2dmodel")==0)         { networkPath=argv[i+1]; } else
