@@ -249,9 +249,11 @@ int main(int argc, char *argv[])
   char * outputPath = (char*) outputPathStatic;
   const char   networkPathOpenPoseMiniStatic[]="combinedModel/openpose_model.pb";
   const char   networkPathVnectStatic[]="combinedModel/vnect_sm_pafs_8.1k.pb";
+  const char   networkPathFORTHStatic[]="combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb";
   char * networkPath = (char*) networkPathVnectStatic;
-  const char   networkInputLayer[]="input_1";
-  const char   networkOutputLayer[]="k2tfout_1";
+  
+  char   networkInputLayer[]="input_1";
+  char   networkOutputLayer[]="k2tfout_1";
   //const char   networkPath[]="combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb",
   //const char   networkInputLayer[]="input_1",
   //const char   networkOutputLayer[]="k2tfout_0"
@@ -267,6 +269,7 @@ int main(int argc, char *argv[])
     if (strcmp(argv[i],"--maxskippedframes")==0){ quitAfterNSkippedFrames=atoi(argv[i+1]); } else
     if (strcmp(argv[i],"--novisualization")==0) { visualize=0; } else
     if (strcmp(argv[i],"--openposemini")==0)    { networkPath=(char*) networkPathOpenPoseMiniStatic; joint2DSensitivity=0.4; } else
+    if (strcmp(argv[i],"--forth")==0)    { networkPath=(char*) networkPathFORTHStatic; networkOutputLayer[8]='0';  joint2DSensitivity=0.4; } else
     if (strcmp(argv[i],"--vnect")==0)           { networkPath = (char*) networkPathVnectStatic;      joint2DSensitivity=0.20; } else
     if (strcmp(argv[i],"--2dmodel")==0)         { networkPath=argv[i+1]; } else
     if (strcmp(argv[i],"--output")==0)          { outputPath=argv[i+1]; } else 

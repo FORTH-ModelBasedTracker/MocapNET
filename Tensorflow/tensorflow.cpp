@@ -26,6 +26,11 @@ std::vector<int> get_tensor_shape(tensorflow::Tensor& tensor)
     return shape;
 }*/
 
+#define NORMAL   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
 
 #include <sys/time.h>
 #include <unistd.h>
@@ -65,7 +70,7 @@ int checkAndDeallocate(TF_Status * s,const char * label)
 {
   if (TF_GetCode(s) != TF_OK)
   {
-    std::cout << "Error " << label <<"\n";
+     fprintf(stderr,RED "Error %s  \n" NORMAL,label );  
     TF_DeleteStatus(s);
     return 0;
   }
@@ -101,12 +106,12 @@ int loadTensorflowInstance(
    //tf_utils::PrintOp(net->graph);
    //--------------------------------------------------------------------------------------------------------------
    net->input_operation  = {TF_GraphOperationByName(net->graph, inputTensor), 0};
-   if (net->input_operation.oper == nullptr) { listNodes(filename,net->graph); std::cout << "Can't init input for " <<filename << std::endl; return 0; }
+   if (net->input_operation.oper == nullptr) { listNodes(filename,net->graph); fprintf(stderr,"Can't init input for %s \n",filename); return 0; }
    std::cout << " Input Tensor for " <<filename << std::endl;
    tf_utils::PrintTensorInfo(net->graph,inputTensor,0,0);
 
    net->output_operation = {TF_GraphOperationByName(net->graph, outputTensor), 0};
-   if (net->output_operation.oper == nullptr)  { listNodes(filename,net->graph); std::cout << "Can't init output for " <<filename << std::endl; return 0; }
+   if (net->output_operation.oper == nullptr)  { listNodes(filename,net->graph); fprintf(stderr,"Can't init output for %s \n",filename); return 0; }
    std::cout << " Output Tensor for " <<filename << std::endl;
    tf_utils::PrintTensorInfo(net->graph,outputTensor,0,0);
    //--------------------------------------------------------------------------------------------------------------
@@ -124,7 +129,7 @@ int loadTensorflowInstance(
                                   log_device_placement=False
                                  );*/
   if (forceCPU)
-  {
+  { //How do you end up with this byte array ?
     uint8_t config[] = { 0xa,0x7,0xa,0x3,0x43,0x50,0x55,0x10,0x1,0xa,0x7,0xa,0x3,0x47,0x50,0x55,0x10,0x0,0x38,0x1};
     TF_SetConfig(net->options, (void*)config,  20 , net->status);
   }
@@ -282,18 +287,44 @@ std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
                  net->status // Output status.
                 );
 
-  if (TF_GetCode(net->status) != TF_OK) { std::cout << "Error run session"; TF_DeleteStatus(net->status); tf_utils::DeleteTensor(input_tensor); return matrix; }
+  if (TF_GetCode(net->status) != TF_OK) {   fprintf(stderr,RED "Error running session\n"  NORMAL); TF_DeleteStatus(net->status); tf_utils::DeleteTensor(input_tensor); return matrix; }
+
+if (output_tensor==nullptr)
+{
+     fprintf(stderr,RED "Error retrieving output..\n"  NORMAL); TF_DeleteStatus(net->status); tf_utils::DeleteTensor(input_tensor); return matrix;
+}
+
 
 
   //===============================================================================
-  int64_t outputSizeA[32];
+  int64_t outputSizeA[32]={0};
   TF_GraphGetTensorShape(
                          net->graph,
                          net->output_operation,
                          outputSizeA, 4,
                          net->status
                         );
-  if (TF_GetCode(net->status) != TF_OK) { std::cout << "Error TF_GraphGetTensorShape for output\n"; TF_DeleteStatus(net->status); tf_utils::DeleteTensor(input_tensor); return matrix; }
+  if (TF_GetCode(net->status) != TF_OK) 
+       {   
+           fprintf(stderr,RED "Error TF_GraphGetTensorShape for output\n" NORMAL); 
+           
+           //TEST CONTINUING..
+           
+           //TF_DeleteStatus(net->status); 
+           //tf_utils::DeleteTensor(input_tensor); 
+           //return matrix; 
+           
+           fprintf(stderr,"Let's see how big the output is \n"); 
+           float * out_p = static_cast<float*>(TF_TensorData(output_tensor));
+           std::vector<float> heatmapRAW;
+           unsigned int pos=0;
+           while (pos<18 * 46 * 46) 
+           {
+               fprintf(stderr, " %u ",pos );
+               heatmapRAW.push_back(out_p[pos]);
+               pos++;
+           }
+        }
 
 
   //===============================================================================
