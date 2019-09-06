@@ -8,37 +8,35 @@
 
 
 void addSkeletonJointFromTwoJoints(
-                                    struct skeletonCOCO * sk,
-                                    std::vector<float> &result,
-                                    int jointIDA,
-                                    int jointIDB
-                                   );
+    struct skeletonCOCO * sk,
+    std::vector<float> &result,
+    int jointIDA,
+    int jointIDB
+);
 
 
 void addSkeletonJoint(
-                       struct skeletonCOCO * sk,
-                       std::vector<float> &result,
-                       int jointID
-                      );
+    struct skeletonCOCO * sk,
+    std::vector<float> &result,
+    int jointID
+);
 
 void addRightFinger(
-                    struct skeletonCOCO * sk,
-                    std::vector<float> &result,
-                    int fingerJointA,
-                    int fingerJointB,
-                    int fingerJointC
-                   );
+    struct skeletonCOCO * sk,
+    std::vector<float> &result,
+    int fingerJointA,
+    int fingerJointB,
+    int fingerJointC
+);
 
 
 
 void addLeftFinger(
-                    struct skeletonCOCO * sk,
-                    std::vector<float> &result,
-                    int fingerJointA,
-                    int fingerJointB,
-                    int fingerJointC
-                   );
+    struct skeletonCOCO * sk,
+    std::vector<float> &result,
+    int fingerJointA,
+    int fingerJointB,
+    int fingerJointC
+);
 
 std::vector<float> flattenskeletonCOCOToVector(struct skeletonCOCO * sk,unsigned int width ,unsigned int height);
-
-

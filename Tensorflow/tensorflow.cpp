@@ -42,23 +42,26 @@ unsigned long tickBase = 0;
 
 unsigned long GetTickCountMicroseconds()
 {
-   struct timespec ts;
-   if ( clock_gettime(CLOCK_MONOTONIC,&ts) != 0) { return 0; }
+    struct timespec ts;
+    if ( clock_gettime(CLOCK_MONOTONIC,&ts) != 0)
+        {
+            return 0;
+        }
 
-   if (tickBase==0)
-   {
-     tickBase = ts.tv_sec*1000000 + ts.tv_nsec/1000;
-     return 0;
-   }
+    if (tickBase==0)
+        {
+            tickBase = ts.tv_sec*1000000 + ts.tv_nsec/1000;
+            return 0;
+        }
 
-   return ( ts.tv_sec*1000000 + ts.tv_nsec/1000 ) - tickBase;
+    return ( ts.tv_sec*1000000 + ts.tv_nsec/1000 ) - tickBase;
 }
 
 
 
 unsigned long GetTickCountMilliseconds()
 {
-   return (unsigned long) GetTickCountMicroseconds()/1000;
+    return (unsigned long) GetTickCountMicroseconds()/1000;
 }
 
 
@@ -68,97 +71,125 @@ unsigned long GetTickCountMilliseconds()
 
 int checkAndDeallocate(TF_Status * s,const char * label)
 {
-  if (TF_GetCode(s) != TF_OK)
-  {
-     fprintf(stderr,RED "Error %s  \n" NORMAL,label );  
-    TF_DeleteStatus(s);
-    return 0;
-  }
- return 1;
+    if (TF_GetCode(s) != TF_OK)
+        {
+            fprintf(stderr,RED "Error %s  \n" NORMAL,label );
+            TF_DeleteStatus(s);
+            return 0;
+        }
+    return 1;
 }
 
 
 void listNodes(const char * label , TF_Graph* graph)
 {
-  size_t pos = 0;
-  TF_Operation* oper;
-  std::cout << "Nodes list : \n";
-  while ((oper = TF_GraphNextOperation(graph, &pos)) != nullptr)
-  {
-     std::cout << label<<" - "<<TF_OperationName(oper)<<" "<< std::endl;
-  }
+    size_t pos = 0;
+    TF_Operation* oper;
+    std::cout << "Nodes list : \n";
+    while ((oper = TF_GraphNextOperation(graph, &pos)) != nullptr)
+        {
+            std::cout << label<<" - "<<TF_OperationName(oper)<<" "<< std::endl;
+        }
 }
 
 
 int loadTensorflowInstance(
-                            struct TensorflowInstance * net,
-                            const char * filename,
-                            const char * inputTensor,
-                            const char * outputTensor,
-                            unsigned int forceCPU
-                          )
+    struct TensorflowInstance * net,
+    const char * filename,
+    const char * inputTensor,
+    const char * outputTensor,
+    unsigned int forceCPU
+)
 {
-   net->outputTensor=nullptr;
+    net->outputTensor=nullptr;
 
-   //--------------------------------------------------------------------------------------------------------------
-   net->graph   = tf_utils::LoadGraph(filename);
-   if (net->graph == nullptr)    { std::cout << "Can't load graph "<<filename<<" "<< std::endl;   return 0; }
-   //tf_utils::PrintOp(net->graph);
-   //--------------------------------------------------------------------------------------------------------------
-   net->input_operation  = {TF_GraphOperationByName(net->graph, inputTensor), 0};
-   if (net->input_operation.oper == nullptr) { listNodes(filename,net->graph); fprintf(stderr,"Can't init input for %s \n",filename); return 0; }
-   std::cout << " Input Tensor for " <<filename << std::endl;
-   tf_utils::PrintTensorInfo(net->graph,inputTensor,0,0);
+    //--------------------------------------------------------------------------------------------------------------
+    net->graph   = tf_utils::LoadGraph(filename);
+    if (net->graph == nullptr)
+        {
+            std::cout << "Can't load graph "<<filename<<" "<< std::endl;
+            return 0;
+        }
+    //tf_utils::PrintOp(net->graph);
+    //--------------------------------------------------------------------------------------------------------------
+    net->input_operation  = {TF_GraphOperationByName(net->graph, inputTensor), 0};
+    if (net->input_operation.oper == nullptr)
+        {
+            listNodes(filename,net->graph);
+            fprintf(stderr,"Can't init input for %s \n",filename);
+            return 0;
+        }
+    std::cout << " Input Tensor for " <<filename << std::endl;
+    tf_utils::PrintTensorInfo(net->graph,inputTensor,0,0);
 
-   net->output_operation = {TF_GraphOperationByName(net->graph, outputTensor), 0};
-   if (net->output_operation.oper == nullptr)  { listNodes(filename,net->graph); fprintf(stderr,"Can't init output for %s \n",filename); return 0; }
-   std::cout << " Output Tensor for " <<filename << std::endl;
-   tf_utils::PrintTensorInfo(net->graph,outputTensor,0,0);
-   //--------------------------------------------------------------------------------------------------------------
+    net->output_operation = {TF_GraphOperationByName(net->graph, outputTensor), 0};
+    if (net->output_operation.oper == nullptr)
+        {
+            listNodes(filename,net->graph);
+            fprintf(stderr,"Can't init output for %s \n",filename);
+            return 0;
+        }
+    std::cout << " Output Tensor for " <<filename << std::endl;
+    tf_utils::PrintTensorInfo(net->graph,outputTensor,0,0);
+    //--------------------------------------------------------------------------------------------------------------
 
-   snprintf(net->inputLayerName,512,"%s",inputTensor);
-   snprintf(net->outputLayerName,512,"%s",outputTensor);
+    snprintf(net->inputLayerName,512,"%s",inputTensor);
+    snprintf(net->outputLayerName,512,"%s",outputTensor);
 
-   //--------------------------------------------------------------------------------------------------------------
-   net->status      = TF_NewStatus();
-   net->options     = TF_NewSessionOptions();
-  if (forceCPU)
-  { 
-      //How do you end up with this byte array you might ask ?
-      //You use the python code and extract the configuration bytes and copy paste them here..
-     // https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/Tensorflow/createTensorflowConfigurationForC.py
-    /*net->session = tf.ConfigProto(
-                                                                          device_count={'CPU' : 1, 'GPU' : 0},
-                                                                          allow_soft_placement=True,
-                                                                          log_device_placement=False
-                                 );*/
+    //--------------------------------------------------------------------------------------------------------------
+    net->status      = TF_NewStatus();
+    net->options     = TF_NewSessionOptions();
+    if (forceCPU)
+        {
+            //How do you end up with this byte array you might ask ?
+            //You use the python code and extract the configuration bytes and copy paste them here..
+            // https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/Tensorflow/createTensorflowConfigurationForC.py
+            /*net->session = tf.ConfigProto(
+                                                                                  device_count={'CPU' : 1, 'GPU' : 0},
+                                                                                  allow_soft_placement=True,
+                                                                                  log_device_placement=False
+                                         );*/
 
-    uint8_t config[] = { 0xa,0x7,0xa,0x3,0x43,0x50,0x55,0x10,0x1,0xa,0x7,0xa,0x3,0x47,0x50,0x55,0x10,0x0,0x38,0x1};
-    TF_SetConfig(net->options, (void*)config,  20 , net->status);
-  }
+            uint8_t config[] = { 0xa,0x7,0xa,0x3,0x43,0x50,0x55,0x10,0x1,0xa,0x7,0xa,0x3,0x47,0x50,0x55,0x10,0x0,0x38,0x1};
+            TF_SetConfig(net->options, (void*)config,  20 , net->status);
+        }
 
-  net->session     = TF_NewSession(net->graph,net->options,net->status);
+    net->session     = TF_NewSession(net->graph,net->options,net->status);
 
-   TF_DeleteSessionOptions(net->options);
-   if (TF_GetCode(net->status) != TF_OK)  { TF_DeleteStatus(net->status); return 0; }
-   //--------------------------------------------------------------------------------------------------------------
+    TF_DeleteSessionOptions(net->options);
+    if (TF_GetCode(net->status) != TF_OK)
+        {
+            TF_DeleteStatus(net->status);
+            return 0;
+        }
+    //--------------------------------------------------------------------------------------------------------------
 
-  return 1;
+    return 1;
 }
 
 int unloadTensorflow(struct TensorflowInstance * net)
 {
-  //------------------------------------
-  TF_CloseSession(net->session, net->status);
-  if (TF_GetCode(net->status) != TF_OK)  { std::cout << "Error closing all session"; TF_DeleteStatus(net->status); return 0; }
-  TF_DeleteSession(net->session, net->status);
-  if (TF_GetCode(net->status) != TF_OK)  { std::cout << "Error delete session"; TF_DeleteStatus(net->status); return 0; }
-  tf_utils::DeleteGraph(net->graph);
-  tf_utils::DeleteTensor(net->inputTensor);
-  tf_utils::DeleteTensor(net->outputTensor);
-  //------------------------------------
+    //------------------------------------
+    TF_CloseSession(net->session, net->status);
+    if (TF_GetCode(net->status) != TF_OK)
+        {
+            std::cout << "Error closing all session";
+            TF_DeleteStatus(net->status);
+            return 0;
+        }
+    TF_DeleteSession(net->session, net->status);
+    if (TF_GetCode(net->status) != TF_OK)
+        {
+            std::cout << "Error delete session";
+            TF_DeleteStatus(net->status);
+            return 0;
+        }
+    tf_utils::DeleteGraph(net->graph);
+    tf_utils::DeleteTensor(net->inputTensor);
+    tf_utils::DeleteTensor(net->outputTensor);
+    //------------------------------------
 
- TF_DeleteStatus(net->status);
+    TF_DeleteStatus(net->status);
 }
 
 
@@ -167,224 +198,239 @@ int unloadTensorflow(struct TensorflowInstance * net)
 
 std::vector<float> predictTensorflow(struct TensorflowInstance * net,std::vector<float> input)
 {
-  const int printInput=0;
-  const int printOutput=0;
+    const int printInput=0;
+    const int printOutput=0;
 
-  std::vector<float> result; result.clear();
+    std::vector<float> result;
+    result.clear();
 
-  TF_Tensor* output_tensor = nullptr;
+    TF_Tensor* output_tensor = nullptr;
 
-  unsigned int inputSize=input.size();
-  std::vector<std::int64_t> input_dims = {1,inputSize};
-  std::vector<float> input_vals = input;
+    unsigned int inputSize=input.size();
+    std::vector<std::int64_t> input_dims = {1,inputSize};
+    std::vector<float> input_vals = input;
 
-  //----------------------------------------
-  if (printInput)
-  { //----------------------------------------
-    std::cout << "Input vals: ";
-    for (int i=0; i<inputSize; i++)
-     {
-       std::cout <<  input_vals[i] << ", ";
-     }
-   std::cout  << std::endl;
- } //----------------------------------------
-  //----------------------------------------
+    //----------------------------------------
+    if (printInput)
+        {
+            //----------------------------------------
+            std::cout << "Input vals: ";
+            for (int i=0; i<inputSize; i++)
+                {
+                    std::cout <<  input_vals[i] << ", ";
+                }
+            std::cout  << std::endl;
+        } //----------------------------------------
+    //----------------------------------------
 
-  TF_Tensor* input_tensor = tf_utils::CreateTensor(
-                                                   TF_FLOAT,
-                                                   input_dims.data(), input_dims.size(),
-                                                   input_vals.data(), input_vals.size() * sizeof(float)
-                                                  );
-
-
-  TF_SessionRun( net->session,
-                 nullptr, // Run options.
-                 &net->input_operation,     &input_tensor,  1, // Input tensors, input tensor values, number of inputs.
-                 &net->output_operation,   &output_tensor,  1, // Output tensors, output tensor values, number of outputs.
-                 nullptr, 0, // Target operations, number of targets.
-                 nullptr, // Run metadata.
-                 net->status // Output status.
-                );
-
-  if (!checkAndDeallocate(net->status,"running session"))
-      { return result; }
+    TF_Tensor* input_tensor = tf_utils::CreateTensor(
+                                  TF_FLOAT,
+                                  input_dims.data(), input_dims.size(),
+                                  input_vals.data(), input_vals.size() * sizeof(float)
+                              );
 
 
-  const auto data = static_cast<float*>(TF_TensorData(output_tensor));
+    TF_SessionRun( net->session,
+                   nullptr, // Run options.
+                   &net->input_operation,     &input_tensor,  1, // Input tensors, input tensor values, number of inputs.
+                   &net->output_operation,   &output_tensor,  1, // Output tensors, output tensor values, number of outputs.
+                   nullptr, 0, // Target operations, number of targets.
+                   nullptr, // Run metadata.
+                   net->status // Output status.
+                 );
 
-
-  int64_t outputSizeA[4];
-  TF_GraphGetTensorShape(
-                         net->graph,
-                         net->output_operation,
-                         outputSizeA, 2,
-                         net->status
-                        );
-
-
-  if (!checkAndDeallocate(net->status,"TF_GraphGetTensorShape"))
-      { return result; }
-
-
-
-
-  int outputSize = outputSizeA[1];
-  //----------------------------------------
-  if (printOutput)
-  { //----------------------------------------
-  std::cout << "Output vals "<<outputSize<<" : ";
-  for (int i=0; i<outputSize; i++)
-   {
-     std::cout <<  data[i] << ", ";
-   }
-  std::cout  << std::endl;
-  } //----------------------------------------
-  //----------------------------------------
-
-
-
- tf_utils::DeleteTensor(input_tensor);
-
- for (int i=0; i<outputSize; i++)
-   {
-     result.push_back((float) data[i]);
-   }
-
- return result;
-}
-
-
- 
-
-
-std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
-                                                                     struct TensorflowInstance * net,
-                                                                     unsigned int width ,
-                                                                     unsigned int height ,
-                                                                     float * data,
-                                                                     unsigned int heatmapWidth,
-                                                                     unsigned int heatmapHeight,
-                                                                     unsigned int numberOfOutputTensors
-                                                                   )
-{
-   std::vector<std::vector<float> > matrix; //This function output 
-
-  TF_Tensor* output_tensor = nullptr;
-  std::vector<std::int64_t> input_dims = {1,height,width,3};
-
-
-  TF_Tensor* input_tensor = tf_utils::CreateTensor(
-                                                   TF_FLOAT,
-                                                   input_dims.data(), 4,
-                                                   data , width * height * 3 * sizeof(float)
-                                                  );
-
-  TF_SessionRun( net->session,
-                 nullptr, // Run options.
-                 &net->input_operation,    &input_tensor,  1, // Input tensors,  input tensor values,  number of inputs.
-                 &net->output_operation,   &output_tensor, 1, // Output tensors, output tensor values, number of outputs.
-                 nullptr, 0, // Target operations, number of targets.
-                 nullptr, // Run metadata.
-                 net->status // Output status.
-                );
-
-  if (TF_GetCode(net->status) != TF_OK) {   fprintf(stderr,RED "Error running session\n"  NORMAL); TF_DeleteStatus(net->status); tf_utils::DeleteTensor(input_tensor); return matrix; }
-
-if (output_tensor==nullptr)
-{
-     fprintf(stderr,RED "Error retrieving output..\n"  NORMAL); TF_DeleteStatus(net->status); tf_utils::DeleteTensor(input_tensor); return matrix;
-}
-
-
-/*
-  TF_Output outputO = TF_Output{net->operation, 0};
-  TF_Status* s = TF_NewStatus();
-  //TF_Output feed_out_0 = TF_Output{output_tensor, 0};
-  int num_dims;
-
-  // Fetch the shape, it should be completely unknown.
-  num_dims = TF_GraphGetTensorNumDims(net->graph,outputO, s);
-  fprintf(stderr,"Number of dimensions is %u \n",num_dims);
- */
-  
-  //=============================================================================== 
-  int64_t outputSizeA[32]={0};
-  TF_GraphGetTensorShape(
-                         net->graph,
-                         net->output_operation,
-                         outputSizeA, numberOfOutputTensors,
-                         net->status
-                        );
-                        
-                        
-  if (TF_GetCode(net->status) != TF_OK) 
-       {   
-           fprintf(stderr,RED "Error TF_GraphGetTensorShape for output, numberOfOutputTensors is probably wrong..! \n" NORMAL); 
-           TF_DeleteStatus(net->status); 
-           tf_utils::DeleteTensor(input_tensor); 
-           return matrix;  
+    if (!checkAndDeallocate(net->status,"running session"))
+        {
+            return result;
         }
 
 
-  //===============================================================================
+    const auto data = static_cast<float*>(TF_TensorData(output_tensor));
 
-  //std::cout << "OutputA vals "<<outputSizeA[0]<<","<<outputSizeA[1]<<","<<outputSizeA[2]<<","<<outputSizeA[3]<<"\n";
-  //This is -1 -1 -1 19 and so we need the values and we get them as input
-  if ( (outputSizeA[1]==-1) && (outputSizeA[2]==-1) )
-  {
-      //std::cout<<"tensorflow not reporting correct output size..\n";
-  }
 
-/*
- * Attempting to retreive the correct shape ..
-  //===============================================================================
-  TF_Operation *operation  = TF_GraphOperationByName(net->graph, net->outputLayerName);
-  TF_Output operation_out = {operation, 0};
-  int64_t outputSizeB[32];
-  TF_OperationGetAttrShape(
-                           operation,
-                           "shape",
-                           outputSizeB, 4,
-                           net->status
-                          );
-  std::cout << "OutputB "<<net->outputLayerName<<" vals "<<outputSizeB[0]<<", cols = "<<outputSizeB[1]<<", rows = "<<outputSizeB[2]<<", hm = "<<outputSizeB[3]<<"\n";
-  //===============================================================================
-*/
+    int64_t outputSizeA[4];
+    TF_GraphGetTensorShape(
+        net->graph,
+        net->output_operation,
+        outputSizeA, 2,
+        net->status
+    );
+
+
+    if (!checkAndDeallocate(net->status,"TF_GraphGetTensorShape"))
+        {
+            return result;
+        }
+
+
+
+
+    int outputSize = outputSizeA[1];
+    //----------------------------------------
+    if (printOutput)
+        {
+            //----------------------------------------
+            std::cout << "Output vals "<<outputSize<<" : ";
+            for (int i=0; i<outputSize; i++)
+                {
+                    std::cout <<  data[i] << ", ";
+                }
+            std::cout  << std::endl;
+        } //----------------------------------------
+    //----------------------------------------
+
+
+
+    tf_utils::DeleteTensor(input_tensor);
+
+    for (int i=0; i<outputSize; i++)
+        {
+            result.push_back((float) data[i]);
+        }
+
+    return result;
+}
+
+
+
+
+
+std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
+    struct TensorflowInstance * net,
+    unsigned int width ,
+    unsigned int height ,
+    float * data,
+    unsigned int heatmapWidth,
+    unsigned int heatmapHeight,
+    unsigned int numberOfOutputTensors
+)
+{
+    std::vector<std::vector<float> > matrix; //This function output
+
+    TF_Tensor* output_tensor = nullptr;
+    std::vector<std::int64_t> input_dims = {1,height,width,3};
+
+
+    TF_Tensor* input_tensor = tf_utils::CreateTensor(
+                                  TF_FLOAT,
+                                  input_dims.data(), 4,
+                                  data , width * height * 3 * sizeof(float)
+                              );
+
+    TF_SessionRun( net->session,
+                   nullptr, // Run options.
+                   &net->input_operation,    &input_tensor,  1, // Input tensors,  input tensor values,  number of inputs.
+                   &net->output_operation,   &output_tensor, 1, // Output tensors, output tensor values, number of outputs.
+                   nullptr, 0, // Target operations, number of targets.
+                   nullptr, // Run metadata.
+                   net->status // Output status.
+                 );
+
+    if (TF_GetCode(net->status) != TF_OK)
+        {
+            fprintf(stderr,RED "Error running session\n"  NORMAL);
+            TF_DeleteStatus(net->status);
+            tf_utils::DeleteTensor(input_tensor);
+            return matrix;
+        }
+
+    if (output_tensor==nullptr)
+        {
+            fprintf(stderr,RED "Error retrieving output..\n"  NORMAL);
+            TF_DeleteStatus(net->status);
+            tf_utils::DeleteTensor(input_tensor);
+            return matrix;
+        }
+
+
+    /*
+      TF_Output outputO = TF_Output{net->operation, 0};
+      TF_Status* s = TF_NewStatus();
+      //TF_Output feed_out_0 = TF_Output{output_tensor, 0};
+      int num_dims;
+
+      // Fetch the shape, it should be completely unknown.
+      num_dims = TF_GraphGetTensorNumDims(net->graph,outputO, s);
+      fprintf(stderr,"Number of dimensions is %u \n",num_dims);
+     */
+
+    //===============================================================================
+    int64_t outputSizeA[32]= {0};
+    TF_GraphGetTensorShape(
+        net->graph,
+        net->output_operation,
+        outputSizeA, numberOfOutputTensors,
+        net->status
+    );
+
+
+    if (TF_GetCode(net->status) != TF_OK)
+        {
+            fprintf(stderr,RED "Error TF_GraphGetTensorShape for output, numberOfOutputTensors is probably wrong..! \n" NORMAL);
+            TF_DeleteStatus(net->status);
+            tf_utils::DeleteTensor(input_tensor);
+            return matrix;
+        }
+
+
+    //===============================================================================
+
+    //std::cout << "OutputA vals "<<outputSizeA[0]<<","<<outputSizeA[1]<<","<<outputSizeA[2]<<","<<outputSizeA[3]<<"\n";
+    //This is -1 -1 -1 19 and so we need the values and we get them as input
+    if ( (outputSizeA[1]==-1) && (outputSizeA[2]==-1) )
+        {
+            //std::cout<<"tensorflow not reporting correct output size..\n";
+        }
+
+    /*
+     * Attempting to retreive the correct shape ..
+      //===============================================================================
+      TF_Operation *operation  = TF_GraphOperationByName(net->graph, net->outputLayerName);
+      TF_Output operation_out = {operation, 0};
+      int64_t outputSizeB[32];
+      TF_OperationGetAttrShape(
+                               operation,
+                               "shape",
+                               outputSizeB, 4,
+                               net->status
+                              );
+      std::cout << "OutputB "<<net->outputLayerName<<" vals "<<outputSizeB[0]<<", cols = "<<outputSizeB[1]<<", rows = "<<outputSizeB[2]<<", hm = "<<outputSizeB[3]<<"\n";
+      //===============================================================================
+    */
 //  const int num_outputs = TF_OperationNumOutputs(operation);
 //  std::cout << "TF_OperationNumOutputs "<<num_outputs<<"\n";
 
 
 
- //Retreive output..
-  float * out_p = static_cast<float*>(TF_TensorData(output_tensor));
-  if (out_p!=nullptr)
-  {
-   //Rows and columns should be automatically extracted,however
-   //tensorflow and TF_GraphGetTensorShape returns -1,-1 as their dimensions
-   //https://github.com/tensorflow/tensorflow/blob/master/tensorflow/c/c_api.h#L239
-   unsigned int rows = heatmapWidth; //outputSizeA[numberOfOutputTensors-3];
-   unsigned int cols = heatmapHeight; //outputSizeA[numberOfOutputTensors-2];
-   unsigned int hm   = outputSizeA[numberOfOutputTensors-1];
+//Retreive output..
+    float * out_p = static_cast<float*>(TF_TensorData(output_tensor));
+    if (out_p!=nullptr)
+        {
+            //Rows and columns should be automatically extracted,however
+            //tensorflow and TF_GraphGetTensorShape returns -1,-1 as their dimensions
+            //https://github.com/tensorflow/tensorflow/blob/master/tensorflow/c/c_api.h#L239
+            unsigned int rows = heatmapWidth; //outputSizeA[numberOfOutputTensors-3];
+            unsigned int cols = heatmapHeight; //outputSizeA[numberOfOutputTensors-2];
+            unsigned int hm   = outputSizeA[numberOfOutputTensors-1];
 
-   //For each of the output heatmaps
-   for(int i=0; i<hm; ++i) 
-   {  
-     std::vector<float> heatmap(rows*cols);
-     //For each of the rows of a particular heatmap
-     for(int r=0;r<rows;++r)
-     {
-     //For each of the cols of a particular heatmap
-      for(int c=0;c<cols;++c)
-      {
-        int pos = (r*cols+c) * hm + i;
-        heatmap[r*cols+c] = out_p[pos];
-      }
-     }
-    //Retreive the values in our matrix
-    matrix.push_back(heatmap);
-   }
-  } //We have output..
- tf_utils::DeleteTensor(input_tensor);
- return matrix;
+            //For each of the output heatmaps
+            for(int i=0; i<hm; ++i)
+                {
+                    std::vector<float> heatmap(rows*cols);
+                    //For each of the rows of a particular heatmap
+                    for(int r=0; r<rows; ++r)
+                        {
+                            //For each of the cols of a particular heatmap
+                            for(int c=0; c<cols; ++c)
+                                {
+                                    int pos = (r*cols+c) * hm + i;
+                                    heatmap[r*cols+c] = out_p[pos];
+                                }
+                        }
+                    //Retreive the values in our matrix
+                    matrix.push_back(heatmap);
+                }
+        } //We have output..
+    tf_utils::DeleteTensor(input_tensor);
+    return matrix;
 }
-

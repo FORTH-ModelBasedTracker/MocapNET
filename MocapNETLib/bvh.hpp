@@ -42,10 +42,10 @@ const char * getBVHJointName(unsigned int currentJoint);
  * @retval Vector of 2D points
  */
 std::vector<std::vector<float> > convertBVHFrameTo2DPoints(
-                                                            std::vector<float> bvhFrame,
-                                                            unsigned int width,
-                                                            unsigned int height
-                                                          );
+    std::vector<float> bvhFrame,
+    unsigned int width,
+    unsigned int height
+);
 
 
 
@@ -56,10 +56,10 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(
  * @retval Vector of 2D points
  */
 std::vector<std::vector<float> > convert3DGridTo2DPoints(
-                                                         float roll,
-                                                         float pitch,
-                                                         float yaw,
-                                                         unsigned int width,
-                                                         unsigned int height,
-                                                         unsigned int dimensions
-                                                        );
+    float roll,
+    float pitch,
+    float yaw,
+    unsigned int width,
+    unsigned int height,
+    unsigned int dimensions
+);

@@ -9,28 +9,28 @@ using namespace cv;
  */
 struct boundingBox
 {
-   char populated;
-   float minimumX;
-   float maximumX;
-   float minimumY;
-   float maximumY;
+    char populated;
+    float minimumX;
+    float maximumX;
+    float minimumY;
+    float maximumY;
 };
 
 
 int populateBoundingBox(
-                                                         struct boundingBox *bbox,
-                                                         std::vector<cv::Point_<float> > points
-                                                        );
- 
+    struct boundingBox *bbox,
+    std::vector<cv::Point_<float> > points
+);
+
 int getBestCropWindow(
-                                                      int maximumCrop,
-                                                      unsigned int * x,
-                                                     unsigned int * y,
-                                                      unsigned int * width,
-                                                      unsigned int * height,
-                                                      struct boundingBox * bbox,
-                                                      unsigned int inputWidth2DJointDetector,
-                                                      unsigned int inputHeight2DJointDetector,
-                                                      unsigned int fullFrameWidth,
-                                                      unsigned int fullFrameHeight
-                                                    );
+    int maximumCrop,
+    unsigned int * x,
+    unsigned int * y,
+    unsigned int * width,
+    unsigned int * height,
+    struct boundingBox * bbox,
+    unsigned int inputWidth2DJointDetector,
+    unsigned int inputHeight2DJointDetector,
+    unsigned int fullFrameWidth,
+    unsigned int fullFrameHeight
+);
