@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
     unsigned int forceCPUMocapNET=1;
     unsigned int forceCPU2DJointEstimation=0;
 
-    unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,visualize=1;
+    unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,frameLimitSet=0,visualize=1;
     float joint2DSensitivity=0.35;
     const char * webcam = 0;
 
@@ -332,6 +332,7 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"--frames")==0)
                     {
                         frameLimit=atoi(argv[i+1]);
+                        frameLimitSet=1;
                     }
                 else
                     //if (strcmp(argv[i],"--cpu")==0)           { setenv("CUDA_VISIBLE_DEVICES", "", 1); } else //Alternate way to force CPU everywhere
@@ -396,6 +397,10 @@ int main(int argc, char *argv[])
 
     signed int totalNumberOfFrames = cap.get(CV_CAP_PROP_FRAME_COUNT);
     fprintf(stderr,"totalNumberOfFrames in %s is %u \n",webcam,totalNumberOfFrames);
+    if ( (totalNumberOfFrames>0) && (!frameLimitSet) )
+    {
+     frameLimit=totalNumberOfFrames;   
+    }
     //exit(0);
 
     cv::Mat frame;
