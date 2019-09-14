@@ -250,7 +250,7 @@ int main(int argc, char *argv[])
 
     int live=0,stop=0;
     int constrainPositionRotation=1;
-    int doCrop=1,tryForMaximumCrop=0,drawFloor=1;
+    int doCrop=1,tryForMaximumCrop=0,drawFloor=1,drawNSDM=1;
     int yawValue = 0;
     int pitchValue = 0;
     int rollValue = 0;
@@ -401,7 +401,6 @@ int main(int argc, char *argv[])
     {
      frameLimit=totalNumberOfFrames;   
     }
-    //exit(0);
 
     cv::Mat frame;
     struct boundingBox cropBBox= {0};
@@ -593,6 +592,7 @@ int main(int argc, char *argv[])
                                                             createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
                                                             createTrackbar("Maximize Crop", "3D Control", &tryForMaximumCrop, 1);
                                                             createTrackbar("Draw Floor", "3D Control", &drawFloor, 1);
+                                                            createTrackbar("Draw NSDM", "3D Control", &drawNSDM, 1);
                                                             createTrackbar("Distance  ", "3D Control", &distance,  150);
                                                             createTrackbar("Yaw            ", "3D Control", &yawValue,  360);
                                                             createTrackbar("Pitch          ", "3D Control", &pitchValue,360);
@@ -620,6 +620,7 @@ int main(int argc, char *argv[])
                                                         totalNumberOfFrames,
                                                         frameLimit,
                                                         drawFloor,
+                                                        drawNSDM,
                                                         fpsTotal,
                                                         fpsAcquisition,
                                                         fps2DJointDetector,
@@ -627,6 +628,7 @@ int main(int argc, char *argv[])
                                                         visWidth,
                                                         visHeight,
                                                         0,
+                                                        flatAndNormalizedPoints,
                                                         bvhOutput
                                                     );
 

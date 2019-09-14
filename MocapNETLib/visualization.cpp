@@ -6,6 +6,7 @@ using namespace cv;
 #include "jsonCocoSkeleton.h"
 #include "visualization.hpp"
 #include "bvh.hpp"
+#include "../MocapNETLib/mocapnet.hpp"
 
 
 #define NORMAL   "\033[0m"
@@ -13,6 +14,72 @@ using namespace cv;
 #define RED     "\033[31m"      /* Red */
 #define GREEN   "\033[32m"      /* Green */
 #define YELLOW  "\033[33m"      /* Yellow */
+
+
+
+
+#if USE_OPENCV
+int visualizeNSDM(
+                   cv::Mat &img,
+                   std::vector<float> mocapNETInput,
+                   unsigned int x,
+                   unsigned int y,
+                   unsigned int width,
+                   unsigned int height
+                 )
+{
+   float thickness=2.5; 
+   cv::Point topLeft(x,y);
+   cv::Point bottomRight(x+width,y+height);
+   //cv::line(img,topLeft,bottomRight, cv::Scalar(0,255,0),thickness);
+   //cv::rectangle(img, topLeft,bottomRight, cv::Scalar(0,255,0),thickness, 8, 0);
+   
+   int addSyntheticPoints=1;
+   int doScaleCompensation=1;
+   std::vector<float> NSDM = compressMocapNETInput(mocapNETInput,addSyntheticPoints,doScaleCompensation);
+   
+   if (NSDM.size()>0)
+   {
+        
+    float thickness=1;
+    int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
+    cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
+    cv::Point txtPosition(x,y-15);
+    cv::putText(img,"NSDM",txtPosition,fontUsed,0.8,color,thickness,8);
+
+   
+   unsigned int xI,yI,item=0,dim=sqrt(NSDM.size()/2);
+   unsigned int boxX=width/dim,boxY=height/dim;
+   for (yI=0; yI<dim; yI++)
+   {
+    for (xI=0; xI<dim; xI++)
+    {
+       cv::Point topLeft(x+xI*boxX,y+yI*boxY);
+       cv::Point bottomRight(x+xI*boxX+boxX,y+yI*boxY+boxY);
+       
+       unsigned int blueChannel=NSDM[item]*255;
+       unsigned int greenChannel=NSDM[item+1]*255;
+       unsigned int redChannel=255* ( (NSDM[item]==0.0) && (NSDM[item+1]==0.0) );
+       
+       cv::rectangle(
+                     img, 
+                     topLeft,
+                     bottomRight, 
+                     cv::Scalar(
+                                blueChannel,
+                                greenChannel,
+                                redChannel
+                                ),
+                     -1*thickness, 
+                     8, 
+                     0
+                    );
+       item+=2;                                                  
+    }   
+   }
+   }
+}
+#endif
 
 
 
@@ -24,6 +91,7 @@ int visualizePoints(
     signed int totalNumberOfFrames,
     unsigned int numberOfFramesToGrab,
     int drawFloor,
+    int drawNSDM,
     float fpsTotal,
     float fpsAcquisition,
     float joint2DEstimator,
@@ -31,6 +99,7 @@ int visualizePoints(
     unsigned int width,
     unsigned int height,
     unsigned int handleMessages,
+    std::vector<float> mocapNETInput,
     std::vector<float> mocapNETOutput
 )
 {
@@ -233,8 +302,19 @@ int visualizePoints(
     txtPosition.y+=30;
     snprintf(textInfo,512,"Total : %0.2f fps",fpsTotal);
     cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
-
-
+    
+    if (drawNSDM)
+    {
+     visualizeNSDM(
+                   img,
+                   mocapNETInput,
+                   20,
+                   400,
+                   200,
+                   200
+                  ); 
+    }
+ 
     cv::imshow(windowName,img);
     if (handleMessages)
         {

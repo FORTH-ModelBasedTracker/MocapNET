@@ -91,35 +91,27 @@ float get2DPointsDistance(float x1,float y1,float x2,float y2)
 }
 
 
-std::vector<float> prepareMocapNETInputFromUncompressedInput(std::vector<float> input)
-{
-    //std::cerr<<"prepareMocapNETInputFromUncompressedInput\n";
-    int addSyntheticPoints=1;
-    int doScaleCompensation=0;
-    std::vector<float>  mocapnetInput(MOCAPNET_UNCOMPRESSED_JOINT_PARTS * 3);
-    std::fill(mocapnetInput.begin(), mocapnetInput.end(), 0.0);
-    if ( (MOCAPNET_UNCOMPRESSED_JOINT_PARTS * 3!=input.size())||(input.size()!=171) )
+std::vector<float> compressMocapNETInput(std::vector<float> mocapnetInput,int addSyntheticPoints,int doScaleCompensation)
+{ 
+    if ( (MOCAPNET_UNCOMPRESSED_JOINT_PARTS * 3!=mocapnetInput.size())||(mocapnetInput.size()!=171) )
         {
-            fprintf(stderr,RED "mocapNET: prepareMocapNETInputFromUncompressedInput : wrong input size , received %lu expected 171\n" NORMAL,input.size());
+            fprintf(stderr,RED "mocapNET: compressMocapNETInput : wrong input size , received %lu expected 171\n" NORMAL,mocapnetInput.size());
 
             return mocapnetInput;
         }
-
-    for (int i=0; i<input.size(); i++)
-        {
-            mocapnetInput[i]=input[i];
-        }
-
+ 
 
     //---------------------------------------------------
-    float rShoulderToHipDistance = get2DPointsDistance(
+    float rShoulderToHipDistance = get2DPointsDistance
+                                   (
                                        mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_HIP*3+0],
                                        mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_HIP*3+1],
                                        mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_RSHOULDER*3+0],
                                        mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_RSHOULDER*3+1]
                                    );
     //---------------------------------------------------
-    float lShoulderToHipDistance = get2DPointsDistance(
+    float lShoulderToHipDistance = get2DPointsDistance
+                                   (
                                        mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_HIP*3+0],
                                        mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_HIP*3+1],
                                        mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_LSHOULDER*3+0],
@@ -247,9 +239,30 @@ std::vector<float> prepareMocapNETInputFromUncompressedInput(std::vector<float> 
                 }
         }
 
+ 
+    return  mocapnetCompressed;
+}
 
+
+
+
+
+std::vector<float> prepareMocapNETInputFromUncompressedInput(std::vector<float> mocapnetInput)
+{ 
     std::vector<float> mocapnetUncompressedAndCompressed;
     mocapnetUncompressedAndCompressed.clear();
+
+    if ( (MOCAPNET_UNCOMPRESSED_JOINT_PARTS * 3!=mocapnetInput.size())||(mocapnetInput.size()!=171) )
+        {
+          fprintf(stderr,RED "mocapNET: prepareMocapNETInputFromUncompressedInput : wrong input size , received %lu expected 171\n" NORMAL,mocapnetInput.size());
+          return mocapnetUncompressedAndCompressed;
+        }
+    
+    
+    int addSyntheticPoints=1;
+    int doScaleCompensation=0;
+    std::vector<float> mocapnetCompressed = compressMocapNETInput(mocapnetInput,addSyntheticPoints,doScaleCompensation);
+    
 
     mocapnetUncompressedAndCompressed.insert(mocapnetUncompressedAndCompressed.end(), mocapnetInput.begin(), mocapnetInput.end());
     mocapnetUncompressedAndCompressed.insert(mocapnetUncompressedAndCompressed.end(), mocapnetCompressed.begin(), mocapnetCompressed.end());
@@ -257,6 +270,7 @@ std::vector<float> prepareMocapNETInputFromUncompressedInput(std::vector<float> 
     //std::cerr<<"done \n";
     return  mocapnetUncompressedAndCompressed;
 }
+
 
 
 float undoOrientationTrickForBackOrientation(float orientation)

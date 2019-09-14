@@ -1811,6 +1811,12 @@ int writeBVHFile(
  */
 int loadMocapNET(struct MocapNET * mnet,const char * filename,unsigned int forceCPU);
 
+
+
+
+std::vector<float> compressMocapNETInput(std::vector<float> mocapnetInput,int addSyntheticPoints,int doScaleCompensation);
+
+
 /**
  * @brief Convert a Vector Of floats encoded in the COCO format to the MocapNET format
  * @ingroup mocapnet

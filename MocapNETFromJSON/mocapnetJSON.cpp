@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
 
                             if (visualize)
                                 {
-                                    visualizePoints("3D Points Output",frameID,0,0,0,0,1,0.0,0.0,fpsMocapNET,width,height,1,result);
+                                    visualizePoints("3D Points Output",frameID,0,0,0,0,1,1,0.0,0.0,fpsMocapNET,width,height,1,inputValues,result);
                                 }
 
 

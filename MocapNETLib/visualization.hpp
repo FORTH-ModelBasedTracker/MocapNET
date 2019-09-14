@@ -28,6 +28,7 @@ int visualizePoints(
                      signed int totalNumberOfFrames,
                      unsigned int numberOfFramesToGrab,
                      int drawFloor,
+                     int drawNSDM, 
                      float fpsTotal,
                      float fpsAcquisition,
                      float joint2DEstimator,
@@ -35,5 +36,6 @@ int visualizePoints(
                      unsigned int width,
                      unsigned int height,
                      unsigned int handleMessages,
+                     std::vector<float> mocapNETInput,
                      std::vector<float> mocapNETOutput
                    );
