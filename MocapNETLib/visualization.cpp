@@ -35,7 +35,7 @@ int visualizeNSDM(
    //cv::rectangle(img, topLeft,bottomRight, cv::Scalar(0,255,0),thickness, 8, 0);
    
    int addSyntheticPoints=1;
-   int doScaleCompensation=1;
+   int doScaleCompensation=0;
    std::vector<float> NSDM = compressMocapNETInput(mocapNETInput,addSyntheticPoints,doScaleCompensation);
    
    if (NSDM.size()>0)
@@ -57,9 +57,9 @@ int visualizeNSDM(
        cv::Point topLeft(x+xI*boxX,y+yI*boxY);
        cv::Point bottomRight(x+xI*boxX+boxX,y+yI*boxY+boxY);
        
-       unsigned int blueChannel=NSDM[item]*255;
-       unsigned int greenChannel=NSDM[item+1]*255;
-       unsigned int redChannel=255* ( (NSDM[item]==0.0) && (NSDM[item+1]==0.0) );
+       float blueChannel=(float) NSDM[item]*255.0;
+       float greenChannel=(float) NSDM[item+1]*255.0;
+       float redChannel=(float) 255.0 * ( (NSDM[item]==0.0) && (NSDM[item+1]==0.0) );
        
        cv::rectangle(
                      img, 
