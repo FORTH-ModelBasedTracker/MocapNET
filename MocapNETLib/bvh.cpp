@@ -1,4 +1,5 @@
 #include "bvh.hpp"
+#include <string.h>
 
 #if USE_BVH
 #include "../RGBDAcquisition/tools/AmMatrix/matrix4x4Tools.h"
@@ -63,6 +64,26 @@ const char * getBVHJointName(unsigned int currentJoint)
 #endif
     return 0;
 }
+
+
+
+
+
+unsigned int getBVHJointIDFromJointName(const char * jointName)
+{
+#if USE_BVH
+    int i=0;
+    for (i=0; i<bvhMotion.jointHierarchySize; i++)
+    {
+        if ( strcmp(jointName,bvhMotion.jointHierarchy[i].jointName)==0 )
+        { 
+          return  i;
+        }
+    }  
+#endif
+    return 0;
+}
+
 
 std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bvhFrame,unsigned int width, unsigned int height)
 {
@@ -237,7 +258,6 @@ std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,
 
 #else
     fprintf(stderr,"BVH code is not compiled in this version of MocapNET\n");
-
 #endif // USE_BVH
     return result;
 }

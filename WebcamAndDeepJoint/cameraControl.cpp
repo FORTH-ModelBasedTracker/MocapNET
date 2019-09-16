@@ -84,7 +84,7 @@ int getMaximumCropWindow(
     struct boundingBox * bbox = &bboxLocal;
 
 
-    float paddingPercent=0.05; // 0.1 = 10% etc
+    float paddingPercent=0.2; // 0.1 = 10% etc
 
     if ( (bbox!=0) && (bbox->populated) )
         {

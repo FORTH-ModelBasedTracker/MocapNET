@@ -20,70 +20,204 @@ using namespace cv;
 
 #if USE_OPENCV
 int visualizeNSDM(
-                   cv::Mat &img,
-                   std::vector<float> mocapNETInput,
-                   unsigned int x,
-                   unsigned int y,
-                   unsigned int width,
-                   unsigned int height
-                 )
+    cv::Mat &img,
+    std::vector<float> mocapNETInput,
+    unsigned int x,
+    unsigned int y,
+    unsigned int width,
+    unsigned int height
+)
 {
-   float thickness=2.5; 
-   cv::Point topLeft(x,y);
-   cv::Point bottomRight(x+width,y+height);
-   //cv::line(img,topLeft,bottomRight, cv::Scalar(0,255,0),thickness);
-   //cv::rectangle(img, topLeft,bottomRight, cv::Scalar(0,255,0),thickness, 8, 0);
-   
-   int addSyntheticPoints=1;
-   int doScaleCompensation=0;
-   std::vector<float> NSDM = compressMocapNETInput(mocapNETInput,addSyntheticPoints,doScaleCompensation);
-   
-   if (NSDM.size()>0)
-   {
-        
-    float thickness=1;
-    int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
-    cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
-    cv::Point txtPosition(x,y-15);
-    cv::putText(img,"NSDM",txtPosition,fontUsed,0.8,color,thickness,8);
+    float thickness=2.5;
+    cv::Point topLeft(x,y);
+    cv::Point bottomRight(x+width,y+height);
+    //cv::line(img,topLeft,bottomRight, cv::Scalar(0,255,0),thickness);
+    //cv::rectangle(img, topLeft,bottomRight, cv::Scalar(0,255,0),thickness, 8, 0);
 
-   
-   unsigned int xI,yI,item=0,dim=sqrt(NSDM.size()/2);
-   unsigned int boxX=width/dim,boxY=height/dim;
-   for (yI=0; yI<dim; yI++)
-   {
-    for (xI=0; xI<dim; xI++)
-    {
-       cv::Point topLeft(x+xI*boxX,y+yI*boxY);
-       cv::Point bottomRight(x+xI*boxX+boxX,y+yI*boxY+boxY);
-       
-       float blueChannel=(float) NSDM[item]*255.0;
-       float greenChannel=(float) NSDM[item+1]*255.0;
-       float redChannel=(float) 255.0 * ( (NSDM[item]==0.0) && (NSDM[item+1]==0.0) );
-       
-       cv::rectangle(
-                     img, 
-                     topLeft,
-                     bottomRight, 
-                     cv::Scalar(
-                                blueChannel,
-                                greenChannel,
-                                redChannel
+    int addSyntheticPoints=1;
+    int doScaleCompensation=0;
+    std::vector<float> NSDM = compressMocapNETInput(mocapNETInput,addSyntheticPoints,doScaleCompensation);
+
+    if (NSDM.size()>0)
+        {
+
+            float thickness=1;
+            int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
+            cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
+            cv::Point txtPosition(x,y-15);
+            cv::putText(img,"NSDM",txtPosition,fontUsed,0.8,color,thickness,8);
+
+
+            unsigned int xI,yI,item=0,dim=sqrt(NSDM.size()/2);
+            unsigned int boxX=width/dim,boxY=height/dim;
+            for (yI=0; yI<dim; yI++)
+                {
+                    for (xI=0; xI<dim; xI++)
+                        {
+                            cv::Point topLeft(x+xI*boxX,y+yI*boxY);
+                            cv::Point bottomRight(x+xI*boxX+boxX,y+yI*boxY+boxY);
+
+                            float blueChannel=(float) NSDM[item]*255.0;
+                            float greenChannel=(float) NSDM[item+1]*255.0;
+                            float redChannel=(float) 255.0 * ( (NSDM[item]==0.0) && (NSDM[item+1]==0.0) );
+
+                            cv::rectangle(
+                                img,
+                                topLeft,
+                                bottomRight,
+                                cv::Scalar(
+                                    blueChannel,
+                                    greenChannel,
+                                    redChannel
                                 ),
-                     -1*thickness, 
-                     8, 
-                     0
-                    );
-       item+=2;                                                  
-    }   
-   }
-   }
+                                -1*thickness,
+                                8,
+                                0
+                            );
+                            item+=2;
+                        }
+                }
+        }
 }
+
+
+
+
+int drawFloorFromPrimitives(
+    cv::Mat &img,
+    float roll,
+    float pitch,
+    float yaw,
+    unsigned int floorDimension,
+    unsigned int width,
+    unsigned int height
+)
+{
+    std::vector<std::vector<float> > gridPoints2D = convert3DGridTo2DPoints(
+                roll,
+                pitch,
+                yaw,
+                width,
+                height,
+                floorDimension
+            );
+    cv::Point parentPoint(gridPoints2D[0][0],gridPoints2D[0][1]);
+    cv::Point verticalPoint(gridPoints2D[0][0],gridPoints2D[0][1]);
+    for (int jointID=0; jointID<gridPoints2D.size(); jointID++)
+        {
+            float jointPointX = gridPoints2D[jointID][0];
+            float jointPointY = gridPoints2D[jointID][1];
+            cv::Point jointPoint(jointPointX,jointPointY);
+
+            if (jointID+floorDimension<gridPoints2D.size())
+                {
+                    verticalPoint.x=gridPoints2D[jointID+20][0];
+                    verticalPoint.y=gridPoints2D[jointID+20][1];
+                }
+            else
+                {
+                    verticalPoint.x=0.0;
+                    verticalPoint.y=0.0;
+                }
+
+            if ( (jointPointX>0.0) && (jointPointY>0.0) )
+                {
+                    cv::circle(img,jointPoint,2,cv::Scalar(255,255,0),3,8,0);
+                    if ( (verticalPoint.x>0.0) && (verticalPoint.y>0.0) )
+                        {
+                            cv::line(img,jointPoint,verticalPoint, cv::Scalar(255,255,0), 1.0);
+                        }
+                }
+
+            if (jointID%floorDimension!=0)
+                {
+                    if ( (jointPointX>0.0) && (jointPointY>0.0) && (verticalPoint.x>0.0) && (verticalPoint.y>0.0) )
+                        {
+                            cv::line(img,jointPoint,parentPoint, cv::Scalar(255,255,0), 1.0);
+                        }
+                }
+            parentPoint = jointPoint;
+        }
+}
+
+
+
+
+
+int visualizeSkeletonCorrespondence(
+    cv::Mat &imgO,
+    std::vector<std::vector<float> > points2DInput,
+    std::vector<std::vector<float> > points2DOutput,
+    unsigned int x,
+    unsigned int y,
+    unsigned int width,
+    unsigned int height
+)
+{
+
+    height=1080;
+    width=1920;
+    cv::Mat img(height,width, CV_8UC3, Scalar(0,0,0));
+
+
+//Just the points and text ( foreground )
+    for (int jointID=0; jointID<points2DInput.size(); jointID++)
+        {
+            float jointInPointX = points2DInput[jointID][0];
+            float jointInPointY = points2DInput[jointID][1];
+            //fprintf(stderr,"P x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
+
+            if ( (jointInPointX!=0) && (jointInPointY!=0) )
+                {
+                    cv::Point jointPoint(jointInPointX+10,jointInPointY);
+                    cv::circle(img,jointPoint,5,cv::Scalar(0,255,0),3,8,0);
+                    const char * jointName  = Body25BodyNames[jointID];
+                    if (jointName!=0)
+                        {
+                            cv::putText(img, jointName  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(123), 0.2, 8 );
+                        }
+                }
+        }
+
+    unsigned int midHipBVHJointID = getBVHJointIDFromJointName("Hip");
+    float alignmentX = points2DInput[BODY25_MidHip][0]-points2DOutput[midHipBVHJointID][0];
+    float alignmentY = points2DInput[BODY25_MidHip][1]-points2DOutput[midHipBVHJointID][1];
+
+
+    for (int jointID=0; jointID<points2DOutput.size(); jointID++)
+        {
+            float jointOutPointX = points2DOutput[jointID][0]+alignmentX;
+            float jointOutPointY = points2DOutput[jointID][1]+alignmentY;
+            //fprintf(stderr,"P x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
+
+            if ( (jointOutPointX!=0) && (jointOutPointY!=0) )
+                {
+                    cv::Point jointPoint(jointOutPointX+10,jointOutPointY);
+                    cv::circle(img,jointPoint,5,cv::Scalar(0,0,255),3,8,0);
+                    const char * jointName = getBVHJointName(jointID);
+                    if (jointName!=0)
+                        {
+                            cv::putText(img, jointName  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(255), 0.2, 8 );
+                        }
+                }
+        }
+
+    cv::imshow("TEST",img);
+    return 1;
+}
+
+
+
+
+
+
+
+
+
 #endif
 
 
 
-//#define USE_OPENCV 1
 int visualizePoints(
     const char* windowName,
     unsigned int frameNumber,
@@ -100,7 +234,11 @@ int visualizePoints(
     unsigned int height,
     unsigned int handleMessages,
     std::vector<float> mocapNETInput,
-    std::vector<float> mocapNETOutput
+    std::vector<float> mocapNETOutput,
+    std::vector<float> mocapNETOutputWithGUIForcedView,
+    std::vector<std::vector<float> > points2DInput,
+    std::vector<std::vector<float> > points2DOutput,
+    std::vector<std::vector<float> > points2DOutputGUIForcedView
 )
 {
 #if USE_OPENCV
@@ -112,78 +250,62 @@ int visualizePoints(
 
     char textInfo[512];
 
-    std::vector<std::vector<float> > points2D = convertBVHFrameTo2DPoints(mocapNETOutput,width,height);
+    //std::vector<std::vector<float> > points2D = convertBVHFrameTo2DPoints(mocapNETOutput,width,height);
     cv::Mat img(height,width, CV_8UC3, Scalar(0,0,0));
 
 
 
-    if (drawFloor)
 //------------------------------------------------------------------------------------------
 //Draw floor
 //------------------------------------------------------------------------------------------
+    if (drawFloor)
         {
             unsigned int floorDimension=20;
-            std::vector<std::vector<float> > gridPoints2D = convert3DGridTo2DPoints(
-                        mocapNETOutput[3],
-                        mocapNETOutput[4],
-                        mocapNETOutput[5],
-                        width,
-                        height,
-                        floorDimension
-                    );
-            cv::Point parentPoint(gridPoints2D[0][0],gridPoints2D[0][1]);
-            cv::Point verticalPoint(gridPoints2D[0][0],gridPoints2D[0][1]);
-            for (int jointID=0; jointID<gridPoints2D.size(); jointID++)
-                {
-                    float jointPointX = gridPoints2D[jointID][0];
-                    float jointPointY = gridPoints2D[jointID][1];
-                    cv::Point jointPoint(jointPointX,jointPointY);
-
-                    if (jointID+floorDimension<gridPoints2D.size())
-                        {
-                            verticalPoint.x=gridPoints2D[jointID+20][0];
-                            verticalPoint.y=gridPoints2D[jointID+20][1];
-                        }
-                    else
-                        {
-                            verticalPoint.x=0.0;
-                            verticalPoint.y=0.0;
-                        }
-
-                    if ( (jointPointX>0.0) && (jointPointY>0.0) )
-                        {
-                            cv::circle(img,jointPoint,2,cv::Scalar(255,255,0),3,8,0);
-                            if ( (verticalPoint.x>0.0) && (verticalPoint.y>0.0) )
-                                {
-                                    cv::line(img,jointPoint,verticalPoint, cv::Scalar(255,255,0), 1.0);
-                                }
-                        }
-
-                    if (jointID%floorDimension!=0)
-                        {
-                            if ( (jointPointX>0.0) && (jointPointY>0.0) && (verticalPoint.x>0.0) && (verticalPoint.y>0.0) )
-                                {
-                                    cv::line(img,jointPoint,parentPoint, cv::Scalar(255,255,0), 1.0);
-                                }
-                        }
-                    parentPoint = jointPoint;
-                }
+            drawFloorFromPrimitives(
+                img,
+                mocapNETOutputWithGUIForcedView[3],
+                mocapNETOutputWithGUIForcedView[4],
+                mocapNETOutputWithGUIForcedView[5],
+                floorDimension,
+                width,
+                height
+            );
         }
 //------------------------------------------------------------------------------------------
 
 
 
-    if (points2D.size()==0)
+//---------------------------------------------------------------------------------------------------------------------
+//   Draw correspondance, post processing step to see if output is good
+//---------------------------------------------------------------------------------------------------------------------
+    int visualizeCorrespondence=0;
+
+    if (visualizeCorrespondence)
+        {
+            visualizeSkeletonCorrespondence(
+                img,
+                points2DInput,
+                points2DOutput,
+                0, //X
+                0, //Y
+                width,
+                height
+            );
+        }
+//----------------------------------------------------------------------------------------------------------------------
+
+
+    if (points2DOutputGUIForcedView.size()==0)
         {
             fprintf(stderr,"Can't visualize empty 2D projected points for frame %u ..\n",frameNumber);
             return 0;
         }
-//fprintf(stderr,"visualizePoints %u points\n",points2D.size());
+//fprintf(stderr,"visualizePoints %u points\n",points2DOutputGUIForcedView.size());
 //Just the lines ( background layer)
-    for (int jointID=0; jointID<points2D.size(); jointID++)
+    for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
         {
-            float jointPointX = points2D[jointID][0];
-            float jointPointY = points2D[jointID][1];
+            float jointPointX = points2DOutputGUIForcedView[jointID][0];
+            float jointPointY = points2DOutputGUIForcedView[jointID][1];
             cv::Point jointPoint(jointPointX,jointPointY);
             //fprintf(stderr,"L x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
 
@@ -194,10 +316,10 @@ int visualizePoints(
                     unsigned int parentID = getBVHParentJoint(jointID);
                     if (parentID!=jointID)
                         {
-                            if (parentID<points2D.size())
+                            if (parentID<points2DOutputGUIForcedView.size())
                                 {
-                                    float parentPointX = points2D[parentID][0];
-                                    float parentPointY = points2D[parentID][1];
+                                    float parentPointX = points2DOutputGUIForcedView[parentID][0];
+                                    float parentPointY = points2DOutputGUIForcedView[parentID][1];
                                     cv::Point parentPoint(parentPointX,parentPointY);
 
                                     if ( (parentPointX!=0) && (parentPointY!=0) )
@@ -217,10 +339,10 @@ int visualizePoints(
 
 
 //Just the points and text ( foreground )
-    for (int jointID=0; jointID<points2D.size(); jointID++)
+    for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
         {
-            float jointPointX = points2D[jointID][0];
-            float jointPointY = points2D[jointID][1];
+            float jointPointX = points2DOutputGUIForcedView[jointID][0];
+            float jointPointY = points2DOutputGUIForcedView[jointID][1];
             //fprintf(stderr,"P x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
 
 
@@ -302,19 +424,19 @@ int visualizePoints(
     txtPosition.y+=30;
     snprintf(textInfo,512,"Total : %0.2f fps",fpsTotal);
     cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
-    
+
     if (drawNSDM)
-    {
-     visualizeNSDM(
-                   img,
-                   mocapNETInput,
-                   20,
-                   400,
-                   200,
-                   200
-                  ); 
-    }
- 
+        {
+            visualizeNSDM(
+                img,
+                mocapNETInput,
+                20,
+                400,
+                200,
+                200
+            );
+        }
+
     cv::imshow(windowName,img);
     if (handleMessages)
         {

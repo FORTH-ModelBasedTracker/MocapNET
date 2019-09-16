@@ -27,6 +27,11 @@ mv CMUMotionCaptureDatasets.zip MotionCapture
 fi
 
 
+#also force download a sample
+if [ ! -f shuffle.webm ]; then
+  wget http://ammar.gr/mocapnet/shuffle.webm
+fi
+
 QUALITY="1.0" #1.0 , 1.5 , 2.0
 
 mkdir combinedModel

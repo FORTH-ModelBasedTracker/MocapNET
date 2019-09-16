@@ -9,6 +9,25 @@
 #include "../MocapNETLib/jsonCocoSkeleton.h"
 
 
+std::vector <float> smoothVector(std::vector <float> previousVector,std::vector <float> currentVector,float magnitude)
+{
+    if (previousVector.size()==currentVector.size())
+    {
+        std::vector <float> smoothedVector;
+        int i=0;
+        for (i=0; i<previousVector.size(); i++)
+        {
+            float smoothedValue =  currentVector[i]+ ( currentVector[i]-previousVector[i] ) * magnitude;
+            
+            smoothedVector.push_back(smoothedValue);
+        }
+        return smoothedVector;    
+    }
+    
+    return currentVector;
+}
+
+
 
 /*=======================================================================================================*/
 cv::Rect dj_getImageRect( cv::Mat &im )

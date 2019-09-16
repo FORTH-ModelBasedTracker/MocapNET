@@ -86,7 +86,8 @@ int main(int argc, char *argv[])
                     fprintf(stderr,"Image dimensions changed from default to %ux%u",width,height);
                 }
 
-
+            
+           std::vector<std::vector<float> >  empty2DPointsInput; 
 
             float totalTime=0.0;
             unsigned int totalSamples=0;
@@ -132,8 +133,9 @@ int main(int argc, char *argv[])
 
 
                             if (visualize)
-                                {
-                                    visualizePoints("3D Points Output",frameID,0,0,0,0,1,1,0.0,0.0,fpsMocapNET,width,height,1,inputValues,result);
+                                { 
+                                    std::vector<std::vector<float> > points2DOutput = convertBVHFrameTo2DPoints(result,width,height);
+                                    visualizePoints("3D Points Output",frameID,0,0,0,0,1,1,0.0,0.0,fpsMocapNET,width,height,1,inputValues,result,result,empty2DPointsInput,points2DOutput,points2DOutput);
                                 }
 
 

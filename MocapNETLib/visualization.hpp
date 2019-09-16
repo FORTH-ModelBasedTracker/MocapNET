@@ -37,5 +37,9 @@ int visualizePoints(
                      unsigned int height,
                      unsigned int handleMessages,
                      std::vector<float> mocapNETInput,
-                     std::vector<float> mocapNETOutput
+                     std::vector<float> mocapNETOutput,
+                     std::vector<float> mocapNETOutputWithGUIForcedView,
+                     std::vector<std::vector<float> > points2DInput,
+                     std::vector<std::vector<float> > points2DOutput,
+                     std::vector<std::vector<float> > points2DOutputGUIForcedView
                    );

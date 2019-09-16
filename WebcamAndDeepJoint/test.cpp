@@ -142,6 +142,7 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
     struct TensorflowInstance * net,
     const cv::Mat &bgr,
     struct boundingBox *bbox,
+    std::vector<std::vector<float> > & points2DInput,
     float minThreshold,
     int visualize ,
     float * fps,
@@ -162,7 +163,7 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
     unsigned int frameHeight =  bgr.size().height; //frame.rows
 
     unsigned long startTime  = GetTickCountMicroseconds();
-    std::vector<cv::Point_<float> > points = predictAndReturnSingleSkeletonOf2DCOCOJoints(
+    std::vector<cv::Point_<float> > pointsOf2DSkeleton = predictAndReturnSingleSkeletonOf2DCOCOJoints(
                 net,
                 bgr,
                 minThreshold,
@@ -191,27 +192,41 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
     struct skeletonCOCO sk= {0};
 
 
-    if (points.size()>=(UT_COCO_PARTS-1))
+    if (pointsOf2DSkeleton.size()>=(UT_COCO_PARTS-1))
         {
             // Extract bounding box..
 
             populateBoundingBox(
                 bbox,
-                points
+                pointsOf2DSkeleton
             );
 
-            for (i=0; i<points.size()-1; i++)
+            for (i=0; i<pointsOf2DSkeleton.size()-1; i++)
                 {
-                    points[i].x+=offsetX;
-                    points[i].y+=offsetY;
+                    pointsOf2DSkeleton[i].x+=offsetX;
+                    pointsOf2DSkeleton[i].y+=offsetY;
                 }
 
-            convertUtilitiesSkeletonFormatToBODY25(&sk,points);
+            convertUtilitiesSkeletonFormatToBODY25(&sk,pointsOf2DSkeleton);
+            
+            
+            //----------------------------------------------------------------------------------
+            //             Recover points to parent function
+            //----------------------------------------------------------------------------------
+            points2DInput.clear();
+            for (i=0; i<BODY25_PARTS-1; i++)
+                {
+                    std::vector<float> newPoint;
+                    newPoint.push_back(sk.joint2D[i].x);
+                    newPoint.push_back(sk.joint2D[i].y);
+                    points2DInput.push_back(newPoint);
+                }
+            //----------------------------------------------------------------------------------
 
         }
     else
         {
-            fprintf(stderr,"Cannot Flatten Empty Skeleton (Got %lu points and had to have at least %u)...\n",points.size(),(UT_COCO_PARTS-1));
+            fprintf(stderr,"Cannot Flatten Empty Skeleton (Got %lu points and had to have at least %u)...\n",pointsOf2DSkeleton.size(),(UT_COCO_PARTS-1));
             std::vector<float> emptyVector;
             return emptyVector;
         }
@@ -250,7 +265,7 @@ int main(int argc, char *argv[])
 
     int live=0,stop=0;
     int constrainPositionRotation=1;
-    int doCrop=1,tryForMaximumCrop=0,drawFloor=1,drawNSDM=1;
+    int doCrop=1,tryForMaximumCrop=0,doSmoothing=2,drawFloor=1,drawNSDM=1;
     int yawValue = 0;
     int pitchValue = 0;
     int rollValue = 0;
@@ -413,7 +428,10 @@ int main(int argc, char *argv[])
 
     std::vector<float> flatAndNormalizedPoints;
     std::vector<std::vector<float> > bvhFrames;
+    std::vector<float> previousBvhOutput;
     std::vector<float> bvhOutput;
+    std::vector<std::vector<float> > points2DOutput;
+    std::vector<std::vector<float> > points2DOutputGUIForcedView;
 
     if ( loadMocapNET(&mnet,"test",forceCPUMocapNET) )
         {
@@ -439,6 +457,24 @@ int main(int argc, char *argv[])
 
                             unsigned int frameWidth  =  frame.size().width;  //frame.cols
                             unsigned int frameHeight =  frame.size().height; //frame.rows
+                            
+                            
+                            //-------------------------------------------------
+                            //          Visualization Window Size
+                            //-------------------------------------------------
+                            unsigned int visWidth=frameWidth;
+                            unsigned int visHeight=frameHeight;
+                            //If our input window is small enlarge it a little..
+                            if (visWidth<700)
+                                  {
+                                    visWidth=(unsigned int) frameWidth*2.0;
+                                    visHeight=(unsigned int) frameHeight*2.0;
+                                  }
+                            visWidth=1024;
+                            visHeight=768;
+                            //-------------------------------------------------
+                            
+                            
                             if ( (frameWidth!=0)  && (frameHeight!=0)  )
                                 {
                                     unsigned long acquisitionEnd = GetTickCountMicroseconds();
@@ -488,12 +524,15 @@ int main(int argc, char *argv[])
 
                                     if ( (frameWidth>0) && (frameHeight>0) )
                                         {
+                                            std::vector<std::vector<float> >  points2DInput;
+                                            
                                             // Get 2D Skeleton Input from Frame
                                             float fps2DJointDetector = 0;
                                             flatAndNormalizedPoints = returnMocapNETInputFrom2DDetectorOutput(
                                                                           &net,
                                                                           frame,
                                                                           &cropBBox,
+                                                                          points2DInput,
                                                                           joint2DSensitivity,
                                                                           visualize,
                                                                           &fps2DJointDetector,
@@ -514,8 +553,25 @@ int main(int argc, char *argv[])
                                             unsigned long startTime = GetTickCountMicroseconds();
                                             bvhOutput = runMocapNET(&mnet,flatAndNormalizedPoints);
                                             unsigned long endTime = GetTickCountMicroseconds();
+                                            
+                                            //-------------------------------------------------------------------------------------------------------------------------
+                                            // Adding a vary baseline smoothing after a project request, it should be noted
+                                            // that no results during the original BMVC2019 used any smoothing of any kind 
+                                            //-------------------------------------------------------------------------------------------------------------------------
+                                            if(doSmoothing)
+                                            {//-------------------------------------------------------------------------------------------------------------------------
+                                                 if ( (previousBvhOutput.size()>0) && (bvhOutput.size()>0) )
+                                                 {
+                                                     smoothVector(previousBvhOutput,bvhOutput,(float) doSmoothing/10);
+                                                    previousBvhOutput=bvhOutput;
+                                                 }
+                                            }//-------------------------------------------------------------------------------------------------------------------------
+                                            
 
                                             float fpsMocapNET = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
+
+
+                                             std::vector<float> bvhForcedViewOutput=bvhOutput;
 
                                             if (!visualize)
                                                 {
@@ -534,17 +590,28 @@ int main(int argc, char *argv[])
                                             //Force Skeleton Position and orientation to make it more easily visualizable
                                             if (constrainPositionRotation)
                                                 {
-                                                    if (bvhOutput.size()>0)
+                                                    if (bvhForcedViewOutput.size()>0)
                                                         {
-                                                            bvhOutput[MOCAPNET_OUTPUT_HIP_XPOSITION]=0.0;
-                                                            bvhOutput[MOCAPNET_OUTPUT_HIP_YPOSITION]=0.0;
-                                                            bvhOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-160.0 - (float) distance;
-                                                            bvhOutput[MOCAPNET_OUTPUT_HIP_ZROTATION]=(float) rollValue;
-                                                            bvhOutput[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) yawValue;
-                                                            bvhOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) pitchValue;
+                                                            bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_XPOSITION]=0.0;
+                                                            bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_YPOSITION]=0.0;
+                                                            bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-160.0 - (float) distance;
+                                                            bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_ZROTATION]=(float) rollValue;
+                                                            bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) yawValue;
+                                                            bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) pitchValue;
                                                         }
                                                 }
 
+                                            if (bvhForcedViewOutput.size()>0)
+                                            { 
+                                              points2DOutputGUIForcedView = convertBVHFrameTo2DPoints(bvhForcedViewOutput,visWidth,visHeight);
+                                            }
+
+                                            if (bvhOutput.size()>0)
+                                            { 
+                                              points2DOutput = convertBVHFrameTo2DPoints(bvhOutput,visWidth,visHeight);
+                                            }
+                                            
+                                             
 
                                             //Display two sample joint configurations to console output
                                             //to demonstrate how easy it is to get the output joint information
@@ -571,25 +638,15 @@ int main(int argc, char *argv[])
                                             //OpenCV Visualization stuff
                                             //---------------------------------------------------
                                             if (visualize)
-                                                {
-                                                    unsigned int visWidth=frameWidth;
-                                                    unsigned int visHeight=frameHeight;
-                                                    //If our input window is small enlarge it a little..
-                                                    if (visWidth<700)
-                                                        {
-                                                            visWidth=(unsigned int) frameWidth*2.0;
-                                                            visHeight=(unsigned int) frameHeight*2.0;
-                                                        }
-                                                    visWidth=1024;
-                                                    visHeight=768;
-
+                                                { 
                                                     if (frameNumber==0)
                                                         {
                                                             cv::imshow("3D Control",controlMat);
 
                                                             createTrackbar("Stop Demo", "3D Control", &stop, 1);
                                                             createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 1);
-                                                            createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
+                                                            createTrackbar("Automatic Crop", "3D Control", &doCrop, 1); 
+                                                            createTrackbar("Smooth 3D Output", "3D Control", &doSmoothing, 10);
                                                             createTrackbar("Maximize Crop", "3D Control", &tryForMaximumCrop, 1);
                                                             createTrackbar("Draw Floor", "3D Control", &drawFloor, 1);
                                                             createTrackbar("Draw NSDM", "3D Control", &drawNSDM, 1);
@@ -629,7 +686,11 @@ int main(int argc, char *argv[])
                                                         visHeight,
                                                         0,
                                                         flatAndNormalizedPoints,
-                                                        bvhOutput
+                                                        bvhOutput,
+                                                        bvhForcedViewOutput,
+                                                        points2DInput,
+                                                        points2DOutput,
+                                                        points2DOutputGUIForcedView
                                                     );
 
 

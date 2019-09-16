@@ -35,6 +35,13 @@ const char * getBVHJointName(unsigned int currentJoint);
 
 
 /**
+ * @brief Get the jointID based on a string with the name of the joint
+ * @param CString with the name we want to search for
+ * @retval JointID that we want to get the name for, 0 means no result or the first joint
+ */
+unsigned int getBVHJointIDFromJointName(const char * jointName);
+
+/**
  * @brief Initialize BVH code ( if it is present )
  * @param  A float corresponding to a BVH frame
  * @param  The width of the 2D frame that will hold the 2D Points
