@@ -131,13 +131,15 @@ We have included a [video file](http://ammar.gr/mocapnet/shuffle.webm) that shou
 ./WebcamJointBIN --from shuffle.webm --frames 375
 ```
 
-The output window of WebcamJointBIN contains a heatmap depicting the 2D Joint estimations, an RGB image cropped and centered on the observed person, a 2D overlay of the 2D Skeleton as well as a window that has the 3D output retrieved by our method as seen in the following image. It should be noted that this demo is performance oriented and to that end it uses the fast [VNect](http://gvv.mpi-inf.mpg.de/projects/VNect/) artificial neural network as its 2D joint estimator. On recent systems the framerate achieved by the application should match the input framerate of your camera which is typically 30 or 60 fps. That being said the visualization provided will provide detailed framerate information for every part of the demo and the bottleneck is the 2D joint estimator. If your target is a headless enviornment then you might consider deactivating the visualization by passing the runtime argument --novisualization. This will prevent any windows from opening and thus not cause issues even on a headless environment.
+The output window of WebcamJointBIN contains a heatmap depicting the 2D Joint estimations, an RGB image cropped and centered on the observed person, a 2D overlay of the 2D Skeleton as well as a window that has the 3D output retrieved by our method as seen in the following image. It should be noted that this demo is performance oriented and to that end it uses the fast [VNect](http://gvv.mpi-inf.mpg.de/projects/VNect/) artificial neural network as its 2D joint estimator. On recent systems the framerate achieved by the application should match the input framerate of your camera which is typically 30 or 60 fps. That being said the visualization provided will provide detailed framerate information for every part of the demo and the bottleneck is the 2D joint estimator. 
+
+If your target is a headless enviornment then you might consider deactivating the visualization by passing the runtime argument --novisualization. This will prevent any windows from opening and thus not cause issues even on a headless environment.
 
 
 ![WebcamJointBin](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoview.jpg)
 
 
-BVH output files can be easily viewed using a variety of compatible applicatons. We suggest [Blender](https://www.blender.org/) or [BVHacker](https://www.bvhacker.com/) that is free for download and compatible with [Wine](https://wiki.winehq.org/)
+BVH output files can be easily viewed using a variety of compatible applicatons. We suggest [Blender](https://www.blender.org/) which is a very powerful open-source 3D editing and animation suite or [BVHacker](https://www.bvhacker.com/) that is freeware and compatible with [Wine](https://wiki.winehq.org/)
 
 
 ## Higher accuracy using OpenPose JSON files
