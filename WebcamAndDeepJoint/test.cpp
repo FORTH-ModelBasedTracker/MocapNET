@@ -2,6 +2,7 @@
  *  @brief This is an all-in-one live demo. It combines data acquisition using OpenCV, 2D Joint estimation using Tensorflow ( via VNECT/OpenPose/FORTH estimators ),
  *  and 3D BVH output using MocapNET.
  *  @author Ammar Qammaz (AmmarkoV)
+
  */
 
 #include "opencv2/opencv.hpp"
@@ -131,6 +132,22 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
 
 
 
+/**
+ * @brief Convert start and end time to a framerate ( frames per second )
+ * @ingroup demo
+ * @retval Will return a framerate from two millisecond timestamps, if no time duration has been passed there is no division by zero.
+ */
+float convertStartEndTimeFromMicrosecondsToFPS(unsigned long startTime, unsigned long endTime)
+{
+    float timeInMilliseconds =  (float) (endTime-startTime)/1000;
+    if (timeInMilliseconds ==0.0)
+        {
+            timeInMilliseconds=0.00001;    //Take care of division by null..
+        }
+    return (float) 1000/timeInMilliseconds;
+}
+
+
 
 /**
  * @brief Retrieve MocapNET output vector from an image
@@ -178,14 +195,14 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
             );
     unsigned long endTime = GetTickCountMicroseconds();
     unsigned long openPoseComputationTimeInMilliseconds = (unsigned long) (endTime-startTime)/1000;
+    *fps = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
+    
     if (!visualize)
         {
             //If we don't visualize using OpenCV output performance
-            fprintf(stderr,"OpenPose 2DSkeleton @ %lu ms \n",openPoseComputationTimeInMilliseconds);
-
+            fprintf(stderr,"OpenPose 2DSkeleton @ %0.2f fps \n",*fps);
         }
 
-    *fps = (float) 1000000/(endTime-startTime);
 
 
     unsigned int i=0;
@@ -236,21 +253,6 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
 }
 
 
-/**
- * @brief Convert start and end time to a framerate ( frames per second )
- * @ingroup demo
- * @retval Will return a framerate from two millisecond timestamps, if no time duration has been passed there is no division by zero.
- */
-float convertStartEndTimeFromMicrosecondsToFPS(unsigned long startTime, unsigned long endTime)
-{
-    float timeInMilliseconds =  (float) (endTime-startTime)/1000;
-    if (timeInMilliseconds ==0.0)
-        {
-            timeInMilliseconds=0.00001;    //Take care of division by null..
-        }
-    return (float) 1000/timeInMilliseconds;
-}
-
 
 int main(int argc, char *argv[])
 {
@@ -265,11 +267,8 @@ int main(int argc, char *argv[])
 
     int live=0,stop=0;
     int constrainPositionRotation=1;
-    int doCrop=1,tryForMaximumCrop=0,doSmoothing=2,drawFloor=1,drawNSDM=1;
-    int yawValue = 0;
-    int pitchValue = 0;
-    int rollValue = 0;
-    int distance = 0;
+    int doCrop=1,tryForMaximumCrop=0,doSmoothing=3,drawFloor=1,drawNSDM=1;
+    int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0;
 
     unsigned int quitAfterNSkippedFrames = 10000;
     //2D Joint Detector Configuration
@@ -608,7 +607,11 @@ int main(int argc, char *argv[])
 
                                             if (bvhOutput.size()>0)
                                             { 
-                                              points2DOutput = convertBVHFrameTo2DPoints(bvhOutput,visWidth,visHeight);
+                                              points2DOutput = convertBVHFrameTo2DPoints(
+                                                                                          bvhOutput,
+                                                                                          1920,//visWidth,
+                                                                                          1080//visHeight
+                                                                                        );
                                             }
                                             
                                              

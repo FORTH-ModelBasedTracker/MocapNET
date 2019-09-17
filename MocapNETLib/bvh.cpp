@@ -87,6 +87,16 @@ unsigned int getBVHJointIDFromJointName(const char * jointName)
 
 std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bvhFrame,unsigned int width, unsigned int height)
 {
+    
+    /*
+        renderingConfiguration.width=1920;
+    renderingConfiguration.height=1080;
+    renderingConfiguration.cX=(float)renderingConfiguration.width/2;
+    renderingConfiguration.cY=(float)renderingConfiguration.height/2;
+    renderingConfiguration.fX=582.18394;
+    renderingConfiguration.fY=582.52915;
+    */
+    
     std::vector<std::vector<float> > result;
 #if USE_BVH
     struct simpleRenderer renderer= {0};
@@ -94,8 +104,8 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
         &renderer,
         width,
         height,
-        570.0,
-        570.0
+        582.18394, //570.0
+        582.52915  //570.0
     );
     simpleRendererInitialize(&renderer);
     if (!haveBVHInit)
