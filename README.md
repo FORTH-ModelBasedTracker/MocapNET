@@ -21,7 +21,7 @@ Please cite the [following paper](http://users.ics.forth.gr/~argyros/mypapers/20
 @inproceedings{Qammaz2019,
   author = {Qammaz, Ammar and Argyros, Antonis A},
   title = {MocapNET: Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images},
-  booktitle = {British Machine Vision Conference (BMVC 2019) (to appear)},
+  booktitle = {British Machine Vision Conference (BMVC 2019)},
   publisher = {BMVA},
   year = {2019},
   month = {September},
