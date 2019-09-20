@@ -270,7 +270,9 @@ int main(int argc, char *argv[])
     int constrainPositionRotation=1;
     int doCrop=1,tryForMaximumCrop=0,doSmoothing=3,drawFloor=1,drawNSDM=1;
     int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0;
-
+    
+    unsigned int delay=1; //Just a little time to view the window..
+    
     unsigned int quitAfterNSkippedFrames = 10000;
     //2D Joint Detector Configuration
     unsigned int inputWidth2DJointDetector = 368;
@@ -348,7 +350,13 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"-o")==0)
                     {
                         outputPath=argv[i+1];
-                    }
+                    } 
+                else if (strcmp(argv[i],"--delay")==0)
+                    {
+                        //If you want to take some time to check the results that 
+                        //might otherwise pass by very fast
+                        delay=atoi(argv[i+1]);
+                    } 
                 else if (strcmp(argv[i],"--frames")==0)
                     {
                         frameLimit=atoi(argv[i+1]);
@@ -713,7 +721,7 @@ int main(int argc, char *argv[])
 
                                                     //Window Event Loop Time and  Receiving Key Presses..
                                                     //----------------------------------------------------------------------------------------------------------
-                                                    int key = cv::waitKey(1) ;
+                                                    int key = cv::waitKey(delay) ;
                                                     key = 0x000000FF & key;
 
                                                     if (key!=255)
