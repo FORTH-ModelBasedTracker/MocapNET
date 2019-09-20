@@ -201,6 +201,18 @@ int visualizeSkeletonCorrespondence(
                         }
                 }
         }
+        
+        /*
+      float x2D,y2D,xReprojected,yReprojected;
+      
+      
+     unsigned int midHipBVHJointID = getBVHJointIDFromJointName("Hip");
+      x2D = 
+  */
+        
+        
+        
+        
 
     cv::imshow("TEST",img);
     return 1;

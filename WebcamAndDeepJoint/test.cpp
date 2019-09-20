@@ -196,7 +196,7 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
     unsigned long endTime = GetTickCountMicroseconds();
     unsigned long openPoseComputationTimeInMilliseconds = (unsigned long) (endTime-startTime)/1000;
     *fps = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
-    
+
     if (!visualize)
         {
             //If we don't visualize using OpenCV output performance
@@ -225,8 +225,8 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
                 }
 
             convertUtilitiesSkeletonFormatToBODY25(&sk,pointsOf2DSkeleton);
-            
-            
+
+
             //----------------------------------------------------------------------------------
             //             Recover points to parent function
             //----------------------------------------------------------------------------------
@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
     unsigned int forceCPUMocapNET=1;
     unsigned int forceCPU2DJointEstimation=0;
     float quality=1.0;
-    
+
     unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,frameLimitSet=0,visualize=1;
     float joint2DSensitivity=0.35;
     const char * webcam = 0;
@@ -270,9 +270,9 @@ int main(int argc, char *argv[])
     int constrainPositionRotation=1;
     int doCrop=1,tryForMaximumCrop=0,doSmoothing=3,drawFloor=1,drawNSDM=1;
     int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0;
-    
+
     unsigned int delay=1; //Just a little time to view the window..
-    
+
     unsigned int quitAfterNSkippedFrames = 10000;
     //2D Joint Detector Configuration
     unsigned int inputWidth2DJointDetector = 368;
@@ -326,11 +326,11 @@ int main(int argc, char *argv[])
                     {
                         chdir(argv[i+1]);
                     }
- else if (strcmp(argv[i],"--quality")==0)
-                {
-                    quality=atof(argv[i+1]);
-                } 
-  
+                else if (strcmp(argv[i],"--quality")==0)
+                    {
+                        quality=atof(argv[i+1]);
+                    }
+
                 else if (strcmp(argv[i],"--maxskippedframes")==0)
                     {
                         quitAfterNSkippedFrames=atoi(argv[i+1]);
@@ -350,13 +350,13 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"-o")==0)
                     {
                         outputPath=argv[i+1];
-                    } 
+                    }
                 else if (strcmp(argv[i],"--delay")==0)
                     {
-                        //If you want to take some time to check the results that 
+                        //If you want to take some time to check the results that
                         //might otherwise pass by very fast
                         delay=atoi(argv[i+1]);
-                    } 
+                    }
                 else if (strcmp(argv[i],"--frames")==0)
                     {
                         frameLimit=atoi(argv[i+1]);
@@ -424,11 +424,16 @@ int main(int argc, char *argv[])
         }
 
     signed int totalNumberOfFrames = cap.get(CV_CAP_PROP_FRAME_COUNT);
-    fprintf(stderr,"totalNumberOfFrames in %s is %u \n",webcam,totalNumberOfFrames);
-    if ( (totalNumberOfFrames>0) && (!frameLimitSet) )
-    {
-     frameLimit=totalNumberOfFrames;   
-    }
+    fprintf(stderr,"totalNumberOfFrames by quering capture device %s is %u \n",webcam,totalNumberOfFrames);
+    if (frameLimitSet)
+        {
+            fprintf(stderr,"User has set his own frame limit so we override total number of frames with %u \n",frameLimit);
+            totalNumberOfFrames = frameLimit;
+        }
+    else if ( (totalNumberOfFrames>0) && (!frameLimitSet) )
+        {
+            frameLimit=totalNumberOfFrames;
+        }
 
     cv::Mat frame;
     struct boundingBox cropBBox= {0};
@@ -470,8 +475,8 @@ int main(int argc, char *argv[])
 
                             unsigned int frameWidth  =  frame.size().width;  //frame.cols
                             unsigned int frameHeight =  frame.size().height; //frame.rows
-                            
-                            
+
+
                             //-------------------------------------------------
                             //          Visualization Window Size
                             //-------------------------------------------------
@@ -479,15 +484,15 @@ int main(int argc, char *argv[])
                             unsigned int visHeight=frameHeight;
                             //If our input window is small enlarge it a little..
                             if (visWidth<700)
-                                  {
+                                {
                                     visWidth=(unsigned int) frameWidth*2.0;
                                     visHeight=(unsigned int) frameHeight*2.0;
-                                  }
+                                }
                             visWidth=1024;
                             visHeight=768;
                             //-------------------------------------------------
-                            
-                            
+
+
                             if ( (frameWidth!=0)  && (frameHeight!=0)  )
                                 {
                                     unsigned long acquisitionEnd = GetTickCountMicroseconds();
@@ -538,7 +543,7 @@ int main(int argc, char *argv[])
                                     if ( (frameWidth>0) && (frameHeight>0) )
                                         {
                                             std::vector<std::vector<float> >  points2DInput;
-                                            
+
                                             // Get 2D Skeleton Input from Frame
                                             float fps2DJointDetector = 0;
                                             flatAndNormalizedPoints = returnMocapNETInputFrom2DDetectorOutput(
@@ -566,25 +571,26 @@ int main(int argc, char *argv[])
                                             unsigned long startTime = GetTickCountMicroseconds();
                                             bvhOutput = runMocapNET(&mnet,flatAndNormalizedPoints);
                                             unsigned long endTime = GetTickCountMicroseconds();
-                                            
+
                                             //-------------------------------------------------------------------------------------------------------------------------
                                             // Adding a vary baseline smoothing after a project request, it should be noted
-                                            // that no results during the original BMVC2019 used any smoothing of any kind 
+                                            // that no results during the original BMVC2019 used any smoothing of any kind
                                             //-------------------------------------------------------------------------------------------------------------------------
                                             if(doSmoothing)
-                                            {//-------------------------------------------------------------------------------------------------------------------------
-                                                 if ( (previousBvhOutput.size()>0) && (bvhOutput.size()>0) )
-                                                 {
-                                                     smoothVector(previousBvhOutput,bvhOutput,(float) doSmoothing/10);
-                                                    previousBvhOutput=bvhOutput;
-                                                 }
-                                            }//-------------------------------------------------------------------------------------------------------------------------
-                                            
+                                                {
+                                                    //-------------------------------------------------------------------------------------------------------------------------
+                                                    if ( (previousBvhOutput.size()>0) && (bvhOutput.size()>0) )
+                                                        {
+                                                            smoothVector(previousBvhOutput,bvhOutput,(float) doSmoothing/10);
+                                                            previousBvhOutput=bvhOutput;
+                                                        }
+                                                }//-------------------------------------------------------------------------------------------------------------------------
+
 
                                             float fpsMocapNET = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
 
 
-                                             std::vector<float> bvhForcedViewOutput=bvhOutput;
+                                            std::vector<float> bvhForcedViewOutput=bvhOutput;
 
                                             if (!visualize)
                                                 {
@@ -615,20 +621,20 @@ int main(int argc, char *argv[])
                                                 }
 
                                             if (bvhForcedViewOutput.size()>0)
-                                            { 
-                                              points2DOutputGUIForcedView = convertBVHFrameTo2DPoints(bvhForcedViewOutput,visWidth,visHeight);
-                                            }
+                                                {
+                                                    points2DOutputGUIForcedView = convertBVHFrameTo2DPoints(bvhForcedViewOutput,visWidth,visHeight);
+                                                }
 
                                             if (bvhOutput.size()>0)
-                                            { 
-                                              points2DOutput = convertBVHFrameTo2DPoints(
-                                                                                          bvhOutput,
-                                                                                          1920,//visWidth,
-                                                                                          1080//visHeight
-                                                                                        );
-                                            }
-                                            
-                                             
+                                                {
+                                                    points2DOutput = convertBVHFrameTo2DPoints(
+                                                                         bvhOutput,
+                                                                         1920,//visWidth,
+                                                                         1080//visHeight
+                                                                     );
+                                                }
+
+
 
                                             //Display two sample joint configurations to console output
                                             //to demonstrate how easy it is to get the output joint information
@@ -655,14 +661,14 @@ int main(int argc, char *argv[])
                                             //OpenCV Visualization stuff
                                             //---------------------------------------------------
                                             if (visualize)
-                                                { 
+                                                {
                                                     if (frameNumber==0)
                                                         {
                                                             cv::imshow("3D Control",controlMat);
 
                                                             createTrackbar("Stop Demo", "3D Control", &stop, 1);
                                                             createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 1);
-                                                            createTrackbar("Automatic Crop", "3D Control", &doCrop, 1); 
+                                                            createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
                                                             createTrackbar("Smooth 3D Output", "3D Control", &doSmoothing, 10);
                                                             createTrackbar("Maximize Crop", "3D Control", &tryForMaximumCrop, 1);
                                                             createTrackbar("Draw Floor", "3D Control", &drawFloor, 1);
@@ -809,6 +815,7 @@ int main(int argc, char *argv[])
     else
         {
             fprintf(stderr,"Was not able to load MocapNET, please make sure you have the appropriate models downloaded..\n");
+            fprintf(stderr,"TIP: Rerun initialize.sh to make sure that your model files follow repository changes..\n");
         }
     // the camera will be deinitialized automatically in VideoCapture destructor
 
