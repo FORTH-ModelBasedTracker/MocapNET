@@ -132,14 +132,14 @@ We have included a [video file](http://ammar.gr/mocapnet/shuffle.webm) that shou
 ```
 
 
-Since high-framerate output is hard to examine, if you need some more time to elaborate on the output you can use the delay flag to add programmable delays between frames. Issuing the following will add 1 second of delay between each frame  :
+Since high-framerate output is hard to examine, if you need some more time to elaborate on the output you can use the delay flag to add programmable delays between frames. Issuing the following will add 1 second of delay after each processed frame  :
 
 ```
 ./WebcamJointBIN --from shuffle.webm --frames 375 --delay 1000
 ```
 
 
-Finally, as stated in the paper, MocapNET has a configurable quality/speed setting using the λ variable. You can switch between different λ configurations using the --quality flag with possible values beeing 1.0(maximum quality), 1.5 and 2.0 (maximum framerate). Issuing the following will run the test at maximum framerate  :
+Finally, as stated in the [paper](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf), MocapNET has a configurable quality/speed setting we call its λ variable. You can switch between different λ configurations using the --quality flag with possible values beeing 1.0(maximum quality), 1.5 and 2.0 (maximum framerate). By default a λ=1.0 is used. If you wish to override this issuing the following command will run the  maximum framerate ensemble :
 
 ```
 ./WebcamJointBIN --from shuffle.webm --frames 375 --quality 2.0
@@ -147,7 +147,7 @@ Finally, as stated in the paper, MocapNET has a configurable quality/speed setti
 
 The output window of WebcamJointBIN contains a heatmap depicting the 2D Joint estimations, an RGB image cropped and centered on the observed person, a 2D overlay of the 2D Skeleton as well as a window that has the 3D output retrieved by our method as seen in the following image. It should be noted that this demo is performance oriented and to that end it uses the fast [VNect](http://gvv.mpi-inf.mpg.de/projects/VNect/) artificial neural network as its 2D joint estimator. On recent systems the framerate achieved by the application should match the input framerate of your camera which is typically 30 or 60 fps. That being said the visualization provided will provide detailed framerate information for every part of the demo and the bottleneck is the 2D joint estimator. 
 
-If your target is a headless enviornment then you might consider deactivating the visualization by passing the runtime argument --novisualization. This will prevent any windows from opening and thus not cause issues even on a headless environment.
+If your target is a headless environment then you might consider deactivating the visualization by passing the runtime argument --novisualization. This will prevent any windows from opening and thus not cause issues even on a headless environment.
 
 
 ![WebcamJointBin](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoview.jpg)
