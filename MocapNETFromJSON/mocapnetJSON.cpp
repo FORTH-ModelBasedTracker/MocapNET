@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 
             if ( getImageWidthHeight(filePathOfJSONFile,&width,&height) )
                 {
-                    fprintf(stderr,"Image dimensions changed from default to %ux%u",width,height);
+                    fprintf(stderr,"Image dimensions changed from default to %ux%u\n",width,height);
                 }
 
             
@@ -102,14 +102,14 @@ int main(int argc, char *argv[])
 
 
             char formatString[128]= {0};
-            snprintf(formatString,128,"%%s/%%s_%%0%u_keypoints.json",serialLength);
+            snprintf(formatString,128,"%%s/%%s%%0%uu_keypoints.json",serialLength);
 
 
-            unsigned int frameID=0;
+            unsigned int frameID=1;
             while (frameID<frameLimit)
                 {
 
-                    snprintf(filePathOfJSONFile,1024,formatString,path,frameID);
+                    snprintf(filePathOfJSONFile,1024,formatString,path,label,frameID);
 
                     if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton))
                         {

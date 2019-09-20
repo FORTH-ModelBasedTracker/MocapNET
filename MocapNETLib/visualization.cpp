@@ -193,7 +193,23 @@ int visualizeSkeletonCorrespondence(
     unsigned int height
 )
 {
-
+    if (  
+           (points2DInput.size()==0)  
+       )
+       {
+            fprintf(stderr,YELLOW "visualizeSkeletonCorrespondence cannot display something without the input 2D points\n" NORMAL); 
+            return 0;
+       }   
+    
+    if (  
+           (points2DOutput.size()==0)
+       )
+       {
+            fprintf(stderr,YELLOW "visualizeSkeletonCorrespondence cannot display something without the output 2D points\n" NORMAL); 
+            return 0;
+       }   
+        
+    
     height=1080;
     width=1920;
     int doFullReprojectionVisualization = 0;    
@@ -334,6 +350,12 @@ int visualizePoints(
             return 0;
         }
 
+    if (points2DOutput.size()==0)
+        {
+            fprintf(stderr,YELLOW "Won't visualize empty 2D points for frame %u\n" NORMAL,frameNumber);
+            return 0;
+        }        
+
     char textInfo[512];
 
     //std::vector<std::vector<float> > points2D = convertBVHFrameTo2DPoints(mocapNETOutput,width,height);
@@ -346,12 +368,21 @@ int visualizePoints(
 //------------------------------------------------------------------------------------------
     if (drawFloor)
         {
+            float floorX=0,floorY=0,floorZ=0;
+            
+            if (mocapNETOutputWithGUIForcedView.size()>5)
+            {
+                floorX=mocapNETOutputWithGUIForcedView[3];
+                floorY=mocapNETOutputWithGUIForcedView[4];
+                floorZ=mocapNETOutputWithGUIForcedView[5];
+            }
+            
             unsigned int floorDimension=20;
             drawFloorFromPrimitives(
                 img,
-                mocapNETOutputWithGUIForcedView[3],
-                mocapNETOutputWithGUIForcedView[4],
-                mocapNETOutputWithGUIForcedView[5],
+                floorX,
+                floorY,
+                floorZ,
                 floorDimension,
                 width,
                 height
