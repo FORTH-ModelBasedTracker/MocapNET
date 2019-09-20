@@ -1,3 +1,8 @@
+/*
+ * Utility to extract BVH files straight from OpenPose JSON output
+ * Sample usage ./MocapNETJSON  --from frames/GOPR3223.MP4-data --label colorFrame_0_ --visualize
+ */
+
 #include "../MocapNETLib/mocapnet.hpp"
 #include <iostream>
 #include <vector>
