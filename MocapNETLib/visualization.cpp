@@ -141,8 +141,47 @@ int drawFloorFromPrimitives(
 }
 
 
+float pointDistance(float xA,float yA,float xB,float yB)
+{
+ return sqrt( ((xA-xB)*(xA-xB)) + ((yA-yB)*(yA-yB)) );
+}
 
 
+static const char * reprojectBVHNames[] =
+{
+"lShldr",
+"rShldr",
+"lForeArm",
+"rForeArm",
+"lHand",
+"rHand",
+"lThigh",
+"rThigh",
+"lShin",
+"rShin",
+"lFoot",
+"rFoot"
+};
+
+
+
+static int reproject2DIDs[] =
+{
+BODY25_LShoulder,    
+BODY25_RShoulder,    
+BODY25_LElbow,
+BODY25_RElbow,
+BODY25_LWrist,
+BODY25_RWrist,
+BODY25_LHip,
+BODY25_RHip,
+BODY25_LKnee,
+BODY25_RKnee,
+BODY25_LAnkle,
+BODY25_RAnkle
+};
+
+static int numberOfReprojectionChecks=12;
 
 int visualizeSkeletonCorrespondence(
     cv::Mat &imgO,
@@ -157,6 +196,10 @@ int visualizeSkeletonCorrespondence(
 
     height=1080;
     width=1920;
+    int doFullReprojectionVisualization = 0;    
+    
+    if (doFullReprojectionVisualization)
+    {
     cv::Mat img(height,width, CV_8UC3, Scalar(0,0,0));
 
 
@@ -201,20 +244,51 @@ int visualizeSkeletonCorrespondence(
                         }
                 }
         }
-        
-        /*
-      float x2D,y2D,xReprojected,yReprojected;
-      
-      
+    
+    cv::imshow("TEST",img);    
+    }
+    
+     //-----------------------------------------------------------------------------------------------------------------------------
+     //-----------------------------------------------------------------------------------------------------------------------------
+     //-----------------------------------------------------------------------------------------------------------------------------
      unsigned int midHipBVHJointID = getBVHJointIDFromJointName("Hip");
-      x2D = 
-  */
-        
-        
-        
-        
+     float alignmentX = points2DInput[BODY25_MidHip][0]-points2DOutput[midHipBVHJointID][0];
+     float alignmentY = points2DInput[BODY25_MidHip][1]-points2DOutput[midHipBVHJointID][1];
+    
+     float x2D,y2D,xReprojected,yReprojected,distance,relativeDistance;
+     unsigned int jointID2D,jointIDBVH;
+ 
+     //-------------------------------------------------------------------------
+     //-------------------------------------------------------------------------
+     //-------------------------------------------------------------------------
+ 
+     char textWarning[512];
+     int i=0;
+     for (i=0; i<numberOfReprojectionChecks; i++)
+     {
+      jointID2D = reproject2DIDs[i]; 
+      jointIDBVH = getBVHJointIDFromJointName(reprojectBVHNames[i]);
+      //-------------------------------------------------------------------------
+      x2D = points2DInput[jointID2D][0];
+      y2D = points2DInput[jointID2D][1];
+      xReprojected = alignmentX + points2DOutput[jointIDBVH][0];
+      yReprojected = alignmentY + points2DOutput[jointIDBVH][1];
+      distance=pointDistance(x2D,y2D,xReprojected,yReprojected);
+      relativeDistance=(float) distance/width;
 
-    cv::imshow("TEST",img);
+      snprintf(textWarning,512,"%s reprojection error %0.2f %%",reprojectBVHNames[i],relativeDistance);
+      if (relativeDistance>0.07)
+      { 
+          //fprintf(stderr,RED);
+          
+          cv::Point jointPoint(x,y);  
+          cv::putText(imgO, textWarning  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar(0,0,255), 0.2, 8 );
+          y+=15;
+      }
+      //fprintf(stderr,"%s\n" NORMAL,textWarning);         
+     } 
+
+
     return 1;
 }
 
@@ -290,7 +364,7 @@ int visualizePoints(
 //---------------------------------------------------------------------------------------------------------------------
 //   Draw correspondance, post processing step to see if output is good
 //---------------------------------------------------------------------------------------------------------------------
-    int visualizeCorrespondence=0;
+    int visualizeCorrespondence=1;
 
     if (visualizeCorrespondence)
         {
@@ -298,8 +372,8 @@ int visualizePoints(
                 img,
                 points2DInput,
                 points2DOutput,
-                0, //X
-                0, //Y
+                750, //X
+                50, //Y
                 width,
                 height
             );

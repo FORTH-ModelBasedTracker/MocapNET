@@ -257,13 +257,18 @@ std::vector<float> flattenskeletonCOCOToVector(struct skeletonCOCO * sk,unsigned
     int guessNose=1;
     if (guessNose==1)
         {
+            /*
             if (bothJointAreNotZero(sk,BODY25_LEar,BODY25_REar))
                 {
                     addSkeletonJointFromTwoJoints(sk,result,BODY25_LEar,BODY25_REar);
                 }
-            else if (bothJointAreNotZero(sk,BODY25_LEye,BODY25_REye))
+            else */ 
+            if (bothJointAreNotZero(sk,BODY25_LEye,BODY25_REye))
                 {
                     addSkeletonJointFromTwoJoints(sk,result,BODY25_LEye,BODY25_REye);
+                } else
+                { 
+                  addSkeletonJoint(sk,result,BODY25_Nose);
                 }
         }
     else

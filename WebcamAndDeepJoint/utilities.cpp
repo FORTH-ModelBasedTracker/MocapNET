@@ -342,10 +342,14 @@ void convertUtilitiesSkeletonFormatToBODY25(struct skeletonCOCO * sk, std::vecto
     if (
         (points[UT_COCO_RHip].x!=0) && (points[UT_COCO_LHip].x!=0) &&
         (points[UT_COCO_RHip].y!=0) && (points[UT_COCO_LHip].y!=0)
-    )
+       )
         {
             sk->joint2D[BODY25_MidHip].x = (points[UT_COCO_RHip].x+points[UT_COCO_LHip].x)/2;
             sk->joint2D[BODY25_MidHip].y = (points[UT_COCO_RHip].y+points[UT_COCO_LHip].y)/2;
+        } else
+        {
+            sk->joint2D[BODY25_MidHip].x = 0;
+            sk->joint2D[BODY25_MidHip].y = 0; 
         }
 
     sk->joint2D[BODY25_RHip].x = points[UT_COCO_RHip].x;
