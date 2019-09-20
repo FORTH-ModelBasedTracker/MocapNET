@@ -1807,9 +1807,10 @@ int writeBVHFile(
  * @ingroup mocapnet
  * @param Pointer to a struct MocapNET that will hold the tensorflow instances on load.
  * @param Path to .pb files that are needed
+ * @param Quality setting, can currently be 1.0 ( highest quality ), 1.5  or 2.0 ( highest performance )
  * @retval 1 = Success loading the files  , 0 = Failure
  */
-int loadMocapNET(struct MocapNET * mnet,const char * filename,unsigned int forceCPU);
+ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetting,unsigned int forceCPU);
 
 
 

@@ -84,8 +84,9 @@ function generateDataset
 
 #New extra fine detail
 #------------------------------------------------------------------------------------------------------------
-generateDataset dataFrontΑ.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -90 -35 35 0 35"
-generateDataset dataFrontΒ.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 0 -35 35 90 35"
+generateDataset dataAll.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 180 35"
+generateDataset dataFrontA.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -90 -35 35 0 35"
+generateDataset dataFrontB.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 0 -35 35 90 35"
 generateDataset dataBackA.csv "--flipRandomizationOrientation --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -90 -35 35 0 35"
 generateDataset dataBackB.csv "--flipRandomizationOrientation --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 0 -35 35 90 35"
 

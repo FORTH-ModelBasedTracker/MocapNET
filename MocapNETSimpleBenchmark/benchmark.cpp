@@ -183,10 +183,13 @@ int main(int argc, char *argv[])
 //     Parse command-line options, switch CPU/GPU execution and pick which benchmark to run
 //-------------------------------------------------------------------------------------------------
   int useCPUOnly=1;
+  float quality=1.0;
+  
   for (int i=0; i<argc; i++)
   {
     //if (strcmp(argv[i],"--cpu")==0)      { setenv("CUDA_VISIBLE_DEVICES", "", 1);  } else
-    if (strcmp(argv[i],"--gpu")==0)      { useCPUOnly=0;  } else
+    if (strcmp(argv[i],"--gpu")==0)       { useCPUOnly=0;  } else
+   if (strcmp(argv[i],"--quality")==0) { quality=atof(argv[i+1]); }  else
     if (strcmp(argv[i],"--test")==0)     { testMocapNETCompression(); exit(0);     } else
     if (strcmp(argv[i],"--testJSON")==0) { testMocapNETJSONCompression(); exit(0); }
   }
@@ -194,7 +197,7 @@ int main(int argc, char *argv[])
 
 
   struct MocapNET mnet={0};
-  if ( loadMocapNET(&mnet,"test",useCPUOnly) )
+  if ( loadMocapNET(&mnet,"test",quality,useCPUOnly) )
   {
    std::vector<float> inputValues;
    std::vector<float> outputValuesExpected;

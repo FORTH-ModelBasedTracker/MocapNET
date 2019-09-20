@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
     unsigned int width=1920 , height=1080 , frameLimit=10000 , visualize = 0, useCPUOnly=1 , serialLength=5;
     const char * path=0;
     const char * label=0;
+    float quality=1.0;
 
     if (initializeBVHConverter())
         {
@@ -36,6 +37,10 @@ int main(int argc, char *argv[])
                 {
                     frameLimit=atoi(argv[i+1]);
                 }
+            else if (strcmp(argv[i],"--quality")==0)
+                {
+                    quality=atof(argv[i+1]);
+                } 
             else
                 //if (strcmp(argv[i],"--cpu")==0)        { setenv("CUDA_VISIBLE_DEVICES", "", 1); } else
                 if (strcmp(argv[i],"--gpu")==0)
@@ -76,7 +81,7 @@ int main(int argc, char *argv[])
 
 
     struct MocapNET mnet= {0};
-    if ( loadMocapNET(&mnet,"test",useCPUOnly) )
+    if ( loadMocapNET(&mnet,"test",quality,useCPUOnly) )
         {
             char filePathOfJSONFile[1024]= {0};
             snprintf(filePathOfJSONFile,1024,"%s/colorFrame_0_00000.jpg",path);

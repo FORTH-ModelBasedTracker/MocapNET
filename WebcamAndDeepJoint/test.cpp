@@ -260,7 +260,8 @@ int main(int argc, char *argv[])
 
     unsigned int forceCPUMocapNET=1;
     unsigned int forceCPU2DJointEstimation=0;
-
+    float quality=1.0;
+    
     unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,frameLimitSet=0,visualize=1;
     float joint2DSensitivity=0.35;
     const char * webcam = 0;
@@ -323,6 +324,11 @@ int main(int argc, char *argv[])
                     {
                         chdir(argv[i+1]);
                     }
+ else if (strcmp(argv[i],"--quality")==0)
+                {
+                    quality=atof(argv[i+1]);
+                } 
+  
                 else if (strcmp(argv[i],"--maxskippedframes")==0)
                     {
                         quitAfterNSkippedFrames=atoi(argv[i+1]);
@@ -432,7 +438,7 @@ int main(int argc, char *argv[])
     std::vector<std::vector<float> > points2DOutput;
     std::vector<std::vector<float> > points2DOutputGUIForcedView;
 
-    if ( loadMocapNET(&mnet,"test",forceCPUMocapNET) )
+    if ( loadMocapNET(&mnet,"test",quality,forceCPUMocapNET) )
         {
             if (
                 loadTensorflowInstance(

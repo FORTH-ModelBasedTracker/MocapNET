@@ -60,12 +60,20 @@ int listNodesMN(const char * label , TF_Graph* graph)
     return 1;
 }
 
-int loadMocapNET(struct MocapNET * mnet,const char * filename,unsigned int forceCPU)
+int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetting,unsigned int forceCPU)
 {
+    char allModelPath[1024]; 
+    char frontModelPath[1024]; 
+    char backModelPath[1024]; 
+    
+    snprintf(allModelPath,1024,"combinedModel/%0.1f/all.pb",qualitySetting);
+    snprintf(frontModelPath,1024,"combinedModel/%0.1f/front.pb",qualitySetting);
+    snprintf(backModelPath,1024,"combinedModel/%0.1f/back.pb",qualitySetting);
+    
     int result = (
-                     ( loadTensorflowInstance(&mnet->allModel  ,"combinedModel/all.pb"  ,"input_all"  ,"result_all/concat",forceCPU) ) &&
-                     ( loadTensorflowInstance(&mnet->frontModel,"combinedModel/front.pb","input_front","result_front/concat",forceCPU) ) &&
-                     ( loadTensorflowInstance(&mnet->backModel ,"combinedModel/back.pb" ,"input_back" ,"result_back/concat",forceCPU) )
+                     ( loadTensorflowInstance(&mnet->allModel  ,allModelPath  ,"input_all"  ,"result_all/concat",forceCPU) ) &&
+                     ( loadTensorflowInstance(&mnet->frontModel,frontModelPath,"input_front","result_front/concat",forceCPU) ) &&
+                     ( loadTensorflowInstance(&mnet->backModel ,backModelPath ,"input_back" ,"result_back/concat",forceCPU) )
                  );
 
     if (result)
@@ -92,14 +100,14 @@ float get2DPointsDistance(float x1,float y1,float x2,float y2)
 
 
 std::vector<float> compressMocapNETInput(std::vector<float> mocapnetInput,int addSyntheticPoints,int doScaleCompensation)
-{ 
+{
     if ( (MOCAPNET_UNCOMPRESSED_JOINT_PARTS * 3!=mocapnetInput.size())||(mocapnetInput.size()!=171) )
         {
             fprintf(stderr,RED "mocapNET: compressMocapNETInput : wrong input size , received %lu expected 171\n" NORMAL,mocapnetInput.size());
 
             return mocapnetInput;
         }
- 
+
 
     //---------------------------------------------------
     float rShoulderToHipDistance = get2DPointsDistance
@@ -239,7 +247,7 @@ std::vector<float> compressMocapNETInput(std::vector<float> mocapnetInput,int ad
                 }
         }
 
- 
+
     return  mocapnetCompressed;
 }
 
@@ -248,21 +256,21 @@ std::vector<float> compressMocapNETInput(std::vector<float> mocapnetInput,int ad
 
 
 std::vector<float> prepareMocapNETInputFromUncompressedInput(std::vector<float> mocapnetInput)
-{ 
+{
     std::vector<float> mocapnetUncompressedAndCompressed;
     mocapnetUncompressedAndCompressed.clear();
 
     if ( (MOCAPNET_UNCOMPRESSED_JOINT_PARTS * 3!=mocapnetInput.size())||(mocapnetInput.size()!=171) )
         {
-          fprintf(stderr,RED "mocapNET: prepareMocapNETInputFromUncompressedInput : wrong input size , received %lu expected 171\n" NORMAL,mocapnetInput.size());
-          return mocapnetUncompressedAndCompressed;
+            fprintf(stderr,RED "mocapNET: prepareMocapNETInputFromUncompressedInput : wrong input size , received %lu expected 171\n" NORMAL,mocapnetInput.size());
+            return mocapnetUncompressedAndCompressed;
         }
-    
-    
+
+
     int addSyntheticPoints=1;
     int doScaleCompensation=0;
     std::vector<float> mocapnetCompressed = compressMocapNETInput(mocapnetInput,addSyntheticPoints,doScaleCompensation);
-    
+
 
     mocapnetUncompressedAndCompressed.insert(mocapnetUncompressedAndCompressed.end(), mocapnetInput.begin(), mocapnetInput.end());
     mocapnetUncompressedAndCompressed.insert(mocapnetUncompressedAndCompressed.end(), mocapnetCompressed.begin(), mocapnetCompressed.end());

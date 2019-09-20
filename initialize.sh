@@ -32,10 +32,19 @@ if [ ! -f shuffle.webm ]; then
   wget http://ammar.gr/mocapnet/shuffle.webm
 fi
 
-QUALITY="1.0" #1.0 , 1.5 , 2.0
 
 mkdir combinedModel
 cd combinedModel
+
+LIST_OF_QUALITY="1.0 1.5 2.0"
+
+for QUALITY in $LIST_OF_QUALITY; do
+#--------------------------------------------------------------------
+echo "Downloading Models for quality setting $QUALITY"
+cd "$DIR/combinedModel"
+mkdir $QUALITY
+cd $QUALITY 
+
 if [ ! -f all.pb ]; then
   wget http://ammar.gr/datasets/combinedModel/$QUALITY/all.pb
 fi
@@ -47,6 +56,13 @@ fi
 if [ ! -f front.pb ]; then
   wget http://ammar.gr/datasets/combinedModel/$QUALITY/front.pb
 fi
+
+cd ..
+done
+#--------------------------------------------------------------------
+
+#Rest of combined models..
+cd "$DIR/combinedModel"
 
 if [ ! -f openpose_model.pb ]; then
   wget http://ammar.gr/datasets/combinedModel/openpose_model.pb
