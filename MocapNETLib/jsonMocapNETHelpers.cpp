@@ -392,12 +392,18 @@ std::vector<float> flattenskeletonCOCOToVector(struct skeletonCOCO * sk,unsigned
     addSkeletonJoint(sk,result,BODY25_LAnkle);
     addSkeletonJoint(sk,result,BODY25_LAnkle);
 
-
+    
+    if ( (width==1) && (height==1) )
+    {
+       //Input is already normalized.. 
+    } else
+    {
     for (int i=0; i<result.size()/3; i++)
         {
             result[i*3+0]=(float) result[i*3+0]/width;
             result[i*3+1]=(float) result[i*3+1]/height;
-        }
+        }    
+    }
 
     if (result.size()==0)
         {

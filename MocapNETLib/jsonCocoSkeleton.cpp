@@ -178,3 +178,214 @@ int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel)
     fprintf(stderr,"Could not find COCO 2D skeleton in %s \n",filename);
     return 0;
 }
+
+
+
+int resolveCSVHeader(const char * header,int * type,int * jointID)
+{
+    unsigned int headerLength = strlen(header);
+    
+    if (headerLength<5)
+    {
+      fprintf(stderr,"Unknown CSV header tag..\n");  
+      return 0;  
+    }
+    
+    *type = 0;
+    unsigned int startOfJointName=0;
+    if (headerLength>=5)
+    {
+       if  ( strncmp(header,"2D_X_",5)==0 )    { *type = 1; startOfJointName=5; } else
+       if  ( strncmp(header,"2D_Y_",5)==0 )    { *type = 2; startOfJointName=5; } 
+    }
+    if (headerLength>=7)
+    {
+       if  ( strncmp(header,"2D_vis_",7)==0 ) { *type = 3; startOfJointName=7; }    
+    }
+    
+    int found=1;
+    
+    if (strcmp(header+startOfJointName,"hip")==0)       { *jointID = BODY25_MidHip; } else
+    if (strcmp(header+startOfJointName,"abdomen")==0)   {   } else
+    if (strcmp(header+startOfJointName,"chest")==0)     {   } else
+    if (strcmp(header+startOfJointName,"neck")==0)      { *jointID = BODY25_Neck; } else
+    if (strcmp(header+startOfJointName,"head")==0)      { *jointID = BODY25_Nose; } else
+    if (strcmp(header+startOfJointName,"lefteye")==0)   { *jointID = BODY25_LEye; } else
+    if (strcmp(header+startOfJointName,"righteye")==0)  { *jointID = BODY25_REye; } else
+    if (strcmp(header+startOfJointName,"rcollar")==0)   {  } else
+    if (strcmp(header+startOfJointName,"rshoulder")==0) { *jointID = BODY25_RShoulder;  } else
+    if (strcmp(header+startOfJointName,"relbow")==0)    { *jointID = BODY25_RElbow;  } else
+    if (strcmp(header+startOfJointName,"rhand")==0)     { *jointID = BODY25_RWrist;  } else
+    if (strcmp(header+startOfJointName,"lcollar")==0)   {  } else
+    if (strcmp(header+startOfJointName,"lshoulder")==0) { *jointID = BODY25_LShoulder;  } else
+    if (strcmp(header+startOfJointName,"lelbow")==0)    { *jointID = BODY25_LElbow;  } else
+    if (strcmp(header+startOfJointName,"lhand")==0)     { *jointID = BODY25_LWrist;  } else
+    if (strcmp(header+startOfJointName,"rhip")==0)      { *jointID = BODY25_RHip;   } else
+    if (strcmp(header+startOfJointName,"rknee")==0)     { *jointID = BODY25_RKnee;  } else
+    if (strcmp(header+startOfJointName,"rfoot")==0)     { *jointID = BODY25_RAnkle;  } else
+    if (strcmp(header+startOfJointName,"es_rfoot")==0)  { *jointID = BODY25_RBigToe; /**jointID = BODY25_RSmallToe;*/  } else
+    if (strcmp(header+startOfJointName,"lhip")==0)      { *jointID = BODY25_LHip;   } else
+    if (strcmp(header+startOfJointName,"lknee")==0)     { *jointID = BODY25_LKnee;  } else
+    if (strcmp(header+startOfJointName,"lfoot")==0)     { *jointID = BODY25_LAnkle;  } else
+    if (strcmp(header+startOfJointName,"es_lfoot")==0)  { *jointID = BODY25_LBigToe; /**jointID = BODY25_LSmallToe;*/  } else
+                                                         { found=0; }
+ 
+    
+    
+    return found;
+}
+
+
+
+
+int openCSVFile(struct CSVFileContext * csv,const char * filename)
+{
+  csv->fp = fopen(filename,"r");
+  {
+    return 1;  
+  }  
+ return 0; 
+}
+
+int closeCSVFile(struct CSVFileContext * csv)
+{
+  if (csv->fp!=0)
+  {
+    //TODO FREE STUFF HERE..  
+    int i=0;
+    for (i=0; i<csv->numberOfHeaderFields; i++)
+    {
+        if (csv->field[i].str!=0)
+        {
+          free(csv->field[i].str);
+          csv->field[i].str=0;  
+        }
+    }
+      
+    fclose(csv->fp);  
+  }  
+ return 1; 
+}
+
+
+int parseCSVHeader(struct CSVFileContext * csv)
+{ 
+    char whereToStoreItems[256];
+    char * line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    
+    if (csv->lineNumber==0)
+    {
+        read = getline(&line, &len, csv->fp);
+        struct InputParserC * ipc = InputParser_Create(2048,3);
+        InputParser_SetDelimeter(ipc,0,',');
+        InputParser_SetDelimeter(ipc,1,',');  
+            
+        int numberOfArguments = InputParser_SeperateWords(ipc,line,1);
+        
+        if (numberOfArguments<MAX_CSV_HEADER_FIELDS)
+        {
+           int i=0;
+           for (i=0; i<numberOfArguments; i++)
+           {
+               InputParser_GetWord(ipc,i,whereToStoreItems,256);
+               csv->field[i].strLength = strlen(whereToStoreItems); 
+               csv->field[i].str = (char*) malloc(sizeof(char) * (csv->field[i].strLength+2));
+               memcpy(csv->field[i].str ,whereToStoreItems,csv->field[i].strLength);
+               csv->field[i].str[csv->field[i].strLength]=0;
+               csv->numberOfHeaderFields = csv->numberOfHeaderFields + 1; 
+           }
+        } else
+        {
+          fprintf(stderr,"Too many CSV header arguments..\n");  
+          return 0;  
+        }
+        
+        
+        
+        
+        InputParser_Destroy(ipc);
+        csv->lineNumber = csv->lineNumber +1;
+        return 1;
+    }
+  return 0;
+}
+
+  
+int parseNextCSVCOCOSkeleton(struct CSVFileContext * csv, struct skeletonCOCO * skel)
+{
+    char * line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    
+    if (csv->lineNumber==0)
+    {
+        if (!parseCSVHeader(csv))
+        {
+           fprintf(stderr,"Could not read CSV header"); 
+        }
+    }
+    
+    if ((read = getline(&line, &len, csv->fp)) != -1)
+        { 
+            struct InputParserC * ipc = InputParser_Create(2048,3);
+            InputParser_SetDelimeter(ipc,0,',');
+            InputParser_SetDelimeter(ipc,1,',');  
+            InputParser_SetDelimeter(ipc,2,',');  
+            
+            int numberOfArguments = InputParser_SeperateWords(ipc,line,1);
+            
+            int typeOfData=0,jointID=0;
+            float value=0.0;
+            for (int i=0; i<numberOfArguments; i++)
+            {
+               if (resolveCSVHeader(csv->field[i].str,&typeOfData,&jointID))
+               {
+                   value = InputParser_GetWordFloat(ipc,i);
+                   switch (typeOfData)
+                   {
+                     case 1:
+                       //fprintf(stderr,"joint[%s].x=%0.2f\n",csv->field[i].str,value);
+                       skel->joint2D[jointID].x=value;
+                     break;
+                     case 2:
+                       //fprintf(stderr,"joint[%s].y=%0.2f\n",csv->field[i].str,value);
+                       skel->joint2D[jointID].y=value;
+                     break;
+                     case 3:
+                       //fprintf(stderr,"joint[%s].accuracy=%0.2f\n",csv->field[i].str,value);
+                       skel->jointAccuracy[jointID] = value;
+                       skel->active[jointID] = (value>0.5);
+                     break;
+                     default:
+                       fprintf(stderr,"Could not resolve CSV entry %u ( should be %s )\n",i,csv->field[i].str);
+                     break; 
+                   };
+                    
+                       
+                   if (jointID==BODY25_LBigToe) 
+                       {
+                          skel->joint2D[BODY25_LSmallToe].x=skel->joint2D[BODY25_LBigToe].x;
+                          skel->joint2D[BODY25_LSmallToe].y=skel->joint2D[BODY25_LBigToe].y;
+                          skel->jointAccuracy[BODY25_LSmallToe]=skel->jointAccuracy[BODY25_LBigToe];
+                          skel->active[BODY25_LSmallToe]=skel->active[BODY25_LBigToe];
+                       } else
+                    if (jointID==BODY25_RBigToe) 
+                       {
+                          skel->joint2D[BODY25_RSmallToe].x=skel->joint2D[BODY25_RBigToe].x;
+                          skel->joint2D[BODY25_RSmallToe].y=skel->joint2D[BODY25_RBigToe].y;
+                          skel->jointAccuracy[BODY25_RSmallToe]=skel->jointAccuracy[BODY25_RBigToe];
+                          skel->active[BODY25_RSmallToe]=skel->active[BODY25_RBigToe];
+                       }
+               }
+                 
+            }
+             
+            
+            InputParser_Destroy(ipc);
+            csv->lineNumber = csv->lineNumber +1;
+          return 1;
+        }
+    return 0;
+}

@@ -5,10 +5,13 @@
  *  @author Ammar Qammaz (AmmarkoV)
  */
 
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+
+#include <stdio.h>
 
 
 /**
@@ -300,6 +303,28 @@ int parseJsonCOCOSkeleton(
     const char * filename ,
     struct skeletonCOCO * skel
 );
+
+
+#define MAX_CSV_HEADER_FIELDS 512
+
+struct CSVHeaderField
+{
+  unsigned int strLength;
+  char * str;  
+};
+
+struct CSVFileContext
+{
+    FILE * fp;
+    unsigned int lineNumber;
+    unsigned int numberOfHeaderFields;
+    struct CSVHeaderField field[512];
+};
+
+int openCSVFile(struct CSVFileContext * csv,const char * filename);
+int closeCSVFile(struct CSVFileContext * csv);
+int parseCSVHeader(struct CSVFileContext * csv);
+int parseNextCSVCOCOSkeleton(struct CSVFileContext * csv, struct skeletonCOCO * skel);
 
 
 #ifdef __cplusplus

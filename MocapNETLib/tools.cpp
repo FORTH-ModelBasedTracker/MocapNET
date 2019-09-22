@@ -60,9 +60,21 @@ unsigned long GetTickCountMillisecondsMN()
 
 
 
+char fileExists(const char * filename)
+{
+ FILE *fp = fopen(filename,"r");
+ if( fp ) { /* exists */ fclose(fp); return 1; }
+ return 0;
+}
 
 int getImageWidthHeight(const char * filename,unsigned int * width , unsigned int * height)
 {
+    if (!fileExists(filename))
+    {
+      fprintf(stderr,"File %s does not exist, unable to get its dimensions..\n",filename);
+      return 0;  
+    }
+    
     unsigned int retrievedWidth=0;
     unsigned int retrievedHeight=0;
 
@@ -87,7 +99,7 @@ int getImageWidthHeight(const char * filename,unsigned int * width , unsigned in
     if (
         (retrievedWidth!=0) &&
         (retrievedHeight!=0)
-    )
+       )
         {
             *width  = retrievedWidth;
             *height = retrievedHeight;

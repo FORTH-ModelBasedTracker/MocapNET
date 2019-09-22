@@ -73,7 +73,7 @@ int writeCSVBody(const char * filename,struct skeletonCOCO * skeleton,unsigned i
 
 int main(int argc, char *argv[])
 {
-    
+
     unsigned int width=1920 , height=1080 , frameLimit=100000 , processed = 0 , serialLength = 5;
     const char * path=0;
     const char * label=0;
@@ -115,6 +115,11 @@ int main(int argc, char *argv[])
                 {
                     serialLength = atoi(argv[i+1]);
                 }
+            else if (strcmp(argv[i],"--size")==0)
+                {
+                    width = atoi(argv[i+1]);
+                    height = atoi(argv[i+2]);
+                }
         }
 
     if (path==0)
@@ -141,11 +146,15 @@ int main(int argc, char *argv[])
     snprintf(formatString,256,"%%s/%%s%%0%uu_keypoints.json",serialLength);
 
     char filePathOfJSONFile[2048]= {0};
-    snprintf(filePathOfJSONFile,2048,"%s/colorFrame_0_00000.jpg",path);
+    snprintf(filePathOfJSONFile,2048,"%s/colorFrame_0_00001.jpg",path);
 
     if ( getImageWidthHeight(filePathOfJSONFile,&width,&height) )
         {
             fprintf(stderr,"Image dimensions changed from default to %ux%u",width,height);
+        }
+    else
+        {
+            fprintf(stderr,"Assuming default image dimensions %ux%u , you can change this using --size x y\n",width,height);
         }
 
 
@@ -158,7 +167,7 @@ int main(int argc, char *argv[])
     while (frameID<frameLimit)
         {
             snprintf(filePathOfJSONFile,1024,formatString,path,label,frameID);
-            fprintf(stderr,"Processing %s \n",filePathOfJSONFile);
+            fprintf(stderr,"Processing %s (%ux%u)\n",filePathOfJSONFile,width,height);
 
             if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton))
                 {

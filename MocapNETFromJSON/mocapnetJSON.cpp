@@ -1,6 +1,7 @@
 /*
  * Utility to extract BVH files straight from OpenPose JSON output
  * Sample usage ./MocapNETJSON  --from frames/GOPR3223.MP4-data --label colorFrame_0_ --visualize
+ * or           ./MocapNETJSON  --from 2dJoints_v1.2.csv --visualize
  */
 
 #include "../MocapNETLib/mocapnet.hpp"
@@ -18,9 +19,13 @@
 int main(int argc, char *argv[])
 {
     unsigned int width=1920 , height=1080 , frameLimit=10000 , visualize = 0, useCPUOnly=1 , serialLength=5;
+    unsigned int visWidth=1024,visHeight=768;
     const char * path=0;
     const char * label=0;
     float quality=1.0;
+
+    unsigned int isJSONFile=1;
+    unsigned int isCSVFile=0;
 
     if (initializeBVHConverter())
         {
@@ -45,7 +50,7 @@ int main(int argc, char *argv[])
             else if (strcmp(argv[i],"--quality")==0)
                 {
                     quality=atof(argv[i+1]);
-                } 
+                }
             else
                 //if (strcmp(argv[i],"--cpu")==0)        { setenv("CUDA_VISIBLE_DEVICES", "", 1); } else
                 if (strcmp(argv[i],"--gpu")==0)
@@ -55,6 +60,16 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"--from")==0)
                     {
                         path = argv[i+1];
+                        if (strstr(path,".json")!=0)
+                            {
+                                isJSONFile=1;
+                                isCSVFile=0;
+                            }
+                        if (strstr(path,".csv")!=0)
+                            {
+                                isJSONFile=0;
+                                isCSVFile=1;
+                            }
                     }
                 else if (strcmp(argv[i],"--label")==0)
                     {
@@ -83,21 +98,35 @@ int main(int argc, char *argv[])
         }
 
 
+    struct CSVFileContext csv= {0};
+
+    if (isCSVFile)
+        {
+            if (!openCSVFile(&csv,path))
+                {
+                    fprintf(stderr,"Unable to open CSV file %s \n",path);
+                    return 0;
+                }
+        }
 
 
     struct MocapNET mnet= {0};
     if ( loadMocapNET(&mnet,"test",quality,useCPUOnly) )
         {
             char filePathOfJSONFile[1024]= {0};
-            snprintf(filePathOfJSONFile,1024,"%s/colorFrame_0_00000.jpg",path);
+            snprintf(filePathOfJSONFile,1024,"%s/colorFrame_0_00001.jpg",path);
 
             if ( getImageWidthHeight(filePathOfJSONFile,&width,&height) )
                 {
                     fprintf(stderr,"Image dimensions changed from default to %ux%u\n",width,height);
                 }
+            else
+                {
+                    fprintf(stderr,"Assuming default image dimensions %ux%u , you can change this using --size x y\n",width,height);
+                }
 
-            
-           std::vector<std::vector<float> >  empty2DPointsInput; 
+
+            std::vector<std::vector<float> >  empty2DPointsInput;
 
             float totalTime=0.0;
             unsigned int totalSamples=0;
@@ -106,19 +135,43 @@ int main(int argc, char *argv[])
             struct skeletonCOCO skeleton= {0};
 
 
-            char formatString[128]= {0};
-            snprintf(formatString,128,"%%s/%%s%%0%uu_keypoints.json",serialLength);
+            char formatString[256]= {0};
+            snprintf(formatString,256,"%%s/%%s%%0%uu_keypoints.json",serialLength);
 
 
             unsigned int frameID=1;
             while (frameID<frameLimit)
                 {
-
+                    int okayToProceed=0;
                     snprintf(filePathOfJSONFile,1024,formatString,path,label,frameID);
 
-                    if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton))
+                    if (isJSONFile)
                         {
-                            std::vector<float> inputValues = flattenskeletonCOCOToVector(&skeleton,width,height);
+                            if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton))
+                                {
+                                    okayToProceed=1;
+                                }
+                        }
+                    else if (isCSVFile)
+                        {
+                            if ( parseNextCSVCOCOSkeleton(&csv,&skeleton) )
+                                {
+                                    okayToProceed=1;
+                                }
+                        }
+
+                    if (okayToProceed)
+                        {
+                            unsigned int flatWidth=width,flatHeight=height;
+
+                            if (isCSVFile)
+                                {
+                                    //CSV files come prenormalize so let's normalize them to 1x1 ( so leave them as they where )
+                                    flatWidth=1;
+                                    flatHeight=1;
+                                }
+
+                            std::vector<float> inputValues = flattenskeletonCOCOToVector(&skeleton,flatWidth,flatHeight);
                             if (inputValues.size()==0)
                                 {
                                     fprintf(stderr,"Failed to read from JSON file..\n");
@@ -143,9 +196,9 @@ int main(int argc, char *argv[])
 
 
                             if (visualize)
-                                { 
-                                    std::vector<std::vector<float> > points2DOutput = convertBVHFrameTo2DPoints(result,width,height);
-                                    visualizePoints("3D Points Output",frameID,0,0,0,0,1,1,0.0,0.0,fpsMocapNET,width,height,1,inputValues,result,result,empty2DPointsInput,points2DOutput,points2DOutput);
+                                {
+                                    std::vector<std::vector<float> > points2DOutput = convertBVHFrameTo2DPoints(result,visWidth,visHeight);
+                                    visualizePoints("3D Points Output",frameID,0,0,0,0,1,1,0.0,0.0,fpsMocapNET,visWidth,visHeight,1,inputValues,result,result,empty2DPointsInput,points2DOutput,points2DOutput);
                                 }
 
 
@@ -179,6 +232,11 @@ int main(int argc, char *argv[])
 
                     float averageTime=(float) totalTime/totalSamples;
                     fprintf(stderr,"\nTotal %0.2f ms for %u samples - Average %0.2f ms - %0.2f fps\n",totalTime,totalSamples,averageTime,(float) 1000/averageTime);
+                }
+
+            if (isCSVFile)
+                {
+                    closeCSVFile(&csv);
                 }
 
 
