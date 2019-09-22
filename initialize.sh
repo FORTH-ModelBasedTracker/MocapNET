@@ -27,9 +27,14 @@ mv CMUMotionCaptureDatasets.zip MotionCapture
 fi
 
 
-#also force download a sample
+#also force download a sample video
 if [ ! -f shuffle.webm ]; then
   wget http://ammar.gr/mocapnet/shuffle.webm
+fi
+
+#also force download a sample csv
+if [ ! -f sample.csv ]; then
+  wget http://ammar.gr/mocapnet/sample.csv
 fi
 
 

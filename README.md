@@ -172,6 +172,15 @@ You can convert them to a BVH file by issuing :
 ./MocapNETJSON --from /path/to/outputJSONDirectory/ --label yourVideoFile --seriallength 12 --size 1920 1080
 ```
 
+A utility has been included that can convert the JSON files to a single CSV file issuing :
+```
+ ./convertBody25JSONToCSV --from /path/to/outputJSONDirectory/ --label yourVideoFile -o .
+```
+
+A CSV file has been included that can be run by issuing : 
+```
+ ./MocapNETJSON --from sample.csv --visualize
+```
 
 
 ## License
