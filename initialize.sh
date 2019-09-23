@@ -37,6 +37,11 @@ fi
 if [ ! -f sample.csv ]; then
   wget http://ammar.gr/mocapnet/sample.csv
 fi
+#also force download a CSV sample
+if [ ! -f tektonik.csv ]; then
+  wget http://ammar.gr/mocapnet/tektonik.csv
+fi
+
 
 mkdir combinedModel
 cd combinedModel
