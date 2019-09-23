@@ -27,16 +27,16 @@ mv CMUMotionCaptureDatasets.zip MotionCapture
 fi
 
 
-#also force download a sample video
+#also force download a Video sample
 if [ ! -f shuffle.webm ]; then
   wget http://ammar.gr/mocapnet/shuffle.webm
 fi
 
-#also force download a sample csv
+
+#also force download a CSV sample
 if [ ! -f sample.csv ]; then
   wget http://ammar.gr/mocapnet/sample.csv
 fi
-
 
 mkdir combinedModel
 cd combinedModel

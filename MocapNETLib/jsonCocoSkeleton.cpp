@@ -207,7 +207,7 @@ int resolveCSVHeader(const char * header,int * type,int * jointID)
     
     if (strcmp(header+startOfJointName,"hip")==0)       { *jointID = BODY25_MidHip; } else
     if (strcmp(header+startOfJointName,"abdomen")==0)   {   } else
-    if (strcmp(header+startOfJointName,"chest")==0)     {   } else
+    if (strcmp(header+startOfJointName,"chest")==0)     {  /* *jointID = BODY25_Chest;*/ } else
     if (strcmp(header+startOfJointName,"neck")==0)      { *jointID = BODY25_Neck; } else
     if (strcmp(header+startOfJointName,"head")==0)      { *jointID = BODY25_Nose; } else
     if (strcmp(header+startOfJointName,"lefteye")==0)   { *jointID = BODY25_LEye; } else

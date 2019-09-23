@@ -149,6 +149,42 @@ float convertStartEndTimeFromMicrosecondsToFPS(unsigned long startTime, unsigned
 
 
 
+int feetHeuristics(struct skeletonCOCO * sk)
+{
+    //There are various problems with the 2D detections when it comes to feet
+    //one pretty regular problem is that knees get somehow mixed up
+    if (sk!=0)
+        {
+            if (
+                ( sk->joint2D[BODY25_RAnkle] .x< sk->joint2D[BODY25_LAnkle].x ) &&
+                ( sk->joint2D[BODY25_RKnee].x  > sk->joint2D[BODY25_LKnee].x )  &&
+                ( sk->joint2D[BODY25_RHip].x < sk->joint2D[BODY25_LHip].x )
+            )
+                {
+                    struct point2D tmp = sk->joint2D[BODY25_RKnee];
+                    sk->joint2D[BODY25_RKnee]=sk->joint2D[BODY25_LKnee];
+                    sk->joint2D[BODY25_LKnee] = tmp;
+                    return 1;
+                }
+            else if (
+                ( sk->joint2D[BODY25_RAnkle] .x > sk->joint2D[BODY25_LAnkle].x ) &&
+                ( sk->joint2D[BODY25_RKnee].x  < sk->joint2D[BODY25_LKnee].x )  &&
+                ( sk->joint2D[BODY25_RHip].x < sk->joint2D[BODY25_LHip].x )
+            )
+                {
+                    struct point2D tmp = sk->joint2D[BODY25_RAnkle];
+                    sk->joint2D[BODY25_RAnkle]=sk->joint2D[BODY25_LAnkle];
+                    sk->joint2D[BODY25_LAnkle] = tmp;
+                    return 1;
+                }
+
+
+
+        }
+    return 0;
+}
+
+
 /**
  * @brief Retrieve MocapNET output vector from an image
  * @ingroup demo
@@ -173,7 +209,8 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
     unsigned int heatmapWidth2DJointDetector,
     unsigned int heatmapHeight2DJointDetector,
     unsigned int numberOfHeatmaps,
-    unsigned int numberOfOutputTensors
+    unsigned int numberOfOutputTensors,
+    int doFeetHeuristics
 )
 {
     unsigned int frameWidth  =  bgr.size().width; //frame.cols
@@ -226,6 +263,13 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
 
             convertUtilitiesSkeletonFormatToBODY25(&sk,pointsOf2DSkeleton);
 
+            if (doFeetHeuristics)
+                {
+                    if (feetHeuristics(&sk))
+                        {
+                            fprintf(stderr,"Feet heuristics changed something.. \n");
+                        }
+                }
 
             //----------------------------------------------------------------------------------
             //             Recover points to parent function
@@ -267,9 +311,10 @@ int main(int argc, char *argv[])
     const char * webcam = 0;
 
     int live=0,stop=0;
-    int constrainPositionRotation=1;
+    int constrainPositionRotation=1,rotate=0;
     int doCrop=1,tryForMaximumCrop=0,doSmoothing=3,drawFloor=1,drawNSDM=1;
     int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0;
+    int doFeetHeuristics=0;
 
     unsigned int delay=1; //Just a little time to view the window..
 
@@ -363,9 +408,9 @@ int main(int argc, char *argv[])
                         frameLimitSet=1;
                     }
                 else
-                    //if (strcmp(argv[i],"--cpu")==0)           { setenv("CUDA_VISIBLE_DEVICES", "", 1); } else //Alternate way to force CPU everywhere
                     if (strcmp(argv[i],"--cpu")==0)
                         {
+                            //setenv("CUDA_VISIBLE_DEVICES", "", 1);   //Alternate way to force CPU everywhere
                             forceCPUMocapNET=1;
                             forceCPU2DJointEstimation=1;
                         }
@@ -471,6 +516,18 @@ int main(int argc, char *argv[])
                             unsigned long acquisitionStart = GetTickCountMicroseconds();
 
                             cap >> frame; // get a new frame from camera
+                            
+                            
+                            if (rotate) 
+                                { //Maybe we want to rotate the feed..
+                                     switch(rotate)
+                                     {
+                                         case 1 :  cv::rotate(frame, frame, cv::ROTATE_90_CLOCKWISE);  break;
+                                         case 2 : cv::rotate(frame, frame, cv::ROTATE_180);  break;
+                                         case 3 : cv::rotate(frame, frame, cv::ROTATE_90_COUNTERCLOCKWISE);  break; 
+                                     } ;   
+                                }
+                            
                             cv::Mat frameOriginal = frame; //ECONOMY .clone();
 
                             unsigned int frameWidth  =  frame.size().width;  //frame.cols
@@ -564,7 +621,8 @@ int main(int argc, char *argv[])
                                                                           heatmapWidth2DJointDetector,
                                                                           heatmapHeight2DJointDetector,
                                                                           numberOfHeatmaps,
-                                                                          numberOfOutputTensors
+                                                                          numberOfOutputTensors,
+                                                                          doFeetHeuristics
                                                                       );
 
                                             // Get MocapNET prediction
@@ -667,8 +725,10 @@ int main(int argc, char *argv[])
                                                             cv::imshow("3D Control",controlMat);
 
                                                             createTrackbar("Stop Demo", "3D Control", &stop, 1);
+                                                            createTrackbar("Rotate Feed", "3D Control", &rotate, 4); 
                                                             createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 1);
                                                             createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
+                                                            createTrackbar("Feet Heuristics", "3D Control", &doFeetHeuristics,1);
                                                             createTrackbar("Smooth 3D Output", "3D Control", &doSmoothing, 10);
                                                             createTrackbar("Maximize Crop", "3D Control", &tryForMaximumCrop, 1);
                                                             createTrackbar("Draw Floor", "3D Control", &drawFloor, 1);
