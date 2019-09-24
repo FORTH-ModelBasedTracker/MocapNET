@@ -8,6 +8,16 @@
 #include <vector>
 
 
+#if USE_OPENCV
+#include "opencv2/opencv.hpp"
+using namespace cv; 
+  int visualizeCameraIntensities(const char* windowName,cv::Mat &imgOriginal,int forceColors);
+  int visualizeCameraChannels(const char* windowName,cv::Mat &img,int channelNumber);
+  int visualizeCameraEdges(const char* windowName,cv::Mat &img);
+#endif 
+
+
+
 /**
  * @brief Visualize MocapNET BVH output on a window
  * @ingroup visualization

@@ -310,7 +310,7 @@ int main(int argc, char *argv[])
     float joint2DSensitivity=0.35;
     const char * webcam = 0;
 
-    int live=0,stop=0;
+    int live=0,stop=0,visualizationType=0;
     int constrainPositionRotation=1,rotate=0;
     int doCrop=1,tryForMaximumCrop=0,doSmoothing=3,drawFloor=1,drawNSDM=1;
     int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0;
@@ -725,6 +725,7 @@ int main(int argc, char *argv[])
                                                             cv::imshow("3D Control",controlMat);
 
                                                             createTrackbar("Stop Demo", "3D Control", &stop, 1);
+                                                            createTrackbar("Visualization Type", "3D Control", &visualizationType,10); 
                                                             createTrackbar("Rotate Feed", "3D Control", &rotate, 4); 
                                                             createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 1);
                                                             createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
@@ -751,9 +752,12 @@ int main(int argc, char *argv[])
                                                     //Get rid of GLib-GObject-CRITICAL **: 10:36:18.934: g_object_unref: assertion 'G_IS_OBJECT (object)' failed opencv
                                                     //by displaying an empty cv Mat on the window besides the trackbars
                                                     cv::imshow("3D Control",controlMat);
-
-
-                                                    visualizePoints(
+                                                   
+                                                   
+ 
+                                                    if (visualizationType==0)
+                                                    {
+                                                     visualizePoints(
                                                         "3D Points Output",
                                                         frameNumber,
                                                         skippedFrames,
@@ -774,7 +778,24 @@ int main(int argc, char *argv[])
                                                         points2DInput,
                                                         points2DOutput,
                                                         points2DOutputGUIForcedView
-                                                    );
+                                                     ); 
+                                                    } else
+                                                    if (visualizationType==1)
+                                                    {
+                                                       visualizeCameraEdges("3D Points Output",frame); 
+                                                    } else
+                                                     if (visualizationType<=8)
+                                                     {
+                                                           visualizeCameraChannels("3D Points Output",frame,visualizationType-2);
+                                                     }    else
+                                                     if (visualizationType==9)
+                                                     {
+                                                           visualizeCameraIntensities("3D Points Output",frame,0);
+                                                     }   else
+                                                     if (visualizationType==10)
+                                                     {
+                                                           visualizeCameraIntensities("3D Points Output",frame,1);
+                                                     }   
 
 
                                                     if (frameNumber==0)
