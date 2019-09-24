@@ -815,8 +815,7 @@ int main(int argc, char *argv[])
                                                         {
                                                             fprintf(stderr,"Keypress = %u \n",key);
                                                             if  (
-                                                                (key == 113) ||
-                                                                (key == 81)
+                                                                (key == 113) //|| (key == 81)
                                                             )
                                                                 {
                                                                     fprintf(stderr,"Stopping MocapNET after keypress..\n");
