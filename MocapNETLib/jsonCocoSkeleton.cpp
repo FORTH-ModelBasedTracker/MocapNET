@@ -241,6 +241,7 @@ int resolveCSVHeader(const char * header,int * type,int * jointID)
 int openCSVFile(struct CSVFileContext * csv,const char * filename)
 {
   csv->fp = fopen(filename,"r");
+  if (csv->fp!=0)
   {
     return 1;  
   }  
@@ -324,6 +325,7 @@ int parseNextCSVCOCOSkeleton(struct CSVFileContext * csv, struct skeletonCOCO * 
         if (!parseCSVHeader(csv))
         {
            fprintf(stderr,"Could not read CSV header"); 
+           return 0;
         }
     }
     

@@ -16,7 +16,8 @@ using namespace cv;
 #define YELLOW  "\033[33m"      /* Yellow */
 
 
-
+std::vector<cv::Point> leftEndEffector;
+std::vector<cv::Point> rightEndEffector;
 
 #if USE_OPENCV
 int visualizeNSDM(
@@ -450,27 +451,27 @@ int visualizeCameraEdges(const char* windowName,cv::Mat &img)
 
 int visualizeCameraFeatures(const char* windowName,cv::Mat &img)
 {
-      std::vector<cv::KeyPoint> keypoints;
-      
-      cv::Mat imgCopy; //= img.clone();
-      cv::resize(img, imgCopy, img.size() ,0,0,INTER_NEAREST);
-      cv::FAST(imgCopy,keypoints,100.0,false);
-      char coordinates[256];
-      
-      
-      for (int i=0; i<keypoints.size(); i++)
-      {
-                   cv::circle(imgCopy,keypoints[i].pt,5,cv::Scalar(0,255,0),3,8,0); 
-                   cv::Point jointPoint(keypoints[i].pt.x,keypoints[i].pt.y);
-                   snprintf(coordinates,256,"%0.1f,%0.1f",keypoints[i].pt.x,keypoints[i].pt.y);
-                   cv::putText(imgCopy,coordinates, jointPoint, cv::FONT_HERSHEY_DUPLEX,0.4, cv::Scalar(0,255,255), 0.2, cv::LINE_4);
-      }
-      
-      
+    std::vector<cv::KeyPoint> keypoints;
+
+    cv::Mat imgCopy; //= img.clone();
+    cv::resize(img, imgCopy, img.size() ,0,0,INTER_NEAREST);
+    cv::FAST(imgCopy,keypoints,100.0,false);
+    char coordinates[256];
+
+
+    for (int i=0; i<keypoints.size(); i++)
+        {
+            cv::circle(imgCopy,keypoints[i].pt,5,cv::Scalar(0,255,0),3,8,0);
+            cv::Point jointPoint(keypoints[i].pt.x,keypoints[i].pt.y);
+            snprintf(coordinates,256,"%0.1f,%0.1f",keypoints[i].pt.x,keypoints[i].pt.y);
+            cv::putText(imgCopy,coordinates, jointPoint, cv::FONT_HERSHEY_DUPLEX,0.4, cv::Scalar(0,255,255), 0.2, cv::LINE_4);
+        }
+
+
     cv::Point jointPoint(10,10);
     float fontSize = 0.5;
     cv::putText(imgCopy,"Features", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(255,255,255), 0.2, cv::LINE_8);
-      cv::imshow(windowName,imgCopy);
+    cv::imshow(windowName,imgCopy);
 }
 
 int visualizeFigure(const char* windowName,cv::Mat &img)
@@ -589,6 +590,47 @@ int visualizePoints(
         }
 //fprintf(stderr,"visualizePoints %u points\n",points2DOutputGUIForcedView.size());
 //Just the lines ( background layer)
+
+
+    //-----------------------------------------------------------------------------------------------------------------------------
+    int  endEffectorHistory=1;
+    //-----------------------------------------------------------------------------------------------------------------------------
+    if (endEffectorHistory)
+        {
+            int maxEndEffectorHistory=10;
+            unsigned int jointIDLeftHand= getBVHJointIDFromJointName("lHand");
+            cv::Point leftHand(points2DOutputGUIForcedView[jointIDLeftHand][0],points2DOutputGUIForcedView[jointIDLeftHand][1]);
+            leftEndEffector.push_back(leftHand);
+            if (leftEndEffector.size()>maxEndEffectorHistory)
+                {
+                    leftEndEffector.erase(leftEndEffector.begin());
+                }
+
+            unsigned int jointIDRightHand= getBVHJointIDFromJointName("rHand");
+            cv::Point rightHand(points2DOutputGUIForcedView[jointIDRightHand][0],points2DOutputGUIForcedView[jointIDRightHand][1]);
+            rightEndEffector.push_back(rightHand);
+            if (rightEndEffector.size()>maxEndEffectorHistory)
+                {
+                    rightEndEffector.erase(rightEndEffector.begin());
+                }
+
+             float stepColorD=(float) 255/maxEndEffectorHistory;
+            for (int step=0; step<rightEndEffector.size(); step++)
+                {
+                    float stepColor = 255 - step*stepColorD;
+                    if (step>1)
+                    {
+                                            cv::line(img,leftEndEffector[step],leftEndEffector[step-1], cv::Scalar(0,stepColor,stepColor), 1.0);
+                                            cv::line(img,rightEndEffector[step],rightEndEffector[step-1], cv::Scalar(0,stepColor,stepColor), 1.0);
+                        
+                    }
+                    cv::circle(img,leftEndEffector[step],1,cv::Scalar(0,stepColor,stepColor),3,8,0);
+                    cv::circle(img,rightEndEffector[step],1,cv::Scalar(0,stepColor,stepColor),3,8,0);
+                }
+        }
+    //-----------------------------------------------------------------------------------------------------------------------------
+
+
     for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
         {
             float jointPointX = points2DOutputGUIForcedView[jointID][0];

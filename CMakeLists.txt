@@ -4,6 +4,7 @@ cmake_minimum_required( VERSION 2.8.7 )
 set(CMAKE_CXX_FLAGS "-fPIC ")
 set(CMAKE_C_FLAGS "-fPIC") 
 
+OPTION (ENABLE_OPENGL OFF)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD 11)  
@@ -42,6 +43,11 @@ ENDIF()
 
 
 
+if (ENABLE_OPENGL)
+  add_definitions(-DENABLE_OPENGL)
+ELSE (ENABLE_REALSENSE) 
+ MESSAGE("OpenGL support will not be compiled in")
+ENDIF(ENABLE_REALSENSE)
 
 
 find_package(OpenCV)
