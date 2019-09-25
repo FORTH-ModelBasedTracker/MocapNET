@@ -307,7 +307,7 @@ int populateDemoFigures(cv::Mat * figures)
     figures[1] = cv::imread("doc/figureB.png", CV_LOAD_IMAGE_COLOR);   // Read the file
     cv::resize(figures[1],figures[1], cv::Size(), reduction, reduction);
     figures[2] = cv::imread("doc/figureC.png", CV_LOAD_IMAGE_COLOR);   // Read the file
-    cv::resize(figures[2],figures[2], cv::Size(), reduction, reduction); 
+    cv::resize(figures[2],figures[2], cv::Size(), reduction, reduction);
     return 1;
 }
 
