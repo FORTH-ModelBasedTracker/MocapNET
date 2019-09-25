@@ -298,6 +298,21 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
 
 
 
+int populateDemoFigures(cv::Mat * figures)
+{
+    fprintf(stderr,"Populating Demo Figures.. You probably don't need that, but I did in Researcher's night 2019..\n");
+    float reduction=0.5;
+    figures[0] = cv::imread("doc/figureA.png", CV_LOAD_IMAGE_COLOR);   // Read the file
+    cv::resize(figures[0],figures[0], cv::Size(), reduction,reduction);
+    figures[1] = cv::imread("doc/figureB.png", CV_LOAD_IMAGE_COLOR);   // Read the file
+    cv::resize(figures[1],figures[1], cv::Size(), reduction, reduction);
+    figures[2] = cv::imread("doc/figureC.png", CV_LOAD_IMAGE_COLOR);   // Read the file
+    cv::resize(figures[2],figures[2], cv::Size(), reduction, reduction); 
+    return 1;
+}
+
+
+
 int main(int argc, char *argv[])
 {
     fprintf(stderr,"Welcome to the MocapNET demo\n");
@@ -336,6 +351,14 @@ int main(int argc, char *argv[])
     unsigned int numberOfOutputTensors = 3;
     char * networkPath = (char*) networkPathFORTHStatic;
     //-------------------------------
+
+    //---------------------------------------------------------
+    // Researcher's night figures..
+    //---------------------------------------------------------
+    cv::Mat demoFigures[3];
+    populateDemoFigures(demoFigures);
+    //---------------------------------------------------------
+
 
     for (int i=0; i<argc; i++)
         {
@@ -407,38 +430,37 @@ int main(int argc, char *argv[])
                         frameLimit=atoi(argv[i+1]);
                         frameLimitSet=1;
                     }
-                else
-                    if (strcmp(argv[i],"--cpu")==0)
-                        {
-                            //setenv("CUDA_VISIBLE_DEVICES", "", 1);   //Alternate way to force CPU everywhere
-                            forceCPUMocapNET=1;
-                            forceCPU2DJointEstimation=1;
-                        }
-                    else if (strcmp(argv[i],"--gpu")==0)
-                        {
-                            forceCPUMocapNET=0;
-                            forceCPU2DJointEstimation=0;
-                        }
-                    else if (strcmp(argv[i],"--unconstrained")==0)
-                        {
-                            constrainPositionRotation=0;
-                        }
-                    else if (strcmp(argv[i],"--nocrop")==0)
-                        {
-                            doCrop=0;
-                        }
-                    else if (strcmp(argv[i],"--live")==0)
-                        {
-                            live=1;
-                            frameLimit=0;
-                        }
-                    else if (strcmp(argv[i],"--from")==0)
-                        {
-                            if (argc>i+1)
-                                {
-                                    webcam = argv[i+1];
-                                }
-                        }
+                else if (strcmp(argv[i],"--cpu")==0)
+                    {
+                        //setenv("CUDA_VISIBLE_DEVICES", "", 1);   //Alternate way to force CPU everywhere
+                        forceCPUMocapNET=1;
+                        forceCPU2DJointEstimation=1;
+                    }
+                else if (strcmp(argv[i],"--gpu")==0)
+                    {
+                        forceCPUMocapNET=0;
+                        forceCPU2DJointEstimation=0;
+                    }
+                else if (strcmp(argv[i],"--unconstrained")==0)
+                    {
+                        constrainPositionRotation=0;
+                    }
+                else if (strcmp(argv[i],"--nocrop")==0)
+                    {
+                        doCrop=0;
+                    }
+                else if (strcmp(argv[i],"--live")==0)
+                    {
+                        live=1;
+                        frameLimit=0;
+                    }
+                else if (strcmp(argv[i],"--from")==0)
+                    {
+                        if (argc>i+1)
+                            {
+                                webcam = argv[i+1];
+                            }
+                    }
         }
 
 
@@ -516,18 +538,25 @@ int main(int argc, char *argv[])
                             unsigned long acquisitionStart = GetTickCountMicroseconds();
 
                             cap >> frame; // get a new frame from camera
-                            
-                            
-                            if (rotate) 
-                                { //Maybe we want to rotate the feed..
-                                     switch(rotate)
-                                     {
-                                         case 1 :  cv::rotate(frame, frame, cv::ROTATE_90_CLOCKWISE);  break;
-                                         case 2 : cv::rotate(frame, frame, cv::ROTATE_180);  break;
-                                         case 3 : cv::rotate(frame, frame, cv::ROTATE_90_COUNTERCLOCKWISE);  break; 
-                                     } ;   
+
+
+                            if (rotate)
+                                {
+                                    //Maybe we want to rotate the feed..
+                                    switch(rotate)
+                                        {
+                                        case 1 :
+                                            cv::rotate(frame, frame, cv::ROTATE_90_CLOCKWISE);
+                                            break;
+                                        case 2 :
+                                            cv::rotate(frame, frame, cv::ROTATE_180);
+                                            break;
+                                        case 3 :
+                                            cv::rotate(frame, frame, cv::ROTATE_90_COUNTERCLOCKWISE);
+                                            break;
+                                        } ;
                                 }
-                            
+
                             cv::Mat frameOriginal = frame; //ECONOMY .clone();
 
                             unsigned int frameWidth  =  frame.size().width;  //frame.cols
@@ -725,8 +754,8 @@ int main(int argc, char *argv[])
                                                             cv::imshow("3D Control",controlMat);
 
                                                             createTrackbar("Stop Demo", "3D Control", &stop, 1);
-                                                            createTrackbar("Visualization Type", "3D Control", &visualizationType,10); 
-                                                            createTrackbar("Rotate Feed", "3D Control", &rotate, 4); 
+                                                            createTrackbar("Visualization Demo", "3D Control", &visualizationType,14);
+                                                            createTrackbar("Rotate Feed", "3D Control", &rotate, 4);
                                                             createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 1);
                                                             createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
                                                             createTrackbar("Feet Heuristics", "3D Control", &doFeetHeuristics,1);
@@ -752,50 +781,68 @@ int main(int argc, char *argv[])
                                                     //Get rid of GLib-GObject-CRITICAL **: 10:36:18.934: g_object_unref: assertion 'G_IS_OBJECT (object)' failed opencv
                                                     //by displaying an empty cv Mat on the window besides the trackbars
                                                     cv::imshow("3D Control",controlMat);
-                                                   
-                                                   
- 
+
+
+
                                                     if (visualizationType==0)
-                                                    {
-                                                     visualizePoints(
-                                                        "3D Points Output",
-                                                        frameNumber,
-                                                        skippedFrames,
-                                                        totalNumberOfFrames,
-                                                        frameLimit,
-                                                        drawFloor,
-                                                        drawNSDM,
-                                                        fpsTotal,
-                                                        fpsAcquisition,
-                                                        fps2DJointDetector,
-                                                        fpsMocapNET,
-                                                        visWidth,
-                                                        visHeight,
-                                                        0,
-                                                        flatAndNormalizedPoints,
-                                                        bvhOutput,
-                                                        bvhForcedViewOutput,
-                                                        points2DInput,
-                                                        points2DOutput,
-                                                        points2DOutputGUIForcedView
-                                                     ); 
-                                                    } else
-                                                    if (visualizationType==1)
-                                                    {
-                                                       visualizeCameraEdges("3D Points Output",frame); 
-                                                    } else
-                                                     if (visualizationType<=8)
-                                                     {
-                                                           visualizeCameraChannels("3D Points Output",frame,visualizationType-2);
-                                                     }    else
-                                                     if (visualizationType==9)
-                                                     {
-                                                           visualizeCameraIntensities("3D Points Output",frame,0);
-                                                     }   else
-                                                     if (visualizationType==10)
-                                                     {
-                                                           visualizeCameraIntensities("3D Points Output",frame,1);
-                                                     }   
+                                                        {
+                                                            visualizePoints(
+                                                                "3D Points Output",
+                                                                frameNumber,
+                                                                skippedFrames,
+                                                                totalNumberOfFrames,
+                                                                frameLimit,
+                                                                drawFloor,
+                                                                drawNSDM,
+                                                                fpsTotal,
+                                                                fpsAcquisition,
+                                                                fps2DJointDetector,
+                                                                fpsMocapNET,
+                                                                visWidth,
+                                                                visHeight,
+                                                                0,
+                                                                flatAndNormalizedPoints,
+                                                                bvhOutput,
+                                                                bvhForcedViewOutput,
+                                                                points2DInput,
+                                                                points2DOutput,
+                                                                points2DOutputGUIForcedView
+                                                            );
+                                                        }
+                                                    else
+
+                                                        if (visualizationType==1)
+                                                            {
+                                                                visualizeFigure("3D Points Output",demoFigures[0]);
+                                                            }
+                                                        else if (visualizationType==2)
+                                                            {
+                                                                visualizeFigure("3D Points Output",demoFigures[1]);
+                                                            }
+                                                        else if (visualizationType==3)
+                                                            {
+                                                                visualizeFigure("3D Points Output",demoFigures[2]);
+                                                            }
+                                                        else if (visualizationType==4)
+                                                            {
+                                                                visualizeCameraFeatures("3D Points Output",frameOriginal);
+                                                            }
+                                                        else if (visualizationType==5)
+                                                            {
+                                                                visualizeCameraEdges("3D Points Output",frame);
+                                                            }
+                                                        else if (visualizationType<=12)
+                                                            {
+                                                                visualizeCameraChannels("3D Points Output",frame,visualizationType-6);
+                                                            }
+                                                        else if (visualizationType==13)
+                                                            {
+                                                                visualizeCameraIntensities("3D Points Output",frame,0);
+                                                            }
+                                                        else if (visualizationType==14)
+                                                            {
+                                                                visualizeCameraIntensities("3D Points Output",frame,1);
+                                                            }
 
 
                                                     if (frameNumber==0)

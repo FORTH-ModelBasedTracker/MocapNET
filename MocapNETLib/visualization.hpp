@@ -14,6 +14,8 @@ using namespace cv;
   int visualizeCameraIntensities(const char* windowName,cv::Mat &imgOriginal,int forceColors);
   int visualizeCameraChannels(const char* windowName,cv::Mat &img,int channelNumber);
   int visualizeCameraEdges(const char* windowName,cv::Mat &img);
+  int visualizeCameraFeatures(const char* windowName,cv::Mat &img);
+  int visualizeFigure(const char* windowName,cv::Mat &img);
 #endif 
 
 

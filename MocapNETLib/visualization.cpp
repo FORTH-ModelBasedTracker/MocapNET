@@ -143,42 +143,42 @@ int drawFloorFromPrimitives(
 
 float pointDistance(float xA,float yA,float xB,float yB)
 {
- return sqrt( ((xA-xB)*(xA-xB)) + ((yA-yB)*(yA-yB)) );
+    return sqrt( ((xA-xB)*(xA-xB)) + ((yA-yB)*(yA-yB)) );
 }
 
 
 static const char * reprojectBVHNames[] =
 {
-"lShldr",
-"rShldr",
-"lForeArm",
-"rForeArm",
-"lHand",
-"rHand",
-"lThigh",
-"rThigh",
-"lShin",
-"rShin",
-"lFoot",
-"rFoot"
+    "lShldr",
+    "rShldr",
+    "lForeArm",
+    "rForeArm",
+    "lHand",
+    "rHand",
+    "lThigh",
+    "rThigh",
+    "lShin",
+    "rShin",
+    "lFoot",
+    "rFoot"
 };
 
 
 
 static int reproject2DIDs[] =
 {
-BODY25_LShoulder,    
-BODY25_RShoulder,    
-BODY25_LElbow,
-BODY25_RElbow,
-BODY25_LWrist,
-BODY25_RWrist,
-BODY25_LHip,
-BODY25_RHip,
-BODY25_LKnee,
-BODY25_RKnee,
-BODY25_LAnkle,
-BODY25_RAnkle
+    BODY25_LShoulder,
+    BODY25_RShoulder,
+    BODY25_LElbow,
+    BODY25_RElbow,
+    BODY25_LWrist,
+    BODY25_RWrist,
+    BODY25_LHip,
+    BODY25_RHip,
+    BODY25_LKnee,
+    BODY25_RKnee,
+    BODY25_LAnkle,
+    BODY25_RAnkle
 };
 
 static int numberOfReprojectionChecks=12;
@@ -193,215 +193,297 @@ int visualizeSkeletonCorrespondence(
     unsigned int height
 )
 {
-    if (  
-           (points2DInput.size()==0)  
-       )
-       {
-            fprintf(stderr,YELLOW "visualizeSkeletonCorrespondence cannot display something without the input 2D points\n" NORMAL); 
+    if (
+        (points2DInput.size()==0)
+    )
+        {
+            fprintf(stderr,YELLOW "visualizeSkeletonCorrespondence cannot display something without the input 2D points\n" NORMAL);
             return 0;
-       }   
-    
-    if (  
-           (points2DOutput.size()==0)
-       )
-       {
-            fprintf(stderr,YELLOW "visualizeSkeletonCorrespondence cannot display something without the output 2D points\n" NORMAL); 
+        }
+
+    if (
+        (points2DOutput.size()==0)
+    )
+        {
+            fprintf(stderr,YELLOW "visualizeSkeletonCorrespondence cannot display something without the output 2D points\n" NORMAL);
             return 0;
-       }   
-        
-    
+        }
+
+
     height=1080;
     width=1920;
-    int doFullReprojectionVisualization = 0;    
-    
+    int doFullReprojectionVisualization = 0;
+
     if (doFullReprojectionVisualization)
-    {
-    cv::Mat img(height,width, CV_8UC3, Scalar(0,0,0));
+        {
+            cv::Mat img(height,width, CV_8UC3, Scalar(0,0,0));
 
 
 //Just the points and text ( foreground )
-    for (int jointID=0; jointID<points2DInput.size(); jointID++)
-        {
-            float jointInPointX = points2DInput[jointID][0];
-            float jointInPointY = points2DInput[jointID][1];
-            //fprintf(stderr,"P x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
-
-            if ( (jointInPointX!=0) && (jointInPointY!=0) )
+            for (int jointID=0; jointID<points2DInput.size(); jointID++)
                 {
-                    cv::Point jointPoint(jointInPointX+10,jointInPointY);
-                    cv::circle(img,jointPoint,5,cv::Scalar(0,255,0),3,8,0);
-                    const char * jointName  = Body25BodyNames[jointID];
-                    if (jointName!=0)
+                    float jointInPointX = points2DInput[jointID][0];
+                    float jointInPointY = points2DInput[jointID][1];
+                    //fprintf(stderr,"P x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
+
+                    if ( (jointInPointX!=0) && (jointInPointY!=0) )
                         {
-                            cv::putText(img, jointName  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(123), 0.2, 8 );
+                            cv::Point jointPoint(jointInPointX+10,jointInPointY);
+                            cv::circle(img,jointPoint,5,cv::Scalar(0,255,0),3,8,0);
+                            const char * jointName  = Body25BodyNames[jointID];
+                            if (jointName!=0)
+                                {
+                                    cv::putText(img, jointName  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(123), 0.2, 8 );
+                                }
                         }
                 }
+
+            unsigned int midHipBVHJointID = getBVHJointIDFromJointName("Hip");
+            float alignmentX = points2DInput[BODY25_MidHip][0]-points2DOutput[midHipBVHJointID][0];
+            float alignmentY = points2DInput[BODY25_MidHip][1]-points2DOutput[midHipBVHJointID][1];
+
+
+            for (int jointID=0; jointID<points2DOutput.size(); jointID++)
+                {
+                    float jointOutPointX = points2DOutput[jointID][0]+alignmentX;
+                    float jointOutPointY = points2DOutput[jointID][1]+alignmentY;
+                    //fprintf(stderr,"P x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
+
+                    if ( (jointOutPointX!=0) && (jointOutPointY!=0) )
+                        {
+                            cv::Point jointPoint(jointOutPointX+10,jointOutPointY);
+                            cv::circle(img,jointPoint,5,cv::Scalar(0,0,255),3,8,0);
+                            const char * jointName = getBVHJointName(jointID);
+                            if (jointName!=0)
+                                {
+                                    cv::putText(img, jointName  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(255), 0.2, 8 );
+                                }
+                        }
+                }
+
+            cv::imshow("TEST",img);
         }
 
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
     unsigned int midHipBVHJointID = getBVHJointIDFromJointName("Hip");
     float alignmentX = points2DInput[BODY25_MidHip][0]-points2DOutput[midHipBVHJointID][0];
     float alignmentY = points2DInput[BODY25_MidHip][1]-points2DOutput[midHipBVHJointID][1];
 
+    float x2D,y2D,xReprojected,yReprojected,distance,relativeDistance;
+    unsigned int jointID2D,jointIDBVH;
 
-    for (int jointID=0; jointID<points2DOutput.size(); jointID++)
+    //-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
+
+    char textWarning[512];
+    int i=0;
+    for (i=0; i<numberOfReprojectionChecks; i++)
         {
-            float jointOutPointX = points2DOutput[jointID][0]+alignmentX;
-            float jointOutPointY = points2DOutput[jointID][1]+alignmentY;
-            //fprintf(stderr,"P x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
+            jointID2D = reproject2DIDs[i];
+            jointIDBVH = getBVHJointIDFromJointName(reprojectBVHNames[i]);
+            //-------------------------------------------------------------------------
+            x2D = points2DInput[jointID2D][0];
+            y2D = points2DInput[jointID2D][1];
+            xReprojected = alignmentX + points2DOutput[jointIDBVH][0];
+            yReprojected = alignmentY + points2DOutput[jointIDBVH][1];
+            distance=pointDistance(x2D,y2D,xReprojected,yReprojected);
+            relativeDistance=(float) distance/width;
 
-            if ( (jointOutPointX!=0) && (jointOutPointY!=0) )
+            snprintf(textWarning,512,"%s reprojection error %0.2f %%",reprojectBVHNames[i],relativeDistance);
+            if (relativeDistance>0.07)
                 {
-                    cv::Point jointPoint(jointOutPointX+10,jointOutPointY);
-                    cv::circle(img,jointPoint,5,cv::Scalar(0,0,255),3,8,0);
-                    const char * jointName = getBVHJointName(jointID);
-                    if (jointName!=0)
-                        {
-                            cv::putText(img, jointName  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(255), 0.2, 8 );
-                        }
-                }
-        }
-    
-    cv::imshow("TEST",img);    
-    }
-    
-     //-----------------------------------------------------------------------------------------------------------------------------
-     //-----------------------------------------------------------------------------------------------------------------------------
-     //-----------------------------------------------------------------------------------------------------------------------------
-     unsigned int midHipBVHJointID = getBVHJointIDFromJointName("Hip");
-     float alignmentX = points2DInput[BODY25_MidHip][0]-points2DOutput[midHipBVHJointID][0];
-     float alignmentY = points2DInput[BODY25_MidHip][1]-points2DOutput[midHipBVHJointID][1];
-    
-     float x2D,y2D,xReprojected,yReprojected,distance,relativeDistance;
-     unsigned int jointID2D,jointIDBVH;
- 
-     //-------------------------------------------------------------------------
-     //-------------------------------------------------------------------------
-     //-------------------------------------------------------------------------
- 
-     char textWarning[512];
-     int i=0;
-     for (i=0; i<numberOfReprojectionChecks; i++)
-     {
-      jointID2D = reproject2DIDs[i]; 
-      jointIDBVH = getBVHJointIDFromJointName(reprojectBVHNames[i]);
-      //-------------------------------------------------------------------------
-      x2D = points2DInput[jointID2D][0];
-      y2D = points2DInput[jointID2D][1];
-      xReprojected = alignmentX + points2DOutput[jointIDBVH][0];
-      yReprojected = alignmentY + points2DOutput[jointIDBVH][1];
-      distance=pointDistance(x2D,y2D,xReprojected,yReprojected);
-      relativeDistance=(float) distance/width;
+                    //fprintf(stderr,RED);
 
-      snprintf(textWarning,512,"%s reprojection error %0.2f %%",reprojectBVHNames[i],relativeDistance);
-      if (relativeDistance>0.07)
-      { 
-          //fprintf(stderr,RED);
-          
-          cv::Point jointPoint(x,y);  
-          cv::putText(imgO, textWarning  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar(0,0,255), 0.2, 8 );
-          y+=15;
-      }
-      //fprintf(stderr,"%s\n" NORMAL,textWarning);         
-     } 
+                    cv::Point jointPoint(x,y);
+                    cv::putText(imgO, textWarning  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar(0,0,255), 0.2, 8 );
+                    y+=15;
+                }
+            //fprintf(stderr,"%s\n" NORMAL,textWarning);
+        }
 
 
     return 1;
 }
- 
- 
- 
- 
- 
+
+
+
+
+
 int visualizeCameraIntensities(const char* windowName, cv::Mat &imgOriginal,int forceColors)
-{  
-    float fontSize = 0.5;
-    
-    unsigned int x=0,y=0;
-    char text[512]; 
+{
+    float fontSize = 0.3;
+    unsigned int verticalSpace=25;
+    unsigned int horizontalSpace=10;
+
+    unsigned int x=0,y=10;
+    char text[512];
     if ( (imgOriginal.rows!=0) && (imgOriginal.cols!=0) )
-    { 
-        cv::Mat img(32,32, CV_8UC3, cv::Scalar(0,0,0));
-        cv::resize(imgOriginal, img, img.size() ,0,0,INTER_NEAREST);
-        //cv::imshow(windowName,img); 
-        cv::Mat imgV(1024,1024, CV_8UC3,cv::Scalar(0,0,0));
+        {
+            cv::Mat img(32,32, CV_8UC3, cv::Scalar(0,0,0));
+            cv::resize(imgOriginal, img, img.size() ,0,0,INTER_NEAREST);
+            //cv::imshow(windowName,img);
+            cv::Mat imgV((3+img.cols) * horizontalSpace *3 ,img.rows * verticalSpace, CV_8UC3,cv::Scalar(0,0,0));
             for(int r=0; r<img.rows; ++r)
                 {
-                    y=y+20;
                     x=0;
-                            
                     for(int c=0; c<img.cols; ++c)
                         {
-                             unsigned char * p = img.ptr(r,c); // Y first, X after     
-                              cv::Point jointPoint(x,y);
-                              snprintf(text,512,"%u",p[0]);
-                              if (forceColors) p[0]=255;
-                              cv::putText(imgV, text  , jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(p[0],0,0), 0.2, cv::LINE_4 );
-                              x=x+12;
-                              jointPoint.x=x;
-                              snprintf(text,512,"%u",p[1]);
-                              if (forceColors) p[1]=255;
-                              cv::putText(imgV, text  , jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(0,p[1],0), 0.2, cv::LINE_4 );
-                              x=x+12;
-                              jointPoint.x=x;
-                              snprintf(text,512,"%u",p[2]);
-                              if (forceColors) p[2]=255;
-                              cv::putText(imgV, text  , jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(0,0,p[2]), 0.2, cv::LINE_4 );
-                              x=x+12; 
-                              jointPoint.x=x;
+                            unsigned char * p = img.ptr(r,c); // Y first, X after
+                            cv::Point jointPoint(x,y);
+                            snprintf(text,512,"%u",p[0]);
+                            if (forceColors) p[0]=255;
+                            cv::putText(imgV, text  , jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(p[0],0,0), 0.2, cv::LINE_4 );
+                            x=x+horizontalSpace;
+                            jointPoint.x=x;
+                            snprintf(text,512,"%u",p[1]);
+                            if (forceColors) p[1]=255;
+                            cv::putText(imgV, text  , jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(0,p[1],0), 0.2, cv::LINE_4 );
+                            x=x+horizontalSpace;
+                            jointPoint.x=x;
+                            snprintf(text,512,"%u",p[2]);
+                            if (forceColors) p[2]=255;
+                            cv::putText(imgV, text  , jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(0,0,p[2]), 0.2, cv::LINE_4 );
+                            x=x+horizontalSpace;
+                            jointPoint.x=x;
                         }
+                    y=y+verticalSpace;
                 }
-         cv::waitKey(2);
-         cv::imshow(windowName,imgV); 
-         cv::waitKey(1);
-     return 1;    
-    }
-   return 0; 
-}
- 
- 
-int visualizeCameraChannels(const char* windowName,cv::Mat &img,int channelNumber)
-{ 
-    if ( (img.rows!=0) && (img.cols!=0) )
-    {
-    
-    Mat channel[3]; 
-    // The actual splitting.
-    split(img, channel);
 
-   
-    if (channelNumber<3)
-    { 
-     cv::imshow(windowName, channel[channelNumber]);
-    } else     
-    if (channelNumber>=3)
-    {
-          cv::Mat imageMerged;
-          
-          if (channelNumber==3) {  channel[0]=cv::Mat::zeros(img.rows, img.cols, CV_8UC1); } else //Set blue channel to 0
-          if (channelNumber==4) {  channel[1]=cv::Mat::zeros(img.rows, img.cols, CV_8UC1); } else //Set blue channel to 0
-          if (channelNumber==5) {  channel[2]=cv::Mat::zeros(img.rows, img.cols, CV_8UC1); }   //Set blue channel to 0
-           
-          cv::merge(channel,3,imageMerged);
-          
-          cv::imshow(windowName,imageMerged);
-    }
-        
-        
-     return 1;    
-    }
-   return 0; 
+
+            cv::Point jointPoint(10,10);
+            fontSize = 0.5;
+            cv::putText(imgV,"Raw RGB Image Data", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(255,255,255), 0.2, cv::LINE_8);
+            cv::imshow(windowName,imgV);
+            cv::waitKey(1);
+            return 1;
+        }
+    return 0;
+}
+
+
+int visualizeCameraChannels(const char* windowName,cv::Mat &img,int channelNumber)
+{
+    if ( (img.rows!=0) && (img.cols!=0) )
+        {
+
+            Mat channel[3];
+            // The actual splitting.
+            split(img, channel);
+
+            cv::Point jointPoint(10,10);
+            float fontSize = 0.5;
+
+
+            if (channelNumber<3)
+                {
+                    if (channelNumber==0)
+                        {
+                            cv::putText(channel[channelNumber],"Blue channel", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(255,0,0), 0.2, cv::LINE_8);
+                        }
+                    else if (channelNumber==1)
+                        {
+                            cv::putText(channel[channelNumber],"Green channel", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(0,255,0), 0.2, cv::LINE_8);
+                        }
+                    else if (channelNumber==2)
+                        {
+                            cv::putText(channel[channelNumber],"Red channel", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(0,0,255), 0.2, cv::LINE_8);
+                        }
+                    cv::imshow(windowName, channel[channelNumber]);
+                }
+            else if (channelNumber>=3)
+                {
+                    cv::Mat imageMerged;
+
+                    if (channelNumber==3)
+                        {
+                            channel[0]=cv::Mat::zeros(img.rows, img.cols, CV_8UC1);
+                            cv::merge(channel,3,imageMerged);
+                            cv::putText(imageMerged,"Green + Red channel", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(0,255,255), 0.2, cv::LINE_8);
+                        }
+                    else   //Set blue channel to 0
+                        if (channelNumber==4)
+                            {
+                                channel[1]=cv::Mat::zeros(img.rows, img.cols, CV_8UC1);
+                                cv::merge(channel,3,imageMerged);
+                                cv::putText(imageMerged,"Blue + Red channel", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(255,0,255), 0.2, cv::LINE_8);
+                            }
+                        else   //Set blue channel to 0
+                            if (channelNumber==5)
+                                {
+                                    channel[2]=cv::Mat::zeros(img.rows, img.cols, CV_8UC1);
+                                    cv::merge(channel,3,imageMerged);
+                                    cv::putText(imageMerged,"Green + Blue channel", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(255,255,0), 0.2, cv::LINE_8);
+                                }
+                            else     //Set blue channel to 0
+                                {
+                                    cv::merge(channel,3,imageMerged);
+                                    cv::putText(imageMerged,"Red + Green + Blue channel", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(255,255,255), 0.2, cv::LINE_8);
+                                }
+
+                    cv::imshow(windowName,imageMerged);
+                }
+
+
+            return 1;
+        }
+    return 0;
 }
 
 
 int visualizeCameraEdges(const char* windowName,cv::Mat &img)
 {
-     cv::Mat edges;
-     cv::cvtColor(img, edges, CV_BGR2GRAY);
+    cv::Mat edges;
+    cv::cvtColor(img, edges, CV_BGR2GRAY);
 
-      cv::Canny(edges, edges, 30, 60);
-      cv::imshow(windowName, edges);
-   return 1;
+    cv::Canny(edges, edges, 30, 60);
+
+    cv::Point jointPoint(10,10);
+    float fontSize = 0.5;
+    cv::putText(edges,"Edges", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(255,255,255), 0.2, cv::LINE_8);
+    cv::imshow(windowName, edges);
+    return 1;
 }
+
+
+int visualizeCameraFeatures(const char* windowName,cv::Mat &img)
+{
+      std::vector<cv::KeyPoint> keypoints;
+      
+      cv::Mat imgCopy; //= img.clone();
+      cv::resize(img, imgCopy, img.size() ,0,0,INTER_NEAREST);
+      cv::FAST(imgCopy,keypoints,100.0,false);
+      char coordinates[256];
+      
+      
+      for (int i=0; i<keypoints.size(); i++)
+      {
+                   cv::circle(imgCopy,keypoints[i].pt,5,cv::Scalar(0,255,0),3,8,0); 
+                   cv::Point jointPoint(keypoints[i].pt.x,keypoints[i].pt.y);
+                   snprintf(coordinates,256,"%0.1f,%0.1f",keypoints[i].pt.x,keypoints[i].pt.y);
+                   cv::putText(imgCopy,coordinates, jointPoint, cv::FONT_HERSHEY_DUPLEX,0.4, cv::Scalar(0,255,255), 0.2, cv::LINE_4);
+      }
+      
+      
+    cv::Point jointPoint(10,10);
+    float fontSize = 0.5;
+    cv::putText(imgCopy,"Features", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(255,255,255), 0.2, cv::LINE_8);
+      cv::imshow(windowName,imgCopy);
+}
+
+int visualizeFigure(const char* windowName,cv::Mat &img)
+{
+    if ( (img.rows!=0) && (img.cols!=0) )
+        {
+            cv::imshow(windowName, img);
+            return 1;
+        }
+    return 0;
+}
+
+
 
 #endif
 
@@ -442,7 +524,7 @@ int visualizePoints(
         {
             fprintf(stderr,YELLOW "Won't visualize empty 2D points for frame %u\n" NORMAL,frameNumber);
             return 0;
-        }        
+        }
 
     char textInfo[512];
 
@@ -457,14 +539,14 @@ int visualizePoints(
     if (drawFloor)
         {
             float floorX=0,floorY=0,floorZ=0;
-            
+
             if (mocapNETOutputWithGUIForcedView.size()>5)
-            {
-                floorX=mocapNETOutputWithGUIForcedView[3];
-                floorY=mocapNETOutputWithGUIForcedView[4];
-                floorZ=mocapNETOutputWithGUIForcedView[5];
-            }
-            
+                {
+                    floorX=mocapNETOutputWithGUIForcedView[3];
+                    floorY=mocapNETOutputWithGUIForcedView[4];
+                    floorZ=mocapNETOutputWithGUIForcedView[5];
+                }
+
             unsigned int floorDimension=20;
             drawFloorFromPrimitives(
                 img,
