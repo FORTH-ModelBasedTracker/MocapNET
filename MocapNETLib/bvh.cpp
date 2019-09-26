@@ -13,6 +13,11 @@ int haveBVHInit=0;
 #warning "BVH code not included.."
 #endif // USE_BVH
 
+
+
+const float fX = 582.18394; //570.0
+const float fY = 582.52915;  //570.0
+
 int initializeBVHConverter()
 {
 #if USE_BVH
@@ -104,8 +109,8 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
         &renderer,
         width,
         height,
-        582.18394, //570.0
-        582.52915  //570.0
+        fX, //570.0
+        fY  //570.0
     );
     simpleRendererInitialize(&renderer);
     if (!haveBVHInit)
@@ -186,8 +191,8 @@ std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,
         &renderer,
         width,
         height,
-        570.0,
-        570.0
+        fX,
+        fY
     );
     simpleRendererInitialize(&renderer);
 

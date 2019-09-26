@@ -102,18 +102,19 @@ int drawFloorFromPrimitives(
                 height,
                 floorDimension
             );
+             
     cv::Point parentPoint(gridPoints2D[0][0],gridPoints2D[0][1]);
     cv::Point verticalPoint(gridPoints2D[0][0],gridPoints2D[0][1]);
+    float m=10.0; //Minimum 
+    
     for (int jointID=0; jointID<gridPoints2D.size(); jointID++)
-        {
-            float jointPointX = gridPoints2D[jointID][0];
-            float jointPointY = gridPoints2D[jointID][1];
-            cv::Point jointPoint(jointPointX,jointPointY);
+        { 
+            cv::Point jointPoint( gridPoints2D[jointID][0], gridPoints2D[jointID][1]);
 
             if (jointID+floorDimension<gridPoints2D.size())
                 {
-                    verticalPoint.x=gridPoints2D[jointID+20][0];
-                    verticalPoint.y=gridPoints2D[jointID+20][1];
+                    verticalPoint.x=gridPoints2D[jointID+floorDimension][0];
+                    verticalPoint.y=gridPoints2D[jointID+floorDimension][1];
                 }
             else
                 {
@@ -121,22 +122,25 @@ int drawFloorFromPrimitives(
                     verticalPoint.y=0.0;
                 }
 
-            if ( (jointPointX>0.0) && (jointPointY>0.0) )
+
+            if ( (jointPoint.x>m) && (jointPoint.y>m) )
                 {
                     cv::circle(img,jointPoint,2,cv::Scalar(255,255,0),3,8,0);
-                    if ( (verticalPoint.x>0.0) && (verticalPoint.y>0.0) )
+                  if ( (jointPoint.x>m) && (jointPoint.y>m) &&  (verticalPoint.x>m) && (verticalPoint.y>m) )
                         {
                             cv::line(img,jointPoint,verticalPoint, cv::Scalar(255,255,0), 1.0);
                         }
                 }
 
+ 
             if (jointID%floorDimension!=0)
                 {
-                    if ( (jointPointX>0.0) && (jointPointY>0.0) && (verticalPoint.x>0.0) && (verticalPoint.y>0.0) )
+             if ( (jointPoint.x>m) && (jointPoint.y>m) && (parentPoint.x>m) && (parentPoint.y>m) )
                         {
                             cv::line(img,jointPoint,parentPoint, cv::Scalar(255,255,0), 1.0);
-                        }
+                        } 
                 }
+                
             parentPoint = jointPoint;
         }
 }

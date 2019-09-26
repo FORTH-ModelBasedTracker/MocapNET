@@ -328,7 +328,7 @@ int main(int argc, char *argv[])
     int live=0,stop=0,visualizationType=0;
     int constrainPositionRotation=1,rotate=0;
     int doCrop=1,tryForMaximumCrop=0,doSmoothing=3,drawFloor=1,drawNSDM=1;
-    int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0;
+    int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0,autoDirection=0,autoCount=0;
     int doFeetHeuristics=0;
 
     unsigned int delay=1; //Just a little time to view the window..
@@ -691,10 +691,26 @@ int main(int argc, char *argv[])
                                                 {
                                                     bvhFrames.push_back(bvhOutput);
                                                 }
-
+                                             
+                                             
+                                             if (constrainPositionRotation==2)
+                                             {//Specific position rotation constraint that scans left and right..
+                                                 ++autoCount; 
+                                                 if (autoCount>=1)
+                                                 {
+                                                     autoCount=0;
+                                                     
+                                                     if ( (autoDirection==1) && (yawValue==0) )      { autoDirection=0; } else
+                                                     if ( (autoDirection==0) && (yawValue==360) ) { autoDirection=1; }
+                                                     
+                                                     if (autoDirection==0) { yawValue+=1; } else
+                                                     if (autoDirection==1) { yawValue-=1; }
+                                                 } 
+                                             }//---------------------------------------------------------------------------------------------------
+                                             
 
                                             //Force Skeleton Position and orientation to make it more easily visualizable
-                                            if (constrainPositionRotation)
+                                            if (constrainPositionRotation>0)
                                                 {
                                                     if (bvhForcedViewOutput.size()>0)
                                                         {
@@ -753,20 +769,20 @@ int main(int argc, char *argv[])
                                                         {
                                                             cv::imshow("3D Control",controlMat);
 
-                                                            createTrackbar("Stop Demo", "3D Control", &stop, 1);
-                                                            createTrackbar("Visualization Demo", "3D Control", &visualizationType,14);
-                                                            createTrackbar("Rotate Feed", "3D Control", &rotate, 4);
-                                                            createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 1);
-                                                            createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
-                                                            createTrackbar("Feet Heuristics", "3D Control", &doFeetHeuristics,1);
-                                                            createTrackbar("Smooth 3D Output", "3D Control", &doSmoothing, 10);
-                                                            createTrackbar("Maximize Crop", "3D Control", &tryForMaximumCrop, 1);
-                                                            createTrackbar("Draw Floor", "3D Control", &drawFloor, 1);
-                                                            createTrackbar("Draw NSDM", "3D Control", &drawNSDM, 1);
-                                                            createTrackbar("Distance  ", "3D Control", &distance,  150);
-                                                            createTrackbar("Yaw            ", "3D Control", &yawValue,  360);
-                                                            createTrackbar("Pitch          ", "3D Control", &pitchValue,360);
-                                                            createTrackbar("Roll            ", "3D Control", &rollValue, 360);
+                                                            cv::createTrackbar("Stop Demo", "3D Control", &stop, 1);
+                                                            cv::createTrackbar("Visualization Demo", "3D Control", &visualizationType,14);
+                                                            cv::createTrackbar("Rotate Feed", "3D Control", &rotate, 4);
+                                                            cv::createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 2);
+                                                            cv::createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
+                                                            cv::createTrackbar("Feet Heuristics", "3D Control", &doFeetHeuristics,1);
+                                                            cv::createTrackbar("Smooth 3D Output", "3D Control", &doSmoothing, 10);
+                                                            cv::createTrackbar("Maximize Crop", "3D Control", &tryForMaximumCrop, 1);
+                                                            cv::createTrackbar("Draw Floor", "3D Control", &drawFloor, 1);
+                                                            cv::createTrackbar("Draw NSDM", "3D Control", &drawNSDM, 1);
+                                                            cv::createTrackbar("Distance  ", "3D Control", &distance,  150);
+                                                            cv::createTrackbar("Yaw            ", "3D Control", &yawValue,  360);
+                                                            cv::createTrackbar("Pitch          ", "3D Control", &pitchValue,360);
+                                                            cv::createTrackbar("Roll            ", "3D Control", &rollValue, 360);
 
 
 
