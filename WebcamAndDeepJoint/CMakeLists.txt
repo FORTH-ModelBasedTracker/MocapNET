@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories(${TENSORFLOW_INCLUDE_ROOT})
  
 
-add_executable(WebcamJointBIN ${BVH_SOURCE} test.cpp cameraControl.cpp ../MocapNETLib/bvh.cpp ../MocapNETLib/visualization.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../MocapNETLib/InputParser_C.cpp utilities.cpp ../Tensorflow/tensorflow.cpp ../Tensorflow/tf_utils.cpp  )
+add_executable(WebcamJointBIN ${BVH_SOURCE} test.cpp cameraControl.cpp ../MocapNETLib/bvh.cpp ../MocapNETLib/nsdm.cpp ../MocapNETLib/visualization.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../MocapNETLib/InputParser_C.cpp utilities.cpp ../Tensorflow/tensorflow.cpp ../Tensorflow/tf_utils.cpp  )
 
 target_link_libraries(WebcamJointBIN rt dl m ${OpenCV_LIBRARIES}  Tensorflow  TensorflowFramework MocapNETLib )
 set_target_properties(WebcamJointBIN PROPERTIES DEBUG_POSTFIX "D") 

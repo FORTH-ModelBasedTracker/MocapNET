@@ -1774,15 +1774,28 @@ enum MOCAPNET_Output_Joints
  MOCAPNET_OUTPUT_LFOOT_YROTATION
 };
 
+
+struct MocapNETModelLimits
+{
+    int numberOfLimits;
+    float minimumYaw1;
+    float maximumYaw1;
+    float minimumYaw2;
+    float maximumYaw2;
+    int isFlipped;
+};
+
+
+
 /**
  * @brief MocapNET consists of separate classes/ensembles that are invoked for particular orientations.
  * This structure holds the required tensorflow instances to make MocapNET work.
  */
 struct MocapNET
 {
-   struct TensorflowInstance allModel;
-   struct TensorflowInstance frontModel;
-   struct TensorflowInstance backModel;
+    unsigned int loadedModels;
+   struct TensorflowInstance models[16]; 
+   struct MocapNETModelLimits modelLimits[16];  
 };
 
 
@@ -1808,14 +1821,14 @@ int writeBVHFile(
  * @param Pointer to a struct MocapNET that will hold the tensorflow instances on load.
  * @param Path to .pb files that are needed
  * @param Quality setting, can currently be 1.0 ( highest quality ), 1.5  or 2.0 ( highest performance )
+ * @param Mode setting, can currently be 2 (default ) or 4 (experimental) 
+ * @param Force the usage of CPU for MocapNET ( should be 1 as MocapNET is designed for CPU while GPU handles 2D ) 
  * @retval 1 = Success loading the files  , 0 = Failure
  */
- int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetting,unsigned int forceCPU);
+int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetting,int mode,unsigned int forceCPU);
 
 
-
-
-std::vector<float> compressMocapNETInput(std::vector<float> mocapnetInput,int addSyntheticPoints,int doScaleCompensation);
+ 
 
 
 /**

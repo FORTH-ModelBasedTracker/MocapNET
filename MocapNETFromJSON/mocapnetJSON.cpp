@@ -18,6 +18,7 @@
 
 int main(int argc, char *argv[])
 {
+    unsigned int mocapNETMode=3;
     unsigned int width=1920 , height=1080 , frameLimit=10000 , visualize = 0, useCPUOnly=1 , serialLength=5;
     unsigned int visWidth=1024,visHeight=768;
     const char * path=0;
@@ -111,7 +112,7 @@ int main(int argc, char *argv[])
 
 
     struct MocapNET mnet= {0};
-    if ( loadMocapNET(&mnet,"test",quality,useCPUOnly) )
+    if ( loadMocapNET(&mnet,"test",quality,mocapNETMode,useCPUOnly) )
         {
             char filePathOfJSONFile[1024]= {0};
             snprintf(filePathOfJSONFile,1024,"%s/colorFrame_0_00001.jpg",path);

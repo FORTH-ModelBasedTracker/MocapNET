@@ -1,7 +1,7 @@
 #include "../Tensorflow/tf_utils.hpp"
 #include "mocapnet.hpp"
+#include "nsdm.hpp"
 #include "jsonCocoSkeleton.h"
-#include <math.h>
 
 #define NORMAL   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
@@ -60,21 +60,59 @@ int listNodesMN(const char * label , TF_Graph* graph)
     return 1;
 }
 
-int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetting,unsigned int forceCPU)
+int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetting,int mode,unsigned int forceCPU)
 {
-    char allModelPath[1024]; 
-    char frontModelPath[1024]; 
-    char backModelPath[1024]; 
-    
-    snprintf(allModelPath,1024,"combinedModel/%0.1f/all.pb",qualitySetting);
-    snprintf(frontModelPath,1024,"combinedModel/%0.1f/front.pb",qualitySetting);
-    snprintf(backModelPath,1024,"combinedModel/%0.1f/back.pb",qualitySetting);
-    
-    int result = (
-                     ( loadTensorflowInstance(&mnet->allModel  ,allModelPath  ,"input_all"  ,"result_all/concat",forceCPU) ) &&
-                     ( loadTensorflowInstance(&mnet->frontModel,frontModelPath,"input_front","result_front/concat",forceCPU) ) &&
-                     ( loadTensorflowInstance(&mnet->backModel ,backModelPath ,"input_back" ,"result_back/concat",forceCPU) )
-                 );
+    char modelPath[1024]= {0};
+    int result = 0;
+
+    switch (mode)
+        {
+        case 3:
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            //                                                  Regular 3 Model setup such as the BMVC 2019 Work..
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            snprintf(modelPath,1024,"combinedModel/%0.1f/all.pb",qualitySetting);
+            result += loadTensorflowInstance(&mnet->models[0]  ,modelPath  ,"input_all"  ,"result_all/concat",forceCPU);
+            mnet->modelLimits[0].isFlipped=0;
+            mnet->modelLimits[0].numberOfLimits=1;
+            mnet->modelLimits[0].minimumYaw1=-360.0;
+            mnet->modelLimits[0].maximumYaw1=360.0;
+
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            snprintf(modelPath,1024,"combinedModel/%0.1f/front.pb",qualitySetting);
+            result += loadTensorflowInstance(&mnet->models[1],modelPath,"input_front","result_front/concat",forceCPU);
+            mnet->modelLimits[1].isFlipped=0;
+            mnet->modelLimits[1].numberOfLimits=1;
+            mnet->modelLimits[1].minimumYaw1=-90.0;
+            mnet->modelLimits[1].maximumYaw1=90.0;
+
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            snprintf(modelPath,1024,"combinedModel/%0.1f/back.pb",qualitySetting);
+            result += loadTensorflowInstance(&mnet->models[2] ,modelPath ,"input_back" ,"result_back/concat",forceCPU);
+            mnet->modelLimits[2].isFlipped=0;
+            mnet->modelLimits[2].numberOfLimits=2;
+            mnet->modelLimits[2].minimumYaw1=-90.0;
+            mnet->modelLimits[2].maximumYaw1=-270.0;
+            mnet->modelLimits[2].minimumYaw1=90.0;
+            mnet->modelLimits[2].maximumYaw1=270.0;
+
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            if(result==3)
+                {
+                    result=1;
+                    mnet->loadedModels=3;
+                }
+            else
+                {
+                    result=0;
+                }
+            break;
+
+        default:
+            fprintf(stderr,RED "You requested a MocapNET configuration that is incorrect  ( mode=%u )\n" NORMAL , mode);
+            return 0;
+            break;
+        };
 
     if (result)
         {
@@ -84,174 +122,23 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
                 {
                     emptyValues.push_back(0.0);
                 }
-            predictTensorflow(&mnet->allModel,emptyValues);
-            predictTensorflow(&mnet->frontModel,emptyValues);
-            predictTensorflow(&mnet->backModel,emptyValues);
-        }
 
-    return result;
-}
-
-
-float get2DPointsDistance(float x1,float y1,float x2,float y2)
-{
-    return sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
-}
-
-
-std::vector<float> compressMocapNETInput(std::vector<float> mocapnetInput,int addSyntheticPoints,int doScaleCompensation)
-{
-    if ( (MOCAPNET_UNCOMPRESSED_JOINT_PARTS * 3!=mocapnetInput.size())||(mocapnetInput.size()!=171) )
-        {
-            fprintf(stderr,RED "mocapNET: compressMocapNETInput : wrong input size , received %lu expected 171\n" NORMAL,mocapnetInput.size());
-
-            return mocapnetInput;
-        }
-
-
-    //---------------------------------------------------
-    float rShoulderToHipDistance = get2DPointsDistance
-                                   (
-                                       mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_HIP*3+0],
-                                       mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_HIP*3+1],
-                                       mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_RSHOULDER*3+0],
-                                       mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_RSHOULDER*3+1]
-                                   );
-    //---------------------------------------------------
-    float lShoulderToHipDistance = get2DPointsDistance
-                                   (
-                                       mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_HIP*3+0],
-                                       mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_HIP*3+1],
-                                       mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_LSHOULDER*3+0],
-                                       mocapnetInput[MOCAPNET_UNCOMPRESSED_JOINT_LSHOULDER*3+1]
-                                   );
-
-    //std::cerr<<"rShoulderToHipDistance "<<rShoulderToHipDistance<<"\n";
-    //std::cerr<<"lShoulderToHipDistance "<<lShoulderToHipDistance<<"\n";
-
-
-    //---------------------------------------------------
-    float scaleDistance=1.0;
-    if ( (rShoulderToHipDistance!=0) && (lShoulderToHipDistance!=0) )
-        {
-            scaleDistance=(rShoulderToHipDistance+lShoulderToHipDistance)/2;
-        }
-    else if (rShoulderToHipDistance!=0)
-        {
-            scaleDistance=rShoulderToHipDistance;
-        }
-    else if (lShoulderToHipDistance!=0)
-        {
-            scaleDistance=lShoulderToHipDistance;
-        }
-
-
-    //std::cerr<<"mocapnetCompressed\n";
-
-    std::vector<float>  mocapnetCompressed;
-    for (unsigned int iI=0; iI<MocapNETInputCompressedArrayIndexesSize; iI++)
-        {
-            unsigned int i=MocapNETInputCompressedArrayIndexes[iI];
-            for (unsigned int jJ=0; jJ<MocapNETInputCompressedArrayIndexesSize; jJ++)
+            for (int i=0;  i<mnet->loadedModels; i++ )
                 {
-                    unsigned int j=MocapNETInputCompressedArrayIndexes[jJ];
-
-                    if (i>=MOCAPNET_UNCOMPRESSED_JOINT_PARTS)
+                    std::vector<float>  prediction = predictTensorflow(&mnet->models[i],emptyValues);
+                    if (prediction.size()>0)
                         {
-                            fprintf(stderr,RED "\nERROR at i=%u for EDM element  [%u,%u]\n",i,iI,jJ);
-                            fprintf(stderr,RED "%s\n",MocapNETInputUncompressedArrayNames[i*3+0]);
-                            fprintf(stderr,RED "%s\n",MocapNETInputUncompressedArrayNames[i*3+1]);
-                            fprintf(stderr,RED "%s\n",MocapNETInputUncompressedArrayNames[i*3+2]);
-                            exit(0);
-                        }
-                    if (j>=MOCAPNET_UNCOMPRESSED_JOINT_PARTS)
-                        {
-                            fprintf(stderr,RED "\nERROR at j=%u for EDM element [%u,%u]\n",j,iI,jJ);
-                            fprintf(stderr,RED "%s\n",MocapNETInputUncompressedArrayNames[j*3+0]);
-                            fprintf(stderr,RED "%s\n",MocapNETInputUncompressedArrayNames[j*3+1]);
-                            fprintf(stderr,RED "%s\n",MocapNETInputUncompressedArrayNames[j*3+2]);
-                            exit(0);
-                        }
-
-                    float iX = mocapnetInput[i*3+0];
-                    float iY = mocapnetInput[i*3+1];
-                    float jX = mocapnetInput[j*3+0];
-                    float jY = mocapnetInput[j*3+1];
-
-                    if ( (iX>1.0) || (iY>1.0) || (jX>1.0) || (jY>1.0) )
-                        {
-                            //This should never happen
-                            fprintf(stderr,RED "\nBigger than 1.0 element at [%u,%u]\n",iI,jJ);
-                            mocapnetCompressed.push_back(666.0);
-                            mocapnetCompressed.push_back(666.0);
-                        }
-                    else if ( (iX==0) || (iY==0) || (jX==0) || (jY==0) )
-                        {
-                            mocapnetCompressed.push_back(0.0);
-                            mocapnetCompressed.push_back(0.0);
+                            fprintf(stderr, GREEN "Test running model %u was successful\n" NORMAL ,i);
                         }
                     else
                         {
-                            //#--------------------------
-                            //#     Synthetic Points
-                            //#--------------------------
-                            if (addSyntheticPoints)
-                                {
-                                    if (i==7)
-                                        {
-                                            iX=iX-0.3;
-                                        }
-                                    else if (i==8)
-                                        {
-                                            iX=iX+0.3;
-                                        }
-                                    //#--------------------------
-                                    if (j==7)
-                                        {
-                                            jX=jX-0.3;
-                                        }
-                                    else if (j==8)
-                                        {
-                                            jX=jX+0.3;
-                                        }
-                                }
-                            //#--------------------------
-
-                            float iXMinusjXPlus0_5=0.5+iX-jX;
-                            float iYMinusjYPlus0_5=0.5+iY-jY;
-
-                            if (iXMinusjXPlus0_5>10.0)
-                                {
-                                    fprintf(stderr,RED "\nERROR at (%0.2f,%0.2f)/(%0.2f,%0.2f)  for NSDM element [%u,%u]\n",iX,iY,jX,jY,iI,jJ);
-                                    fprintf(stderr,RED "%s-%s\n",MocapNETInputUncompressedArrayNames[i*3+0],MocapNETInputUncompressedArrayNames[j*3+0]);
-                                    fprintf(stderr,RED "%s-%s\n",MocapNETInputUncompressedArrayNames[i*3+1],MocapNETInputUncompressedArrayNames[j*3+1]);
-                                }
-                            if (iYMinusjYPlus0_5>10.0)
-                                {
-                                    fprintf(stderr,RED "\nERROR at (%0.2f,%0.2f)/(%0.2f,%0.2f)  for NSDM element [%u,%u]\n",iX,iY,jX,jY,iI,jJ);
-                                    fprintf(stderr,RED "%s-%s\n",MocapNETInputUncompressedArrayNames[i*3+0],MocapNETInputUncompressedArrayNames[j*3+0]);
-                                    fprintf(stderr,RED "%s-%s\n",MocapNETInputUncompressedArrayNames[i*3+1],MocapNETInputUncompressedArrayNames[j*3+1]);
-                                }
-
-                            if ( (doScaleCompensation) && (scaleDistance>0.0) )
-                                {
-                                    mocapnetCompressed.push_back( (float) iXMinusjXPlus0_5/scaleDistance );
-                                    mocapnetCompressed.push_back( (float) iYMinusjYPlus0_5/scaleDistance );
-                                }
-                            else
-                                {
-                                    mocapnetCompressed.push_back(iXMinusjXPlus0_5);
-                                    mocapnetCompressed.push_back(iYMinusjYPlus0_5);
-                                }
+                            fprintf(stderr,RED "Test running model %u was unsuccessful\n" NORMAL,i);
                         }
                 }
         }
 
-
-    return  mocapnetCompressed;
+    return result;
 }
-
-
 
 
 
@@ -269,7 +156,7 @@ std::vector<float> prepareMocapNETInputFromUncompressedInput(std::vector<float> 
 
     int addSyntheticPoints=1;
     int doScaleCompensation=0;
-    std::vector<float> mocapnetCompressed = compressMocapNETInput(mocapnetInput,addSyntheticPoints,doScaleCompensation);
+    std::vector<float> mocapnetCompressed = compressMocapNETInputToNSDM(mocapnetInput,addSyntheticPoints,doScaleCompensation);
 
 
     mocapnetUncompressedAndCompressed.insert(mocapnetUncompressedAndCompressed.end(), mocapnetInput.begin(), mocapnetInput.end());
@@ -327,7 +214,7 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
             return emptyResult;
         }
 
-    std::vector<float> direction = predictTensorflow(&mnet->allModel,mnetInput);
+    std::vector<float> direction = predictTensorflow(&mnet->models[0],mnetInput);
 
     if (direction.size()>0)
         {
@@ -336,7 +223,7 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
                 {
                     //Back ----------------------------------------------=
                     fprintf(stderr,"Back\n");
-                    std::vector<float> result = predictTensorflow(&mnet->backModel,mnetInput);
+                    std::vector<float> result = predictTensorflow(&mnet->models[2],mnetInput);
                     result[4]=undoOrientationTrickForBackOrientation(result[4]);
                     return result;
                 }
@@ -344,7 +231,7 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
                 {
                     //Front ----------------------------------------------
                     fprintf(stderr,"Front\n");
-                    std::vector<float> result = predictTensorflow(&mnet->frontModel,mnetInput);
+                    std::vector<float> result = predictTensorflow(&mnet->models[1],mnetInput);
                     return result;
                 }
         }
@@ -362,9 +249,21 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
 
 int unloadMocapNET(struct MocapNET * mnet)
 {
-    return (
-               ( unloadTensorflow(&mnet->allModel  ) ) &&
-               ( unloadTensorflow(&mnet->frontModel) ) &&
-               ( unloadTensorflow(&mnet->backModel) )
-           );
+    unsigned int result=0;
+    for (int i=0;  i<mnet->loadedModels; i++ )
+        {
+            result+=unloadTensorflow(&mnet->models[i]);
+        }
+
+    if (result==mnet->loadedModels)
+        {
+            result=1;
+        }
+    else
+        {
+            result=0;
+        }
+    mnet->loadedModels=0;
+
+    return result;
 }

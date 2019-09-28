@@ -316,7 +316,8 @@ int populateDemoFigures(cv::Mat * figures)
 int main(int argc, char *argv[])
 {
     fprintf(stderr,"Welcome to the MocapNET demo\n");
-
+   
+    unsigned int mocapNETMode=3;
     unsigned int forceCPUMocapNET=1;
     unsigned int forceCPU2DJointEstimation=0;
     float quality=1.0;
@@ -471,7 +472,9 @@ int main(int argc, char *argv[])
 
     fprintf(stderr,"Attempting to open input device\n");
     cv::Mat controlMat = Mat(Size(inputWidth2DJointDetector,2),CV_8UC3, Scalar(0,0,0));
-
+   
+   
+   //sudo echo 64 > /sys/module/usbcore/parameters/usbfs_memory_mb
     VideoCapture cap(webcam); // open the default camera
     if (webcam==0)
         {
@@ -518,7 +521,7 @@ int main(int argc, char *argv[])
     std::vector<std::vector<float> > points2DOutput;
     std::vector<std::vector<float> > points2DOutputGUIForcedView;
 
-    if ( loadMocapNET(&mnet,"test",quality,forceCPUMocapNET) )
+    if ( loadMocapNET(&mnet,"test",quality,mocapNETMode,forceCPUMocapNET) )
         {
             if (
                 loadTensorflowInstance(

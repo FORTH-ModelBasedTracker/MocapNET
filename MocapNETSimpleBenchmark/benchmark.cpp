@@ -183,6 +183,7 @@ int main(int argc, char *argv[])
 //     Parse command-line options, switch CPU/GPU execution and pick which benchmark to run
 //-------------------------------------------------------------------------------------------------
   int useCPUOnly=1;
+  unsigned int mocapNETMode=3;
   float quality=1.0;
   
   for (int i=0; i<argc; i++)
@@ -197,7 +198,7 @@ int main(int argc, char *argv[])
 
 
   struct MocapNET mnet={0};
-  if ( loadMocapNET(&mnet,"test",quality,useCPUOnly) )
+  if ( loadMocapNET(&mnet,"test",quality,mocapNETMode,useCPUOnly) )
   {
    std::vector<float> inputValues;
    std::vector<float> outputValuesExpected;
