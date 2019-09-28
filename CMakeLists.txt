@@ -45,9 +45,9 @@ ENDIF()
 
 if (ENABLE_OPENGL)
   add_definitions(-DENABLE_OPENGL)
-ELSE (ENABLE_REALSENSE) 
+ELSE (ENABLE_OPENGL) 
  MESSAGE("OpenGL support will not be compiled in")
-ENDIF(ENABLE_REALSENSE)
+ENDIF(ENABLE_OPENGL)
 
 
 find_package(OpenCV)
