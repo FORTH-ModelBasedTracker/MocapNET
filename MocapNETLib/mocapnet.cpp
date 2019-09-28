@@ -128,11 +128,11 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
                     std::vector<float>  prediction = predictTensorflow(&mnet->models[i],emptyValues);
                     if (prediction.size()>0)
                         {
-                            fprintf(stderr, GREEN "Test running model %u was successful\n" NORMAL ,i);
+                            fprintf(stderr, GREEN "Caching and testing model %u was successful\n" NORMAL ,i);
                         }
                     else
                         {
-                            fprintf(stderr,RED "Test running model %u was unsuccessful\n" NORMAL,i);
+                            fprintf(stderr,RED "Caching and testing model %u was unsuccessful\n" NORMAL,i);
                         }
                 }
         }
