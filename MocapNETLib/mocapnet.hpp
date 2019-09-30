@@ -1793,8 +1793,9 @@ struct MocapNETModelLimits
  */
 struct MocapNET
 {
-    unsigned int loadedModels;
    struct TensorflowInstance models[16]; 
+   unsigned int mode;
+   unsigned int loadedModels;
    struct MocapNETModelLimits modelLimits[16];  
 };
 

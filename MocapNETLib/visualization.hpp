@@ -39,6 +39,8 @@ int visualizePoints(
                      unsigned int skippedFrames,
                      signed int totalNumberOfFrames,
                      unsigned int numberOfFramesToGrab,
+                     const char * CPUName,
+                     const char * GPUName,                              
                      int drawFloor,
                      int drawNSDM, 
                      float fpsTotal,
@@ -53,5 +55,6 @@ int visualizePoints(
                      std::vector<float> mocapNETOutputWithGUIForcedView,
                      std::vector<std::vector<float> > points2DInput,
                      std::vector<std::vector<float> > points2DOutput,
-                     std::vector<std::vector<float> > points2DOutputGUIForcedView
+                     std::vector<std::vector<float> > points2DOutputGUIForcedView,
+                     void* optionalOpenGLCVMat
                    );

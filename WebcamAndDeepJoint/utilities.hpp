@@ -110,6 +110,7 @@ static const int UT_COCOSkeletonJointsParentRelationMap[] =
 
 
 
+std::vector <float> fillInTheBlanks(std::vector <float> previousVector,std::vector <float> currentVector);
 
 std::vector <float> smoothVector(std::vector <float> previousVector,std::vector <float> currentVector,float magnitude);
 
@@ -124,13 +125,17 @@ std::vector <float> smoothVector(std::vector <float> previousVector,std::vector 
  * @retval A vector of 2D Points that contains detections for each of the joints, A point marked as 0,0 means no detection
  */
 std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
-                                                                                                                                                           cv::Mat colorImageOriginal ,
-                                                                                                                                                           cv::Mat colorImageSmall,
-                                                                                                                                                           std::vector<cv::Mat> heatmaps ,
-                                                                                                                                                           float minThreshold  ,
-                                                                                                                                                           int visualize,
-                                                                                                                                                           unsigned int handleMessages
-                                                                                                                                                         );
+    cv::Mat colorImageOriginal ,
+    cv::Mat colorImageSmall,
+    std::vector<cv::Mat> heatmaps ,
+    float minThreshold , 
+    unsigned int frameNumber,
+    int visualize,
+    int saveVisualization,
+    unsigned int handleMessages
+);
+
+ 
 
 
 void convertUtilitiesSkeletonFormatToBODY25(struct skeletonCOCO * sk, std::vector<cv::Point_<float> > points);

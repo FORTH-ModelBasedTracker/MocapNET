@@ -17,6 +17,8 @@ using namespace cv;
 #include "../Tensorflow/tensorflow.hpp"
 #include "../MocapNETLib/mocapnet.hpp"
 #include "../MocapNETLib/bvh.hpp"
+#include "../MocapNETLib/opengl.hpp"
+#include "../MocapNETLib/tools.h"
 #include "../MocapNETLib/visualization.hpp"
 
 #include "cameraControl.hpp"
@@ -38,6 +40,7 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
     const cv::Mat &bgr ,
     float minThreshold,
     int visualize ,
+    int saveVisualization,
     unsigned int frameNumber,
     unsigned int inputWidth2DJointDetector,
     unsigned int inputHeight2DJointDetector,
@@ -56,7 +59,8 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
 
     if (visualize)
         {
-            cv::imshow("BGR",fr_res);
+            //This is not very useful anymore
+            //cv::imshow("BGR",fr_res);
         }
     fr_res.convertTo(fr_res,CV_32FC3);
     // pass the frame to the Estimator
@@ -126,7 +130,7 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
         }
 #endif // DISPLAY_ALL_HEATMAPS
 
-    return dj_getNeuralNetworkDetectionsForColorImage(bgr,smallBGR,heatmaps,minThreshold,visualize,0);
+    return dj_getNeuralNetworkDetectionsForColorImage(bgr,smallBGR,heatmaps,minThreshold,frameNumber,visualize,saveVisualization,0);
 }
 
 
@@ -198,6 +202,7 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
     std::vector<std::vector<float> > & points2DInput,
     float minThreshold,
     int visualize ,
+    int saveVisualization,
     float * fps,
     unsigned int frameNumber,
     unsigned int offsetX,
@@ -222,6 +227,7 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
                 bgr,
                 minThreshold,
                 visualize,
+                saveVisualization,
                 frameNumber,
                 inputWidth2DJointDetector,
                 inputHeight2DJointDetector,
@@ -322,15 +328,16 @@ int main(int argc, char *argv[])
     unsigned int forceCPU2DJointEstimation=0;
     float quality=1.0;
 
-    unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,frameLimitSet=0,visualize=1;
-    float joint2DSensitivity=0.35;
+    unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,frameLimitSet=0,visualize=1,save2DVisualization=0,visualizeOpenGLEnabled=0; 
+    int joint2DSensitivityPercent=35;
     const char * webcam = 0;
 
     int live=0,stop=0,visualizationType=0;
     int constrainPositionRotation=1,rotate=0;
-    int doCrop=1,tryForMaximumCrop=0,doSmoothing=3,drawFloor=1,drawNSDM=1;
+    int doCrop=1,tryForMaximumCrop=0,doSmoothing=5,drawFloor=1,drawNSDM=1;
     int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0,autoDirection=0,autoCount=0;
     int doFeetHeuristics=0;
+    int rememberPrevious2DPositions=0;
 
     unsigned int delay=1; //Just a little time to view the window..
 
@@ -360,7 +367,16 @@ int main(int argc, char *argv[])
     populateDemoFigures(demoFigures);
     //---------------------------------------------------------
 
-
+    char CPUName[512]={0}; 
+    if (getCPUName(CPUName,512))  
+        { fprintf(stderr,"CPU : %s\n",CPUName); }
+    
+    
+    char GPUName[512]={0}; 
+    if (getGPUName(GPUName,512))  
+        { fprintf(stderr,"GPU : %s\n",GPUName); }
+      
+      
     for (int i=0; i<argc; i++)
         {
             //In order to have an acceptable performance you should run 2D Joint estimation on GPU and MocapNET on CPU (which is the default configuration)
@@ -371,22 +387,22 @@ int main(int argc, char *argv[])
             if (strcmp(argv[i],"--openpose")==0)
                 {
                     networkPath=(char*) networkPathOpenPoseMiniStatic;
-                    networkOutputLayer[8]='1';
-                    joint2DSensitivity=0.4;
+                    networkOutputLayer[8]='1'; 
+                    joint2DSensitivityPercent=40;
                     numberOfOutputTensors = 4;
                 }
             else if (strcmp(argv[i],"--forth")==0)
                 {
                     networkPath=(char*) networkPathFORTHStatic;
-                    networkOutputLayer[8]='0';
-                    joint2DSensitivity=0.35;
+                    networkOutputLayer[8]='0'; 
+                    joint2DSensitivityPercent=30;
                     numberOfOutputTensors = 3;
                 }
             else if (strcmp(argv[i],"--vnect")==0)
                 {
                     networkPath = (char*) networkPathVnectStatic;
-                    networkOutputLayer[8]='1';
-                    joint2DSensitivity=0.20;
+                    networkOutputLayer[8]='1'; 
+                    joint2DSensitivityPercent=20;
                     numberOfOutputTensors = 4;
                 }
             else
@@ -404,6 +420,14 @@ int main(int argc, char *argv[])
                     {
                         quitAfterNSkippedFrames=atoi(argv[i+1]);
                     }
+                 else if  ( (strcmp(argv[i],"--save2D")==0) || (strcmp(argv[i],"--save2d")==0) )
+                 {
+                     save2DVisualization=1;
+                 }
+                 else if (strcmp(argv[i],"--opengl")==0)
+                 {
+                     visualizeOpenGLEnabled=1;
+                 }   
                 else if (strcmp(argv[i],"--novisualization")==0)
                     {
                         visualize=0;
@@ -449,6 +473,10 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"--nocrop")==0)
                     {
                         doCrop=0;
+                    }
+                else if (strcmp(argv[i],"--mode")==0)
+                    { 
+                        mocapNETMode=atoi(argv[i+1]);
                     }
                 else if (strcmp(argv[i],"--live")==0)
                     {
@@ -506,6 +534,7 @@ int main(int argc, char *argv[])
         }
 
     cv::Mat frame;
+    cv::Mat openGLFramePermanentMat; 
     struct boundingBox cropBBox= {0};
     unsigned int croppedDimensionWidth=0,croppedDimensionHeight=0,offsetX=0,offsetY=0;
 
@@ -514,10 +543,11 @@ int main(int argc, char *argv[])
 
 
 
-    std::vector<float> flatAndNormalizedPoints;
+    std::vector<float> flatAndNormalized2DPoints;
+    std::vector<float> previousFlatAndNormalized2DPoints;
     std::vector<std::vector<float> > bvhFrames;
-    std::vector<float> previousBvhOutput;
     std::vector<float> bvhOutput;
+    std::vector<float> previousBvhOutput;
     std::vector<std::vector<float> > points2DOutput;
     std::vector<std::vector<float> > points2DOutputGUIForcedView;
 
@@ -635,13 +665,14 @@ int main(int argc, char *argv[])
 
                                             // Get 2D Skeleton Input from Frame
                                             float fps2DJointDetector = 0;
-                                            flatAndNormalizedPoints = returnMocapNETInputFrom2DDetectorOutput(
+                                            flatAndNormalized2DPoints = returnMocapNETInputFrom2DDetectorOutput(
                                                                           &net,
                                                                           frame,
                                                                           &cropBBox,
                                                                           points2DInput,
-                                                                          joint2DSensitivity,
+                                                                          (float) joint2DSensitivityPercent/100,
                                                                           visualize,
+                                                                          save2DVisualization,
                                                                           &fps2DJointDetector,
                                                                           frameNumber,
                                                                           offsetX,
@@ -657,11 +688,19 @@ int main(int argc, char *argv[])
                                                                           doFeetHeuristics
                                                                       );
 
+
+                                            if (rememberPrevious2DPositions)
+                                            {
+                                                fprintf(stderr,"TODO: implement previous 2D position remberence :P");
+                                                //flatAndNormalized2DPoints = fillInTheBlanks(previousFlatAndNormalized2DPoints,flatAndNormalized2DPoints);
+                                                previousFlatAndNormalized2DPoints = flatAndNormalized2DPoints;
+                                            }
+
                                             // Get MocapNET prediction
                                             unsigned long startTime = GetTickCountMicroseconds();
-                                            bvhOutput = runMocapNET(&mnet,flatAndNormalizedPoints);
+                                            bvhOutput = runMocapNET(&mnet,flatAndNormalized2DPoints);
                                             unsigned long endTime = GetTickCountMicroseconds();
-
+                                           fprintf(stderr,"Just run MocapNET and got back a %lu sized vector \n",bvhOutput.size());
                                             //-------------------------------------------------------------------------------------------------------------------------
                                             // Adding a vary baseline smoothing after a project request, it should be noted
                                             // that no results during the original BMVC2019 used any smoothing of any kind
@@ -703,7 +742,7 @@ int main(int argc, char *argv[])
                                                  {
                                                      autoCount=0;
                                                      
-                                                     if ( (autoDirection==1) && (yawValue==0) )      { autoDirection=0; } else
+                                                     if ( (autoDirection==1) && (yawValue==0) )   { autoDirection=0; } else
                                                      if ( (autoDirection==0) && (yawValue==360) ) { autoDirection=1; }
                                                      
                                                      if (autoDirection==0) { yawValue+=1; } else
@@ -719,7 +758,7 @@ int main(int argc, char *argv[])
                                                         {
                                                             bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_XPOSITION]=0.0;
                                                             bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_YPOSITION]=0.0;
-                                                            bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-160.0 - (float) distance;
+                                                            bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-190.0 - (float) distance;
                                                             bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_ZROTATION]=(float) rollValue;
                                                             bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) yawValue;
                                                             bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) pitchValue;
@@ -746,13 +785,13 @@ int main(int argc, char *argv[])
                                             //to demonstrate how easy it is to get the output joint information
                                             if (bvhOutput.size()>0)
                                                 {
-                                                    fprintf(stderr,"Right Shoulder Z X Y = %0.2f,%0.2f,%0.2f\n",
+                                                    fprintf(stderr,"Right Shoulder Rotations Z X Y = %0.2f,%0.2f,%0.2f\n",
                                                             bvhOutput[MOCAPNET_OUTPUT_RSHOULDER_ZROTATION],
                                                             bvhOutput[MOCAPNET_OUTPUT_RSHOULDER_XROTATION],
                                                             bvhOutput[MOCAPNET_OUTPUT_RSHOULDER_YROTATION]
                                                            );
 
-                                                    fprintf(stderr,"Left Shoulder Z X Y = %0.2f,%0.2f,%0.2f\n",
+                                                    fprintf(stderr,"Left Shoulder Rotations Z X Y = %0.2f,%0.2f,%0.2f\n",
                                                             bvhOutput[MOCAPNET_OUTPUT_LSHOULDER_ZROTATION],
                                                             bvhOutput[MOCAPNET_OUTPUT_LSHOULDER_XROTATION],
                                                             bvhOutput[MOCAPNET_OUTPUT_LSHOULDER_YROTATION]
@@ -776,8 +815,10 @@ int main(int argc, char *argv[])
                                                             cv::createTrackbar("Visualization Demo", "3D Control", &visualizationType,14);
                                                             cv::createTrackbar("Rotate Feed", "3D Control", &rotate, 4);
                                                             cv::createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 2);
-                                                            cv::createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
-                                                            cv::createTrackbar("Feet Heuristics", "3D Control", &doFeetHeuristics,1);
+                                                            cv::createTrackbar("Automatic Crop", "3D Control", &doCrop, 1); 
+                                                            cv::createTrackbar("2D NN Sensitivity", "3D Control", &joint2DSensitivityPercent,100);
+                                                            cv::createTrackbar("Remember Previous 2D", "3D Control", &rememberPrevious2DPositions,1);
+                                                            cv::createTrackbar("Feet Heuristics", "3D Control", &doFeetHeuristics,1); 
                                                             cv::createTrackbar("Smooth 3D Output", "3D Control", &doSmoothing, 10);
                                                             cv::createTrackbar("Maximize Crop", "3D Control", &tryForMaximumCrop, 1);
                                                             cv::createTrackbar("Draw Floor", "3D Control", &drawFloor, 1);
@@ -790,9 +831,9 @@ int main(int argc, char *argv[])
 
 
                                                             cv::namedWindow("3D Points Output");
-                                                            cv::moveWindow("3D Control",inputWidth2DJointDetector,inputHeight2DJointDetector);
+                                                            cv::moveWindow("3D Control",inputWidth2DJointDetector,0); //y=inputHeight2DJointDetector
                                                             cv::moveWindow("2D NN Heatmaps",0,0);
-                                                            cv::moveWindow("BGR",0,inputHeight2DJointDetector);
+                                                            //cv::moveWindow("BGR",inputWidth2DJointDetector,0);
                                                             //cv::moveWindow("2D Detections",inputWidth2DJointDetector,0);
                                                         }
 
@@ -803,6 +844,31 @@ int main(int argc, char *argv[])
 
 
 
+
+
+                                                    cv::Mat * openGLMatForVisualization = 0;
+                                                    if (visualizeOpenGLEnabled)
+                                                    {
+                                                    unsigned int openGLFrameWidth=visWidth,openGLFrameHeight=visHeight;
+                                                    char * openGLFrame = visualizeOpenGL(&openGLFrameWidth,&openGLFrameHeight);
+                                                    //=====================================================================
+                                                    if (openGLFrame!=0)
+                                                    {
+                                                        fprintf(stderr,"Got Back a frame..!\n");
+                                                          cv::Mat openGLMat(openGLFrameHeight, openGLFrameWidth, CV_8UC3);
+                                                          unsigned char *   initialPointer = openGLMat.data;
+                                                          openGLMat.data=(unsigned char * ) openGLFrame;
+ 
+                                                          cv::cvtColor(openGLMat,openGLFramePermanentMat,COLOR_RGB2BGR);
+                                                          //cv::imshow("OpenGL",openGLFramePermanentMat);
+                                                          openGLMatForVisualization = &openGLFramePermanentMat; 
+                                                          openGLMat.data=initialPointer;
+                                                    }//=====================================================================
+                                                        
+                                                    }
+                                                    
+                                                    
+
                                                     if (visualizationType==0)
                                                         {
                                                             visualizePoints(
@@ -811,6 +877,8 @@ int main(int argc, char *argv[])
                                                                 skippedFrames,
                                                                 totalNumberOfFrames,
                                                                 frameLimit,
+                                                                CPUName,
+                                                                GPUName,
                                                                 drawFloor,
                                                                 drawNSDM,
                                                                 fpsTotal,
@@ -820,12 +888,13 @@ int main(int argc, char *argv[])
                                                                 visWidth,
                                                                 visHeight,
                                                                 0,
-                                                                flatAndNormalizedPoints,
+                                                                flatAndNormalized2DPoints,
                                                                 bvhOutput,
                                                                 bvhForcedViewOutput,
                                                                 points2DInput,
                                                                 points2DOutput,
-                                                                points2DOutputGUIForcedView
+                                                                points2DOutputGUIForcedView,
+                                                                (void*) openGLMatForVisualization
                                                             );
                                                         }
                                                     else
@@ -868,7 +937,7 @@ int main(int argc, char *argv[])
                                                         {
                                                             cv::resizeWindow("3D Control",inputWidth2DJointDetector,inputHeight2DJointDetector);
                                                             cv::moveWindow("3D Points Output",inputWidth2DJointDetector*2,0);
-                                                            cv::moveWindow("2D Detections",inputWidth2DJointDetector,0);
+                                                            cv::moveWindow("2D Detections",0,inputHeight2DJointDetector);
                                                         }
 
 

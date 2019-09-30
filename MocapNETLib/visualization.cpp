@@ -491,6 +491,117 @@ int visualizeFigure(const char* windowName,cv::Mat &img)
 
 
 
+
+int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOutputGUIForcedView)
+{
+    char textInfo[512];
+    
+    for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
+        {
+            float jointPointX = points2DOutputGUIForcedView[jointID][0];
+            float jointPointY = points2DOutputGUIForcedView[jointID][1];
+            cv::Point jointPoint(jointPointX,jointPointY);
+            //fprintf(stderr,"L x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
+
+            if ( (jointPointX!=0) && (jointPointY!=0) )
+                {
+
+                    //unsigned int parentID = Body25SkeletonJointsParentRelationMap[jointID];
+                    unsigned int parentID = getBVHParentJoint(jointID);
+                    if (parentID!=jointID)
+                        {
+                            if (parentID<points2DOutputGUIForcedView.size())
+                                {
+                                    float parentPointX = points2DOutputGUIForcedView[parentID][0];
+                                    float parentPointY = points2DOutputGUIForcedView[parentID][1];
+                                    cv::Point parentPoint(parentPointX,parentPointY);
+
+                                    if ( (parentPointX!=0) && (parentPointY!=0) )
+                                        {
+                                            cv::line(outputMat,jointPoint,parentPoint, cv::Scalar(0,255,0), 5.0);
+                                        }
+                                }
+                            else
+                                {
+                                    fprintf(stderr,"Joint Out Of Bounds..");
+                                }
+
+                        }
+
+                }
+        }
+
+
+//Just the points and text ( foreground )
+    for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
+        {
+            float jointPointX = points2DOutputGUIForcedView[jointID][0];
+            float jointPointY = points2DOutputGUIForcedView[jointID][1];
+            //fprintf(stderr,"P x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
+
+
+            if ( (jointPointX!=0) && (jointPointY!=0) )
+                {
+                    cv::Point jointPoint(jointPointX+10,jointPointY);
+                    cv::circle(outputMat,jointPoint,5,cv::Scalar(255,0,0),3,8,0);
+
+                    const char * jointName = getBVHJointName(jointID);
+                    if (jointName!=0)
+                        {
+                            snprintf(textInfo,512,"%s(%u)",jointName,jointID);
+                        }
+                    else
+                        {
+                            snprintf(textInfo,512,"-(%u)",jointID);
+                        }
+                    cv::putText(outputMat, textInfo  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(255), 0.2, 8 );
+                }
+        }
+        
+     return 1;   
+}
+
+
+
+
+int drawEndEffectorTrack(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOutputGUIForcedView)
+{ 
+             int maxEndEffectorHistory=10;
+            unsigned int jointIDLeftHand= getBVHJointIDFromJointName("lHand");
+            cv::Point leftHand(points2DOutputGUIForcedView[jointIDLeftHand][0],points2DOutputGUIForcedView[jointIDLeftHand][1]);
+            leftEndEffector.push_back(leftHand);
+            if (leftEndEffector.size()>maxEndEffectorHistory)
+                {
+                    leftEndEffector.erase(leftEndEffector.begin());
+                }
+
+            unsigned int jointIDRightHand= getBVHJointIDFromJointName("rHand");
+            cv::Point rightHand(points2DOutputGUIForcedView[jointIDRightHand][0],points2DOutputGUIForcedView[jointIDRightHand][1]);
+            rightEndEffector.push_back(rightHand);
+            if (rightEndEffector.size()>maxEndEffectorHistory)
+                {
+                    rightEndEffector.erase(rightEndEffector.begin());
+                }
+
+             float stepColorD=(float) 255/maxEndEffectorHistory;
+            for (int step=0; step<rightEndEffector.size(); step++)
+                {
+                    float stepColor = 255 - step*stepColorD;
+                    if (step>1)
+                    {
+                                            cv::line(outputMat,leftEndEffector[step],leftEndEffector[step-1], cv::Scalar(0,stepColor,stepColor), 1.0);
+                                            cv::line(outputMat,rightEndEffector[step],rightEndEffector[step-1], cv::Scalar(0,stepColor,stepColor), 1.0);
+                        
+                    }
+                    cv::circle(outputMat,leftEndEffector[step],1,cv::Scalar(0,stepColor,stepColor),3,8,0);
+                    cv::circle(outputMat,rightEndEffector[step],1,cv::Scalar(0,stepColor,stepColor),3,8,0);
+                }
+                
+        return 1;        
+}
+
+
+
 #endif
 
 
@@ -502,6 +613,8 @@ int visualizePoints(
     unsigned int skippedFrames,
     signed int totalNumberOfFrames,
     unsigned int numberOfFramesToGrab,
+    const char * CPUName,
+    const char * GPUName,                  
     int drawFloor,
     int drawNSDM,
     float fpsTotal,
@@ -516,9 +629,10 @@ int visualizePoints(
     std::vector<float> mocapNETOutputWithGUIForcedView,
     std::vector<std::vector<float> > points2DInput,
     std::vector<std::vector<float> > points2DOutput,
-    std::vector<std::vector<float> > points2DOutputGUIForcedView
+    std::vector<std::vector<float> > points2DOutputGUIForcedView,
+    void* optionalOpenGLCVMat
 )
-{
+{  
 #if USE_OPENCV
     if (mocapNETOutput.size()==0)
         {
@@ -540,7 +654,7 @@ int visualizePoints(
 
 
 //------------------------------------------------------------------------------------------
-//Draw floor
+//  Draw floor as a grid of lines 
 //------------------------------------------------------------------------------------------
     if (drawFloor)
         {
@@ -598,107 +712,39 @@ int visualizePoints(
 
 
     //-----------------------------------------------------------------------------------------------------------------------------
+    //  The yellow lines that track the hand movement! 
     int  endEffectorHistory=1;
     //-----------------------------------------------------------------------------------------------------------------------------
     if (endEffectorHistory)
         {
-            int maxEndEffectorHistory=10;
-            unsigned int jointIDLeftHand= getBVHJointIDFromJointName("lHand");
-            cv::Point leftHand(points2DOutputGUIForcedView[jointIDLeftHand][0],points2DOutputGUIForcedView[jointIDLeftHand][1]);
-            leftEndEffector.push_back(leftHand);
-            if (leftEndEffector.size()>maxEndEffectorHistory)
-                {
-                    leftEndEffector.erase(leftEndEffector.begin());
-                }
-
-            unsigned int jointIDRightHand= getBVHJointIDFromJointName("rHand");
-            cv::Point rightHand(points2DOutputGUIForcedView[jointIDRightHand][0],points2DOutputGUIForcedView[jointIDRightHand][1]);
-            rightEndEffector.push_back(rightHand);
-            if (rightEndEffector.size()>maxEndEffectorHistory)
-                {
-                    rightEndEffector.erase(rightEndEffector.begin());
-                }
-
-             float stepColorD=(float) 255/maxEndEffectorHistory;
-            for (int step=0; step<rightEndEffector.size(); step++)
-                {
-                    float stepColor = 255 - step*stepColorD;
-                    if (step>1)
-                    {
-                                            cv::line(img,leftEndEffector[step],leftEndEffector[step-1], cv::Scalar(0,stepColor,stepColor), 1.0);
-                                            cv::line(img,rightEndEffector[step],rightEndEffector[step-1], cv::Scalar(0,stepColor,stepColor), 1.0);
-                        
-                    }
-                    cv::circle(img,leftEndEffector[step],1,cv::Scalar(0,stepColor,stepColor),3,8,0);
-                    cv::circle(img,rightEndEffector[step],1,cv::Scalar(0,stepColor,stepColor),3,8,0);
-                }
+             drawEndEffectorTrack(img,points2DOutputGUIForcedView);
         }
     //-----------------------------------------------------------------------------------------------------------------------------
 
+ 
 
-    for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
-        {
-            float jointPointX = points2DOutputGUIForcedView[jointID][0];
-            float jointPointY = points2DOutputGUIForcedView[jointID][1];
-            cv::Point jointPoint(jointPointX,jointPointY);
-            //fprintf(stderr,"L x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
-
-            if ( (jointPointX!=0) && (jointPointY!=0) )
-                {
-
-                    //unsigned int parentID = Body25SkeletonJointsParentRelationMap[jointID];
-                    unsigned int parentID = getBVHParentJoint(jointID);
-                    if (parentID!=jointID)
-                        {
-                            if (parentID<points2DOutputGUIForcedView.size())
-                                {
-                                    float parentPointX = points2DOutputGUIForcedView[parentID][0];
-                                    float parentPointY = points2DOutputGUIForcedView[parentID][1];
-                                    cv::Point parentPoint(parentPointX,parentPointY);
-
-                                    if ( (parentPointX!=0) && (parentPointY!=0) )
-                                        {
-                                            cv::line(img,jointPoint,parentPoint, cv::Scalar(0,255,0), 5.0);
-                                        }
-                                }
-                            else
-                                {
-                                    fprintf(stderr,"Joint Out Of Bounds..");
-                                }
-
-                        }
-
-                }
-        }
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+   //The main star of the show , the skeleton..
+    drawSkeleton(img,points2DOutputGUIForcedView);
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
 
 
-//Just the points and text ( foreground )
-    for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
-        {
-            float jointPointX = points2DOutputGUIForcedView[jointID][0];
-            float jointPointY = points2DOutputGUIForcedView[jointID][1];
-            //fprintf(stderr,"P x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
+ 
 
-
-            if ( (jointPointX!=0) && (jointPointY!=0) )
-                {
-                    cv::Point jointPoint(jointPointX+10,jointPointY);
-                    cv::circle(img,jointPoint,5,cv::Scalar(255,0,0),3,8,0);
-
-                    const char * jointName = getBVHJointName(jointID);
-                    if (jointName!=0)
-                        {
-                            snprintf(textInfo,512,"%s(%u)",jointName,jointID);
-                        }
-                    else
-                        {
-                            snprintf(textInfo,512,"-(%u)",jointID);
-                        }
-                    cv::putText(img, textInfo  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(255), 0.2, 8 );
-                }
-        }
-
-
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //                  We print all the lines of text that give information
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
     cv::Point txtPosition;
     txtPosition.x=20;
     txtPosition.y=20;
@@ -718,6 +764,25 @@ int visualizePoints(
     cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
 
 
+    if (CPUName!=0)
+    {
+      if (strlen(CPUName)!=0) 
+      {
+        snprintf(textInfo,512,"CPU:%s",CPUName);
+        txtPosition.y+=30;
+        cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);   
+      } 
+    }
+     
+    if (GPUName!=0)
+    {
+      if (strlen(GPUName)!=0) 
+      {
+        snprintf(textInfo,512,"GPU:%s",GPUName);
+        txtPosition.y+=30;
+        cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);   
+      } 
+    }
     if (totalNumberOfFrames>0)
         {
             snprintf(textInfo,512,"Frame %u/%u",frameNumber,totalNumberOfFrames);
@@ -737,11 +802,7 @@ int visualizePoints(
             snprintf(textInfo,512,"Skipped/Corrupted Frames %u",skippedFrames);
             cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
         }
-
-//  txtPosition.y+=40;
-//  snprintf(textInfo,512,"Input Quality : %s",fpsAcquisition);
-//  cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,4,8);
-
+ 
     txtPosition.y+=30;
     snprintf(textInfo,512,"Acquisition : %0.2f fps",fpsAcquisition);
     cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
@@ -757,7 +818,12 @@ int visualizePoints(
 
     txtPosition.y+=30;
     snprintf(textInfo,512,"Total : %0.2f fps",fpsTotal);
-    cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
+    cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8); 
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    
+    
+    
 
     if (drawNSDM)
         {
@@ -770,12 +836,30 @@ int visualizePoints(
                 200
             );
         }
+  
+   if (optionalOpenGLCVMat!=0)
+   { 
+     cv::Mat * glMat = (cv::Mat *) optionalOpenGLCVMat;
+     float alpha=0.3;
+     cv::addWeighted(*glMat, alpha, img, 1 - alpha, 0, img) ;
+   }
+   
+   
 
+    //At last we are able to show the window..
     cv::imshow(windowName,img);
+    
     if (handleMessages)
         {
             cv::waitKey(1);
         }
+        
+
+    //Initially place window top left..
+    if (frameNumber==0)
+      { cv::moveWindow(windowName,0,0); }
+
+        
     return 1;
 #else
     fprintf(stderr,"OpenCV code not present in this build, cannot show visualization..\n");

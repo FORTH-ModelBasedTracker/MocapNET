@@ -35,6 +35,35 @@ int executeCommandLineNum(const char *  command , char * what2GetBack , unsigned
     return 1;
 }
 
+/**
+ * @brief Simple way to get our CPU model name..
+ * @retval 1=Success/0=Failure
+ */
+int getCPUName(char * str,unsigned int maxLength)
+{
+     if (!executeCommandLineNum("cat /proc/cpuinfo | grep \"model name\" | cut -d':' -f2 | tr -s ' '|  uniq",str,maxLength,0))
+       {
+         fprintf(stderr,"Could not get our CPU model name\n");
+         return 0;
+       }
+     return 1;  
+}
+
+/**
+ * @brief Simple way to get our GPU model name..
+ * @retval 1=Success/0=Failure
+ */
+int getGPUName(char * str,unsigned int maxLength)
+{ 
+     if (!executeCommandLineNum("lspci | grep VGA  | cut -d':' -f3 | tr -s ' '|  uniq",str,maxLength,0))
+       {
+         fprintf(stderr,"Could not get our GPU model name\n");
+         return 0;
+       }
+     return 1;  
+}
+
+
 unsigned long GetTickCountMicrosecondsMN()
 {
     struct timespec ts;

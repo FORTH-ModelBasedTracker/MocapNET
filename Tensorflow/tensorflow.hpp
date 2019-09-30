@@ -19,6 +19,7 @@
  */
 struct TensorflowInstance
 {
+  char modelPath[1024];
   char inputLayerName[512];
   char outputLayerName[512];
 

@@ -67,7 +67,10 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
 
     switch (mode)
         {
+
+
         case 3:
+            mnet->mode=3;
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             //                                                  Regular 3 Model setup such as the BMVC 2019 Work..
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -93,8 +96,8 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
             mnet->modelLimits[2].numberOfLimits=2;
             mnet->modelLimits[2].minimumYaw1=-90.0;
             mnet->modelLimits[2].maximumYaw1=-270.0;
-            mnet->modelLimits[2].minimumYaw1=90.0;
-            mnet->modelLimits[2].maximumYaw1=270.0;
+            mnet->modelLimits[2].minimumYaw2=90.0;
+            mnet->modelLimits[2].maximumYaw2=270.0;
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             if(result==3)
@@ -107,6 +110,71 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
                     result=0;
                 }
             break;
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+        case 5:
+            mnet->mode=5; 
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            //                                                  Regular 3 Model setup such as the BMVC 2019 Work..
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            snprintf(modelPath,1024,"combinedModel/%0.1f/all.pb",qualitySetting);
+            result += loadTensorflowInstance(&mnet->models[0]  ,modelPath  ,"input_all"  ,"result_all/concat",forceCPU);
+            mnet->modelLimits[0].isFlipped=0;
+            mnet->modelLimits[0].numberOfLimits=1;
+            mnet->modelLimits[0].minimumYaw1=-360.0;
+            mnet->modelLimits[0].maximumYaw1=360.0;
+
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            snprintf(modelPath,1024,"combinedModel/%0.1f/frontA.pb",qualitySetting);
+            result += loadTensorflowInstance(&mnet->models[1],modelPath,"input_frontA","result_frontA/concat",forceCPU);
+            mnet->modelLimits[1].isFlipped=0;
+            mnet->modelLimits[1].numberOfLimits=1;
+            mnet->modelLimits[1].minimumYaw1=-90.0;
+            mnet->modelLimits[1].maximumYaw1=0.0;
+
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            snprintf(modelPath,1024,"combinedModel/%0.1f/frontB.pb",qualitySetting);
+            result += loadTensorflowInstance(&mnet->models[2],modelPath,"input_frontB","result_frontB/concat",forceCPU);
+            mnet->modelLimits[2].isFlipped=0;
+            mnet->modelLimits[2].numberOfLimits=1;
+            mnet->modelLimits[2].minimumYaw1=0.0;
+            mnet->modelLimits[2].maximumYaw1=90.0;
+
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            snprintf(modelPath,1024,"combinedModel/%0.1f/backA.pb",qualitySetting);
+            result += loadTensorflowInstance(&mnet->models[3] ,modelPath ,"input_backA" ,"result_backA/concat",forceCPU);
+            mnet->modelLimits[3].isFlipped=0;
+            mnet->modelLimits[3].numberOfLimits=1;
+            mnet->modelLimits[3].minimumYaw1=-90.0;
+            mnet->modelLimits[3].maximumYaw1=-270.0; 
+
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            snprintf(modelPath,1024,"combinedModel/%0.1f/backB.pb",qualitySetting);//
+            result += loadTensorflowInstance(&mnet->models[4] ,modelPath ,"input_backB" ,"result_backB/concat",forceCPU);
+            mnet->modelLimits[4].isFlipped=0;
+            mnet->modelLimits[4].numberOfLimits=1;
+            mnet->modelLimits[4].minimumYaw1=-90.0;
+            mnet->modelLimits[4].maximumYaw1=-270.0; 
+
+            if(result==5)
+                {
+                    result=1;
+                    mnet->loadedModels=5;
+                }
+            else
+                {
+                    result=0;
+                }
+            break;
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
         default:
             fprintf(stderr,RED "You requested a MocapNET configuration that is incorrect  ( mode=%u )\n" NORMAL , mode);
@@ -128,11 +196,11 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
                     std::vector<float>  prediction = predictTensorflow(&mnet->models[i],emptyValues);
                     if (prediction.size()>0)
                         {
-                            fprintf(stderr, GREEN "Caching and testing model %u was successful\n" NORMAL ,i);
+                            fprintf(stderr, GREEN "Caching and testing model %u (%s) was successful\n" NORMAL ,i,mnet->models[i].modelPath);
                         }
                     else
                         {
-                            fprintf(stderr,RED "Caching and testing model %u was unsuccessful\n" NORMAL,i);
+                            fprintf(stderr,RED "Caching and testing model %u (%s) was unsuccessful\n" NORMAL,i,mnet->models[i].modelPath);
                         }
                 }
         }
@@ -155,7 +223,7 @@ std::vector<float> prepareMocapNETInputFromUncompressedInput(std::vector<float> 
 
 
     int addSyntheticPoints=1;
-    int doScaleCompensation=0;
+    int doScaleCompensation=1;
     std::vector<float> mocapnetCompressed = compressMocapNETInputToNSDM(mocapnetInput,addSyntheticPoints,doScaleCompensation);
 
 
@@ -185,9 +253,94 @@ float undoOrientationTrickForBackOrientation(float orientation)
     return orientation;
 }
 
+
+std::vector<float>  MNET3Classes(struct MocapNET * mnet,std::vector<float> mnetInput,std::vector<float> direction )
+{
+    std::vector<float> emptyResult;
+    
+    if (direction.size()>0)
+        { 
+            fprintf(stderr,NORMAL "3Class Direction is : %0.2f " NORMAL , direction[0] );
+            if ( (direction[0]<-90) || (direction[0]>90) )
+                {
+                    //Back ----------------------------------------------=
+                    fprintf(stderr,"Back\n");
+                    std::vector<float> result = predictTensorflow(&mnet->models[2],mnetInput);
+                    if (result.size()>4)
+                            { result[4]=undoOrientationTrickForBackOrientation(result[4]); }
+                    return result;
+                }
+            else
+                {
+                    //Front ----------------------------------------------
+                    fprintf(stderr,"Front\n");
+                    std::vector<float> result = predictTensorflow(&mnet->models[1],mnetInput);
+                    return result;
+                } 
+        }
+    return emptyResult;       
+}
+
+
+
+std::vector<float>  MNET5Classes(struct MocapNET * mnet,std::vector<float> mnetInput,std::vector<float> direction )
+{
+    fprintf(stderr,NORMAL "5Class Direction is : %0.2f " NORMAL , direction[0] );
+    std::vector<float> result;
+    
+    if (direction.size()>0)
+        {
+    
+            if ( (direction[0]>=-90) && (direction[0]<=0) )
+                {
+                    //Front ----------------------------------------------
+                    fprintf(stderr,"Front A\n");
+                    result = predictTensorflow(&mnet->models[1],mnetInput); 
+                }
+            else
+            if ( (direction[0]<=90) && (direction[0]>=0) )
+                {
+                    //Front ----------------------------------------------
+                    fprintf(stderr,"Front B\n");
+                    result = predictTensorflow(&mnet->models[2],mnetInput); 
+                }
+            else
+            if ( (direction[0]<=-90) && (direction[0]>=-180) )
+                {
+                    //Back  ----------------------------------------------
+                    fprintf(stderr,"Back A\n");
+                    result = predictTensorflow(&mnet->models[3],mnetInput); 
+                     if (result.size()>4)
+                        { result[4]=undoOrientationTrickForBackOrientation(result[4]); }
+                } 
+               else
+            if ( (direction[0]>=90) && (direction[0]<=180) )
+                {
+                    //Back  ----------------------------------------------
+                    fprintf(stderr,"Back B\n");
+                    result = predictTensorflow(&mnet->models[4],mnetInput); 
+                     if (result.size()>4)
+                        {result[4]=undoOrientationTrickForBackOrientation(result[4]); }
+                }  else
+                {
+                    fprintf(stderr,RED "Unhandled orientation \n" NORMAL);
+                }
+        }
+       return result;         
+}
+
+
+
 std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
 {
     std::vector<float> emptyResult;
+
+    if (mnet==0)
+    {
+            fprintf(stderr,"MocapNET: invalid initialization\n");
+           return emptyResult;        
+    }
+    
     std::vector<float> mnetInput;
 
     if (input.size()==749)
@@ -218,22 +371,14 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
 
     if (direction.size()>0)
         {
-            fprintf(stderr,NORMAL "Direction is : %0.2f " NORMAL , direction[0] );
-            if ( (direction[0]<-90) || (direction[0]>90) )
-                {
-                    //Back ----------------------------------------------=
-                    fprintf(stderr,"Back\n");
-                    std::vector<float> result = predictTensorflow(&mnet->models[2],mnetInput);
-                    result[4]=undoOrientationTrickForBackOrientation(result[4]);
-                    return result;
-                }
-            else
-                {
-                    //Front ----------------------------------------------
-                    fprintf(stderr,"Front\n");
-                    std::vector<float> result = predictTensorflow(&mnet->models[1],mnetInput);
-                    return result;
-                }
+            if (mnet->mode==3)
+            {
+                return MNET3Classes(mnet,mnetInput,direction);
+            } else
+            if (mnet->mode==5)
+            {
+                return MNET5Classes(mnet,mnetInput,direction);
+            }    
         }
     else
         {

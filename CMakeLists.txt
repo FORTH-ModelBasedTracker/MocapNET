@@ -6,14 +6,28 @@ set(CMAKE_C_FLAGS "-fPIC")
 
 OPTION (ENABLE_OPENGL OFF)
 
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD 11)  
 set(TENSORFLOW_ROOT "/usr/local/lib/" CACHE PATH "tensorflow root") 
 set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")  
  
 
+include_directories(${TENSORFLOW_INCLUDE_ROOT})
+ADD_LIBRARY(TensorflowFramework SHARED IMPORTED) 
+SET_TARGET_PROPERTIES(TensorflowFramework PROPERTIES IMPORTED_LOCATION ${TENSORFLOW_ROOT}/libtensorflow_framework.so) 
+
+ADD_LIBRARY(Tensorflow SHARED IMPORTED)
+SET_TARGET_PROPERTIES(Tensorflow PROPERTIES IMPORTED_LOCATION ${TENSORFLOW_ROOT}/libtensorflow.so)  
+
+
+
 #If our development environment has RGBDAcquisition then we can use BVH capabilities..
-set(BVH_SOURCE " ")
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------
+set(BVH_SOURCE "")
 IF(EXISTS "${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader")
 add_definitions(-DUSE_BVH)
 set(BVH_SOURCE 
@@ -40,14 +54,147 @@ set(BVH_SOURCE
  MESSAGE("BVH Code found and will be used..")
  #MESSAGE("${BVH_SOURCE}")
 ENDIF()
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
+
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------
+set(OPENGL_LIBS   "")
+set(OPENGL_SOURCE "")
 if (ENABLE_OPENGL)
-  add_definitions(-DENABLE_OPENGL)
+IF(EXISTS "${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library")
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/RGBDAcquisition/tools/Codecs)
+add_subdirectory(${CMAKE_SOURCE_DIR}/RGBDAcquisition/tools/Calibration)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library) #OpenGLAcquisition
+add_definitions(-DUSE_OPENGL)
+add_definitions(-DUSE_GLEW)
+set(OPENGL_LIBS  rt m GL GLU GLEW X11 Codecs CalibrationLibrary)
+set(OPENGL_SOURCE 
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/OpenGLAcquisition.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/OpenGLAcquisition.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/System/glx.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/System/glx.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/System/glx2.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/System/glx2.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/System/glx3.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/System/glx3.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/main.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/OGLRendererSandbox.h
+              #3D Models and how to load them  
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_loader.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_loader.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_loader_obj.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_loader_obj.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_loader_tri.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_loader_tri.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_processor.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_processor.h 
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_loader_hardcoded.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_loader_hardcoded.h 
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_loader_transform_joints.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_loader_transform_joints.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_converter.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_converter.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_editor.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_editor.h
+              #Textures and how to load them 
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TextureLoader/texture_loader.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TextureLoader/texture_loader.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TextureLoader/image_proc.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TextureLoader/image_proc.h
+               #OpenGL Rendering stuff  
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/FixedPipeline/ogl_fixed_pipeline_renderer.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/FixedPipeline/ogl_fixed_pipeline_renderer.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/ShaderPipeline/render_buffer.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/ShaderPipeline/render_buffer.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/ShaderPipeline/uploadGeometry.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/ShaderPipeline/uploadGeometry.c 
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/ShaderPipeline/ogl_shader_pipeline_renderer.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/ShaderPipeline/ogl_shader_pipeline_renderer.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/ShaderPipeline/shader_loader.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/ShaderPipeline/shader_loader.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/ogl_rendering.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/ogl_rendering.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/tiledRenderer.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/tiledRenderer.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/downloadFromRenderer.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Rendering/downloadFromRenderer.h
+            
+ 
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Tools/tools.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Tools/tools.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Tools/save_to_file.h 
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Tools/save_to_file.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Scene/scene.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Scene/scene.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Scene/control.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Scene/control.c
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Scene/photoShootingScene.h
+              ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Scene/photoShootingScene.c
+            #AmMatrix dependencies 
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/AmMatrix/quaternions.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/AmMatrix/quaternions.h
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/AmMatrix/matrix3x3Tools.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/AmMatrix/matrix3x3Tools.h
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/AmMatrix/matrix4x4Tools.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/AmMatrix/matrix4x4Tools.h
+            #../tools/AmMatrix/matrixProject.c
+            #../tools/AmMatrix/matrixProject.h
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/AmMatrix/matrixCalculations.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/AmMatrix/matrixCalculations.h
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/AmMatrix/matrixOpenGL.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/AmMatrix/matrixOpenGL.h
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/AmMatrix/solveLinearSystemGJ.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/AmMatrix/solveLinearSystemGJ.h 
+            #ImageOperations dependencies
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/ImageOperations/depthClassifier.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/ImageOperations/convolutionFilter.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/ImageOperations/imageFilters.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/ImageOperations/findSubImage.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/ImageOperations/imageOps.c   
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/ImageOperations/patchComparison.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/ImageOperations/patchComparison.h 
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition//tools/ImageOperations/resize.c 
+            #Rest of the stuff  
+            #${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TrajectoryParser/InputParser_C.c
+            #${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TrajectoryParser/InputParser_C.h
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TrajectoryParser/TrajectoryParser.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TrajectoryParser/TrajectoryParser.h 
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TrajectoryParser/TrajectoryParserDataStructures.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TrajectoryParser/TrajectoryParserDataStructures.h 
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TrajectoryParser/TrajectoryCalculator.c
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TrajectoryParser/TrajectoryCalculator.h  
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TrajectoryParser/TrajectoryPrimitives.c 
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TrajectoryParser/TrajectoryPrimitives.h
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TrajectoryParser/hashmap.c 
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/TrajectoryParser/hashmap.h
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Interfaces/webInterface.c 
+            ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/Interfaces/webInterface.h
+      ) 
+ MESSAGE("OpenGL code found and will be used..")
+ELSE()
+ MESSAGE("OpenGL support enabled, but OpenGL code not found..")
+ENDIF()
 ELSE (ENABLE_OPENGL) 
  MESSAGE("OpenGL support will not be compiled in")
 ENDIF(ENABLE_OPENGL)
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 
 find_package(OpenCV)
@@ -57,15 +204,6 @@ if (OpenCV_FOUND)
 ENDIF(OpenCV_FOUND)
 
 
-
-include_directories(${TENSORFLOW_INCLUDE_ROOT})
-
-ADD_LIBRARY(TensorflowFramework SHARED IMPORTED) 
-SET_TARGET_PROPERTIES(TensorflowFramework PROPERTIES IMPORTED_LOCATION ${TENSORFLOW_ROOT}/libtensorflow_framework.so) 
-
-
-ADD_LIBRARY(Tensorflow SHARED IMPORTED)
-SET_TARGET_PROPERTIES(Tensorflow PROPERTIES IMPORTED_LOCATION ${TENSORFLOW_ROOT}/libtensorflow.so)  
 
 #add_subdirectory (RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer) 
 add_subdirectory (GroundTruthGenerator/)

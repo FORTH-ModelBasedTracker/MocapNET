@@ -31,6 +31,13 @@ fi
 if [ ! -f shuffle.webm ]; then
   wget http://ammar.gr/mocapnet/shuffle.webm
 fi
+#--------------------------------------------
+
+if [ ! -f dataset/makehuman.tri ]; then
+  wget http://ammar.gr/mocapnet/makehuman.tri
+  mv makehuman.tri dataset/
+fi
+
 
 
 #also force download a CSV sample
@@ -41,6 +48,7 @@ fi
 if [ ! -f tektonik.csv ]; then
   wget http://ammar.gr/mocapnet/tektonik.csv
 fi
+#--------------------------------------------
 
 
 mkdir combinedModel

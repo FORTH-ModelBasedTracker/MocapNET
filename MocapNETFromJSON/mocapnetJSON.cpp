@@ -80,6 +80,10 @@ int main(int argc, char *argv[])
                     {
                         serialLength = atoi(argv[i+1]);
                     }
+                else if (strcmp(argv[i],"--mode")==0)
+                    { 
+                        mocapNETMode=atoi(argv[i+1]);
+                    }
                 else if (strcmp(argv[i],"--size")==0)
                     {
                         width = atoi(argv[i+1]);
@@ -199,7 +203,31 @@ int main(int argc, char *argv[])
                             if (visualize)
                                 {
                                     std::vector<std::vector<float> > points2DOutput = convertBVHFrameTo2DPoints(result,visWidth,visHeight);
-                                    visualizePoints("3D Points Output",frameID,0,0,0,0,1,1,0.0,0.0,fpsMocapNET,visWidth,visHeight,1,inputValues,result,result,empty2DPointsInput,points2DOutput,points2DOutput);
+                                    visualizePoints(
+                                                     "3D Points Output",
+                                                     frameID,
+                                                     0,
+                                                     0,
+                                                     0,
+                                                     0,
+                                                     0,
+                                                     0,
+                                                     1,
+                                                     1,
+                                                     0.0,
+                                                     0.0,
+                                                     fpsMocapNET,
+                                                     visWidth,
+                                                     visHeight,
+                                                     1,
+                                                     inputValues,
+                                                     result,
+                                                     result,
+                                                     empty2DPointsInput,
+                                                     points2DOutput,
+                                                     points2DOutput,
+                                                     0 //No OpenGL code here..
+                                                  );
                                 }
 
 

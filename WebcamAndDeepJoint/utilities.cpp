@@ -9,6 +9,29 @@
 #include "../MocapNETLib/jsonCocoSkeleton.h"
 
 
+
+std::vector <float> fillInTheBlanks(std::vector <float> previousVector,std::vector <float> currentVector)
+{
+    fprintf(stderr,"TODO: implement fillInTheBlanks\n"); 
+    /*
+    if (previousVector.size()==currentVector.size())
+    {
+        std::vector <float> smoothedVector;
+        int i=0;
+        for (i=0; i<previousVector.size(); i++)
+        {
+            float smoothedValue =  currentVector[i]+ ( currentVector[i]-previousVector[i] ) * magnitude;
+            
+            smoothedVector.push_back(smoothedValue);
+        }
+        return smoothedVector;    
+    }
+    */
+    return currentVector;
+}
+
+
+
 std::vector <float> smoothVector(std::vector <float> previousVector,std::vector <float> currentVector,float magnitude)
 {
     if (previousVector.size()==currentVector.size())
@@ -231,7 +254,9 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
     cv::Mat colorImageSmall,
     std::vector<cv::Mat> heatmaps ,
     float minThreshold ,
+    unsigned int frameNumber,
     int visualize,
+    int saveVisualization,
     unsigned int handleMessages
 )
 {
@@ -298,7 +323,14 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
                 factorX ,
                 factorY
             );
-
+            
+            if (saveVisualization)
+            {
+                char filename[512];
+                snprintf(filename,512,"MocapNET2D_%05u.png",frameNumber) ;
+                cv::imwrite(filename,visualizationImage2DSkeleton);
+            } 
+            
             cv::imshow("2D Detections",visualizationImage2DSkeleton);
 #endif
 

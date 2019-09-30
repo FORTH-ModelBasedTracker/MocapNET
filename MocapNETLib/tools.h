@@ -21,6 +21,10 @@ int executeCommandLineNum(
                            unsigned int lineNumber
                          );
 
+
+int getCPUName(char * str,unsigned int maxLength);
+int getGPUName(char * str,unsigned int maxLength);
+
 /**
  * @brief Get uptime in microseconds
  * @ingroup tools

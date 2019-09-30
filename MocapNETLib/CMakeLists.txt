@@ -10,7 +10,7 @@ include_directories(${TENSORFLOW_INCLUDE_ROOT})
 
 #add_executable(MocapNETLib mocapnet.cpp ../Tensorflow/tf_utils.cpp)   
 
-add_library(MocapNETLib SHARED   mocapnet.cpp ../Tensorflow/tf_utils.cpp)   
+add_library(MocapNETLib SHARED mocapnet.cpp ../Tensorflow/tf_utils.cpp)   
 
 
 target_link_libraries(MocapNETLib rt dl m Tensorflow  TensorflowFramework )

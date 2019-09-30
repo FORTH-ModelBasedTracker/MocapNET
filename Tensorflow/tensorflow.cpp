@@ -37,7 +37,7 @@ std::vector<int> get_tensor_shape(tensorflow::Tensor& tensor)
 #include <time.h>
 
 
-unsigned long tickBase = 0;
+unsigned long tickBaseTF = 0;
 
 
 unsigned long GetTickCountMicroseconds()
@@ -48,13 +48,13 @@ unsigned long GetTickCountMicroseconds()
             return 0;
         }
 
-    if (tickBase==0)
+    if (tickBaseTF==0)
         {
-            tickBase = ts.tv_sec*1000000 + ts.tv_nsec/1000;
+            tickBaseTF = ts.tv_sec*1000000 + ts.tv_nsec/1000;
             return 0;
         }
 
-    return ( ts.tv_sec*1000000 + ts.tv_nsec/1000 ) - tickBase;
+    return ( ts.tv_sec*1000000 + ts.tv_nsec/1000 ) - tickBaseTF;
 }
 
 
@@ -133,6 +133,7 @@ int loadTensorflowInstance(
     tf_utils::PrintTensorInfo(net->graph,outputTensor,0,0);
     //--------------------------------------------------------------------------------------------------------------
 
+    snprintf(net->modelPath,1024,"%s",filename);
     snprintf(net->inputLayerName,512,"%s",inputTensor);
     snprintf(net->outputLayerName,512,"%s",outputTensor);
 
@@ -328,7 +329,7 @@ std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
 
     if (TF_GetCode(net->status) != TF_OK)
         {
-            fprintf(stderr,RED "Error running session\n"  NORMAL);
+            fprintf(stderr,RED "Error running session %u ( %s ) \n"  NORMAL, TF_GetCode(net->status),TF_Message(net->status));
             TF_DeleteStatus(net->status);
             tf_utils::DeleteTensor(input_tensor);
             return matrix;
