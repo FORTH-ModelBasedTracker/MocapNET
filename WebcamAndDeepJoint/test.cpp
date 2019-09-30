@@ -327,6 +327,7 @@ int main(int argc, char *argv[])
     unsigned int forceCPUMocapNET=1;
     unsigned int forceCPU2DJointEstimation=0;
     float quality=1.0;
+    float scale=1.0;
 
     unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,frameLimitSet=0,visualize=1,save2DVisualization=0,visualizeOpenGLEnabled=0; 
     int joint2DSensitivityPercent=35;
@@ -338,6 +339,8 @@ int main(int argc, char *argv[])
     int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0,autoDirection=0,autoCount=0;
     int doFeetHeuristics=0;
     int rememberPrevious2DPositions=0;
+
+    int borderTop=0, borderBottom=0, borderLeft=0, borderRight=0;
 
     unsigned int delay=1; //Just a little time to view the window..
 
@@ -432,6 +435,16 @@ int main(int argc, char *argv[])
                     {
                         visualize=0;
                     }
+                else if (strcmp(argv[i],"--horizontalpadding")==0)
+                    {
+                        borderLeft=atoi(argv[i+1])/2;
+                        borderRight=atoi(argv[i+1])/2;
+                    }
+                else if (strcmp(argv[i],"--verticalpadding")==0)
+                    {
+                        borderTop=atoi(argv[i+1])/2;
+                        borderBottom=atoi(argv[i+1])/2;
+                    }
                 else if (strcmp(argv[i],"--2dmodel")==0)
                     {
                         networkPath=argv[i+1];
@@ -455,6 +468,14 @@ int main(int argc, char *argv[])
                         frameLimit=atoi(argv[i+1]);
                         frameLimitSet=1;
                     }
+                else if (strcmp(argv[i],"--scale")==0)
+                    {
+                        scale=atof(argv[i+1]); 
+                    } 
+                else if (strcmp(argv[i],"--rotate")==0)
+                    {
+                        rotate=atoi(argv[i+1]); 
+                    } 
                 else if (strcmp(argv[i],"--cpu")==0)
                     {
                         //setenv("CUDA_VISIBLE_DEVICES", "", 1);   //Alternate way to force CPU everywhere
@@ -571,7 +592,17 @@ int main(int argc, char *argv[])
                             unsigned long acquisitionStart = GetTickCountMicroseconds();
 
                             cap >> frame; // get a new frame from camera
-
+                            
+                            if ( ( borderTop!=0 ) || ( borderBottom!=0 ) || ( borderLeft!=0 ) || ( borderRight==0 ) )
+                            {
+                             Scalar colorValue(0,0,0);
+                             copyMakeBorder(frame,frame,borderTop,borderBottom,borderLeft,borderRight,BORDER_CONSTANT,colorValue);                               
+                            }
+                           
+                            if (scale!=1.0)
+                            {  
+                              cv::resize(frame, frame, cv::Size(0,0), scale, scale);
+                            }
 
                             if (rotate)
                                 {

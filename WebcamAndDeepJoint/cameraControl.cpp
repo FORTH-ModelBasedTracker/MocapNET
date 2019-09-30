@@ -302,6 +302,10 @@ int getBestCropWindow(
     unsigned int fullFrameHeight
 )
 {
+    fprintf(stderr,"getBestCropWindow(%u,%u,%u,%u)\n",*x,*y,*width,*height);
+    fprintf(stderr,"input image size is %u,%u\n",fullFrameWidth,fullFrameHeight);
+    
+    
     if (maximumCrop)
         {
             if (  getMaximumCropWindow(
@@ -420,7 +424,40 @@ int getBestCropWindow(
         {
             if  ( (bbox!=0) && (bbox->populated) )
                 {
-                    //TODO : Implement rotated stream logic
+                   dimension = fullFrameWidth;
+                    //TODO:
+                    //if (bodyHeight<dimension) { dimension = bodyHeight; }
+                    //if (dimension<inputHeight2DJointDetector) { dimension = inputHeight2DJointDetector; }
+
+                    *width=dimension;
+                    *height=dimension;
+
+                    //-------------------------------------------------------------------------------------------------------
+                    //-------------------------------------------------------------------------------------------------------
+                    //                                         Center on X axis..
+                    //-------------------------------------------------------------------------------------------------------
+                    //-------------------------------------------------------------------------------------------------------
+                    float bodyCenterY =  bbox->minimumY + (float) bodyHeight/2;
+                    //fprintf(stderr,"The center X of the body lies at %0.2f\n",bodyCenterX);
+
+                    //fprintf(stderr,"We can afford %u pixels left and right of the body center \n",(unsigned int) *width/2);
+                    float cropStartY = bodyCenterY - *width/2;
+
+                    if (cropStartY<0)
+                        {
+                            cropStartY=0;    //Overflow..
+                        }
+                    if (cropStartY>fullFrameHeight-fullFrameWidth)
+                        {
+                            cropStartY=fullFrameHeight-fullFrameWidth;
+                        }
+
+                    //Neural Networks cause flicker, if we don't have exactly the same
+                    //bounding box it's ok just keep the previous, it will help with flicker a lot..
+                    if ( abs(*y - (unsigned int) cropStartY) > noiseThreshold )
+                        {
+                            *y = (unsigned int) cropStartY;
+                        }
                 }
             else
                 {
@@ -428,14 +465,14 @@ int getBestCropWindow(
                     *x=0;
                     *y=(fullFrameHeight-fullFrameWidth)/2;
                     *width=fullFrameWidth;
-                    *height=fullFrameWidth;
+                    *height=fullFrameWidth;  
                 }
         }
 
     if  (
-        ( *x + *width > fullFrameWidth )  ||
-        ( *y + *height > fullFrameHeight )
-    )
+         ( *x + *width > fullFrameWidth )  ||
+         ( *y + *height > fullFrameHeight )
+        )
         {
             //We failed..!
             *x=0;
