@@ -9,6 +9,7 @@
 #include <vector>
 #include <math.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "../MocapNETLib/tools.h"
 #include "../MocapNETLib/jsonCocoSkeleton.h"
@@ -18,8 +19,11 @@
 
 int main(int argc, char *argv[])
 {
+    const char   outputPathStatic[]="out.bvh";
+    char * outputPath = (char*) outputPathStatic;
+    
     unsigned int mocapNETMode=3;
-    unsigned int width=1920 , height=1080 , frameLimit=10000 , visualize = 0, useCPUOnly=1 , serialLength=5;
+    unsigned int width=1920 , height=1080 , frameLimit=10000 , visualize = 0, useCPUOnly=1 , serialLength=5,delay=0;
     unsigned int visWidth=1024,visHeight=768;
     const char * path=0;
     const char * label=0;
@@ -40,6 +44,12 @@ int main(int argc, char *argv[])
                 {
                     visualize=1;
                 }
+                else if (strcmp(argv[i],"--delay")==0)
+                    {
+                        //If you want to take some time to check the results that
+                        //might otherwise pass by very fast
+                        delay=atoi(argv[i+1]);
+                    }
             else if (strcmp(argv[i],"--visualize")==0)
                 {
                     visualize=1;
@@ -80,6 +90,10 @@ int main(int argc, char *argv[])
                     {
                         serialLength = atoi(argv[i+1]);
                     }
+                else if  (  (strcmp(argv[i],"-o")==0) || (strcmp(argv[i],"--output")==0) )
+                    {
+                        outputPath=argv[i+1];
+                    }                     
                 else if (strcmp(argv[i],"--mode")==0)
                     { 
                         mocapNETMode=atoi(argv[i+1]);
@@ -234,12 +248,19 @@ int main(int argc, char *argv[])
                             totalTime+=sampleTime;
                             ++totalSamples;
 
+                   if (delay!=0)
+                   {
+                       usleep(delay*1000);
+                   }
+                   
                         }
                     else
                         {
                             fprintf(stderr,"Done.. \n");
                             break;
                         }
+
+
 
                     ++frameID;
                 }
@@ -248,13 +269,13 @@ int main(int argc, char *argv[])
             if (totalSamples>0)
                 {
                     char * bvhHeaderToWrite=0;
-                    if ( writeBVHFile("out.bvh",bvhHeaderToWrite, bvhFrames) )
+                    if ( writeBVHFile(outputPath,bvhHeaderToWrite, bvhFrames) )
                         {
-                            fprintf(stderr,"Successfully wrote %lu frames to bvh file.. \n",bvhFrames.size());
+                            fprintf(stderr,"Successfully wrote %lu frames to bvh file %s.. \n",bvhFrames.size(),outputPath);
                         }
                     else
                         {
-                            fprintf(stderr,"Failed to write %lu frames to bvh file.. \n",bvhFrames.size());
+                            fprintf(stderr,"Failed to write %lu frames to bvh file %s .. \n",bvhFrames.size(),outputPath);
                         }
 
 

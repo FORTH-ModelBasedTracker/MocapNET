@@ -3,7 +3,7 @@
 #include <cstdlib>
 
 
-const unsigned int noiseThreshold = 5;
+const unsigned int noiseThreshold = 8;
 
 int populateBoundingBox(
     struct boundingBox *bbox,
@@ -302,8 +302,8 @@ int getBestCropWindow(
     unsigned int fullFrameHeight
 )
 {
-    fprintf(stderr,"getBestCropWindow(%u,%u,%u,%u)\n",*x,*y,*width,*height);
-    fprintf(stderr,"input image size is %u,%u\n",fullFrameWidth,fullFrameHeight);
+    //fprintf(stderr,"getBestCropWindow(%u,%u,%u,%u)\n",*x,*y,*width,*height);
+    //fprintf(stderr,"input image size is %u,%u\n",fullFrameWidth,fullFrameHeight);
     
     
     if (maximumCrop)

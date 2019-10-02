@@ -449,11 +449,7 @@ int main(int argc, char *argv[])
                     {
                         networkPath=argv[i+1];
                     }
-                else if (strcmp(argv[i],"--output")==0)
-                    {
-                        outputPath=argv[i+1];
-                    }
-                else if (strcmp(argv[i],"-o")==0)
+                else if  (  (strcmp(argv[i],"-o")==0) || (strcmp(argv[i],"--output")==0) )
                     {
                         outputPath=argv[i+1];
                     }

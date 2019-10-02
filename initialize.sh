@@ -126,6 +126,7 @@ if [ ! -f RGBDAcquisition ]; then
  #We dont need to make it 
  #make 
  cd "$DIR"
+ #ln -s RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/Renderer 
 fi
 
 

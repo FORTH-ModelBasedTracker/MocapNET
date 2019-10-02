@@ -76,6 +76,17 @@ int visualizeNSDM(
                                 8,
                                 0
                             );
+                            
+                            //Visualize error
+                            if (  (NSDM[item]>1.0) || (NSDM[item+1]>1.0)  )
+                               { 
+                                 cv::Point topRight(x+xI*boxX+boxX,y+yI*boxY);
+                                 cv::Point bottomLeft(x+xI*boxX,y+yI*boxY+boxY);
+                                 cv::line(img,topLeft,bottomRight, cv::Scalar(0,0,255), 1.0);
+                                 cv::line(img,topRight,bottomLeft, cv::Scalar(0,0,255), 1.0);
+                               }
+  
+                            
                             item+=2;
                         }
                 }
@@ -840,8 +851,10 @@ int visualizePoints(
    if (optionalOpenGLCVMat!=0)
    { 
      cv::Mat * glMat = (cv::Mat *) optionalOpenGLCVMat;
-     float alpha=0.3;
-     cv::addWeighted(*glMat, alpha, img, 1 - alpha, 0, img) ;
+     //float alpha=0.3;
+     //cv::addWeighted(*glMat, alpha, img, 1 - alpha, 0, img) ;
+     
+     img=cv::max(*glMat, img);
    }
    
    

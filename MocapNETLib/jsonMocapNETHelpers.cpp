@@ -170,6 +170,78 @@ void addLeftFinger(
 }
 
 
+
+std::vector<float> normalizeWhileAlsoMatchingTrainingAspectRatio(
+                                                  std::vector<float> input,
+                                                  unsigned int currentWidth,
+                                                  unsigned int currentHeight,
+                                                  unsigned int trainingWidth,
+                                                  unsigned int trainingHeight
+                                                )
+{ 
+    //fprintf(stderr,YELLOW "normalizeWhileAlsoMatchingTrainingAspectRatio\n" NORMAL);
+    unsigned int addX=0,addY=0;
+    unsigned int targetWidth=currentWidth,targetHeight=currentHeight;
+    float currentAspectRatio = (float) currentWidth/currentHeight;
+    float trainingAspectRatio = (float) trainingWidth/trainingHeight;
+    
+    //fprintf(stderr,"Will try to correct aspect ratio from %0.2f(%ux%u) to %0.2f (%ux%u)\n",currentAspectRatio,currentWidth,currentHeight,trainingAspectRatio,trainingWidth,trainingHeight);
+   
+      std::vector<float> fixedAspectRatio=input;
+    
+      if (currentHeight<currentWidth)
+       {
+         targetHeight=(unsigned int) currentWidth/trainingAspectRatio;   
+         if (targetHeight>=currentHeight)
+         {
+           addY=(unsigned int) (targetHeight-currentHeight)/2;           
+         } else
+         {
+           //Turns out we will have to enlarge X instead of englarging Y
+           addY=0;
+           targetHeight=currentHeight;
+           targetWidth=(unsigned int)currentHeight*trainingAspectRatio;
+           addX=(unsigned int) (targetWidth-currentWidth)/2; 
+         }  
+       } else   
+     if (currentWidth<=currentHeight)
+       {
+         targetWidth=(unsigned int)currentHeight*trainingAspectRatio;
+         if (targetWidth>=currentWidth)  
+         {
+           addX=(unsigned int) (targetWidth-currentWidth)/2;    
+         } else
+         {
+           //Turns out we will have to enlarge Y instead of englarging X
+           addX=0;
+            targetWidth=currentWidth;
+           targetHeight=(unsigned int) currentWidth/trainingAspectRatio;  
+           addY=(unsigned int) (targetHeight-currentHeight)/2;
+         }
+       } 
+           
+    //fprintf(stderr,"Target resolution is  %ux%u to Y\n",targetWidth,targetHeight);
+    //fprintf(stderr,"Will add %u to X and %u to Y to achieve it\n",addX,addY);
+    
+    float targetAspectRatio=(float) targetWidth/targetHeight;
+    if ((unsigned int) targetAspectRatio/100!= (unsigned int) trainingAspectRatio/100)
+    {
+      fprintf(stderr,RED "Failed to perfectly match training aspect ratio (%0.5f), managed to reach (%0.5f)\n" NORMAL,trainingAspectRatio,targetAspectRatio);  
+    }   
+       
+      for (int i=0; i<input.size()/3; i++)
+        {
+            fixedAspectRatio[i*3+0]=(float) (input[i*3+0]+addX)/targetWidth;
+            fixedAspectRatio[i*3+1]=(float) (input[i*3+1]+addY)/targetHeight;
+        }    
+       
+      return fixedAspectRatio;  
+}
+
+
+
+
+
 std::vector<float> flattenskeletonCOCOToVector(struct skeletonCOCO * sk,unsigned int width ,unsigned int height)
 {
     //Extra joints..
@@ -395,14 +467,37 @@ std::vector<float> flattenskeletonCOCOToVector(struct skeletonCOCO * sk,unsigned
     
     if ( (width==1) && (height==1) )
     {
-       //Input is already normalized.. 
+       //Input is already normalized, nothing to do here.. 
+       //fprintf(stderr,"Input is already normalized\n");
     } else
-    {
-    for (int i=0; i<result.size()/3; i++)
-        {
-            result[i*3+0]=(float) result[i*3+0]/width;
-            result[i*3+1]=(float) result[i*3+1]/height;
-        }    
+    { 
+       //This is the training configuration of MocapNET 
+       unsigned int trainingWidth=1920;
+       unsigned int trainingHeight=1080;
+ 
+       float currentAspectRatio  = (float) width/height;
+       float trainingAspectRatio = (float) trainingWidth/trainingHeight;
+    
+       if (currentAspectRatio!=trainingAspectRatio)
+        { 
+             //fprintf(stderr,"Normalizing WITH aspect ratio change\n");
+             //MocapNET has been trained on 1920x1080 frames, so all the received coordinates are normalized in the
+             //0..1 range based on that. This means that the NN learns the X and Y variations. If a joint lies at  pixel 500,500 
+             //it will be represented as 500/1920  , 500/1080.
+             //Now if a user uses another configuration, let's say a vertical (portrait) feed where the resolution is 1080x1920
+             //the 2D points will get normalized at 500/1080 , 500/1920 and the resulting 2D joint cloud won't work as well
+             //This is why it is better to change the aspect ratio while normalizing      
+             result = normalizeWhileAlsoMatchingTrainingAspectRatio(result,width,height,trainingWidth,trainingHeight);
+        } else
+        {   
+          //If we don't want to correct aspect ratio just go on with normalization..  
+          //fprintf(stderr,"Normalizing without aspect ratio change\n");
+          for (int i=0; i<result.size()/3; i++)
+             {
+               result[i*3+0]=(float) result[i*3+0]/width;
+               result[i*3+1]=(float) result[i*3+1]/height;
+             }
+        }
     }
 
     if (result.size()==0)

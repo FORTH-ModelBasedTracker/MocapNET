@@ -29,7 +29,7 @@ char * visualizeOpenGL(unsigned int *openGLFrameWidth,unsigned int *openGLFrameH
          if (
               createOpenGLDevice(
                                   0,
-                                  "dataset/cube.conf",
+                                  "dataset/human3D.conf",
                                   *openGLFrameWidth,
                                   *openGLFrameHeight,
                                   30

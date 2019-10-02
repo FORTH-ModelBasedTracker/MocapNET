@@ -260,7 +260,7 @@ std::vector<float>  MNET3Classes(struct MocapNET * mnet,std::vector<float> mnetI
     
     if (direction.size()>0)
         { 
-            fprintf(stderr,NORMAL "3Class Direction is : %0.2f " NORMAL , direction[0] );
+            fprintf(stderr,NORMAL "Direction is : %0.2f " NORMAL , direction[0] );
             if ( (direction[0]<-90) || (direction[0]>90) )
                 {
                     //Back ----------------------------------------------=
@@ -285,7 +285,7 @@ std::vector<float>  MNET3Classes(struct MocapNET * mnet,std::vector<float> mnetI
 
 std::vector<float>  MNET5Classes(struct MocapNET * mnet,std::vector<float> mnetInput,std::vector<float> direction )
 {
-    fprintf(stderr,NORMAL "5Class Direction is : %0.2f " NORMAL , direction[0] );
+    fprintf(stderr,NORMAL "5Class  Direction is : %0.2f " NORMAL , direction[0] );
     std::vector<float> result;
     
     if (direction.size()>0)
