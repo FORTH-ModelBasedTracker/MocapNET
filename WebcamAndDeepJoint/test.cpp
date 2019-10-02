@@ -754,14 +754,6 @@ int main(int argc, char *argv[])
                                                     fprintf(stderr,"MocapNET 3DSkeleton @ %0.2f fps \n",fpsMocapNET);
                                                 }
 
-                                            //If we are not running live ( aka not from a webcam with no fixed frame limit )
-                                            //Then we record the current bvh frame in order to save a .bvh file in the end..
-                                            if (!live)
-                                                {
-                                                    bvhFrames.push_back(bvhOutput);
-                                                }
-                                             
-                                             
                                              if (constrainPositionRotation==2)
                                              {//Specific position rotation constraint that scans left and right..
                                                  ++autoCount; 
@@ -791,6 +783,16 @@ int main(int argc, char *argv[])
                                                             bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) pitchValue;
                                                         }
                                                 }
+                                                
+                                              
+                                            //If we are not running live ( aka not from a webcam with no fixed frame limit )
+                                            //Then we record the current bvh frame in order to save a .bvh file in the end..
+                                            if (!live)
+                                                {
+                                                    bvhFrames.push_back(bvhForcedViewOutput); //bvhOutput
+                                                }
+                                             
+                                               
 
                                             if (bvhForcedViewOutput.size()>0)
                                                 {
