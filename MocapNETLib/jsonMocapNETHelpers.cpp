@@ -231,8 +231,13 @@ std::vector<float> normalizeWhileAlsoMatchingTrainingAspectRatio(
        
       for (int i=0; i<input.size()/3; i++)
         {
+          if (input[i*3+2]!=0)    
+          {  
+            //Only Fix Aspect Ratio on visible points to preserve 0,0,0 that are 
+            //important to the neural network..  
             fixedAspectRatio[i*3+0]=(float) (input[i*3+0]+addX)/targetWidth;
-            fixedAspectRatio[i*3+1]=(float) (input[i*3+1]+addY)/targetHeight;
+            fixedAspectRatio[i*3+1]=(float) (input[i*3+1]+addY)/targetHeight; 
+          }
         }    
        
       return fixedAspectRatio;  
@@ -464,6 +469,29 @@ std::vector<float> flattenskeletonCOCOToVector(struct skeletonCOCO * sk,unsigned
     addSkeletonJoint(sk,result,BODY25_LAnkle);
     addSkeletonJoint(sk,result,BODY25_LAnkle);
 
+
+
+
+
+    
+    //Last sanity check..!
+    //-----------------------------------------------------------
+     for (int i=0; i<result.size()/3; i++)
+             {
+               if (
+                      ( ( result[i*3+0]<=0 )&&( result[i*3+1]<=0 ) ) || //Both x,y are zero
+                      ( ( result[i*3+0]==0 )||( result[i*3+1]==0 ) )    //Any of x or y are zero to combat a weird bug..
+                  ) 
+               {
+                 result[i*3+0]=0;  
+                 result[i*3+1]=0;  
+                 result[i*3+2]=0; 
+               }
+             }
+    //-----------------------------------------------------------
+
+
+
     
     if ( (width==1) && (height==1) )
     {
@@ -499,6 +527,8 @@ std::vector<float> flattenskeletonCOCOToVector(struct skeletonCOCO * sk,unsigned
              }
         }
     }
+    
+    
 
     if (result.size()==0)
         {

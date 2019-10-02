@@ -249,7 +249,7 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
 
 
     unsigned int i=0;
-    struct skeletonCOCO sk= {0};
+    struct skeletonCOCO sk={0};
 
 
     if (pointsOf2DSkeleton.size()>=(UT_COCO_PARTS-1))
@@ -468,6 +468,10 @@ int main(int argc, char *argv[])
                     {
                         scale=atof(argv[i+1]); 
                     } 
+                else if (strcmp(argv[i],"--remember")==0)
+                    {
+                        rememberPrevious2DPositions=1; 
+                    }                     
                 else if (strcmp(argv[i],"--rotate")==0)
                     {
                         rotate=atoi(argv[i+1]); 
@@ -718,8 +722,7 @@ int main(int argc, char *argv[])
 
                                             if (rememberPrevious2DPositions)
                                             {
-                                                fprintf(stderr,"TODO: implement previous 2D position remberence :P");
-                                                //flatAndNormalized2DPoints = fillInTheBlanks(previousFlatAndNormalized2DPoints,flatAndNormalized2DPoints);
+                                                flatAndNormalized2DPoints = fillInTheBlanks(previousFlatAndNormalized2DPoints,flatAndNormalized2DPoints);
                                                 previousFlatAndNormalized2DPoints = flatAndNormalized2DPoints;
                                             }
 
