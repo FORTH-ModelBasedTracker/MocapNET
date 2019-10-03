@@ -7,6 +7,7 @@
  *  @author Ammar Qammaz (AmmarkoV)
  */
 #include "../Tensorflow/tensorflow.hpp"
+#include "gestureRecognition.hpp"
 #include <iostream>
 #include <vector>
 
@@ -1797,6 +1798,8 @@ struct MocapNET
    unsigned int mode;
    unsigned int loadedModels;
    struct MocapNETModelLimits modelLimits[16];  
+   
+   struct PoseHistory poseHistoryStorage;
 };
 
 

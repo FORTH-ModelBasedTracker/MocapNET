@@ -1,6 +1,7 @@
 #include "../Tensorflow/tf_utils.hpp"
 #include "mocapnet.hpp"
 #include "nsdm.hpp"
+#include "gestureRecognition.hpp"
 #include "jsonCocoSkeleton.h"
 
 #define NORMAL   "\033[0m"
@@ -64,7 +65,11 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
 {
     char modelPath[1024]= {0};
     int result = 0;
-
+   
+   //Reset pose history..
+   mnet->poseHistoryStorage.maxPoseHistory=150;
+   mnet->poseHistoryStorage.history.clear();
+  
     switch (mode)
         {
 
@@ -371,14 +376,18 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
 
     if (direction.size()>0)
         {
+            std::vector<float>  result;
             if (mnet->mode==3)
             {
-                return MNET3Classes(mnet,mnetInput,direction);
+                result=MNET3Classes(mnet,mnetInput,direction);
             } else
             if (mnet->mode==5)
             {
-                return MNET5Classes(mnet,mnetInput,direction);
+                result=MNET5Classes(mnet,mnetInput,direction);
             }    
+            
+            addToMotionHistory(&mnet->poseHistoryStorage,result);
+            return result;
         }
     else
         {

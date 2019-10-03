@@ -50,7 +50,7 @@ char * visualizeOpenGL(unsigned int *openGLFrameWidth,unsigned int *openGLFrameH
          return 0;     
       }
    }
-   //------------------------------------------------------------------
+   //------------------------------------------------------------------ 
    //------------------------------------------------------------------
    
    fprintf(stderr,"Snap OpenGL frame..\n");

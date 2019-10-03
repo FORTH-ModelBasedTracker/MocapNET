@@ -613,6 +613,104 @@ int drawEndEffectorTrack(cv::Mat &outputMat,std::vector<std::vector<float> > poi
 
 
 
+
+cv::Scalar getColorFromIndex(unsigned int i)
+{
+    cv::Scalar color = cv::Scalar::all(255);
+    
+    i = i%107;
+    
+    color[0] = lineColorIndex[i*3+0];
+    color[1] = lineColorIndex[i*3+1];
+    color[2] = lineColorIndex[i*3+2];
+    
+    
+    return color;
+}
+
+
+std::vector<std::vector<float> > place2DSkeletonElsewhere(unsigned int x,unsigned int y,
+unsigned int width,
+unsigned int height, 
+std::vector<std::vector<float> >  skeleton2D)
+{
+    int jointID=0;
+    
+    for (jointID=0; jointID<skeleton2D.size(); jointID++)
+    {
+        skeleton2D[jointID][0]+=x;
+        skeleton2D[jointID][1]+=y;
+    }
+    
+    return skeleton2D;
+    
+}
+
+
+int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float> > history, std::vector<std::vector<float> >  skeleton2D)
+{
+    unsigned int visualizeWidth=1170;
+    unsigned int visualizeHeight=1024;
+    cv::Mat img(visualizeHeight,visualizeWidth, CV_8UC3, cv::Scalar(0,0,0));
+    
+    drawSkeleton(img,place2DSkeletonElsewhere(450,400,200,200,skeleton2D));
+    
+    unsigned int widthOfGraphs=165;
+    unsigned int heightOfGraphs=100;
+    unsigned int i=0,joint=0;
+    
+    unsigned int plotPosX=0;
+    unsigned int plotPosY=0;
+    unsigned int shiftY=15;
+    
+    for (i=1; i<history.size(); i++)
+    {
+        plotPosX=0;
+        plotPosY=shiftY;
+        
+       for (joint=0; joint<history[i].size(); joint++)
+       { 
+        if ( 
+                   (  (joint>=MOCAPNET_OUTPUT_RTHUMB1_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_RPINKY2_YROTATION) )  ||
+                   (  (joint>=MOCAPNET_OUTPUT_LTHUMB1_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_LPINKY2_YROTATION) )    ||
+                   (  (joint>=MOCAPNET_OUTPUT_RBUTTOCK_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_RBUTTOCK_YROTATION) )    || 
+                   (  (joint>=MOCAPNET_OUTPUT_LBUTTOCK_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_LBUTTOCK_YROTATION) )     ||
+                   (  (joint>=MOCAPNET_OUTPUT_CHEST_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_CHEST_YROTATION) )||
+                   (  (joint>=MOCAPNET_OUTPUT_LEFTEYE_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_RIGHTEYE_YROTATION) )  ||
+                   (  (joint>=MOCAPNET_OUTPUT_RCOLLAR_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_RCOLLAR_YROTATION) )   ||
+                   (  (joint>=MOCAPNET_OUTPUT_LCOLLAR_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_LCOLLAR_YROTATION) ) 
+              ) 
+        {
+            //Don't plot hands for now..
+            //Don't plot dead joints
+        } else
+        {
+           if (i==1)
+            { 
+             cv::Point labelPosition(plotPosX,    plotPosY);
+             cv::putText(img, MocapNETOutputArrayNames[joint], labelPosition, cv::FONT_HERSHEY_DUPLEX, 0.3, cv::Scalar::all(255), 0.2, 8 );
+            }          
+         
+            cv::Point jointPointPrev(plotPosX+ i-1,    plotPosY+history[i-1][joint] + heightOfGraphs/2 );
+            cv::Point jointPointNext(plotPosX+ i,        plotPosY+history[i][joint] + heightOfGraphs/2);
+            cv::line(img,jointPointPrev,jointPointNext,getColorFromIndex(joint), 1.0); 
+            plotPosY+=heightOfGraphs;       
+            
+           if (plotPosY+heightOfGraphs+shiftY>1000)
+           {
+             plotPosX+=widthOfGraphs;
+             plotPosY=shiftY;
+           }
+        }
+         
+       } 
+    } 
+    
+    cv::imshow(windowName, img);
+    return 1;
+}
+
+
 #endif
 
 

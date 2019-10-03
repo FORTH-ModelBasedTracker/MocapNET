@@ -468,6 +468,10 @@ int main(int argc, char *argv[])
                     {
                         scale=atof(argv[i+1]); 
                     } 
+                else if (strcmp(argv[i],"--show")==0)
+                    {
+                        visualizationType=atof(argv[i+1]); 
+                    } 
                 else if (strcmp(argv[i],"--remember")==0)
                     {
                         rememberPrevious2DPositions=1; 
@@ -941,7 +945,8 @@ int main(int argc, char *argv[])
                                                             }
                                                         else if (visualizationType==3)
                                                             {
-                                                                visualizeFigure("3D Points Output",demoFigures[2]);
+                                                                visualizeMotionHistory("3D Points Output",mnet.poseHistoryStorage.history,points2DOutputGUIForcedView);
+                                                                //visualizeFigure("3D Points Output",demoFigures[2]);
                                                             }
                                                         else if (visualizationType==4)
                                                             {
