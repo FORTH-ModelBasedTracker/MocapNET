@@ -312,8 +312,8 @@ int populateDemoFigures(cv::Mat * figures)
     cv::resize(figures[0],figures[0], cv::Size(), reduction,reduction);
     figures[1] = cv::imread("doc/figureB.png", CV_LOAD_IMAGE_COLOR);   // Read the file
     cv::resize(figures[1],figures[1], cv::Size(), reduction, reduction);
-    figures[2] = cv::imread("doc/figureC.png", CV_LOAD_IMAGE_COLOR);   // Read the file
-    cv::resize(figures[2],figures[2], cv::Size(), reduction, reduction);
+   // figures[2] = cv::imread("doc/figureC.png", CV_LOAD_IMAGE_COLOR);   // Read the file
+   // cv::resize(figures[2],figures[2], cv::Size(), reduction, reduction);
     return 1;
 }
 
@@ -933,20 +933,17 @@ int main(int argc, char *argv[])
                                                                 (void*) openGLMatForVisualization
                                                             );
                                                         }
-                                                    else
-
-                                                        if (visualizationType==1)
+                                                        else if (visualizationType==1)
+                                                            {
+                                                                visualizeMotionHistory("3D Points Output",mnet.poseHistoryStorage.history,points2DOutputGUIForcedView); 
+                                                            }
+                                                    else  if (visualizationType==2)
                                                             {
                                                                 visualizeFigure("3D Points Output",demoFigures[0]);
                                                             }
-                                                        else if (visualizationType==2)
-                                                            {
-                                                                visualizeFigure("3D Points Output",demoFigures[1]);
-                                                            }
                                                         else if (visualizationType==3)
                                                             {
-                                                                visualizeMotionHistory("3D Points Output",mnet.poseHistoryStorage.history,points2DOutputGUIForcedView);
-                                                                //visualizeFigure("3D Points Output",demoFigures[2]);
+                                                                visualizeFigure("3D Points Output",demoFigures[1]);
                                                             }
                                                         else if (visualizationType==4)
                                                             {

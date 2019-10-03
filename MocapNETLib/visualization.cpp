@@ -649,6 +649,12 @@ std::vector<std::vector<float> >  skeleton2D)
 
 int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float> > history, std::vector<std::vector<float> >  skeleton2D)
 {
+    if (history.size()==0)
+    {
+        return 0;
+    }
+
+
     unsigned int visualizeWidth=1170;
     unsigned int visualizeHeight=1024;
     cv::Mat img(visualizeHeight,visualizeWidth, CV_8UC3, cv::Scalar(0,0,0));
@@ -662,6 +668,9 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
     unsigned int plotPosX=0;
     unsigned int plotPosY=0;
     unsigned int shiftY=15;
+    
+    char labelOfPlot[512];
+    
     
     for (i=1; i<history.size(); i++)
     {
@@ -688,7 +697,8 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
            if (i==1)
             { 
              cv::Point labelPosition(plotPosX,    plotPosY);
-             cv::putText(img, MocapNETOutputArrayNames[joint], labelPosition, cv::FONT_HERSHEY_DUPLEX, 0.3, cv::Scalar::all(255), 0.2, 8 );
+             snprintf(labelOfPlot,512,"%s  -> %0.2f",MocapNETOutputArrayNames[joint],history[history.size()-1][joint]);
+             cv::putText(img,labelOfPlot, labelPosition, cv::FONT_HERSHEY_DUPLEX, 0.3, cv::Scalar::all(255), 0.2, 8 );
             }          
          
             cv::Point jointPointPrev(plotPosX+ i-1,    plotPosY+history[i-1][joint] + heightOfGraphs/2 );

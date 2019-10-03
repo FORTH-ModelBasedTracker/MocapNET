@@ -3,7 +3,7 @@
 #include <cstdlib>
 
 
-const unsigned int noiseThreshold = 8;
+const unsigned int noiseThreshold = 15;
 
 int populateBoundingBox(
     struct boundingBox *bbox,
@@ -242,8 +242,7 @@ int getMaximumCropWindow(
 
 
             //And our output is ready for use..!
-            //--------------------------------------------------------------------------------------------------------------------------------------------------------
-
+            //-------------------------------------------------------------------------------------------------------------------------------------------------------- 
             if (
                 ( abs(previousX -  (unsigned int) bbox->minimumX  ) > noiseThreshold )  ||
                 ( abs(previousY -  (unsigned int) bbox->minimumY ) > noiseThreshold )   ||
