@@ -1,5 +1,7 @@
 #include "gestureRecognition.hpp"
-
+#include "mocapnet.hpp"
+#include "bvh.hpp"
+#include "csv.hpp"
 
 int addToMotionHistory(struct PoseHistory * poseHistoryStorage,std::vector<float> pose)
 {
@@ -9,4 +11,11 @@ int addToMotionHistory(struct PoseHistory * poseHistoryStorage,std::vector<float
                     poseHistoryStorage->history.erase(poseHistoryStorage->history.begin());
                 }
     return 1;
+}
+
+
+
+int dumpMotionHistory(const char * filename,struct PoseHistory * poseHistoryStorage)
+{
+  return writeBVHFile(filename,0,poseHistoryStorage->history);  
 }

@@ -24,8 +24,20 @@ set_target_properties(MocapNETLib PROPERTIES
                       )
 
 
+
+
+
+
+
+
+
+
+
+#-----------------------------------------------
+#       This is the converter utility..
+#-----------------------------------------------
 project( convertBody25JSONToCSV )  
-add_executable(convertBody25JSONToCSV convertBody25JsonToCSV.cpp tools.cpp jsonCocoSkeleton.cpp jsonMocapNETHelpers.cpp InputParser_C.cpp nsdm.cpp gestureRecognition.cpp )   
+add_executable(convertBody25JSONToCSV convertBody25JsonToCSV.cpp tools.cpp jsonCocoSkeleton.cpp jsonMocapNETHelpers.cpp InputParser_C.cpp nsdm.cpp csv.cpp)   
 target_link_libraries(convertBody25JSONToCSV rt dl m )
 set_target_properties(convertBody25JSONToCSV PROPERTIES DEBUG_POSTFIX "D") 
 set_target_properties(convertBody25JSONToCSV PROPERTIES 

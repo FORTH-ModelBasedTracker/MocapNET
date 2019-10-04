@@ -17,6 +17,7 @@ using namespace cv;
 #include "../Tensorflow/tensorflow.hpp"
 #include "../MocapNETLib/mocapnet.hpp"
 #include "../MocapNETLib/bvh.hpp"
+#include "../MocapNETLib/gestureRecognition.hpp"
 #include "../MocapNETLib/opengl.hpp"
 #include "../MocapNETLib/tools.h"
 #include "../MocapNETLib/visualization.hpp"
@@ -984,12 +985,18 @@ int main(int argc, char *argv[])
                                                         {
                                                             fprintf(stderr,"Keypress = %u \n",key);
                                                             if  (
-                                                                (key == 113) //|| (key == 81)
-                                                            )
+                                                                   (key == 113) //|| (key == 81)
+                                                                )
                                                                 {
                                                                     fprintf(stderr,"Stopping MocapNET after keypress..\n");
                                                                     stop=1;
                                                                 } // stop capturing by pressing q
+                                                                else
+                                                            if (key == 115) //S button
+                                                               {
+                                                                  fprintf(stderr,"Saving gesture after keypress..\n");
+                                                                  dumpMotionHistory("gesture.bvh",&mnet.poseHistoryStorage); 
+                                                               }        
                                                         }
                                                     //----------------------------------------------------------------------------------------------------------
 

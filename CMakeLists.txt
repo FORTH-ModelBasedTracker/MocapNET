@@ -29,6 +29,7 @@ SET_TARGET_PROPERTIES(Tensorflow PROPERTIES IMPORTED_LOCATION ${TENSORFLOW_ROOT}
 #------------------------------------------------------------------------------------------------------------------------------------------------
 set(BVH_SOURCE "")
 IF(EXISTS "${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader")
+add_subdirectory (GroundTruthGenerator/) #Ground Truth generator can only be compiled with BVH code..
 add_definitions(-DUSE_BVH)
 set(BVH_SOURCE 
               ${CMAKE_SOURCE_DIR}/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_loader.c
@@ -203,10 +204,7 @@ if (OpenCV_FOUND)
   MESSAGE("OpenCV code found and will be used..")   
 ENDIF(OpenCV_FOUND)
 
-
-
-#add_subdirectory (RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer) 
-add_subdirectory (GroundTruthGenerator/)
+ 
  
 
 

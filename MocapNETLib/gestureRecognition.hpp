@@ -16,3 +16,6 @@ struct PoseHistory
 };
 
 int addToMotionHistory(struct PoseHistory * poseHistoryStorage,std::vector<float> pose);
+
+
+int dumpMotionHistory(const char * filename,struct PoseHistory * poseHistoryStorage);

@@ -10,43 +10,6 @@
 #define GREEN   "\033[32m"      /* Green */
 #define YELLOW  "\033[33m"      /* Yellow */
 
-int writeBVHFile(
-    const char * filename,
-    const char * header,
-    std::vector<std::vector<float> > bvhFrames
-)
-{
-    FILE * fp = fopen(filename,"w");
-    if (fp!=0)
-        {
-            if (header==0)
-                {
-                    header=bvhHeader;
-                }
-            fprintf(fp,"%s",header);
-            fprintf(fp,"\nMOTION\n");
-            fprintf(fp,"Frames: %lu \n",bvhFrames.size());
-            fprintf(fp,"Frame Time: 0.04\n");
-
-            unsigned int i=0,j=0;
-            for (i=0; i< bvhFrames.size(); i++)
-                {
-                    std::vector<float> frame = bvhFrames[i];
-                    //fprintf(fp,"%lu joints",frame.size());
-
-                    //fprintf(fp,"0.0 0.0 0.0 ");
-                    for (j=0; j<frame.size(); j++)
-                        {
-                            fprintf(fp,"%0.4f ",frame[j]);
-                        }
-                    fprintf(fp,"\n");
-                }
-            fclose(fp);
-            return 1;
-        }
-    return 0;
-}
-
 
 int listNodesMN(const char * label , TF_Graph* graph)
 {
