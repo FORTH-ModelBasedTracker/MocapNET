@@ -1494,7 +1494,9 @@ enum MOCAPNET_Output_Joints
  MOCAPNET_OUTPUT_LKNEE_YROTATION,
  MOCAPNET_OUTPUT_LFOOT_ZROTATION,
  MOCAPNET_OUTPUT_LFOOT_XROTATION,
- MOCAPNET_OUTPUT_LFOOT_YROTATION
+ MOCAPNET_OUTPUT_LFOOT_YROTATION,
+ //----------------------------- 
+ MOCAPNET_OUTPUT_NUMBER
 };
 
 
@@ -1521,7 +1523,12 @@ struct MocapNET
    unsigned int loadedModels;
    struct MocapNETModelLimits modelLimits[16];  
    
+   
+   unsigned int lastActivatedGesture;
+   unsigned int gestureTimestamp;
+   
    struct PoseHistory poseHistoryStorage;
+   struct GestureDatabase recognizedGestures;
 };
 
 

@@ -904,7 +904,12 @@ int main(int argc, char *argv[])
                                                         
                                                     }
                                                     
-                                                    
+                                                    //Retreive gesture name to display it
+                                                    char * gestureName=0;
+                                                    if (mnet.lastActivatedGesture>0)
+                                                    {
+                                                        gestureName=mnet.recognizedGestures.gesture[mnet.lastActivatedGesture-1].label;
+                                                    }
 
                                                     if (visualizationType==0)
                                                         {
@@ -925,6 +930,12 @@ int main(int argc, char *argv[])
                                                                 visWidth,
                                                                 visHeight,
                                                                 0,
+                                                                
+                                                                //mnet->recognizedGestures.
+                                                                mnet.lastActivatedGesture, 
+                                                                gestureName,
+                                                                mnet.recognizedGestures.gestureChecksPerformed - mnet.gestureTimestamp ,//gesture stuff
+                                                     
                                                                 flatAndNormalized2DPoints,
                                                                 bvhOutput,
                                                                 bvhForcedViewOutput,

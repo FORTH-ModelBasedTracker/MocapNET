@@ -306,6 +306,22 @@ int writeBVHFile(
                 );
 
 
+
+
+
+
+void * loadBVHFile(const char * filename);
+int freeBVHFile(void * bvhMemoryHandler);
+
+
+std::vector<std::vector<float> > loadBVHFileMotionFrames(const char * filename);
+
+
+
+
+
+
+
 /**
  * @brief Initialize BVH code ( if it is present )
  * @retval 1=Success/0=Failure

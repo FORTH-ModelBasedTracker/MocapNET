@@ -32,6 +32,11 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
    //Reset pose history..
    mnet->poseHistoryStorage.maxPoseHistory=150;
    mnet->poseHistoryStorage.history.clear();
+   
+   if (!loadGestures(&mnet->recognizedGestures))
+   {
+       fprintf(stderr,RED "Failed to read recognized Gestures\n" NORMAL);
+   }
   
     switch (mode)
         {
@@ -298,6 +303,96 @@ std::vector<float>  MNET5Classes(struct MocapNET * mnet,std::vector<float> mnetI
 }
 
 
+int silenceDeadJoints(std::vector<float> & result)
+{
+  if (result.size()!=MOCAPNET_OUTPUT_NUMBER)
+  {
+     fprintf(stderr,RED "silenceDeadJoints: There is an inconsistency in the number of outputs\n" NORMAL); 
+     return 0;
+  }
+    
+ result[MOCAPNET_OUTPUT_LEFTEYE_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LEFTEYE_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LEFTEYE_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RIGHTEYE_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RIGHTEYE_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RIGHTEYE_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RCOLLAR_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RCOLLAR_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RCOLLAR_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RTHUMB1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RTHUMB1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RTHUMB1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RTHUMB2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RTHUMB2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RTHUMB2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RINDEX1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RINDEX1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RINDEX1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RINDEX2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RINDEX2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RINDEX2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RMID1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RMID1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RMID1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RMID2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RMID2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RMID2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RRING1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RRING1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RRING1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RRING2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RRING2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RRING2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RPINKY1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RPINKY1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RPINKY1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RPINKY2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RPINKY2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RPINKY2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LCOLLAR_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LCOLLAR_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LCOLLAR_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LTHUMB1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LTHUMB1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LTHUMB1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LTHUMB2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LTHUMB2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LTHUMB2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LINDEX1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LINDEX1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LINDEX1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LINDEX2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LINDEX2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LINDEX2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LMID1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LMID1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LMID1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LMID2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LMID2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LMID2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LRING1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LRING1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LRING1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LRING2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LRING2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LRING2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LPINKY1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LPINKY1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LPINKY1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LPINKY2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LPINKY2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LPINKY2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RBUTTOCK_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RBUTTOCK_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RBUTTOCK_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LBUTTOCK_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LBUTTOCK_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LBUTTOCK_YROTATION]=0;
+ 
+  return 1;  
+}
+
 
 std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
 {
@@ -350,6 +445,23 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
             }    
             
             addToMotionHistory(&mnet->poseHistoryStorage,result);
+            
+            int gestureDetected=compareHistoryWithKnownGestures(
+                                                                 &mnet->recognizedGestures,
+                                                                 &mnet->poseHistoryStorage,
+                                                                 75.0,//Percentage complete..
+                                                                 20.0 //Angle thrshold
+                                                                );
+                                                                
+            if (gestureDetected!=0)
+            {
+                mnet->lastActivatedGesture=gestureDetected;
+                mnet->gestureTimestamp=mnet->recognizedGestures.gestureChecksPerformed;
+                fprintf(stderr,GREEN "Gesture Detection : %u\n" NORMAL,gestureDetected);
+            }                                                                
+            
+            silenceDeadJoints(result);
+            
             return result;
         }
     else

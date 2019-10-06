@@ -61,6 +61,70 @@ int writeBVHFile(
 
 
 
+void * loadBVHFile(const char * filename)
+{
+#if USE_BVH
+    //struct BVH_MotionCapture tmp={0}; 
+    struct BVH_MotionCapture * newBVHLoadedFile = (struct BVH_MotionCapture *) malloc(sizeof(struct BVH_MotionCapture));
+    memset(newBVHLoadedFile,0,sizeof(struct BVH_MotionCapture));
+    
+    if (newBVHLoadedFile!=0)
+    {
+     if ( bvh_loadBVH(filename,newBVHLoadedFile,1.0) )
+        {
+            return (void*) newBVHLoadedFile;
+        }
+    }
+#endif // USE_BVH
+    return 0;
+}
+
+
+
+
+std::vector<std::vector<float> > loadBVHFileMotionFrames(const char * filename)
+{
+    std::vector<std::vector<float> > result;
+#if USE_BVH
+    struct BVH_MotionCapture bvh={0}; 
+    
+     if ( bvh_loadBVH(filename,&bvh,1.0) )
+        {
+            unsigned int frameID=0, jointID=0, c=0;
+            for (frameID=0; frameID<bvh.numberOfFramesEncountered; frameID++)
+            {
+             std::vector<float> currentFrame;
+             currentFrame.clear();
+               for (jointID=0; jointID<bvh.numberOfValuesPerFrame; jointID++)
+               {
+                   currentFrame.push_back(bvh.motionValues[c]);
+                   c++;
+               }
+             result.push_back(currentFrame);
+            }
+            bvh_free(&bvh);
+        }
+#endif // USE_BVH
+
+    return result;
+}
+
+
+
+
+int freeBVHFile(void * bvhMemoryHandler)
+{
+#if USE_BVH
+    struct BVH_MotionCapture * BVHLoadedFile = (struct BVH_MotionCapture *) bvhMemoryHandler;
+    if (  bvh_free(BVHLoadedFile) )
+        { 
+            free(BVHLoadedFile);
+            return 1;
+        } 
+#endif // USE_BVH
+    return 0;
+}
+
 
 
 int initializeBVHConverter()
@@ -124,12 +188,12 @@ unsigned int getBVHJointIDFromJointName(const char * jointName)
 #if USE_BVH
     int i=0;
     for (i=0; i<bvhMotion.jointHierarchySize; i++)
-    {
-        if ( strcmp(jointName,bvhMotion.jointHierarchy[i].jointName)==0 )
-        { 
-          return  i;
+        {
+            if ( strcmp(jointName,bvhMotion.jointHierarchy[i].jointName)==0 )
+                {
+                    return  i;
+                }
         }
-    }  
 #endif
     return 0;
 }
@@ -137,7 +201,7 @@ unsigned int getBVHJointIDFromJointName(const char * jointName)
 
 std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bvhFrame,unsigned int width, unsigned int height)
 {
-    
+
     /*
         renderingConfiguration.width=1920;
     renderingConfiguration.height=1080;
@@ -146,7 +210,7 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
     renderingConfiguration.fX=582.18394;
     renderingConfiguration.fY=582.52915;
     */
-    
+
     std::vector<std::vector<float> > result;
 #if USE_BVH
     struct simpleRenderer renderer= {0};

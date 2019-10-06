@@ -27,7 +27,8 @@ MAXIMUM_POSITION="1400 300 $MAXIMUM_DEPTH"
 MAXIMUM_ROTATION="25 178 35"
   
 MIRROR_DATASET_HANDS=""
-ITERATIONS="2" 
+ITERATIONS="2" #float32 targeting 16GB RAM
+ITERATIONS="6" #float16 targeting 16GB RAM
 
 #We are also mirroring so bear in mind that this will effectively be doubled 
 #MIRROR_DATASET_HANDS="--mirror lCollar rCollar"
@@ -77,10 +78,11 @@ function generateDataset
 
 #New way to do randomizations Position is picked in 2D and works in all depths
 #------------------------------------------------------------------------------------------------------------
-#generateDataset dataBack.csv "--flipRandomizationOrientation --randomize2Dranges $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 -90 35 -35 90 -35 35 180 35"
-#generateDataset dataAll.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 180 35"
-#generateDataset dataFront.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -90 -35 35 90 35"
+generateDataset dataBack.csv "--flipRandomizationOrientation --randomize2Dranges $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 -90 35 -35 90 -35 35 180 35"
+generateDataset dataFront.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -90 -35 35 90 35"
+generateDataset dataAll.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 180 35"
 
+exit 0
 
 #New extra fine detail
 #------------------------------------------------------------------------------------------------------------

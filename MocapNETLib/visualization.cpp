@@ -680,25 +680,35 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
        for (joint=0; joint<history[i].size(); joint++)
        { 
         if ( 
-                   (  (joint>=MOCAPNET_OUTPUT_RTHUMB1_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_RPINKY2_YROTATION) )  ||
-                   (  (joint>=MOCAPNET_OUTPUT_LTHUMB1_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_LPINKY2_YROTATION) )    ||
-                   (  (joint>=MOCAPNET_OUTPUT_RBUTTOCK_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_RBUTTOCK_YROTATION) )    || 
-                   (  (joint>=MOCAPNET_OUTPUT_LBUTTOCK_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_LBUTTOCK_YROTATION) )     ||
-                   (  (joint>=MOCAPNET_OUTPUT_CHEST_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_CHEST_YROTATION) )||
-                   (  (joint>=MOCAPNET_OUTPUT_LEFTEYE_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_RIGHTEYE_YROTATION) )  ||
-                   (  (joint>=MOCAPNET_OUTPUT_RCOLLAR_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_RCOLLAR_YROTATION) )   ||
-                   (  (joint>=MOCAPNET_OUTPUT_LCOLLAR_ZROTATION)&& (joint<=MOCAPNET_OUTPUT_LCOLLAR_YROTATION) ) 
+                   (  (joint>=MOCAPNET_OUTPUT_RTHUMB1_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_RPINKY2_YROTATION) )  ||
+                   (  (joint>=MOCAPNET_OUTPUT_LTHUMB1_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_LPINKY2_YROTATION) )    ||
+                   (  (joint>=MOCAPNET_OUTPUT_RBUTTOCK_ZROTATION) && (joint<=MOCAPNET_OUTPUT_RBUTTOCK_YROTATION) )    || 
+                   (  (joint>=MOCAPNET_OUTPUT_LBUTTOCK_ZROTATION) && (joint<=MOCAPNET_OUTPUT_LBUTTOCK_YROTATION) )     ||
+                   (  (joint>=MOCAPNET_OUTPUT_CHEST_ZROTATION)    && (joint<=MOCAPNET_OUTPUT_CHEST_YROTATION) )||
+                   (  (joint>=MOCAPNET_OUTPUT_LEFTEYE_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_RIGHTEYE_YROTATION) )  ||
+                   (  (joint>=MOCAPNET_OUTPUT_RCOLLAR_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_RCOLLAR_YROTATION) )   ||
+                   (  (joint>=MOCAPNET_OUTPUT_LCOLLAR_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_LCOLLAR_YROTATION) ) 
               ) 
         {
             //Don't plot hands for now..
             //Don't plot dead joints
         } else
         {
-           if (i==1)
+           if (i==5)
             { 
              cv::Point labelPosition(plotPosX,    plotPosY);
-             snprintf(labelOfPlot,512,"%s  -> %0.2f",MocapNETOutputArrayNames[joint],history[history.size()-1][joint]);
+             float absoluteValue = history[history.size()-1][joint];
+             float velocityValue = history[history.size()-1][joint] - history[history.size()-2][joint];  
+             float accelerationValue = velocityValue - ( history[history.size()-3][joint] - history[history.size()-4][joint] );  
+              
+             
+             snprintf(labelOfPlot,512,"%s  -> %0.2f",MocapNETOutputArrayNames[joint],absoluteValue);
              cv::putText(img,labelOfPlot, labelPosition, cv::FONT_HERSHEY_DUPLEX, 0.3, cv::Scalar::all(255), 0.2, 8 );
+
+             snprintf(labelOfPlot,512,"v %0.2f acc %0.2f",velocityValue,accelerationValue);
+             labelPosition.y+=10;
+             cv::putText(img,labelOfPlot, labelPosition, cv::FONT_HERSHEY_DUPLEX, 0.3, cv::Scalar::all(255), 0.2, 8 );
+
             }          
          
             cv::Point jointPointPrev(plotPosX+ i-1,    plotPosY+history[i-1][joint] + heightOfGraphs/2 );
@@ -743,6 +753,9 @@ int visualizePoints(
     unsigned int width,
     unsigned int height,
     unsigned int handleMessages,
+    unsigned int gestureDetected,
+    const char * gestureName,
+    unsigned int gestureFrame,
     std::vector<float> mocapNETInput,
     std::vector<float> mocapNETOutput,
     std::vector<float> mocapNETOutputWithGUIForcedView,
@@ -964,6 +977,43 @@ int visualizePoints(
      
      img=cv::max(*glMat, img);
    }
+   
+   
+   // txtPosition.y+=30;
+   // snprintf(textInfo,512,"Gesture detected : %u / frame %u",gestureDetected,gestureFrame);
+   // cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8); 
+    
+    if(gestureDetected)
+    {
+        if (gestureFrame<20)
+        {
+           snprintf(textInfo,512,"%s  (%u)",gestureName,gestureDetected);
+          
+          if (endEffectorHistory)   
+          {//If we track end effectors we will use their position to emit circles
+            if (leftEndEffector.size()>0)
+            { 
+                cv::putText(img,textInfo,leftEndEffector[leftEndEffector.size()-1],fontUsed,2.5,cv::Scalar(0,255,255),thickness,8); 
+                cv::circle(img,leftEndEffector[leftEndEffector.size()-1],5*gestureFrame,cv::Scalar(0,255,255),3,8,0);  
+            }
+          if (rightEndEffector.size()>0)
+            {
+                cv::circle(img,rightEndEffector[rightEndEffector.size()-1],5*gestureFrame,cv::Scalar(0,255,255),3,8,0);  
+            }
+          } else
+          {
+            txtPosition.y+=30;
+            cv::putText(img,textInfo,txtPosition,fontUsed,1.5,cv::Scalar(0,255,255),thickness,8); 
+            cv::circle(img,txtPosition,2*gestureFrame,cv::Scalar(0,255,255),3,8,0);  
+          }
+            
+  
+            
+           
+                
+           
+        } 
+    } 
    
    
 
