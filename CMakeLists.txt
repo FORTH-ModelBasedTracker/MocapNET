@@ -197,11 +197,13 @@ ENDIF(ENABLE_OPENGL)
 
 
 
-
-find_package(OpenCV)
+#Autosearch for the opencv maybe installed by the user..!
+find_package(OpenCV PATHS opencv-3.2.0/build NO_DEFAULT_PATH)
+find_package (OpenCV)
 if (OpenCV_FOUND)
   add_definitions(-DUSE_OPENCV)
   MESSAGE("OpenCV code found and will be used..")   
+  MESSAGE(${OpenCV_DIR})   
 ENDIF(OpenCV_FOUND)
 
  

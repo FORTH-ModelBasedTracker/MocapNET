@@ -100,8 +100,8 @@ To test OpenCV support of your video files issue :
 
 These tests only use OpenCV (without Tensorflow or any other dependencies) and are intended as a quick method that can identify and debug configuration problems on your system.
 In case of problems playing back video files or your webcam you might want to consider compiling OpenCV yourself. The [getOpenCV3.2.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/getOpenCV3.2.sh) script has been included to automatically fetch and make OpenCV 3.2 for your convinience. You should first remove the package manager version of OpenCV and keep track of the changes performed. 
- 
 
+The CMake file provided will automatically try to alter the OpenCV_DIR variable to target your locally built version. If you are having trouble switching between the system version and the downloaded version consider removing the build directory and making a new one, once again following the Building instructions. The new build directory should automatically see your local OpenCV version and use this by default.
 
 ## Live Demo
 ------------------------------------------------------------------ 
