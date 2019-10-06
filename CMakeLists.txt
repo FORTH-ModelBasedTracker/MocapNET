@@ -9,9 +9,23 @@ OPTION (ENABLE_OPENGL OFF)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD 11)  
-set(TENSORFLOW_ROOT "/usr/local/lib/" CACHE PATH "tensorflow root") 
-set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")  
- 
+
+
+IF(EXISTS "${CMAKE_SOURCE_DIR}/libtensorflow/lib/libtensorflow.so")
+ MESSAGE("Using locally found libtensorflow C-API")
+ set(TENSORFLOW_ROOT "${CMAKE_SOURCE_DIR}/libtensorflow/lib/" CACHE PATH "tensorflow root") 
+ set(TENSORFLOW_INCLUDE_ROOT "${CMAKE_SOURCE_DIR}/libtensorflow/include/" CACHE PATH "tensorflow include")  
+ELSEIF(EXISTS "/usr/local/lib/libtensorflow.so")
+ MESSAGE("Using system-wide found libtensorflow C-API")
+ set(TENSORFLOW_ROOT "/usr/local/lib/" CACHE PATH "tensorflow root") 
+ set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")  
+ELSE()
+ MESSAGE("Did not find a tensorflow version, please consider running the initialize.sh script or reading the README file")
+ #Set some default tensorflow paths to give some valid error afterwards..
+ set(TENSORFLOW_ROOT "/usr/local/lib/" CACHE PATH "tensorflow root") 
+ set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")  
+ENDIF()
+
 
 include_directories(${TENSORFLOW_INCLUDE_ROOT})
 ADD_LIBRARY(TensorflowFramework SHARED IMPORTED) 
