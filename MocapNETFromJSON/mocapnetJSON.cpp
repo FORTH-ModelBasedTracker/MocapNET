@@ -28,6 +28,8 @@ int main(int argc, char *argv[])
     const char * path=0;
     const char * label=0;
     float quality=1.0;
+    
+    int doGestureDetection=0,doOutputFiltering=0;
 
     unsigned int isJSONFile=1;
     unsigned int isCSVFile=0;
@@ -198,7 +200,7 @@ int main(int argc, char *argv[])
 
                             long startTime = GetTickCountMicrosecondsMN();
                             //--------------------------------------------------------
-                            std::vector<float>  result = runMocapNET(&mnet,inputValues);
+                            std::vector<float>  result = runMocapNET(&mnet,inputValues,doGestureDetection,doOutputFiltering);
                             bvhFrames.push_back(result);
                             //--------------------------------------------------------
                             long endTime = GetTickCountMicrosecondsMN();

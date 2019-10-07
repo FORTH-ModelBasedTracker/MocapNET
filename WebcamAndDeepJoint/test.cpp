@@ -319,7 +319,7 @@ int main(int argc, char *argv[])
 
     int live=0,stop=0,visualizationType=0;
     int constrainPositionRotation=1,rotate=0;
-    int doCrop=1,tryForMaximumCrop=0,doSmoothing=5,drawFloor=1,drawNSDM=1;
+    int doCrop=1,tryForMaximumCrop=0,doSmoothing=5,drawFloor=1,drawNSDM=1,doGestureDetection=1,doOutputFiltering=0;
     int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0,autoDirection=0,autoCount=0;
     int doFeetHeuristics=0;
     int rememberPrevious2DPositions=0;
@@ -716,7 +716,7 @@ int main(int argc, char *argv[])
 
                                             // Get MocapNET prediction
                                             unsigned long startTime = GetTickCountMicroseconds();
-                                            bvhOutput = runMocapNET(&mnet,flatAndNormalized2DPoints);
+                                            bvhOutput = runMocapNET(&mnet,flatAndNormalized2DPoints,doGestureDetection,doOutputFiltering);
                                             unsigned long endTime = GetTickCountMicroseconds();
                                            fprintf(stderr,"Just run MocapNET and got back a %lu sized vector \n",bvhOutput.size());
                                             //-------------------------------------------------------------------------------------------------------------------------
@@ -833,7 +833,8 @@ int main(int argc, char *argv[])
 
                                                             cv::createTrackbar("Stop Demo", "3D Control", &stop, 1);
                                                             cv::createTrackbar("Visualization Demo", "3D Control", &visualizationType,14);
-                                                            cv::createTrackbar("Rotate Feed", "3D Control", &rotate, 4);
+                                                            cv::createTrackbar("Rotate Feed", "3D Control", &rotate, 4); 
+                                                            cv::createTrackbar("Gesture Detection", "3D Control", &doGestureDetection,1);
                                                             cv::createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 2);
                                                             cv::createTrackbar("Automatic Crop", "3D Control", &doCrop, 1); 
                                                             cv::createTrackbar("2D NN Sensitivity", "3D Control", &joint2DSensitivityPercent,100);
@@ -889,9 +890,12 @@ int main(int argc, char *argv[])
                                                     
                                                     //Retreive gesture name to display it
                                                     char * gestureName=0;
-                                                    if (mnet.lastActivatedGesture>0)
+                                                    if (doGestureDetection)
                                                     {
+                                                     if (mnet.lastActivatedGesture>0)
+                                                     {
                                                         gestureName=mnet.recognizedGestures.gesture[mnet.lastActivatedGesture-1].label;
+                                                     }
                                                     }
 
                                                     if (visualizationType==0)

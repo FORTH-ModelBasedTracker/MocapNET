@@ -185,6 +185,7 @@ int main(int argc, char *argv[])
   int useCPUOnly=1;
   unsigned int mocapNETMode=3;
   float quality=1.0;
+  int doGestureDetection=0,doOutputFiltering=0;
   
   for (int i=0; i<argc; i++)
   {
@@ -243,7 +244,7 @@ int main(int argc, char *argv[])
 
        long startTime = GetTickCountMicrosecondsMN();
        //--------------------------------------------------------
-        std::vector<float>  result = runMocapNET(&mnet,inputValues);
+        std::vector<float>  result = runMocapNET(&mnet,inputValues,doGestureDetection,doOutputFiltering);
        //--------------------------------------------------------
        long endTime = GetTickCountMicrosecondsMN();
        float sampleTime = (float) (endTime-startTime)/1000;

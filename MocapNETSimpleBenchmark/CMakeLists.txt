@@ -7,7 +7,7 @@ INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 
 
 
-add_executable(MocapNETBenchmark  ${BVH_SOURCE} benchmark.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/nsdm.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../MocapNETLib/jsonMocapNETHelpers.cpp ../MocapNETLib/InputParser_C.cpp  ../MocapNETLib/gestureRecognition.cpp ../MocapNETLib/bvh.cpp ../MocapNETLib/csv.cpp ../Tensorflow/tensorflow.cpp ../Tensorflow/tf_utils.cpp)   
+add_executable(MocapNETBenchmark  ${BVH_SOURCE} benchmark.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/nsdm.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../MocapNETLib/jsonMocapNETHelpers.cpp ../MocapNETLib/InputParser_C.cpp  ../MocapNETLib/gestureRecognition.cpp ../MocapNETLib/outputFiltering.cpp ../MocapNETLib/bvh.cpp ../MocapNETLib/csv.cpp ../Tensorflow/tensorflow.cpp ../Tensorflow/tf_utils.cpp)   
 target_link_libraries(MocapNETBenchmark rt dl m ${OpenCV_LIBRARIES}  Tensorflow  TensorflowFramework MocapNETLib)
 set_target_properties(MocapNETBenchmark PROPERTIES DEBUG_POSTFIX "D") 
        

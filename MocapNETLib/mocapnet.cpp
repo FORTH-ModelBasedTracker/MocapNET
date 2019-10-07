@@ -394,7 +394,7 @@ int silenceDeadJoints(std::vector<float> & result)
 }
 
 
-std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
+std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,int doGestureDetection,int doOutputFiltering)
 {
     std::vector<float> emptyResult;
 
@@ -445,20 +445,23 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input)
             }    
             
             addToMotionHistory(&mnet->poseHistoryStorage,result);
-            
-            int gestureDetected=compareHistoryWithKnownGestures(
+             
+             if (doGestureDetection)
+             {
+             int gestureDetected=compareHistoryWithKnownGestures(
                                                                                                                                              &mnet->recognizedGestures,
                                                                                                                                              &mnet->poseHistoryStorage,
                                                                                                                                              85.0,//Percentage complete..
                                                                                                                                              23.0 //Angle thrshold
                                                                                                                                          );
                                                                 
-            if (gestureDetected!=0)
-            {
+             if (gestureDetected!=0)
+             {
                 mnet->lastActivatedGesture=gestureDetected;
                 mnet->gestureTimestamp=mnet->recognizedGestures.gestureChecksPerformed;
                 fprintf(stderr,GREEN "Gesture Detection : %u\n" NORMAL,gestureDetected);
-            }                                                                
+              } 
+             }                                                               
             
             silenceDeadJoints(result);
             

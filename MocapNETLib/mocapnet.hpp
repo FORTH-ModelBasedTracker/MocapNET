@@ -1568,7 +1568,7 @@ std::vector<float> prepareMocapNETInputFromUncompressedInput(std::vector<float> 
  * @param Vector of input values according to MocapNETUncompressedAndCompressedArrayNames
  * @retval 1=Success,0=Failure
  */
-std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input) ;
+std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,int doGestureDetection,int doOutputFiltering) ;
 
 
 

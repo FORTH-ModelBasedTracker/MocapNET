@@ -28,7 +28,7 @@ MAXIMUM_ROTATION="25 178 35"
   
 MIRROR_DATASET_HANDS=""
 ITERATIONS="2" #float32 targeting 16GB RAM
-ITERATIONS="6" #float16 targeting 16GB RAM
+ITERATIONS="8" #float16 targeting 16GB RAM
 
 #We are also mirroring so bear in mind that this will effectively be doubled 
 #MIRROR_DATASET_HANDS="--mirror lCollar rCollar"
