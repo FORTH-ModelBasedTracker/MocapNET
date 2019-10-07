@@ -14,22 +14,23 @@
  */
  
  
- const unsigned int hardcodedGestureNumber=12;
+ const unsigned int hardcodedGestureNumber=10;
  
 static const char * hardcodedGestureName[] =
 {
-  "comeleft.bvh",             //0
-  "help.bvh",                       //1
-  "push.bvh",                      //2
-  "comeright.bvh",          //3
-  "lefthandcircle.bvh",  //4
+  "comeleft.bvh",              //0
+  "help.bvh",                         //1
+  "push.bvh",                        //2
+  "comeright.bvh",            //3
+  "lefthandcircle.bvh",   //4
   "righthandcircle.bvh",//5
-  "waveleft.bvh",             //6
-  "doubleclap.bvh",          //7
-  "leftkick.bvh",                //8
-  "rightkick.bvh",             //9
-  "waveright.bvh",          //10
-  "tpose.bvh",                   //11
+  "waveleft.bvh",              //6
+  "doubleclap.bvh",         //7
+  "waveright.bvh",           //8
+  "tpose.bvh",                    //9
+  ""
+  "leftkick.bvh",                //10
+  "rightkick.bvh",             //11
   ""
 };
 
@@ -61,6 +62,7 @@ struct GestureDatabase
     unsigned int gestureChecksPerformed;
     unsigned int numberOfLoadedGestures;
     struct RecordedGesture gesture[hardcodedGestureNumber];
+    unsigned long previousGestureCheckTimestamp;    
 };
 
 

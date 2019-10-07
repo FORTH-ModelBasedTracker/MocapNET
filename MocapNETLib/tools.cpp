@@ -88,6 +88,15 @@ unsigned long GetTickCountMillisecondsMN()
 }
 
 
+float convertStartEndTimeFromMicrosecondsToFPS(unsigned long startTime, unsigned long endTime)
+{
+    float timeInMilliseconds =  (float) (endTime-startTime)/1000;
+    if (timeInMilliseconds ==0.0)
+        {
+            timeInMilliseconds=0.00001;    //Take care of division by null..
+        }
+    return (float) 1000/timeInMilliseconds;
+}
 
 char fileExists(const char * filename)
 {

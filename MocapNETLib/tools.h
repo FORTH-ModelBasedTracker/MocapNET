@@ -41,6 +41,13 @@ unsigned long GetTickCountMillisecondsMN();
 
 
 /**
+ * @brief Convert start and end time to a framerate ( frames per second )
+ * @ingroup demo
+ * @retval Will return a framerate from two millisecond timestamps, if no time duration has been passed there is no division by zero.
+ */
+float convertStartEndTimeFromMicrosecondsToFPS(unsigned long startTime, unsigned long endTime);
+
+/**
  * @brief Get the dimensions of an image by relying on the identify tool
  * @ingroup tools
  * @param CString with path to the image file to get dimensions for

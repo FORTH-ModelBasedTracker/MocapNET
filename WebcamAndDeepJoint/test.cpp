@@ -135,23 +135,7 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
 }
 
 
-
-
-/**
- * @brief Convert start and end time to a framerate ( frames per second )
- * @ingroup demo
- * @retval Will return a framerate from two millisecond timestamps, if no time duration has been passed there is no division by zero.
- */
-float convertStartEndTimeFromMicrosecondsToFPS(unsigned long startTime, unsigned long endTime)
-{
-    float timeInMilliseconds =  (float) (endTime-startTime)/1000;
-    if (timeInMilliseconds ==0.0)
-        {
-            timeInMilliseconds=0.00001;    //Take care of division by null..
-        }
-    return (float) 1000/timeInMilliseconds;
-}
-
+ 
 
 
 int feetHeuristics(struct skeletonCOCO * sk)
@@ -237,8 +221,7 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
                 numberOfHeatmaps,
                 numberOfOutputTensors
             );
-    unsigned long endTime = GetTickCountMicroseconds();
-    unsigned long openPoseComputationTimeInMilliseconds = (unsigned long) (endTime-startTime)/1000;
+    unsigned long endTime = GetTickCountMicroseconds(); 
     *fps = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
 
     if (!visualize)

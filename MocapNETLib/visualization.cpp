@@ -985,7 +985,7 @@ int visualizePoints(
     
     if(gestureDetected)
     {
-        if (gestureFrame<20)
+        if (gestureFrame<25)
         {
            snprintf(textInfo,512,"%s  (%u)",gestureName,gestureDetected);
           
@@ -993,11 +993,12 @@ int visualizePoints(
           {//If we track end effectors we will use their position to emit circles
             if (leftEndEffector.size()>0)
             { 
-                cv::putText(img,textInfo,leftEndEffector[leftEndEffector.size()-1],fontUsed,2.5,cv::Scalar(0,255,255),thickness,8); 
                 cv::circle(img,leftEndEffector[leftEndEffector.size()-1],5*gestureFrame,cv::Scalar(0,255,255),3,8,0);  
             }
           if (rightEndEffector.size()>0)
             {
+                //Right is always left :P so there is space for the string
+                cv::putText(img,textInfo,rightEndEffector[rightEndEffector.size()-1],fontUsed,2.2,cv::Scalar(0,255,255),thickness,8); 
                 cv::circle(img,rightEndEffector[rightEndEffector.size()-1],5*gestureFrame,cv::Scalar(0,255,255),3,8,0);  
             }
           } else
@@ -1006,14 +1007,17 @@ int visualizePoints(
             cv::putText(img,textInfo,txtPosition,fontUsed,1.5,cv::Scalar(0,255,255),thickness,8); 
             cv::circle(img,txtPosition,2*gestureFrame,cv::Scalar(0,255,255),3,8,0);  
           }
-            
-  
-            
-           
-                
-           
-        } 
-    } 
+        }
+   } else
+   {
+       //We did not detect a gesture.. Let's check the  framerate
+       if (fpsTotal<13)
+       {
+           txtPosition.y+=30;
+          cv::putText(img,"Framerate is too slow for reliable gesture recognition..",txtPosition,fontUsed,0.8,color,thickness,8);  
+       }
+       
+   }
    
    
 
