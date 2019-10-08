@@ -236,6 +236,7 @@ int main(int argc, char *argv[])
                                                      visWidth,
                                                      visHeight,
                                                      1,
+                                                     0,//Dead Input Points
                                                      0,0,0,//gesture stuff
                                                      inputValues,
                                                      result,

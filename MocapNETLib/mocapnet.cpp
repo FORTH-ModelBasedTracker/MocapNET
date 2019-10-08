@@ -446,8 +446,9 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,i
             
             addToMotionHistory(&mnet->poseHistoryStorage,result);
              
+             //----------------------------------------------------------------------------------------------
              if (doGestureDetection)
-             {
+             { 
              int gestureDetected=compareHistoryWithKnownGestures(
                                                                                                                                              &mnet->recognizedGestures,
                                                                                                                                              &mnet->poseHistoryStorage,
@@ -461,7 +462,8 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,i
                 mnet->gestureTimestamp=mnet->recognizedGestures.gestureChecksPerformed;
                 fprintf(stderr,GREEN "Gesture Detection : %u\n" NORMAL,gestureDetected);
               } 
-             }                                                               
+             }
+            //----------------------------------------------------------------------------------------------                                                               
             
             silenceDeadJoints(result);
             

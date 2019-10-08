@@ -753,6 +753,7 @@ int visualizePoints(
     unsigned int width,
     unsigned int height,
     unsigned int handleMessages,
+    unsigned int deadInputPoints,
     unsigned int gestureDetected,
     const char * gestureName,
     unsigned int gestureFrame,
@@ -766,22 +767,37 @@ int visualizePoints(
 )
 {  
 #if USE_OPENCV
+
+    char textInfo[512]; 
+    cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
+    cv::Point txtPosition;
+    txtPosition.x=20;
+    txtPosition.y=20;
+    float thickness=1;
+    int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
+    
+
+    cv::Mat img(height,width, CV_8UC3, Scalar(0,0,0));
     if (mocapNETOutput.size()==0)
         {
-            fprintf(stderr,YELLOW "Won't visualize empty neural network output for frame %u\n" NORMAL,frameNumber);
+            txtPosition.x=100;
+            txtPosition.y=400;
+            fprintf(stderr,YELLOW "Won't visualize empty neural network output for frame %u\n" NORMAL,frameNumber); 
+            cv::putText(img,"No visible person..",txtPosition,fontUsed,2.8,cv::Scalar(255,255,255),thickness,8);   
+            cv::imshow(windowName,img);
             return 0;
         }
 
     if (points2DOutput.size()==0)
         {
+            txtPosition.x=100;
+            txtPosition.y=400;
             fprintf(stderr,YELLOW "Won't visualize empty 2D points for frame %u\n" NORMAL,frameNumber);
+            cv::putText(img,"No 2D skeleton..",txtPosition,fontUsed,2.8,cv::Scalar(255,255,255),thickness,8);   
+            cv::imshow(windowName,img);
             return 0;
         }
 
-    char textInfo[512];
-
-    //std::vector<std::vector<float> > points2D = convertBVHFrameTo2DPoints(mocapNETOutput,width,height);
-    cv::Mat img(height,width, CV_8UC3, Scalar(0,0,0));
 
 
 
@@ -877,12 +893,7 @@ int visualizePoints(
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
-    cv::Point txtPosition;
-    txtPosition.x=20;
-    txtPosition.y=20;
-    float thickness=1;
-    int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
-    cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
+
 
     if (numberOfFramesToGrab>0)
         {
@@ -1014,12 +1025,16 @@ int visualizePoints(
        if (fpsTotal<13)
        {
            txtPosition.y+=30;
-          cv::putText(img,"Framerate is too slow for reliable gesture recognition..",txtPosition,fontUsed,0.8,color,thickness,8);  
+           cv::putText(img,"Framerate is too slow for reliable gesture recognition..",txtPosition,fontUsed,0.8,color,thickness,8);  
        }
        
    }
    
-   
+   if (deadInputPoints>102)
+   {
+     txtPosition.y+=30;
+     cv::putText(img,"Bad Input - Filtered out..",txtPosition,fontUsed,1.0,cv::Scalar(0,0,255),thickness,8);   
+   }
 
     //At last we are able to show the window..
     cv::imshow(windowName,img);

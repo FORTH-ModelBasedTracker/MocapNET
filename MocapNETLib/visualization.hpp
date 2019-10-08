@@ -163,6 +163,7 @@ int visualizePoints(
                      unsigned int width,
                      unsigned int height,
                      unsigned int handleMessages,
+                     unsigned int deadInputPoints,
                      unsigned int gestureDetected,
                      const char * gestureName, 
                      unsigned int gestureFrame,

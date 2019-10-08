@@ -135,7 +135,7 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
 }
 
 
- 
+
 
 
 int feetHeuristics(struct skeletonCOCO * sk)
@@ -221,7 +221,7 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
                 numberOfHeatmaps,
                 numberOfOutputTensors
             );
-    unsigned long endTime = GetTickCountMicroseconds(); 
+    unsigned long endTime = GetTickCountMicroseconds();
     *fps = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
 
     if (!visualize)
@@ -233,7 +233,7 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
 
 
     unsigned int i=0;
-    struct skeletonCOCO sk={0};
+    struct skeletonCOCO sk= {0};
 
 
     if (pointsOf2DSkeleton.size()>=(UT_COCO_PARTS-1))
@@ -287,6 +287,22 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
 }
 
 
+unsigned int getNumberOfEmptyNSDMElements(std::vector<float> mocapNETInput)
+{
+    unsigned int numberOfZeros=0;
+
+    for (int i=0; i<mocapNETInput.size(); i++)
+        {
+            if (mocapNETInput[i]==0)
+                {
+                    ++numberOfZeros;
+                }
+
+        }
+
+    return numberOfZeros;
+}
+
 
 int populateDemoFigures(cv::Mat * figures)
 {
@@ -296,8 +312,66 @@ int populateDemoFigures(cv::Mat * figures)
     cv::resize(figures[0],figures[0], cv::Size(), reduction,reduction);
     figures[1] = cv::imread("doc/figureB.png", CV_LOAD_IMAGE_COLOR);   // Read the file
     cv::resize(figures[1],figures[1], cv::Size(), reduction, reduction);
-   // figures[2] = cv::imread("doc/figureC.png", CV_LOAD_IMAGE_COLOR);   // Read the file
-   // cv::resize(figures[2],figures[2], cv::Size(), reduction, reduction);
+    // figures[2] = cv::imread("doc/figureC.png", CV_LOAD_IMAGE_COLOR);   // Read the file
+    // cv::resize(figures[2],figures[2], cv::Size(), reduction, reduction);
+    return 1;
+}
+
+int adjustInputSamplingToMatchFramerateTarget(
+    cv::VideoCapture &cap,
+    cv::Mat  &frame,
+    unsigned int frameNumber,
+    float fpsTarget,
+    float fpsTotal,
+    float fpsAcquisition,
+    float fps2DJointDetector,
+    float fpsMocapNET
+)
+{
+    if (frameNumber<10)
+        {
+            fprintf(stderr,"Allow some frames to correctly measure framerates..\n");
+            return 0;
+        }
+
+
+    if (fpsTarget==fpsTotal)
+        {
+            fprintf(stderr,"Running @ %0.2f as the user requested..\n",fpsTotal);
+            return 1;
+        }
+    else if (fpsTarget<fpsTotal)
+        {
+            fprintf(stderr,"We are running @ %0.2f which is faster than the user target which is %0.2f\n",fpsTotal,fpsTarget);
+
+            float sleepPerSecond=fpsTotal-fpsTarget;
+            unsigned int sleepMicroseconds=(unsigned int) sleepPerSecond*1000;
+            fprintf(stderr,"We will make up for it by sleeping %0.2f frames per second ( %u μs) \n",sleepPerSecond,sleepMicroseconds);
+            usleep(sleepMicroseconds);
+            return 2;
+        }
+    else if (fpsTarget>fpsTotal)
+        {
+            fprintf(stderr,"We are running @ %0.2f which is slower than the user target which is %0.2f\n",fpsTotal,fpsTarget);
+
+            float skipPerSecond=fpsTarget-fpsTotal;
+            unsigned int skipMicroseconds=(unsigned int) skipPerSecond*1000;
+            unsigned int framesSkipped=0;
+
+            unsigned long frameSkipStart = GetTickCountMicroseconds();
+            unsigned long frameSkipEnd = frameSkipStart;
+
+            //Do skip frames until it's time for processing
+            while (frameSkipEnd-frameSkipStart < skipMicroseconds)
+                {
+                    frameSkipEnd = GetTickCountMicroseconds();
+                    cap >> frame; // get a new frame from camera
+                    ++framesSkipped;
+                }
+            fprintf(stderr,"We skipped %u frames to reach target .. \n",framesSkipped);
+            return 3;
+        }
+
     return 1;
 }
 
@@ -306,20 +380,24 @@ int populateDemoFigures(cv::Mat * figures)
 int main(int argc, char *argv[])
 {
     fprintf(stderr,"Welcome to the MocapNET demo\n");
-   
+
     unsigned int mocapNETMode=3;
     unsigned int forceCPUMocapNET=1;
     unsigned int forceCPU2DJointEstimation=0;
     float quality=1.0;
     float scale=1.0;
 
-    unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,frameLimitSet=0,visualize=1,save2DVisualization=0,visualizeOpenGLEnabled=0; 
+    unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,frameLimitSet=0,visualize=1,save2DVisualization=0,visualizeOpenGLEnabled=0;
     int joint2DSensitivityPercent=35;
     const char * webcam = 0;
 
+    unsigned int deadInputPoints=0;
     int live=0,stop=0,visualizationType=0;
     int constrainPositionRotation=1,rotate=0;
-    int doCrop=1,tryForMaximumCrop=0,doSmoothing=5,drawFloor=1,drawNSDM=1,doGestureDetection=1,doOutputFiltering=0;
+    int doCrop=1,tryForMaximumCrop=0,doSmoothing=5,drawFloor=1,drawNSDM=1,doGestureDetection=1,doOutputFiltering=1,frameSkip=0;
+    int targetSpecificFramerate=0;
+    float fpsTotal=1.0,fpsTarget=30.0,fpsAcquisition=1.0,fps2DJointDetector=1.0,fpsMocapNET=1.0;
+
     int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0,autoDirection=0,autoCount=0;
     int doFeetHeuristics=0;
     int rememberPrevious2DPositions=0;
@@ -328,7 +406,7 @@ int main(int argc, char *argv[])
 
     unsigned int delay=1; //Just a little time to view the window..
 
-    unsigned int quitAfterNSkippedFrames = 10000;
+    unsigned int quitAfterNBadFrames = 10000;
     //2D Joint Detector Configuration
     unsigned int inputWidth2DJointDetector = 368;
     unsigned int inputHeight2DJointDetector = 368;
@@ -354,16 +432,20 @@ int main(int argc, char *argv[])
     populateDemoFigures(demoFigures);
     //---------------------------------------------------------
 
-    char CPUName[512]={0}; 
-    if (getCPUName(CPUName,512))  
-        { fprintf(stderr,"CPU : %s\n",CPUName); }
-    
-    
-    char GPUName[512]={0}; 
-    if (getGPUName(GPUName,512))  
-        { fprintf(stderr,"GPU : %s\n",GPUName); }
-      
-      
+    char CPUName[512]= {0};
+    if (getCPUName(CPUName,512))
+        {
+            fprintf(stderr,"CPU : %s\n",CPUName);
+        }
+
+
+    char GPUName[512]= {0};
+    if (getGPUName(GPUName,512))
+        {
+            fprintf(stderr,"GPU : %s\n",GPUName);
+        }
+
+
     for (int i=0; i<argc; i++)
         {
             //In order to have an acceptable performance you should run 2D Joint estimation on GPU and MocapNET on CPU (which is the default configuration)
@@ -374,21 +456,21 @@ int main(int argc, char *argv[])
             if (strcmp(argv[i],"--openpose")==0)
                 {
                     networkPath=(char*) networkPathOpenPoseMiniStatic;
-                    networkOutputLayer[8]='1'; 
+                    networkOutputLayer[8]='1';
                     joint2DSensitivityPercent=40;
                     numberOfOutputTensors = 4;
                 }
             else if (strcmp(argv[i],"--forth")==0)
                 {
                     networkPath=(char*) networkPathFORTHStatic;
-                    networkOutputLayer[8]='0'; 
+                    networkOutputLayer[8]='0';
                     joint2DSensitivityPercent=30;
                     numberOfOutputTensors = 3;
                 }
             else if (strcmp(argv[i],"--vnect")==0)
                 {
                     networkPath = (char*) networkPathVnectStatic;
-                    networkOutputLayer[8]='1'; 
+                    networkOutputLayer[8]='1';
                     joint2DSensitivityPercent=20;
                     numberOfOutputTensors = 4;
                 }
@@ -403,18 +485,31 @@ int main(int argc, char *argv[])
                         quality=atof(argv[i+1]);
                     }
 
-                else if (strcmp(argv[i],"--maxskippedframes")==0)
+                else if (strcmp(argv[i],"--maxbadframes")==0)
                     {
-                        quitAfterNSkippedFrames=atoi(argv[i+1]);
+                        quitAfterNBadFrames=atoi(argv[i+1]);
                     }
-                 else if  ( (strcmp(argv[i],"--save2D")==0) || (strcmp(argv[i],"--save2d")==0) )
-                 {
-                     save2DVisualization=1;
-                 }
-                 else if (strcmp(argv[i],"--opengl")==0)
-                 {
-                     visualizeOpenGLEnabled=1;
-                 }   
+                else if  ( (strcmp(argv[i],"--save2D")==0) || (strcmp(argv[i],"--save2d")==0) )
+                    {
+                        save2DVisualization=1;
+                    }
+                else if (strcmp(argv[i],"--opengl")==0)
+                    {
+                        visualizeOpenGLEnabled=1;
+                    }
+                else if (strcmp(argv[i],"--targetframerate")==0)
+                    {
+                        targetSpecificFramerate=1;
+                        fpsTarget=atoi(argv[i+1]);
+                    }
+                else if (strcmp(argv[i],"--frameskip")==0)
+                    {
+                        frameSkip=atoi(argv[i+1]);
+                    }
+                else if (strcmp(argv[i],"--nofilter")==0)
+                    {
+                        doOutputFiltering=0;
+                    }
                 else if (strcmp(argv[i],"--novisualization")==0)
                     {
                         visualize=0;
@@ -450,20 +545,20 @@ int main(int argc, char *argv[])
                     }
                 else if (strcmp(argv[i],"--scale")==0)
                     {
-                        scale=atof(argv[i+1]); 
-                    } 
+                        scale=atof(argv[i+1]);
+                    }
                 else if (strcmp(argv[i],"--show")==0)
                     {
-                        visualizationType=atof(argv[i+1]); 
-                    } 
+                        visualizationType=atof(argv[i+1]);
+                    }
                 else if (strcmp(argv[i],"--remember")==0)
                     {
-                        rememberPrevious2DPositions=1; 
-                    }                     
+                        rememberPrevious2DPositions=1;
+                    }
                 else if (strcmp(argv[i],"--rotate")==0)
                     {
-                        rotate=atoi(argv[i+1]); 
-                    } 
+                        rotate=atoi(argv[i+1]);
+                    }
                 else if (strcmp(argv[i],"--cpu")==0)
                     {
                         //setenv("CUDA_VISIBLE_DEVICES", "", 1);   //Alternate way to force CPU everywhere
@@ -484,7 +579,7 @@ int main(int argc, char *argv[])
                         doCrop=0;
                     }
                 else if (strcmp(argv[i],"--mode")==0)
-                    { 
+                    {
                         mocapNETMode=atoi(argv[i+1]);
                     }
                 else if (strcmp(argv[i],"--live")==0)
@@ -509,10 +604,10 @@ int main(int argc, char *argv[])
 
     fprintf(stderr,"Attempting to open input device\n");
     cv::Mat controlMat = Mat(Size(inputWidth2DJointDetector,2),CV_8UC3, Scalar(0,0,0));
-   
-   
-   //sudo echo 64 > /sys/module/usbcore/parameters/usbfs_memory_mb
-    VideoCapture cap(webcam); // open the default camera
+
+
+    //sudo echo 64 > /sys/module/usbcore/parameters/usbfs_memory_mb
+    cv::VideoCapture cap(webcam); // open the default camera
     if (webcam==0)
         {
             fprintf(stderr,"Trying to open webcam\n");
@@ -543,7 +638,7 @@ int main(int argc, char *argv[])
         }
 
     cv::Mat frame;
-    cv::Mat openGLFramePermanentMat; 
+    cv::Mat openGLFramePermanentMat;
     struct boundingBox cropBBox= {0};
     unsigned int croppedDimensionWidth=0,croppedDimensionHeight=0,offsetX=0,offsetY=0;
 
@@ -579,22 +674,69 @@ int main(int argc, char *argv[])
                             // Get Image
                             unsigned long acquisitionStart = GetTickCountMicroseconds();
 
+                            //---------------------------------------------------------------------------------------------------
+                            //---------------------------------------------------------------------------------------------------
                             cap >> frame; // get a new frame from camera
-                            
-                            if ( ( borderTop!=0 ) || ( borderBottom!=0 ) || ( borderLeft!=0 ) || ( borderRight==0 ) )
-                            {
-                             Scalar colorValue(0,0,0);
-                             copyMakeBorder(frame,frame,borderTop,borderBottom,borderLeft,borderRight,BORDER_CONSTANT,colorValue);                               
-                            }
-                           
-                            if (scale!=1.0)
-                            {  
-                              cv::resize(frame, frame, cv::Size(0,0), scale, scale);
-                            }
+                            //---------------------------------------------------------------------------------------------------
+                            //---------------------------------------------------------------------------------------------------
 
-                            if (rotate)
+
+                            //A typical problem with low-end computers is that they might
+                            //struggle to run the 2D joint estimator. We can  workaround this
+                            //for the live demo to reduce frame latency and improve the overall experience
+                            //Especially when performing gesture recognition we need to
+                            //know at what speed we are processing framerates to match
+                            //the execution of the gesture.
+                            //There are two flavors of frame skipping, a constant frame skip ( --frameskip X  )
+                            //An adaptable target framerate ( --targetframerate X ) that will try to speed up/slow down
+                            //Depending on your current situation  
+                            //Please note that there is no frame skipping involved in any of the
+                            //reported framerates of the paper.
+                            //---------------------------------------------------------------------------------------------------
+                            if (frameSkip)
                                 {
-                                    //Maybe we want to rotate the feed..
+                                    for (int i=0; i<frameSkip; i++)
+                                        {
+                                            cap >> frame;
+                                        }
+                                }
+                            else if (targetSpecificFramerate)
+                                {
+                                    adjustInputSamplingToMatchFramerateTarget(
+                                        cap,
+                                        frame,
+                                        frameNumber,
+                                        fpsTarget,
+                                        fpsTotal,
+                                        fpsAcquisition,
+                                        fps2DJointDetector,
+                                        fpsMocapNET
+                                    );
+                                }
+                                //-------------------------------------------------------------------------------------------------------
+                                
+                                
+                                
+                                
+                            //If we want to add a border to our frame to pad it this is done here
+                            //----------------------------------------------------------------------------------------------------------
+                            if ( ( borderTop!=0 ) || ( borderBottom!=0 ) || ( borderLeft!=0 ) || ( borderRight==0 ) )
+                                {
+                                    Scalar colorValue(0,0,0);
+                                    copyMakeBorder(frame,frame,borderTop,borderBottom,borderLeft,borderRight,BORDER_CONSTANT,colorValue);
+                                }
+
+                            //If we want to  resize our frame this is done here
+                            //----------------------------------------------------------------------------------------------------------
+                            if (scale!=1.0)
+                                {
+                                    cv::resize(frame, frame, cv::Size(0,0), scale, scale);
+                                }
+
+                            //If we want to  rotate our frame this is done here
+                            //----------------------------------------------------------------------------------------------------------
+                            if (rotate)
+                                { 
                                     switch(rotate)
                                         {
                                         case 1 :
@@ -608,16 +750,21 @@ int main(int argc, char *argv[])
                                             break;
                                         } ;
                                 }
-
-                            cv::Mat frameOriginal = frame; //ECONOMY .clone();
-
+                                
+                             //Our frame at this point is considered captured and almost ready for use..!
+                             //-------------------------------------------------------------------------------------------------------------
+                                
+                                
+                             //We keep a copy of the cv::Mat since we will add a ROI on it
+                             //We could perform a deep copy but this is too wasteful
+                            cv::Mat frameOriginal = frame; //ECONOMY .clone();  
                             unsigned int frameWidth  =  frame.size().width;  //frame.cols
                             unsigned int frameHeight =  frame.size().height; //frame.rows
 
 
-                            //-------------------------------------------------
-                            //          Visualization Window Size
-                            //-------------------------------------------------
+                            //-------------------------------------------------------------
+                            // Decide on Visualization Window Size
+                            //-------------------------------------------------------------
                             unsigned int visWidth=frameWidth;
                             unsigned int visHeight=frameHeight;
                             //If our input window is small enlarge it a little..
@@ -627,16 +774,15 @@ int main(int argc, char *argv[])
                                     visHeight=(unsigned int) frameHeight*2.0;
                                 }
                             visWidth=1024;
-                            visHeight=768;
-                            //-------------------------------------------------
+                            visHeight=768; 
+                            //-------------------------------------------------------------
 
-
+                            
+                            //We need to guard against broken input  of empty frames..
                             if ( (frameWidth!=0)  && (frameHeight!=0)  )
                                 {
-                                    unsigned long acquisitionEnd = GetTickCountMicroseconds();
-
-
-                                    float fpsAcquisition = convertStartEndTimeFromMicrosecondsToFPS(acquisitionStart,acquisitionEnd);
+                                    unsigned long acquisitionEnd = GetTickCountMicroseconds(); 
+                                    fpsAcquisition = convertStartEndTimeFromMicrosecondsToFPS(acquisitionStart,acquisitionEnd);
 
                                     //------------------------------------------------------------------------
                                     // If cropping is enabled
@@ -678,47 +824,64 @@ int main(int argc, char *argv[])
                                         }
                                     //------------------------------------------------------------------------
 
+
+
+                                    //We might have changed frame dimensions so let's check them again..
                                     if ( (frameWidth>0) && (frameHeight>0) )
                                         {
                                             std::vector<std::vector<float> >  points2DInput;
 
                                             // Get 2D Skeleton Input from Frame
-                                            float fps2DJointDetector = 0;
+                                            fps2DJointDetector = 0;
                                             flatAndNormalized2DPoints = returnMocapNETInputFrom2DDetectorOutput(
-                                                                          &net,
-                                                                          frame,
-                                                                          &cropBBox,
-                                                                          points2DInput,
-                                                                          (float) joint2DSensitivityPercent/100,
-                                                                          visualize,
-                                                                          save2DVisualization,
-                                                                          &fps2DJointDetector,
-                                                                          frameNumber,
-                                                                          offsetX,
-                                                                          offsetY,
-                                                                          frameWidth-croppedDimensionWidth,
-                                                                          frameHeight-croppedDimensionHeight,
-                                                                          inputWidth2DJointDetector,
-                                                                          inputHeight2DJointDetector,
-                                                                          heatmapWidth2DJointDetector,
-                                                                          heatmapHeight2DJointDetector,
-                                                                          numberOfHeatmaps,
-                                                                          numberOfOutputTensors,
-                                                                          doFeetHeuristics
-                                                                      );
+                                                                            &net,
+                                                                            frame,
+                                                                            &cropBBox,
+                                                                            points2DInput,
+                                                                            (float) joint2DSensitivityPercent/100,
+                                                                            visualize,
+                                                                            save2DVisualization,
+                                                                            &fps2DJointDetector,
+                                                                            frameNumber,
+                                                                            offsetX,
+                                                                            offsetY,
+                                                                            frameWidth-croppedDimensionWidth,
+                                                                            frameHeight-croppedDimensionHeight,
+                                                                            inputWidth2DJointDetector,
+                                                                            inputHeight2DJointDetector,
+                                                                            heatmapWidth2DJointDetector,
+                                                                            heatmapHeight2DJointDetector,
+                                                                            numberOfHeatmaps,
+                                                                            numberOfOutputTensors,
+                                                                            doFeetHeuristics
+                                                                        );
 
 
                                             if (rememberPrevious2DPositions)
-                                            {
-                                                flatAndNormalized2DPoints = fillInTheBlanks(previousFlatAndNormalized2DPoints,flatAndNormalized2DPoints);
-                                                previousFlatAndNormalized2DPoints = flatAndNormalized2DPoints;
-                                            }
+                                                {
+                                                    flatAndNormalized2DPoints = fillInTheBlanks(previousFlatAndNormalized2DPoints,flatAndNormalized2DPoints);
+                                                    previousFlatAndNormalized2DPoints = flatAndNormalized2DPoints;
+                                                }
 
+
+                                            previousBvhOutput=bvhOutput;
                                             // Get MocapNET prediction
                                             unsigned long startTime = GetTickCountMicroseconds();
                                             bvhOutput = runMocapNET(&mnet,flatAndNormalized2DPoints,doGestureDetection,doOutputFiltering);
                                             unsigned long endTime = GetTickCountMicroseconds();
-                                           fprintf(stderr,"Just run MocapNET and got back a %lu sized vector \n",bvhOutput.size());
+                                            fprintf(stderr,"Just run MocapNET and got back a %lu sized vector \n",bvhOutput.size());
+
+
+                                            if (doOutputFiltering)
+                                                {
+                                                    deadInputPoints = getNumberOfEmptyNSDMElements(flatAndNormalized2DPoints);
+                                                    if (deadInputPoints>102)
+                                                        {
+                                                            fprintf(stderr,RED "Too many dead input elements %u\n" NORMAL,deadInputPoints);
+                                                            bvhOutput=previousBvhOutput;
+                                                        }
+                                                }
+
                                             //-------------------------------------------------------------------------------------------------------------------------
                                             // Adding a vary baseline smoothing after a project request, it should be noted
                                             // that no results during the original BMVC2019 used any smoothing of any kind
@@ -729,12 +892,11 @@ int main(int argc, char *argv[])
                                                     if ( (previousBvhOutput.size()>0) && (bvhOutput.size()>0) )
                                                         {
                                                             smoothVector(previousBvhOutput,bvhOutput,(float) doSmoothing/10);
-                                                            previousBvhOutput=bvhOutput;
                                                         }
-                                                }//-------------------------------------------------------------------------------------------------------------------------
+                                                } //-------------------------------------------------------------------------------------------------------------------------
 
 
-                                            float fpsMocapNET = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
+                                            fpsMocapNET = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
 
 
                                             std::vector<float> bvhForcedViewOutput=bvhOutput;
@@ -745,21 +907,34 @@ int main(int argc, char *argv[])
                                                     fprintf(stderr,"MocapNET 3DSkeleton @ %0.2f fps \n",fpsMocapNET);
                                                 }
 
-                                             if (constrainPositionRotation==2)
-                                             {//Specific position rotation constraint that scans left and right..
-                                                 ++autoCount; 
-                                                 if (autoCount>=1)
-                                                 {
-                                                     autoCount=0;
-                                                     
-                                                     if ( (autoDirection==1) && (yawValue==0) )   { autoDirection=0; } else
-                                                     if ( (autoDirection==0) && (yawValue==360) ) { autoDirection=1; }
-                                                     
-                                                     if (autoDirection==0) { yawValue+=1; } else
-                                                     if (autoDirection==1) { yawValue-=1; }
-                                                 } 
-                                             }//---------------------------------------------------------------------------------------------------
-                                             
+                                            if (constrainPositionRotation==2)
+                                                {
+                                                    //Specific position rotation constraint that scans left and right..
+                                                    ++autoCount;
+                                                    if (autoCount>=1)
+                                                        {
+                                                            autoCount=0;
+
+                                                            if ( (autoDirection==1) && (yawValue==0) )
+                                                                {
+                                                                    autoDirection=0;
+                                                                }
+                                                            else if ( (autoDirection==0) && (yawValue==360) )
+                                                                {
+                                                                    autoDirection=1;
+                                                                }
+
+                                                            if (autoDirection==0)
+                                                                {
+                                                                    yawValue+=1;
+                                                                }
+                                                            else if (autoDirection==1)
+                                                                {
+                                                                    yawValue-=1;
+                                                                }
+                                                        }
+                                                }//---------------------------------------------------------------------------------------------------
+
 
                                             //Force Skeleton Position and orientation to make it more easily visualizable
                                             if (constrainPositionRotation>0)
@@ -774,16 +949,16 @@ int main(int argc, char *argv[])
                                                             bvhForcedViewOutput[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) pitchValue;
                                                         }
                                                 }
-                                                
-                                              
+
+
                                             //If we are not running live ( aka not from a webcam with no fixed frame limit )
                                             //Then we record the current bvh frame in order to save a .bvh file in the end..
                                             if (!live)
                                                 {
                                                     bvhFrames.push_back(bvhForcedViewOutput); //bvhOutput
                                                 }
-                                             
-                                               
+
+
 
                                             if (bvhForcedViewOutput.size()>0)
                                                 {
@@ -820,7 +995,7 @@ int main(int argc, char *argv[])
 
 
                                             unsigned long totalTimeEnd = GetTickCountMicroseconds();
-                                            float fpsTotal = convertStartEndTimeFromMicrosecondsToFPS(acquisitionStart,totalTimeEnd);
+                                            fpsTotal = convertStartEndTimeFromMicrosecondsToFPS(acquisitionStart,totalTimeEnd);
 
 
                                             //OpenCV Visualization stuff
@@ -833,13 +1008,14 @@ int main(int argc, char *argv[])
 
                                                             cv::createTrackbar("Stop Demo", "3D Control", &stop, 1);
                                                             cv::createTrackbar("Visualization Demo", "3D Control", &visualizationType,14);
-                                                            cv::createTrackbar("Rotate Feed", "3D Control", &rotate, 4); 
+                                                            cv::createTrackbar("Rotate Feed", "3D Control", &rotate, 4);
                                                             cv::createTrackbar("Gesture Detection", "3D Control", &doGestureDetection,1);
+                                                            cv::createTrackbar("Filter Output", "3D Control", &doOutputFiltering,1);
                                                             cv::createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 2);
-                                                            cv::createTrackbar("Automatic Crop", "3D Control", &doCrop, 1); 
+                                                            cv::createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
                                                             cv::createTrackbar("2D NN Sensitivity", "3D Control", &joint2DSensitivityPercent,100);
                                                             cv::createTrackbar("Remember Previous 2D", "3D Control", &rememberPrevious2DPositions,1);
-                                                            cv::createTrackbar("Feet Heuristics", "3D Control", &doFeetHeuristics,1); 
+                                                            cv::createTrackbar("Feet Heuristics", "3D Control", &doFeetHeuristics,1);
                                                             cv::createTrackbar("Smooth 3D Output", "3D Control", &doSmoothing, 10);
                                                             cv::createTrackbar("Maximize Crop", "3D Control", &tryForMaximumCrop, 1);
                                                             cv::createTrackbar("Draw Floor", "3D Control", &drawFloor, 1);
@@ -869,34 +1045,34 @@ int main(int argc, char *argv[])
 
                                                     cv::Mat * openGLMatForVisualization = 0;
                                                     if (visualizeOpenGLEnabled)
-                                                    {
-                                                    unsigned int openGLFrameWidth=visWidth,openGLFrameHeight=visHeight;
-                                                    char * openGLFrame = visualizeOpenGL(&openGLFrameWidth,&openGLFrameHeight);
-                                                    //=====================================================================
-                                                    if (openGLFrame!=0)
-                                                    {
-                                                        fprintf(stderr,"Got Back a frame..!\n");
-                                                          cv::Mat openGLMat(openGLFrameHeight, openGLFrameWidth, CV_8UC3);
-                                                          unsigned char *   initialPointer = openGLMat.data;
-                                                          openGLMat.data=(unsigned char * ) openGLFrame;
- 
-                                                          cv::cvtColor(openGLMat,openGLFramePermanentMat,COLOR_RGB2BGR);
-                                                          //cv::imshow("OpenGL",openGLFramePermanentMat);
-                                                          openGLMatForVisualization = &openGLFramePermanentMat; 
-                                                          openGLMat.data=initialPointer;
-                                                    }//=====================================================================
-                                                        
-                                                    }
-                                                    
+                                                        {
+                                                            unsigned int openGLFrameWidth=visWidth,openGLFrameHeight=visHeight;
+                                                            char * openGLFrame = visualizeOpenGL(&openGLFrameWidth,&openGLFrameHeight);
+                                                            //=====================================================================
+                                                            if (openGLFrame!=0)
+                                                                {
+                                                                    fprintf(stderr,"Got Back a frame..!\n");
+                                                                    cv::Mat openGLMat(openGLFrameHeight, openGLFrameWidth, CV_8UC3);
+                                                                    unsigned char *   initialPointer = openGLMat.data;
+                                                                    openGLMat.data=(unsigned char * ) openGLFrame;
+
+                                                                    cv::cvtColor(openGLMat,openGLFramePermanentMat,COLOR_RGB2BGR);
+                                                                    //cv::imshow("OpenGL",openGLFramePermanentMat);
+                                                                    openGLMatForVisualization = &openGLFramePermanentMat;
+                                                                    openGLMat.data=initialPointer;
+                                                                }//=====================================================================
+
+                                                        }
+
                                                     //Retreive gesture name to display it
                                                     char * gestureName=0;
                                                     if (doGestureDetection)
-                                                    {
-                                                     if (mnet.lastActivatedGesture>0)
-                                                     {
-                                                        gestureName=mnet.recognizedGestures.gesture[mnet.lastActivatedGesture-1].label;
-                                                     }
-                                                    }
+                                                        {
+                                                            if (mnet.lastActivatedGesture>0)
+                                                                {
+                                                                    gestureName=mnet.recognizedGestures.gesture[mnet.lastActivatedGesture-1].label;
+                                                                }
+                                                        }
 
                                                     if (visualizationType==0)
                                                         {
@@ -917,12 +1093,14 @@ int main(int argc, char *argv[])
                                                                 visWidth,
                                                                 visHeight,
                                                                 0,
-                                                                
+
+                                                                deadInputPoints,
+
                                                                 //mnet->recognizedGestures.
-                                                                mnet.lastActivatedGesture, 
+                                                                mnet.lastActivatedGesture,
                                                                 gestureName,
                                                                 mnet.recognizedGestures.gestureChecksPerformed - mnet.gestureTimestamp ,//gesture stuff
-                                                     
+
                                                                 flatAndNormalized2DPoints,
                                                                 bvhOutput,
                                                                 bvhForcedViewOutput,
@@ -932,38 +1110,38 @@ int main(int argc, char *argv[])
                                                                 (void*) openGLMatForVisualization
                                                             );
                                                         }
-                                                        else if (visualizationType==1)
-                                                            {
-                                                                visualizeMotionHistory("3D Points Output",mnet.poseHistoryStorage.history,points2DOutputGUIForcedView); 
-                                                            }
+                                                    else if (visualizationType==1)
+                                                        {
+                                                            visualizeMotionHistory("3D Points Output",mnet.poseHistoryStorage.history,points2DOutputGUIForcedView);
+                                                        }
                                                     else  if (visualizationType==2)
-                                                            {
-                                                                visualizeFigure("3D Points Output",demoFigures[0]);
-                                                            }
-                                                        else if (visualizationType==3)
-                                                            {
-                                                                visualizeFigure("3D Points Output",demoFigures[1]);
-                                                            }
-                                                        else if (visualizationType==4)
-                                                            {
-                                                                visualizeCameraFeatures("3D Points Output",frameOriginal);
-                                                            }
-                                                        else if (visualizationType==5)
-                                                            {
-                                                                visualizeCameraEdges("3D Points Output",frame);
-                                                            }
-                                                        else if (visualizationType<=12)
-                                                            {
-                                                                visualizeCameraChannels("3D Points Output",frame,visualizationType-6);
-                                                            }
-                                                        else if (visualizationType==13)
-                                                            {
-                                                                visualizeCameraIntensities("3D Points Output",frame,0);
-                                                            }
-                                                        else if (visualizationType==14)
-                                                            {
-                                                                visualizeCameraIntensities("3D Points Output",frame,1);
-                                                            }
+                                                        {
+                                                            visualizeFigure("3D Points Output",demoFigures[0]);
+                                                        }
+                                                    else if (visualizationType==3)
+                                                        {
+                                                            visualizeFigure("3D Points Output",demoFigures[1]);
+                                                        }
+                                                    else if (visualizationType==4)
+                                                        {
+                                                            visualizeCameraFeatures("3D Points Output",frameOriginal);
+                                                        }
+                                                    else if (visualizationType==5)
+                                                        {
+                                                            visualizeCameraEdges("3D Points Output",frame);
+                                                        }
+                                                    else if (visualizationType<=12)
+                                                        {
+                                                            visualizeCameraChannels("3D Points Output",frame,visualizationType-6);
+                                                        }
+                                                    else if (visualizationType==13)
+                                                        {
+                                                            visualizeCameraIntensities("3D Points Output",frame,0);
+                                                        }
+                                                    else if (visualizationType==14)
+                                                        {
+                                                            visualizeCameraIntensities("3D Points Output",frame,1);
+                                                        }
 
 
                                                     if (frameNumber==0)
@@ -983,18 +1161,17 @@ int main(int argc, char *argv[])
                                                         {
                                                             fprintf(stderr,"Keypress = %u \n",key);
                                                             if  (
-                                                                   (key == 113) //|| (key == 81)
-                                                                )
+                                                                (key == 113) //|| (key == 81)
+                                                            )
                                                                 {
                                                                     fprintf(stderr,"Stopping MocapNET after keypress..\n");
                                                                     stop=1;
                                                                 } // stop capturing by pressing q
-                                                                else
-                                                            if (key == 115) //S button
-                                                               {
-                                                                  fprintf(stderr,"Saving gesture after keypress..\n");
-                                                                  dumpMotionHistory("gesture.bvh",&mnet.poseHistoryStorage); 
-                                                               }        
+                                                            else if (key == 115) //S button
+                                                                {
+                                                                    fprintf(stderr,"Saving gesture after keypress..\n");
+                                                                    dumpMotionHistory("gesture.bvh",&mnet.poseHistoryStorage);
+                                                                }
                                                         }
                                                     //----------------------------------------------------------------------------------------------------------
 
@@ -1028,9 +1205,9 @@ int main(int argc, char *argv[])
                                     fprintf(stderr,YELLOW "OpenCV failed to snap frame %u from your input source (%s)\n" NORMAL,frameNumber,webcam);
                                     fprintf(stderr,NORMAL "Skipped frames %u/%u\n" NORMAL,skippedFrames,frameNumber);
 
-                                    if (skippedFrames>quitAfterNSkippedFrames)
+                                    if (skippedFrames>quitAfterNBadFrames)
                                         {
-                                            fprintf(stderr,RED "We have encountered %u skipped frames so quitting ..\n" NORMAL,quitAfterNSkippedFrames);
+                                            fprintf(stderr,RED "We have encountered %u bad input frames so quitting ..\n" NORMAL,quitAfterNBadFrames);
                                             fprintf(stderr,RED "If you don't want this to happen consider using the flag --maxskippedframes and providing a bigger value ..\n" NORMAL);
                                             break;
                                         }
