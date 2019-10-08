@@ -102,7 +102,13 @@ cd "$DIR"
 
 #If you have an old GPU then use older version 
 TENSORFLOW_VERSION="1.14.0" # 1.12.0 for CUDA 9.0 / 1.11.0 for CUDA9 with  older compute capabilities (5.2) .. / 1.4.1 for CUDA 8 
+ARCHITECTURE="gpu" #can be gpu or cpu
 #https://www.tensorflow.org/install/lang_c
+#https://github.com/tensorflow/tensorflow/tree/master/tensorflow/c
+
+#if you want the latest version 
+#you can download it from https://storage.googleapis.com/tensorflow-nightly/github/tensorflow/lib_package/libtensorflow-gpu-linux-x86_64.tar.gz
+#however it is based on TF2.0 which is not yet tested ..!
 
 if [ -f /usr/local/lib/libtensorflow.so ]; then
  echo "Found a system wide tensorflow installation, not altering anything"
@@ -110,9 +116,9 @@ elif [ -f libtensorflow/lib/libtensorflow.so ]; then
  echo "Found a local tensorflow installation, not altering anything"
 else 
  echo "Did not find tensorflow already installed..!"
- if [ ! -f libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz] then
+ if [ ! -f libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz] then
    echo "Did not find tensorflow already installed..!"
-   wget https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
+   wget https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
    #Is the Google link down ? we have a mirror :)
    #wget https://ammar.gr/mocapnet/libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
  else
