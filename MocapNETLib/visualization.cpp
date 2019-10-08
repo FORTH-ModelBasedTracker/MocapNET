@@ -21,6 +21,7 @@ std::vector<cv::Point> leftEndEffector;
 std::vector<cv::Point> rightEndEffector;
 
 #if USE_OPENCV
+
 int visualizeNSDM(
     cv::Mat &img,
     std::vector<float> mocapNETInput,
@@ -164,6 +165,7 @@ float pointDistance(float xA,float yA,float xB,float yB)
 }
 
 
+
 static const char * reprojectBVHNames[] =
 {
     "lShldr",
@@ -179,8 +181,6 @@ static const char * reprojectBVHNames[] =
     "lFoot",
     "rFoot"
 };
-
-
 
 static int reproject2DIDs[] =
 {
@@ -199,6 +199,9 @@ static int reproject2DIDs[] =
 };
 
 static int numberOfReprojectionChecks=12;
+
+
+
 
 int visualizeSkeletonCorrespondence(
     cv::Mat &imgO,
@@ -329,6 +332,7 @@ int visualizeSkeletonCorrespondence(
 
 
 
+
 int visualizeCameraIntensities(const char* windowName, cv::Mat &imgOriginal,int forceColors)
 {
     float fontSize = 0.3;
@@ -379,6 +383,8 @@ int visualizeCameraIntensities(const char* windowName, cv::Mat &imgOriginal,int 
         }
     return 0;
 }
+
+
 
 
 int visualizeCameraChannels(const char* windowName,cv::Mat &img,int channelNumber)
@@ -450,6 +456,7 @@ int visualizeCameraChannels(const char* windowName,cv::Mat &img,int channelNumbe
 }
 
 
+
 int visualizeCameraEdges(const char* windowName,cv::Mat &img)
 {
     cv::Mat edges;
@@ -463,6 +470,7 @@ int visualizeCameraEdges(const char* windowName,cv::Mat &img)
     cv::imshow(windowName, edges);
     return 1;
 }
+
 
 
 int visualizeCameraFeatures(const char* windowName,cv::Mat &img)
@@ -489,6 +497,8 @@ int visualizeCameraFeatures(const char* windowName,cv::Mat &img)
     cv::putText(imgCopy,"Features", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(255,255,255), 0.2, cv::LINE_8);
     cv::imshow(windowName,imgCopy);
 }
+
+
 
 int visualizeFigure(const char* windowName,cv::Mat &img)
 {
@@ -729,8 +739,6 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
     cv::imshow(windowName, img);
     return 1;
 }
-
-
 #endif
 
 
@@ -964,10 +972,12 @@ int visualizePoints(
     cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8); 
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
-    
-    
-    
 
+
+
+    //-----------------------
+    //     NSDM matrix 
+    //-----------------------
     if (drawNSDM)
         {
             visualizeNSDM(
@@ -979,7 +989,13 @@ int visualizePoints(
                 200
             );
         }
-  
+    //-----------------------    
+
+
+
+    //-----------------------
+    //      OpenGL stuff 
+    //-----------------------
    if (optionalOpenGLCVMat!=0)
    { 
      cv::Mat * glMat = (cv::Mat *) optionalOpenGLCVMat;
@@ -988,14 +1004,18 @@ int visualizePoints(
      
      img=cv::max(*glMat, img);
    }
-   
-   
-   // txtPosition.y+=30;
-   // snprintf(textInfo,512,"Gesture detected : %u / frame %u",gestureDetected,gestureFrame);
-   // cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8); 
-    
-    if(gestureDetected)
-    {
+    //-----------------------
+
+
+
+
+    //-------------------------------------------------------------------------------
+    // If gestures are enabled.. Draw them..
+    //-------------------------------------------------------------------------------
+    if (gestureName!=0)
+    {//-------------------------------------------------------------------------------
+     if(gestureDetected)
+      {
         if (gestureFrame<25)
         {
            snprintf(textInfo,512,"%s  (%u)",gestureName,gestureDetected);
@@ -1019,37 +1039,39 @@ int visualizePoints(
             cv::circle(img,txtPosition,2*gestureFrame,cv::Scalar(0,255,255),3,8,0);  
           }
         }
-   } else
-   {
+     } else
+     {
        //We did not detect a gesture.. Let's check the  framerate
        if (fpsTotal<13)
        {
            txtPosition.y+=30;
            cv::putText(img,"Framerate is too slow for reliable gesture recognition..",txtPosition,fontUsed,0.8,color,thickness,8);  
        }
-       
-   }
-   
+     }
+   } //-------------------------------------------------------------------------------
+
+
+
    if (deadInputPoints>102)
    {
      txtPosition.y+=30;
      cv::putText(img,"Bad Input - Filtered out..",txtPosition,fontUsed,1.0,cv::Scalar(0,0,255),thickness,8);   
    }
 
+
     //At last we are able to show the window..
     cv::imshow(windowName,img);
     
+    //Only handle messages if they are not handled elsewhere
     if (handleMessages)
-        {
-            cv::waitKey(1);
-        }
-        
+        { cv::waitKey(1); }
 
     //Initially place window top left..
     if (frameNumber==0)
       { cv::moveWindow(windowName,0,0); }
 
-        
+
+
     return 1;
 #else
     fprintf(stderr,"OpenCV code not present in this build, cannot show visualization..\n");

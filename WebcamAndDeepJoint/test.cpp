@@ -148,7 +148,7 @@ int feetHeuristics(struct skeletonCOCO * sk)
                 ( sk->joint2D[BODY25_RAnkle] .x< sk->joint2D[BODY25_LAnkle].x ) &&
                 ( sk->joint2D[BODY25_RKnee].x  > sk->joint2D[BODY25_LKnee].x )  &&
                 ( sk->joint2D[BODY25_RHip].x < sk->joint2D[BODY25_LHip].x )
-            )
+               )
                 {
                     struct point2D tmp = sk->joint2D[BODY25_RKnee];
                     sk->joint2D[BODY25_RKnee]=sk->joint2D[BODY25_LKnee];
@@ -156,19 +156,16 @@ int feetHeuristics(struct skeletonCOCO * sk)
                     return 1;
                 }
             else if (
-                ( sk->joint2D[BODY25_RAnkle] .x > sk->joint2D[BODY25_LAnkle].x ) &&
-                ( sk->joint2D[BODY25_RKnee].x  < sk->joint2D[BODY25_LKnee].x )  &&
-                ( sk->joint2D[BODY25_RHip].x < sk->joint2D[BODY25_LHip].x )
-            )
+                     ( sk->joint2D[BODY25_RAnkle] .x > sk->joint2D[BODY25_LAnkle].x ) &&
+                     ( sk->joint2D[BODY25_RKnee].x  < sk->joint2D[BODY25_LKnee].x )  &&
+                     ( sk->joint2D[BODY25_RHip].x < sk->joint2D[BODY25_LHip].x )
+                    )
                 {
                     struct point2D tmp = sk->joint2D[BODY25_RAnkle];
                     sk->joint2D[BODY25_RAnkle]=sk->joint2D[BODY25_LAnkle];
                     sk->joint2D[BODY25_LAnkle] = tmp;
                     return 1;
                 }
-
-
-
         }
     return 0;
 }
@@ -962,16 +959,20 @@ int main(int argc, char *argv[])
 
                                             if (bvhForcedViewOutput.size()>0)
                                                 {
-                                                    points2DOutputGUIForcedView = convertBVHFrameTo2DPoints(bvhForcedViewOutput,visWidth,visHeight);
+                                                    points2DOutputGUIForcedView = convertBVHFrameTo2DPoints(
+                                                                                                             bvhForcedViewOutput,
+                                                                                                             visWidth,
+                                                                                                             visHeight
+                                                                                                           );
                                                 }
 
                                             if (bvhOutput.size()>0)
                                                 {
                                                     points2DOutput = convertBVHFrameTo2DPoints(
-                                                                         bvhOutput,
-                                                                         1920,//visWidth,
-                                                                         1080//visHeight
-                                                                     );
+                                                                                               bvhOutput,
+                                                                                               1920,//visWidth,
+                                                                                               1080//visHeight
+                                                                                              );
                                                 }
 
 
@@ -1061,7 +1062,6 @@ int main(int argc, char *argv[])
                                                                     openGLMatForVisualization = &openGLFramePermanentMat;
                                                                     openGLMat.data=initialPointer;
                                                                 }//=====================================================================
-
                                                         }
 
                                                     //Retreive gesture name to display it
@@ -1074,41 +1074,43 @@ int main(int argc, char *argv[])
                                                                 }
                                                         }
 
+
+
                                                     if (visualizationType==0)
                                                         {
                                                             visualizePoints(
-                                                                "3D Points Output",
-                                                                frameNumber,
-                                                                skippedFrames,
-                                                                totalNumberOfFrames,
-                                                                frameLimit,
-                                                                CPUName,
-                                                                GPUName,
-                                                                drawFloor,
-                                                                drawNSDM,
-                                                                fpsTotal,
-                                                                fpsAcquisition,
-                                                                fps2DJointDetector,
-                                                                fpsMocapNET,
-                                                                visWidth,
-                                                                visHeight,
-                                                                0,
+                                                                            "3D Points Output",
+                                                                            frameNumber,
+                                                                            skippedFrames,
+                                                                            totalNumberOfFrames,
+                                                                            frameLimit,
+                                                                            CPUName,
+                                                                            GPUName,
+                                                                            drawFloor,
+                                                                            drawNSDM,
+                                                                            fpsTotal,
+                                                                            fpsAcquisition,
+                                                                            fps2DJointDetector,
+                                                                            fpsMocapNET,
+                                                                            visWidth,
+                                                                            visHeight,
+                                                                            0,
 
-                                                                deadInputPoints,
+                                                                            deadInputPoints,
 
-                                                                //mnet->recognizedGestures.
-                                                                mnet.lastActivatedGesture,
-                                                                gestureName,
-                                                                mnet.recognizedGestures.gestureChecksPerformed - mnet.gestureTimestamp ,//gesture stuff
+                                                                            //mnet->recognizedGestures.
+                                                                            mnet.lastActivatedGesture,
+                                                                            gestureName,
+                                                                            mnet.recognizedGestures.gestureChecksPerformed - mnet.gestureTimestamp ,//gesture stuff
 
-                                                                flatAndNormalized2DPoints,
-                                                                bvhOutput,
-                                                                bvhForcedViewOutput,
-                                                                points2DInput,
-                                                                points2DOutput,
-                                                                points2DOutputGUIForcedView,
-                                                                (void*) openGLMatForVisualization
-                                                            );
+                                                                            flatAndNormalized2DPoints,
+                                                                            bvhOutput,
+                                                                            bvhForcedViewOutput,
+                                                                            points2DInput,
+                                                                            points2DOutput,
+                                                                            points2DOutputGUIForcedView,
+                                                                            (void*) openGLMatForVisualization
+                                                                           );
                                                         }
                                                     else if (visualizationType==1)
                                                         {
