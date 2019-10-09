@@ -653,12 +653,24 @@ std::vector<std::vector<float> >  skeleton2D)
     }
     
     return skeleton2D;
-    
 }
+#endif
 
+
+int visualizeHandleMessages()
+{
+#if USE_OPENCV
+    cv::waitKey(1); 
+    return 1;
+ #else
+   fprintf(stderr,"visualizeHandleMessages cannot be compiled without OpenCV\n");
+   return 0;
+#endif   
+}
 
 int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float> > history, std::vector<std::vector<float> >  skeleton2D)
 {
+#if USE_OPENCV
     if (history.size()==0)
     {
         return 0;
@@ -738,10 +750,11 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
     
     cv::imshow(windowName, img);
     return 1;
+ #else
+   fprintf(stderr,"visualizeMotionHistory cannot be compiled without OpenCV\n");
+   return 0;
+#endif   
 }
-#endif
-
-
 
 
 int visualizePoints(

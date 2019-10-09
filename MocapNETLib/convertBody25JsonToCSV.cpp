@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     unsigned int width=1920 , height=1080 , frameLimit=100000 , processed = 0 , serialLength = 5;
     const char * path=0;
     const char * label=0;
-    char outputPathFull[2048];
+    char outputPathFull[2048]={0};
     const char * outputPath=0;
     float version=1.2;
 
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
     if (path==0)
         {
-            path="frames/dance.webm-data";
+            path="./";
         }
 
     if (label==0)
@@ -80,7 +80,14 @@ int main(int argc, char *argv[])
         }
     else
         {
-            snprintf(outputPathFull,2048,"%s/2dJoints_v%0.1f.csv",outputPath,version);
+            if (strstr(outputPath,".csv")!=0)
+            {
+               fprintf(stderr,"Output path is actually a csv file so treating it as one..\n"); 
+              snprintf(outputPathFull,2048,"%s",outputPath);            
+            } else
+            {
+              snprintf(outputPathFull,2048,"%s/2dJoints_v%0.1f.csv",outputPath,version);               
+            }
         }
 
 
@@ -122,8 +129,9 @@ int main(int argc, char *argv[])
                     ++processed;
                 }
             else
-                {
+                { 
                     fprintf(stderr,"Done processing %u frames..\n",frameID);
+                    fprintf(stderr,"Output has been stored at %s \n",outputPathFull);
                     break;
                 }
 

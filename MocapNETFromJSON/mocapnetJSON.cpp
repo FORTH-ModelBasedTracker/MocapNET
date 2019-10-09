@@ -17,19 +17,36 @@
 #include "../MocapNETLib/bvh.hpp"
 #include "../MocapNETLib/visualization.hpp"
 
+
+unsigned int getNumberOfEmptyElements(std::vector<float> mocapNETInput)
+{
+    unsigned int numberOfZeros=0;
+
+    for (int i=0; i<mocapNETInput.size(); i++)
+        {
+            if (mocapNETInput[i]==0)
+                {
+                    ++numberOfZeros;
+                }
+
+        } 
+    return numberOfZeros;
+}
+
+
 int main(int argc, char *argv[])
 {
     const char   outputPathStatic[]="out.bvh";
     char * outputPath = (char*) outputPathStatic;
     
     unsigned int mocapNETMode=3;
-    unsigned int width=1920 , height=1080 , frameLimit=10000 , visualize = 0, useCPUOnly=1 , serialLength=5,delay=0;
+    unsigned int width=1920 , height=1080 , frameLimit=10000 , visualize = 0, useCPUOnly=1 , serialLength=5,delay=0,constrainPositionRotation=1,visualizationType=0;
     unsigned int visWidth=1024,visHeight=768;
     const char * path=0;
     const char * label=0;
     float quality=1.0;
     
-    int doGestureDetection=0,doOutputFiltering=0;
+    int doGestureDetection=0,doOutputFiltering=1;
 
     unsigned int isJSONFile=1;
     unsigned int isCSVFile=0;
@@ -42,7 +59,15 @@ int main(int argc, char *argv[])
 
     for (int i=0; i<argc; i++)
         {
-            if (strcmp(argv[i],"-v")==0)
+            if (strcmp(argv[i],"--show")==0)
+                {
+                    visualizationType=atoi(argv[i+1]);
+                } else
+            if (strcmp(argv[i],"--unconstrained")==0)
+                {
+                    constrainPositionRotation=0;
+                }
+            else if (strcmp(argv[i],"-v")==0)
                 {
                     visualize=1;
                 }
@@ -148,7 +173,9 @@ int main(int argc, char *argv[])
 
 
             std::vector<std::vector<float> >  empty2DPointsInput;
-
+            std::vector<float>  result;
+            std::vector<float>  previousResult;
+              
             float totalTime=0.0;
             unsigned int totalSamples=0;
 
@@ -200,11 +227,37 @@ int main(int argc, char *argv[])
 
                             long startTime = GetTickCountMicrosecondsMN();
                             //--------------------------------------------------------
-                            std::vector<float>  result = runMocapNET(&mnet,inputValues,doGestureDetection,doOutputFiltering);
+                            previousResult = result;
+                            result = runMocapNET(&mnet,inputValues,doGestureDetection,doOutputFiltering);
                             bvhFrames.push_back(result);
                             //--------------------------------------------------------
                             long endTime = GetTickCountMicrosecondsMN();
 
+                           if (doOutputFiltering)
+                           {
+                               if (getNumberOfEmptyElements(inputValues)>102)
+                               {
+                                  //Throttle result.. 
+                                 result=previousResult;
+                               }
+                           }
+
+                                            //Force Skeleton Position and orientation to make it more easily visualizable
+                                            if (constrainPositionRotation>0)
+                                                {
+                                                    if (result.size()>0)
+                                                        {
+                                                            float distance=0,rollValue=0,yawValue=0,pitchValue=0;
+                                                            
+                                                            result[MOCAPNET_OUTPUT_HIP_XPOSITION]=0.0;
+                                                            result[MOCAPNET_OUTPUT_HIP_YPOSITION]=0.0;
+                                                            result[MOCAPNET_OUTPUT_HIP_ZPOSITION]=-190.0 - (float) distance;
+                                                            result[MOCAPNET_OUTPUT_HIP_ZROTATION]=(float) rollValue;
+                                                            result[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) yawValue;
+                                                            result[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) pitchValue;
+                                                        }
+                                                }
+                                    
 
                             float sampleTime = (float) (endTime-startTime)/1000;
                             if (sampleTime==0.0)
@@ -218,8 +271,15 @@ int main(int argc, char *argv[])
 
                             if (visualize)
                                 {
+                                    
+                                    
+                                    
+                                    
                                     std::vector<std::vector<float> > points2DOutput = convertBVHFrameTo2DPoints(result,visWidth,visHeight);
-                                    visualizePoints(
+                                    
+                                    if (visualizationType==0)
+                                    { 
+                                     visualizePoints(
                                                      "3D Points Output",
                                                      frameID,
                                                      0,
@@ -229,7 +289,7 @@ int main(int argc, char *argv[])
                                                      0,
                                                      0,
                                                      1,
-                                                     1,
+                                                     fpsMocapNET, //<- total fps
                                                      0.0,
                                                      0.0,
                                                      fpsMocapNET,
@@ -246,6 +306,16 @@ int main(int argc, char *argv[])
                                                      points2DOutput,
                                                      0 //No OpenGL code here..
                                                   );
+                                    } 
+                                    else 
+                                    if (visualizationType==1)
+                                     {
+                                         visualizeMotionHistory("3D Points Output",mnet.poseHistoryStorage.history,points2DOutput);
+                                         visualizeHandleMessages();
+                                     }  else
+                                     {
+                                         fprintf(stderr,"Unhandled visualization type %u\n",visualizationType);
+                                     }
                                 }
 
 

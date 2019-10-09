@@ -15,11 +15,12 @@ using namespace cv;
   int visualizeCameraChannels(const char* windowName,cv::Mat &img,int channelNumber);
   int visualizeCameraEdges(const char* windowName,cv::Mat &img);
   int visualizeCameraFeatures(const char* windowName,cv::Mat &img);
-  int visualizeFigure(const char* windowName,cv::Mat &img);
-  int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float> > history, std::vector<std::vector<float> >  skeleton2D);
+  int visualizeFigure(const char* windowName,cv::Mat &img); 
 #endif 
 
 
+  int visualizeHandleMessages();
+  int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float> > history, std::vector<std::vector<float> >  skeleton2D);
 
 static const int lineColorIndex[] =
 {
