@@ -7,9 +7,13 @@ We present MocapNET, an ensemble of SNN encoders that estimates the 3D human bod
 
 ## Youtube Videos
 ------------------------------------------------------------------ 
+### BMVC 2019 Supplementary Video
 
 [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtubevideolink.jpg)  ](https://www.youtube.com/watch?v=fH5e-KMBvM0)
 
+------------------------------------------------------------------ 
+
+### Demonstration of github live demonstration code
 
 [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtubevideolinkdemo.jpg)  ](https://www.youtube.com/watch?v=pKTA_odo9Xw)
 
