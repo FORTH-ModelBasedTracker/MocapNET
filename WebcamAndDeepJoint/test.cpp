@@ -1098,8 +1098,16 @@ int main(int argc, char *argv[])
 
 
 
-                                                    if (visualizationType==0)
+                                                    if ( (visualizationType==0) || (visualizationType==1) )
                                                         {
+                                                            cv::Mat * openGLMatForVisualizationSelected = openGLMatForVisualization;
+                                                            
+                                                            if (visualizationType==1)
+                                                            {
+                                                                openGLMatForVisualizationSelected=0;
+                                                            }
+                                                                
+                                                            
                                                             visualizePoints(
                                                                             "3D Points Output",
                                                                             frameNumber,
@@ -1132,38 +1140,38 @@ int main(int argc, char *argv[])
                                                                             points2DInput,
                                                                             points2DOutput,
                                                                             points2DOutputGUIForcedView,
-                                                                            (void*) openGLMatForVisualization
+                                                                            (void*) openGLMatForVisualizationSelected//openGLMatForVisualization
                                                                            );
                                                         }
-                                                    else if (visualizationType==1)
+                                                    else if (visualizationType==2)
                                                         {
                                                             visualizeMotionHistory("3D Points Output",mnet.poseHistoryStorage.history,points2DOutputGUIForcedView);
                                                         }
-                                                    else  if (visualizationType==2)
+                                                    else  if (visualizationType==3)
                                                         {
                                                             visualizeFigure("3D Points Output",demoFigures[0]);
                                                         }
-                                                    else if (visualizationType==3)
+                                                    else if (visualizationType==4)
                                                         {
                                                             visualizeFigure("3D Points Output",demoFigures[1]);
                                                         }
-                                                    else if (visualizationType==4)
+                                                    else if (visualizationType==5)
                                                         {
                                                             visualizeCameraFeatures("3D Points Output",frameOriginal);
                                                         }
-                                                    else if (visualizationType==5)
+                                                    else if (visualizationType==6)
                                                         {
                                                             visualizeCameraEdges("3D Points Output",frame);
                                                         }
-                                                    else if (visualizationType<=12)
+                                                    else if (visualizationType<=13)
                                                         {
                                                             visualizeCameraChannels("3D Points Output",frame,visualizationType-6);
                                                         }
-                                                    else if (visualizationType==13)
+                                                    else if (visualizationType==14)
                                                         {
                                                             visualizeCameraIntensities("3D Points Output",frame,0);
                                                         }
-                                                    else if (visualizationType==14)
+                                                    else if (visualizationType==15)
                                                         {
                                                             visualizeCameraIntensities("3D Points Output",frame,1);
                                                         }
