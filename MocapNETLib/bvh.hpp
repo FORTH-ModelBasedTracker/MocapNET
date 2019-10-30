@@ -290,7 +290,6 @@ static const char * bvhHeader="HIERARCHY\n"
 "}";
 
 
-
 /**
  * @brief After collecting a vector of BVH output vectors this call can write them to disk in BVH format
  * to make them accessible by third party 3D animation software like blender etc.
@@ -305,20 +304,29 @@ int writeBVHFile(
                    std::vector<std::vector<float> > bvhFrames
                 );
 
-
-
-
-
-
+/**
+ * @brief This call loads a BVH file into a BVH_MotionCapture* structure that is casted in a void pointer 
+ * to avoid all the include hassle 
+ * @param Path to input file i.e. "input.bvh" 
+ * @retval BVH_MotionCapture pointer that holds all the BVH information
+ */
 void * loadBVHFile(const char * filename);
+
+
+/**
+ * @brief This call frees all memory consumed by the BVH file loaded by a loadBVHFile call
+ * @param Path to input file i.e. "input.bvh" 
+ * @retval 1=Success/0=Failure
+ */
 int freeBVHFile(void * bvhMemoryHandler);
 
 
+/**
+ * @brief This call opens a BVH file decodes it and returns a vector of bvh frames where each frame has all the motions in another vector
+ * @param Path to input file i.e. "input.bvh" 
+ * @retval Vector of Vectors that hold all the BVH motions
+ */
 std::vector<std::vector<float> > loadBVHFileMotionFrames(const char * filename);
-
-
-
-
 
 
 

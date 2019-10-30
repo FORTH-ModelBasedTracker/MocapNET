@@ -1,9 +1,12 @@
 #pragma once
-
+/** @file gestureRecognition.hpp
+ *  @brief MocapNET Gesture recognition is implemented here
+ *  @author Ammar Qammaz (AmmarkoV)
+ */
+ 
 #include <iostream>
 #include <vector>
  
-
 
 /**
  * @brief This is an array of names for the input Joints expected from MocapNET.
@@ -11,33 +14,33 @@
  * x,y,v ( v for visibility ) information for each joint.
  * That gives us 57*3 = 171 input parameters. Values of this array can be accessed using the enumerator MOCAPNET_Uncompressed_Joints
  * For a full list of the 171 input value labels see MocapNETUncompressedArrayNames
- */
- 
- 
- const unsigned int hardcodedGestureNumber=10;
- 
+ */ 
 static const char * hardcodedGestureName[] =
 {
   "comeleft.bvh",              //0
-  "help.bvh",                         //1
-  "push.bvh",                        //2
-  "comeright.bvh",            //3
-  "lefthandcircle.bvh",   //4
-  "righthandcircle.bvh",//5
+  "help.bvh",                  //1
+  "push.bvh",                  //2
+  "comeright.bvh",             //3
+  "lefthandcircle.bvh",        //4
+  "righthandcircle.bvh",       //5
   "waveleft.bvh",              //6
-  "doubleclap.bvh",         //7
-  "waveright.bvh",           //8
-  "tpose.bvh",                    //9
-  ""
-  "leftkick.bvh",                //10
-  "rightkick.bvh",             //11
-  ""
+  "doubleclap.bvh",            //7
+  "waveright.bvh",             //8
+  "tpose.bvh",                 //9
+  ""                           //10
+  "leftkick.bvh",              //11
+  "rightkick.bvh",             //12
+  ""                           //13
+  //hardcodedGestureNumber should be kept in sync
 };
 
 
 /**
- * @brief MocapNET consists of separate classes/ensembles that are invoked for particular orientations.
- * This structure holds the required tensorflow instances to make MocapNET work.
+ * @brief This needs to be kept in sync with hardcodedGestureName */
+const unsigned int hardcodedGestureNumber=10;
+
+/**
+ * @brief  history of poses
  */
 struct PoseHistory
 { 
@@ -46,6 +49,9 @@ struct PoseHistory
 };
 
 
+/**
+ * @brief  recorded gestures that can be used
+ */
 struct RecordedGesture
 {
     unsigned int lastActivation;
@@ -57,6 +63,10 @@ struct RecordedGesture
     void * gestureCallback;
 };
 
+
+/**
+ * @brief  gesture detection context, to facilitate gestures
+ */
 struct GestureDatabase
 {
     unsigned int gestureChecksPerformed;

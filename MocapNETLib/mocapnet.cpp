@@ -19,7 +19,6 @@ int listNodesMN(const char * label , TF_Graph* graph)
     while ((oper = TF_GraphNextOperation(graph, &pos)) != nullptr)
         {
             fprintf(stderr," %s - %s \n",label,TF_OperationName(oper));
-            //std::cout << label<<" - "<<TF_OperationName(oper)<<" "<< std::endl;
         }
     return 1;
 }
@@ -40,8 +39,6 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
   
     switch (mode)
         {
-
-
         case 3:
             mnet->mode=3;
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -163,7 +160,7 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
                 {
                     emptyValues.push_back(0.0);
                 }
-
+            //---------------------------------------------------
             for (int i=0;  i<mnet->loadedModels; i++ )
                 {
                     std::vector<float>  prediction = predictTensorflow(&mnet->models[i],emptyValues);
@@ -194,7 +191,6 @@ std::vector<float> prepareMocapNETInputFromUncompressedInput(std::vector<float> 
             return mocapnetUncompressedAndCompressed;
         }
 
-
     int addSyntheticPoints=1;
     int doScaleCompensation=1;
     std::vector<float> mocapnetCompressed = compressMocapNETInputToNSDM(mocapnetInput,addSyntheticPoints,doScaleCompensation);
@@ -213,53 +209,24 @@ float undoOrientationTrickForBackOrientation(float orientation)
 {
     if (orientation==180)
         {
-            orientation=0;
-        }
-    else if (orientation<0)
+         orientation=0;
+        } else 
+    if (orientation<0)
         {
-            orientation=180-orientation;
-        }
-    else
+         orientation=180-orientation;
+        } else
         {
-            orientation=180-orientation;
+         orientation=180-orientation;
         }
     return orientation;
-}
-
-
-std::vector<float>  MNET3Classes(struct MocapNET * mnet,std::vector<float> mnetInput,std::vector<float> direction )
-{
-    std::vector<float> emptyResult;
-    
-    if (direction.size()>0)
-        { 
-            fprintf(stderr,NORMAL "Direction is : %0.2f " NORMAL , direction[0] );
-            if ( (direction[0]<-90) || (direction[0]>90) )
-                {
-                    //Back ----------------------------------------------=
-                    fprintf(stderr,"Back\n");
-                    std::vector<float> result = predictTensorflow(&mnet->models[2],mnetInput);
-                    if (result.size()>4)
-                            { result[4]=undoOrientationTrickForBackOrientation(result[4]); }
-                    return result;
-                }
-            else
-                {
-                    //Front ----------------------------------------------
-                    fprintf(stderr,"Front\n");
-                    std::vector<float> result = predictTensorflow(&mnet->models[1],mnetInput);
-                    return result;
-                } 
-        }
-    return emptyResult;       
 }
 
 
 
 int  getMocapNETOrientationFromOutputVector(std::vector<float> direction)
 {
-        if (direction.size()>0)
-        {    
+  if (direction.size()>0)
+        {
              if ( (direction[0]>=-45.0) && (direction[0]<=45.0) )
                 {
                     //Front ---------------------------------------------- 
@@ -282,7 +249,7 @@ int  getMocapNETOrientationFromOutputVector(std::vector<float> direction)
                 {
                     //Back  ----------------------------------------------
                     return MOCAPNET_ORIENTATION_BACK;
-                } 
+                }
                else
             if ( (direction[0]>=90) && (direction[0]<=180) )
                 {
@@ -291,11 +258,39 @@ int  getMocapNETOrientationFromOutputVector(std::vector<float> direction)
                 }  else
                 {
                     fprintf(stderr,RED "Unhandled orientation \n" NORMAL);
-                } 
+                }
         }
- return MOCAPNET_ORIENTATION_NONE;
+  return MOCAPNET_ORIENTATION_NONE;
 }
  
+
+std::vector<float>  MNET3Classes(struct MocapNET * mnet,std::vector<float> mnetInput,std::vector<float> direction )
+{
+    std::vector<float> result;
+    
+    if (direction.size()>0)
+        { 
+            fprintf(stderr,NORMAL "Direction is : %0.2f " NORMAL , direction[0] );
+            //===========================================================
+            if ( (direction[0]<-90) || (direction[0]>90) )
+                {
+                    //Back ----------------------------------------------=
+                    fprintf(stderr,"Back\n");
+                    result = predictTensorflow(&mnet->models[2],mnetInput);
+                    if (result.size()>4)
+                            { result[4]=undoOrientationTrickForBackOrientation(result[4]); }
+                } else
+            //===========================================================
+                {
+                    //Front ----------------------------------------------
+                    fprintf(stderr,"Front\n");
+                    result = predictTensorflow(&mnet->models[1],mnetInput); 
+                }
+            //=========================================================== 
+        }
+    return result;       
+}
+
 
 std::vector<float>  MNET5Classes(struct MocapNET * mnet,std::vector<float> mnetInput,std::vector<float> direction )
 {
@@ -456,85 +451,98 @@ int silenceDeadJoints(std::vector<float> & result)
 
 std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,int doGestureDetection,int doOutputFiltering)
 {
+    std::vector<float> mnetInput;
     std::vector<float> emptyResult;
 
     if (mnet==0)
     {
-            fprintf(stderr,"MocapNET: invalid initialization\n");
+           fprintf(stderr,RED "MocapNET: Cannot work without initialization\n" NORMAL);
            return emptyResult;        
     }
     
-    std::vector<float> mnetInput;
 
+    //Check if input is ok or if prepareMocapNETInputFromUncompressedInput is needed
+    //----------------------------------------------------------------------------------------------
     if (input.size()==749)
         {
-            fprintf(stderr,"MocapNET: Input was given precompressed\n");
+            fprintf(stderr,GREEN "MocapNET: Input was given precompressed\n" NORMAL);
             mnetInput = input;
-        }
-    else if (input.size()==171)
+        } else 
+    if (input.size()==171)
         {
             //This is the default case so dont issue any warnings..
             //std::cerr<<"MocapNET: COCO input has "<<input.size()<<" elements (should be 171)\n";
             mnetInput = prepareMocapNETInputFromUncompressedInput(input);
             //std::cerr<<"MocapNET: COCO 171 input has been converted in to MocapNET input with "<<mnetInput.size()<<" elements (should be 749)\n";
-        }
-    else if (input.size()!=171)
+        } else 
+    if (input.size()!=171)
         {
-            fprintf(stderr,"MocapNET: Incorrect size of COCO input  was %lu (but should be 171) \n",input.size());
+            fprintf(stderr,RED "MocapNET: Incorrect size of COCO input  was %lu (but should be 171) \n" NORMAL,input.size());
             return emptyResult;
         }
-
+    //----------------------------------------------------------------------------------------------
+        
+    //The code block above should have done everything needed to make a 749 element vector
+    //If input is not correct then we should stop right here
+    //----------------------------------------------------------------------------------------------
     if (mnetInput.size()!=749)
         {
-            fprintf(stderr,"MocapNET: Incorrect size of MocapNET input .. \n");
+            fprintf(stderr,RED "MocapNET: Incorrect size of MocapNET input .. \n" NORMAL);
             return emptyResult;
         }
 
-    std::vector<float> direction = predictTensorflow(&mnet->models[0],mnetInput);
-
+    //First run the network that can predict the orientation of the skeleton so we will use the correct
+    //network to get the full BVH result from it 
+    //----------------------------------------------------------------------------------------------
+    std::vector<float> direction = predictTensorflow(&mnet->models[0],mnetInput); 
+    //----------------------------------------------------------------------------------------------
     if (direction.size()>0)
         {
-            std::vector<float>  result;
-            if (mnet->mode==3)
+            std::vector<float> result; 
+            
+            switch(mnet->mode)
             {
-                result=MNET3Classes(mnet,mnetInput,direction);
-            } else
-            if (mnet->mode==5)
-            {
-                result=MNET5Classes(mnet,mnetInput,direction);
-            }    
+              case 3: result=MNET3Classes(mnet,mnetInput,direction); break;   
+              case 5: result=MNET5Classes(mnet,mnetInput,direction); break;
+              //-----------------------------------------------------------
+              default:
+               fprintf(stderr,RED "MocapNET: Incorrect Mode %u ..\n" NORMAL,mnet->mode); 
+              break; 
+            };
+            
             
             addToMotionHistory(&mnet->poseHistoryStorage,result);
-             
              //----------------------------------------------------------------------------------------------
              if (doGestureDetection)
              { 
              int gestureDetected=compareHistoryWithKnownGestures(
-                                                                                                                                             &mnet->recognizedGestures,
-                                                                                                                                             &mnet->poseHistoryStorage,
-                                                                                                                                             85.0,//Percentage complete..
-                                                                                                                                             23.0 //Angle thrshold
-                                                                                                                                         );
-                                                                
+                                                                 &mnet->recognizedGestures,
+                                                                 &mnet->poseHistoryStorage,
+                                                                 85.0,//Percentage complete..
+                                                                 23.0 //Angle thrshold
+                                                                );
              if (gestureDetected!=0)
-             {
+              {
                 mnet->lastActivatedGesture=gestureDetected;
                 mnet->gestureTimestamp=mnet->recognizedGestures.gestureChecksPerformed;
                 fprintf(stderr,GREEN "Gesture Detection : %u\n" NORMAL,gestureDetected);
               } 
              }
-            //----------------------------------------------------------------------------------------------                                                               
+            //----------------------------------------------------------------------------------------------
             
+            //Force parts of the output to zero.. 
+            //----------------------------------------------------------------------------------------------
             silenceDeadJoints(result);
+            //----------------------------------------------------------------------------------------------
             
             return result;
         }
     else
         {
-            fprintf(stderr,"Unable to predict pose direction..\n");
+            fprintf(stderr,RED "Unable to predict pose direction..\n" NORMAL);
         }
 
-//-----------------
+    //-----------------
     return emptyResult;
 }
 
@@ -546,16 +554,16 @@ int unloadMocapNET(struct MocapNET * mnet)
     unsigned int result=0;
     for (int i=0;  i<mnet->loadedModels; i++ )
         {
-            result+=unloadTensorflow(&mnet->models[i]);
+         result+=unloadTensorflow(&mnet->models[i]);
         }
 
     if (result==mnet->loadedModels)
         {
-            result=1;
+         result=1;
         }
     else
         {
-            result=0;
+         result=0;
         }
     mnet->loadedModels=0;
 

@@ -42,7 +42,6 @@ void addSkeletonJointFromTwoJoints(
     int jointIDA,
     int jointIDB
 )
-
 {
     float x=(float) (sk->joint2D[jointIDA].x + sk->joint2D[jointIDB].x)/2;
     float y=(float) (sk->joint2D[jointIDA].y + sk->joint2D[jointIDB].y)/2;

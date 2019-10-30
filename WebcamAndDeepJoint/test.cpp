@@ -842,6 +842,7 @@ int main(int argc, char *argv[])
 
 
                                     //We might have changed frame dimensions so let's check them again..
+                                    //-------------------------------------------------------------------------------------------------------------------------
                                     if ( (frameWidth>0) && (frameHeight>0) )
                                         {
                                             std::vector<std::vector<float> >  points2DInput;

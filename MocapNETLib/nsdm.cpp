@@ -123,7 +123,7 @@ std::vector<float> compressMocapNETInputToNSDM(std::vector<float> mocapnetInput,
                                         {
                                             iX=iX+0.3;
                                         }
-                                    //#--------------------------
+                            //#--------------------------
                                     if (j==7)
                                         {
                                             jX=jX-0.3;

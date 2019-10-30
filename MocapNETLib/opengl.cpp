@@ -11,7 +11,6 @@
 
 char * visualizeOpenGL(unsigned int *openGLFrameWidth,unsigned int *openGLFrameHeight)
 {
-   
  #if USE_OPENGL
  fprintf(stderr,"visualizeOpenGL CALLED for %u x %u size \n",*openGLFrameWidth,*openGLFrameHeight);
 
@@ -58,12 +57,10 @@ char * visualizeOpenGL(unsigned int *openGLFrameWidth,unsigned int *openGLFrameH
    snapOpenGLFrames(0); 
    fprintf(stderr,"Returning OpenGL frame..\n");
    return  getOpenGLColorPixels(0);
- 
- #endif
-   
-    
+ #else
   return 0;  
-}
+ #endif
+ }
 
 
  
@@ -205,6 +202,7 @@ int updateOpenGLView(std::vector<float> bvhFrame)
     //------------------------------------------------------------- 
    
     return 1;
+  #else
+    return 0; 
   #endif    
-  return 0;  
 }
