@@ -66,37 +66,7 @@ char * visualizeOpenGL(unsigned int *openGLFrameWidth,unsigned int *openGLFrameH
 }
 
 
-
-/*
- * 
- * 
-POSE_ROTATION_ORDER(human,Hips,ZXY)
-POSE_ROTATION_ORDER(human,LHipJoint,ZXY)
-POSE_ROTATION_ORDER(human,LeftUpLeg,ZXY)
-POSE_ROTATION_ORDER(human,LeftLeg,ZXY)
-POSE_ROTATION_ORDER(human,LeftFoot,ZYX)
-POSE_ROTATION_ORDER(human,LeftToeBase,ZXY)
-POSE_ROTATION_ORDER(human,LowerBack,ZXY)
-POSE_ROTATION_ORDER(human,Spine,ZXY)
-POSE_ROTATION_ORDER(human,Spine1,ZXY)
-POSE_ROTATION_ORDER(human,LeftShoulder,ZXY)
-POSE_ROTATION_ORDER(human,LeftArm,ZXY)
-POSE_ROTATION_ORDER(human,LeftForeArm,ZXY)
-POSE_ROTATION_ORDER(human,LeftHand,ZXY)
-POSE_ROTATION_ORDER(human,Neck,ZXY)
-POSE_ROTATION_ORDER(human,Neck1,ZXY)
-POSE_ROTATION_ORDER(human,Head,ZXY)
-POSE_ROTATION_ORDER(human,RightShoulder,ZXY)
-POSE_ROTATION_ORDER(human,RightArm,ZXY)
-POSE_ROTATION_ORDER(human,RightForeArm,ZXY)
-POSE_ROTATION_ORDER(human,RightHand,ZXY)
-POSE_ROTATION_ORDER(human,RHipJoint,ZXY)
-POSE_ROTATION_ORDER(human,RightUpLeg,ZXY)
-POSE_ROTATION_ORDER(human,RightLeg,ZXY)
-POSE_ROTATION_ORDER(human,RightFoot,ZXY)
-POSE_ROTATION_ORDER(human,RightToeBase,ZXY) 
- * */
-
+ 
 int updateOpenGLView(std::vector<float> bvhFrame)
 { 
   if (bvhFrame.size()<MOCAPNET_OUTPUT_NUMBER)

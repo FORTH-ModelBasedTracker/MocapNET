@@ -958,13 +958,18 @@ int visualizePoints(
 
     if (mocapNETOutput.size()>4)
     {
-     txtPosition.y+=30;
-     if ( (mocapNETOutput[4]>=-45) && (mocapNETOutput[4]<=45) )  { snprintf(textInfo,512,"Direction : Front"); } else
-     if ( (mocapNETOutput[4]<=-45) && (mocapNETOutput[4]>=-135) )  { snprintf(textInfo,512,"Direction : Left"); } else
-     if ( (mocapNETOutput[4]>=45) && (mocapNETOutput[4]<=135) )  { snprintf(textInfo,512,"Direction : Right"); } else 
-     if ( (mocapNETOutput[4]<=-90) && (mocapNETOutput[4]>=-180) )  { snprintf(textInfo,512,"Direction : Back A"); } else  
-     if ( (mocapNETOutput[4]>=90) && (mocapNETOutput[4]<=180) )  { snprintf(textInfo,512,"Direction : Back B"); } 
-     cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);     
+      int foundDirection=0;  
+     
+     if ( (mocapNETOutput[4]>=-45) && (mocapNETOutput[4]<=45) )  { snprintf(textInfo,512,"Direction : Front");  foundDirection=1; } else
+     if ( (mocapNETOutput[4]<=-45) && (mocapNETOutput[4]>=-135) )  { snprintf(textInfo,512,"Direction : Left"); foundDirection=1;  } else
+     if ( (mocapNETOutput[4]>=45) && (mocapNETOutput[4]<=135) )  { snprintf(textInfo,512,"Direction : Right"); foundDirection=1;  } else 
+     if ( (mocapNETOutput[4]<=-90) && (mocapNETOutput[4]>=-180) )  { snprintf(textInfo,512,"Direction : Back A");  foundDirection=1; }  else  
+     if ( (mocapNETOutput[4]>=90) && (mocapNETOutput[4]<=180) )  { snprintf(textInfo,512,"Direction : Back B"); foundDirection=1;  } 
+     if (foundDirection)
+          { 
+              txtPosition.y+=30;
+             cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8); 
+          }     
     }
  
 
@@ -977,7 +982,7 @@ int visualizePoints(
                 img,
                 mocapNETInput,
                 20,
-                400,
+                480,
                 200,
                 200
             );
