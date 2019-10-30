@@ -41,15 +41,11 @@ if [ ! -f dataset/makehuman.tri ]; then
 fi
 
 
-
+#A sample is now included in repo datasets/sample.csv
 #also force download a CSV sample
-if [ ! -f sample.csv ]; then
-  wget http://ammar.gr/mocapnet/sample.csv
-fi
-#also force download a CSV sample
-if [ ! -f tektonik.csv ]; then
-  wget http://ammar.gr/mocapnet/tektonik.csv
-fi
+#if [ ! -f tektonik.csv ]; then
+#  wget http://ammar.gr/mocapnet/tektonik.csv
+#fi
 #--------------------------------------------
 
 
