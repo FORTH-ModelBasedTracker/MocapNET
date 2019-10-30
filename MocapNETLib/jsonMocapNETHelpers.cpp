@@ -334,15 +334,17 @@ std::vector<float> flattenskeletonCOCOToVector(struct skeletonCOCO * sk,unsigned
     int guessNose=1;
     if (guessNose==1)
         {
-            /*
+            //TODO : The nose should only be visible in front 
+            //Eyes the same.. I should also add this to the BVH -> 3D CSV conversions..!
+        
             if (bothJointAreNotZero(sk,BODY25_LEar,BODY25_REar))
                 {
                     addSkeletonJointFromTwoJoints(sk,result,BODY25_LEar,BODY25_REar);
                 }
-            else */ 
+            else  
             if (bothJointAreNotZero(sk,BODY25_LEye,BODY25_REye))
                 {
-                    addSkeletonJointFromTwoJoints(sk,result,BODY25_LEye,BODY25_REye);
+                  addSkeletonJointFromTwoJoints(sk,result,BODY25_LEye,BODY25_REye);
                 } else
                 { 
                   addSkeletonJoint(sk,result,BODY25_Nose);

@@ -19,6 +19,8 @@ echo "Categories=Application;Graphics;3DGraphics;2DGraphics;" >> mocapnet.deskto
 chmod +x mocapnet.desktop
 
 
+# sudo apt-get install build-essential cmake libopencv-dev libjpeg-dev libpng-dev
+
 if [ ! -f MotionCapture/READMEFIRST.txt ]; then
 echo "Could not find MotionCapture"
 wget http://ammar.gr/datasets/CMUMotionCaptureDatasets.zip
@@ -153,6 +155,7 @@ if [ ! -f RGBDAcquisition ]; then
  #We dont need to make it 
  #make 
  cd "$DIR"
+ #Also retrieve Renderer 
  #ln -s RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/Renderer 
 fi
 
@@ -176,6 +179,7 @@ cd build
 cmake ..
 make 
 cd "$DIR"
+ 
 
 
 exit 0

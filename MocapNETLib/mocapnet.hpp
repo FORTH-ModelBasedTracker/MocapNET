@@ -1510,6 +1510,21 @@ struct MocapNETModelLimits
     int isFlipped;
 };
 
+ 
+
+/**
+ * @brief This is a MocapNET orientation.
+ */
+enum MOCAPNET_Orientation
+{
+ MOCAPNET_ORIENTATION_NONE=0,
+ MOCAPNET_ORIENTATION_FRONT,
+ MOCAPNET_ORIENTATION_BACK,
+ MOCAPNET_ORIENTATION_LEFT,
+ MOCAPNET_ORIENTATION_RIGHT,
+ //----------------------------- 
+ MOCAPNET_ORIENTATION_NUMBER
+};
 
 
 /**

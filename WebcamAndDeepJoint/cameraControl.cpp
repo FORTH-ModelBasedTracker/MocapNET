@@ -3,7 +3,7 @@
 #include <cstdlib>
 
 
-const unsigned int noiseThreshold = 15;
+const unsigned int noiseThreshold = 25;
 
 int populateBoundingBox(
     struct boundingBox *bbox,

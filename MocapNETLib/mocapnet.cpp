@@ -103,36 +103,36 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
             mnet->modelLimits[0].maximumYaw1=360.0;
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            snprintf(modelPath,1024,"combinedModel/%0.1f/frontA.pb",qualitySetting);
-            result += loadTensorflowInstance(&mnet->models[1],modelPath,"input_frontA","result_frontA/concat",forceCPU);
+            snprintf(modelPath,1024,"combinedModel/%0.1f/front.pb",qualitySetting);
+            result += loadTensorflowInstance(&mnet->models[1],modelPath,"input_front","result_front/concat",forceCPU);
             mnet->modelLimits[1].isFlipped=0;
             mnet->modelLimits[1].numberOfLimits=1;
-            mnet->modelLimits[1].minimumYaw1=-90.0;
-            mnet->modelLimits[1].maximumYaw1=0.0;
+            mnet->modelLimits[1].minimumYaw1=-45.0;
+            mnet->modelLimits[1].maximumYaw1=45.0;
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            snprintf(modelPath,1024,"combinedModel/%0.1f/frontB.pb",qualitySetting);
-            result += loadTensorflowInstance(&mnet->models[2],modelPath,"input_frontB","result_frontB/concat",forceCPU);
+            snprintf(modelPath,1024,"combinedModel/%0.1f/back.pb",qualitySetting);
+            result += loadTensorflowInstance(&mnet->models[2],modelPath,"input_back","result_back/concat",forceCPU);
             mnet->modelLimits[2].isFlipped=0;
             mnet->modelLimits[2].numberOfLimits=1;
-            mnet->modelLimits[2].minimumYaw1=0.0;
-            mnet->modelLimits[2].maximumYaw1=90.0;
+            mnet->modelLimits[2].minimumYaw1=135.0;//-90.0;
+            mnet->modelLimits[2].maximumYaw1=225.0;//-270.0;
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            snprintf(modelPath,1024,"combinedModel/%0.1f/backA.pb",qualitySetting);
-            result += loadTensorflowInstance(&mnet->models[3] ,modelPath ,"input_backA" ,"result_backA/concat",forceCPU);
+            snprintf(modelPath,1024,"combinedModel/%0.1f/left.pb",qualitySetting);
+            result += loadTensorflowInstance(&mnet->models[3] ,modelPath ,"input_left" ,"result_left/concat",forceCPU);
             mnet->modelLimits[3].isFlipped=0;
             mnet->modelLimits[3].numberOfLimits=1;
-            mnet->modelLimits[3].minimumYaw1=-90.0;
-            mnet->modelLimits[3].maximumYaw1=-270.0; 
+            mnet->modelLimits[3].minimumYaw1=-135.0;
+            mnet->modelLimits[3].maximumYaw1=45.0; 
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            snprintf(modelPath,1024,"combinedModel/%0.1f/backB.pb",qualitySetting);//
-            result += loadTensorflowInstance(&mnet->models[4] ,modelPath ,"input_backB" ,"result_backB/concat",forceCPU);
+            snprintf(modelPath,1024,"combinedModel/%0.1f/right.pb",qualitySetting);//
+            result += loadTensorflowInstance(&mnet->models[4] ,modelPath ,"input_right" ,"result_right/concat",forceCPU);
             mnet->modelLimits[4].isFlipped=0;
             mnet->modelLimits[4].numberOfLimits=1;
-            mnet->modelLimits[4].minimumYaw1=-90.0;
-            mnet->modelLimits[4].maximumYaw1=-270.0; 
+            mnet->modelLimits[4].minimumYaw1=45.0;
+            mnet->modelLimits[4].maximumYaw1=135.0; 
 
             if(result==5)
                 {
@@ -256,48 +256,108 @@ std::vector<float>  MNET3Classes(struct MocapNET * mnet,std::vector<float> mnetI
 
 
 
-std::vector<float>  MNET5Classes(struct MocapNET * mnet,std::vector<float> mnetInput,std::vector<float> direction )
+int  getMocapNETOrientationFromOutputVector(std::vector<float> direction)
 {
-    fprintf(stderr,NORMAL "5Class  Direction is : %0.2f " NORMAL , direction[0] );
-    std::vector<float> result;
-    
-    if (direction.size()>0)
-        {
-    
-            if ( (direction[0]>=-90) && (direction[0]<=0) )
+        if (direction.size()>0)
+        {    
+             if ( (direction[0]>=-45.0) && (direction[0]<=45.0) )
                 {
-                    //Front ----------------------------------------------
-                    fprintf(stderr,"Front A\n");
-                    result = predictTensorflow(&mnet->models[1],mnetInput); 
+                    //Front ---------------------------------------------- 
+                    return MOCAPNET_ORIENTATION_FRONT;
                 }
             else
-            if ( (direction[0]<=90) && (direction[0]>=0) )
+            if ( (direction[0]>=45.0) && (direction[0]<=135.0) )
                 {
-                    //Front ----------------------------------------------
-                    fprintf(stderr,"Front B\n");
-                    result = predictTensorflow(&mnet->models[2],mnetInput); 
+                    //Right ----------------------------------------------
+                    return MOCAPNET_ORIENTATION_RIGHT;
+                }
+            else
+            if ( (direction[0]>=-135.0) && (direction[0]<=-45.0) )
+                {
+                    //Left ---------------------------------------------- 
+                    return MOCAPNET_ORIENTATION_LEFT;  
                 }
             else
             if ( (direction[0]<=-90) && (direction[0]>=-180) )
                 {
                     //Back  ----------------------------------------------
-                    fprintf(stderr,"Back A\n");
-                    result = predictTensorflow(&mnet->models[3],mnetInput); 
-                     if (result.size()>4)
-                        { result[4]=undoOrientationTrickForBackOrientation(result[4]); }
+                    return MOCAPNET_ORIENTATION_BACK;
                 } 
                else
             if ( (direction[0]>=90) && (direction[0]<=180) )
                 {
-                    //Back  ----------------------------------------------
-                    fprintf(stderr,"Back B\n");
-                    result = predictTensorflow(&mnet->models[4],mnetInput); 
-                     if (result.size()>4)
-                        {result[4]=undoOrientationTrickForBackOrientation(result[4]); }
+                    //Back  ---------------------------------------------- 
+                    return MOCAPNET_ORIENTATION_BACK;
                 }  else
                 {
                     fprintf(stderr,RED "Unhandled orientation \n" NORMAL);
-                }
+                } 
+        }
+ return MOCAPNET_ORIENTATION_NONE;
+}
+ 
+
+std::vector<float>  MNET5Classes(struct MocapNET * mnet,std::vector<float> mnetInput,std::vector<float> direction )
+{
+    std::vector<float> result;
+    
+    if (direction.size()>0)
+        {
+            fprintf(stderr,NORMAL "5Class  Direction is : %0.2f " NORMAL , direction[0] );
+            //Output of each Neural Network is -45.0  to 0.0 to 45.0
+            //We need to correct it ..
+            
+            int orientation = getMocapNETOrientationFromOutputVector(direction);
+            switch (orientation)
+            {
+                //=========================================================== 
+                case MOCAPNET_ORIENTATION_FRONT: 
+                    fprintf(stderr,"Front\n");
+                    result = predictTensorflow(&mnet->models[1],mnetInput); 
+                break; 
+                //===========================================================
+                case MOCAPNET_ORIENTATION_BACK:
+                    fprintf(stderr,"Back\n");
+                    result = predictTensorflow(&mnet->models[2],mnetInput); 
+                     if (result.size()>4)
+                        { 
+                          fprintf(stderr,"Orientation changed from %0.2f ",result[4]); 
+                          //result[4]=undoOrientationTrickForBackOrientation(result[4]); 
+                          result[4]-=180.0; 
+                          fprintf(stderr,"to %0.2f\n ",result[4]); 
+                        }
+                break; 
+                //===========================================================
+                case MOCAPNET_ORIENTATION_LEFT:
+                    fprintf(stderr,"Left\n");
+                    result = predictTensorflow(&mnet->models[3],mnetInput); 
+                     if (result.size()>4)
+                        { 
+                          fprintf(stderr,"Orientation changed from %0.2f ",result[4]); 
+                          result[4]-=90.0; 
+                          fprintf(stderr,"to %0.2f\n ",result[4]);  
+                        }                    
+                break; 
+                //===========================================================
+                case MOCAPNET_ORIENTATION_RIGHT:
+                   result = predictTensorflow(&mnet->models[4],mnetInput); 
+                     if (result.size()>4)
+                        { 
+                         fprintf(stderr,"Orientation changed from %0.2f ",result[4]); 
+                         result[4]+=90.0;
+                         fprintf(stderr,"to %0.2f\n ",result[4]);  
+                        }
+                break; 
+                //===========================================================
+                default :
+                    fprintf(stderr,RED "Unhandled orientation, using front as a last resort \n" NORMAL);
+                    result = predictTensorflow(&mnet->models[1],mnetInput); 
+                break;
+                //=========================================================== 
+            };
+        } else
+        {
+            fprintf(stderr,NORMAL "5Class  Direction is not defined\n" NORMAL ); 
         }
        return result;         
 }

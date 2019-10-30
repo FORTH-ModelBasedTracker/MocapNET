@@ -11,6 +11,12 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD 11)  
 
 
+#JPEG/PNG libraries..
+set(JPG_Libs jpeg )
+set(PNG_Libs png ) 
+
+
+
 IF(EXISTS "${CMAKE_SOURCE_DIR}/libtensorflow/lib/libtensorflow.so")
  MESSAGE("Using locally found libtensorflow C-API")
  set(TENSORFLOW_ROOT "${CMAKE_SOURCE_DIR}/libtensorflow/lib/" CACHE PATH "tensorflow root") 

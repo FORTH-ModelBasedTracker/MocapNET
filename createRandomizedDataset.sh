@@ -27,8 +27,9 @@ MAXIMUM_POSITION="1400 300 $MAXIMUM_DEPTH"
 MAXIMUM_ROTATION="25 178 35"
   
 MIRROR_DATASET_HANDS=""
-ITERATIONS="2" #float32 targeting 16GB RAM
-ITERATIONS="8" #float16 targeting 16GB RAM
+ITERATIONS="1" #Smallest size..
+#ITERATIONS="2" #float32 targeting 16GB RAM
+#ITERATIONS="8" #float16 targeting 16GB RAM
 
 #We are also mirroring so bear in mind that this will effectively be doubled 
 #MIRROR_DATASET_HANDS="--mirror lCollar rCollar"
@@ -77,20 +78,63 @@ function generateDataset
 
 
 #New way to do randomizations Position is picked in 2D and works in all depths
-#------------------------------------------------------------------------------------------------------------
-generateDataset dataBack.csv "--flipRandomizationOrientation --randomize2Dranges $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 -90 35 -35 90 -35 35 180 35"
-generateDataset dataFront.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -90 -35 35 90 35"
-generateDataset dataAll.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 180 35"
+#   \                / 
+#     \    BACK    /
+#       \        /
+#         \    /  
+#           \/
+#-----------/\-------------
+#         /    \ 
+#       /        \
+#     /    FRONT   \
+#   /                \
 
-exit 0
+#------------------------------------------------------------------------------------------------------------
+#generateDataset dataBack.csv "--flipRandomizationOrientation --randomize2Dranges $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 -90 35 -35 90 -35 35 180 35"
+#generateDataset dataFront.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -90 -35 35 90 35"
+#generateDataset dataAll.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 180 35"
+
+#exit 0
 
 #New extra fine detail
 #------------------------------------------------------------------------------------------------------------
-generateDataset dataAll.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 180 35"
-generateDataset dataFrontA.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -90 -35 35 0 35"
-generateDataset dataFrontB.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 0 -35 35 90 35"
-generateDataset dataBackA.csv "--flipRandomizationOrientation --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -90 -35 35 0 35"
-generateDataset dataBackB.csv "--flipRandomizationOrientation --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 0 -35 35 90 35"
+#generateDataset dataFrontA.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -90 -35 35 0 35"
+#generateDataset dataFrontB.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 0 -35 35 90 35"
+#generateDataset dataBackA.csv "--flipRandomizationOrientation --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -90 -35 35 0 35"
+#generateDataset dataBackB.csv "--flipRandomizationOrientation --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 0 -35 35 90 35"
+#generateDataset dataAll.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 180 35"
+
+
+
+#New extra extra fine detail rotated by 45 degrees
+#   \                / 
+#     \    BACK    /
+#       \        /
+#         \    /  
+#           \/
+#   LEFT    /\    RIGHT
+#         /    \ 
+#       /        \
+#     /    FRONT   \
+#   /                \
+#------------------------------------------------------------------------------------------------------------
+
+generateDataset data_front.csv "--csvOrientation front --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -45 -35 35 45 35"
+generateDataset data_back.csv "--csvOrientation back --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 135 -35 35 225 35"
+generateDataset data_left.csv "--csvOrientation left --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -135 -35 35 -45 35"
+generateDataset data_right.csv "--csvOrientation right --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 45 -35 35 135 35"
+generateDataset data_all.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 180 35"
+
+
+
+
+
+
+
+
+
+
+
 
 
 exit 0

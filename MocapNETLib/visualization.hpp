@@ -161,6 +161,7 @@ int visualizePoints(
                      float fpsAcquisition,
                      float joint2DEstimator,
                      float fpsMocapNET,
+                     unsigned int mocapNETMode,
                      unsigned int width,
                      unsigned int height,
                      unsigned int handleMessages,

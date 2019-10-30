@@ -271,10 +271,6 @@ int main(int argc, char *argv[])
 
                             if (visualize)
                                 {
-                                    
-                                    
-                                    
-                                    
                                     std::vector<std::vector<float> > points2DOutput = convertBVHFrameTo2DPoints(result,visWidth,visHeight);
                                     
                                     if (visualizationType==0)
@@ -293,6 +289,7 @@ int main(int argc, char *argv[])
                                                      0.0,
                                                      0.0,
                                                      fpsMocapNET,
+                                                     mocapNETMode,
                                                      visWidth,
                                                      visHeight,
                                                      1,

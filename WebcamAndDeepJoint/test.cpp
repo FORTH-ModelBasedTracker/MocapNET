@@ -399,6 +399,9 @@ int main(int argc, char *argv[])
     int rememberPrevious2DPositions=0;
 
     int borderTop=0, borderBottom=0, borderLeft=0, borderRight=0;
+    
+    int coveringRectangle=0;
+    int coveringRectangleX=0, coveringRectangleY=0, coveringRectangleWidth=0, coveringRectangleHeight=0;
 
     unsigned int delay=1; //Just a little time to view the window..
 
@@ -519,6 +522,14 @@ int main(int argc, char *argv[])
                     {
                         borderTop=atoi(argv[i+1])/2;
                         borderBottom=atoi(argv[i+1])/2;
+                    } 
+                else if (strcmp(argv[i],"--rectangle")==0)
+                    {
+                        coveringRectangle=1; 
+                        coveringRectangleX=atoi(argv[i+1]);
+                        coveringRectangleY=atoi(argv[i+2]);
+                        coveringRectangleWidth=atoi(argv[i+3]); 
+                        coveringRectangleHeight=atoi(argv[i+4]);
                     }
                 else if (strcmp(argv[i],"--2dmodel")==0)
                     {
@@ -712,7 +723,15 @@ int main(int argc, char *argv[])
                                 //-------------------------------------------------------------------------------------------------------
                                 
                                 
-                                
+                            //Some datasets have persons that appear in parts of the image, we might want to cover them using a rectangle
+                            //We do this before adding any borders or otherwise change of the ROI of the image, however we do this 
+                            //after possible frame skips for the obviously increased performance..
+                            if (coveringRectangle)
+                            {
+                                cv::Point pt1(coveringRectangleX,coveringRectangleY);
+                                cv::Point pt2(coveringRectangleX+coveringRectangleWidth,coveringRectangleY+coveringRectangleHeight);
+                                cv::rectangle(frame,pt1,pt2,cv::Scalar(0,0,0),-1,8,0); 
+                            }    
                                 
                             //If we want to add a border to our frame to pad it this is done here
                             //----------------------------------------------------------------------------------------------------------
@@ -1026,7 +1045,6 @@ int main(int argc, char *argv[])
                                                             cv::createTrackbar("Roll            ", "3D Control", &rollValue, 360);
 
 
-
                                                             cv::namedWindow("3D Points Output");
                                                             cv::moveWindow("3D Control",inputWidth2DJointDetector,0); //y=inputHeight2DJointDetector
                                                             cv::moveWindow("2D NN Heatmaps",0,0);
@@ -1046,6 +1064,10 @@ int main(int argc, char *argv[])
                                                     cv::Mat * openGLMatForVisualization = 0;
                                                     if (visualizeOpenGLEnabled)
                                                         {
+                                                            //fprintf(stderr,"updateOpenGLView\n");
+                                                            updateOpenGLView(bvhOutput);
+                                                            
+                                                            //fprintf(stderr,"visualizeOpenGL\n");
                                                             unsigned int openGLFrameWidth=visWidth,openGLFrameHeight=visHeight;
                                                             char * openGLFrame = visualizeOpenGL(&openGLFrameWidth,&openGLFrameHeight);
                                                             //=====================================================================
@@ -1091,6 +1113,7 @@ int main(int argc, char *argv[])
                                                                             fpsAcquisition,
                                                                             fps2DJointDetector,
                                                                             fpsMocapNET,
+                                                                            mocapNETMode,
                                                                             visWidth,
                                                                             visHeight,
                                                                             0,

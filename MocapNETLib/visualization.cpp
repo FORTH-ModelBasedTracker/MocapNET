@@ -563,19 +563,37 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
 
             if ( (jointPointX!=0) && (jointPointY!=0) )
                 {
-                    cv::Point jointPoint(jointPointX+10,jointPointY);
-                    cv::circle(outputMat,jointPoint,5,cv::Scalar(255,0,0),3,8,0);
+                    cv::Point jointPoint(jointPointX,jointPointY);
+                    int thickness=3;
+                    cv::circle(outputMat,jointPoint,5,cv::Scalar(255,0,0),thickness,8,0);
 
+                    int filterOut = 1;    
                     const char * jointName = getBVHJointName(jointID);
                     if (jointName!=0)
                         {
-                            snprintf(textInfo,512,"%s(%u)",jointName,jointID);
+                            snprintf(textInfo,512,"%s",jointName);
+                            
+                            if (strcmp("head",jointName)==0)    { filterOut = 0; }  else
+                            if (strcmp("neck",jointName)==0)    { filterOut = 0; }  else
+                            if (strcmp("chest",jointName)==0)    { filterOut = 0; }  else
+                            if (strcmp("lShldr",jointName)==0)    { filterOut = 0; }  else
+                            if (strcmp("rShldr",jointName)==0)    { filterOut = 0; }  else
+                            if (strcmp("rShin",jointName)==0)    { filterOut = 0; }  else
+                            if (strcmp("lShin",jointName)==0)    { filterOut = 0; }  else
+                            if (strcmp("rForeArm",jointName)==0)    { filterOut = 0; }  else
+                            if (strcmp("lForeArm",jointName)==0)    { filterOut = 0; }  else
+                            if (strcmp("rFoot",jointName)==0)    { filterOut = 0; }  else
+                            if (strcmp("lFoot",jointName)==0)    { filterOut = 0; }   
                         }
                     else
                         {
                             snprintf(textInfo,512,"-(%u)",jointID);
                         }
-                    cv::putText(outputMat, textInfo  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(255), 0.2, 8 );
+                     
+                    
+                    jointPoint.x+=10;
+                    if (!filterOut)
+                      { cv::putText(outputMat, textInfo  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(255), 0.2, 8 ); }
                 }
         }
         
@@ -681,7 +699,7 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
     unsigned int visualizeHeight=1024;
     cv::Mat img(visualizeHeight,visualizeWidth, CV_8UC3, cv::Scalar(0,0,0));
     
-    drawSkeleton(img,place2DSkeletonElsewhere(450,400,200,200,skeleton2D));
+    drawSkeleton(img,place2DSkeletonElsewhere(450,350,200,200,skeleton2D));
     
     unsigned int widthOfGraphs=165;
     unsigned int heightOfGraphs=100;
@@ -771,6 +789,7 @@ int visualizePoints(
     float fpsAcquisition,
     float joint2DEstimator,
     float fpsMocapNET,
+    unsigned int mocapNETMode,
     unsigned int width,
     unsigned int height,
     unsigned int handleMessages,
@@ -821,35 +840,9 @@ int visualizePoints(
 
 
 
-
-//------------------------------------------------------------------------------------------
-//  Draw floor as a grid of lines 
-//------------------------------------------------------------------------------------------
-    if (drawFloor)
-        {
-            float floorX=0,floorY=0,floorZ=0;
-
-            if (mocapNETOutputWithGUIForcedView.size()>5)
-                {
-                    floorX=mocapNETOutputWithGUIForcedView[3];
-                    floorY=mocapNETOutputWithGUIForcedView[4];
-                    floorZ=mocapNETOutputWithGUIForcedView[5];
-                }
-
-            unsigned int floorDimension=20;
-            drawFloorFromPrimitives(
-                img,
-                floorX,
-                floorY,
-                floorZ,
-                floorDimension,
-                width,
-                height
-            );
-        }
-//------------------------------------------------------------------------------------------
-
-
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //  The yellow lines that track the hand movement! 
+    int  endEffectorHistory=1;
 
 //---------------------------------------------------------------------------------------------------------------------
 //   Draw correspondance, post processing step to see if output is good
@@ -880,29 +873,6 @@ int visualizePoints(
 //Just the lines ( background layer)
 
 
-    //-----------------------------------------------------------------------------------------------------------------------------
-    //  The yellow lines that track the hand movement! 
-    int  endEffectorHistory=1;
-    //-----------------------------------------------------------------------------------------------------------------------------
-    if (endEffectorHistory)
-        {
-             drawEndEffectorTrack(img,points2DOutputGUIForcedView);
-        }
-    //-----------------------------------------------------------------------------------------------------------------------------
-
- 
-
-    //-----------------------------------------------------------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------------------------------------------------------
-   //The main star of the show , the skeleton..
-    drawSkeleton(img,points2DOutputGUIForcedView);
-    //-----------------------------------------------------------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------------------------------------------------------
 
 
  
@@ -977,7 +947,7 @@ int visualizePoints(
     cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
 
     txtPosition.y+=30;
-    snprintf(textInfo,512,"MocapNET : %0.2f fps",fpsMocapNET);
+    snprintf(textInfo,512,"MocapNET (%u-way) : %0.2f fps",mocapNETMode,fpsMocapNET);
     cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);
 
     txtPosition.y+=30;
@@ -986,7 +956,17 @@ int visualizePoints(
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
 
-
+    if (mocapNETOutput.size()>4)
+    {
+     txtPosition.y+=30;
+     if ( (mocapNETOutput[4]>=-45) && (mocapNETOutput[4]<=45) )  { snprintf(textInfo,512,"Direction : Front"); } else
+     if ( (mocapNETOutput[4]<=-45) && (mocapNETOutput[4]>=-135) )  { snprintf(textInfo,512,"Direction : Left"); } else
+     if ( (mocapNETOutput[4]>=45) && (mocapNETOutput[4]<=135) )  { snprintf(textInfo,512,"Direction : Right"); } else 
+     if ( (mocapNETOutput[4]<=-90) && (mocapNETOutput[4]>=-180) )  { snprintf(textInfo,512,"Direction : Back A"); } else  
+     if ( (mocapNETOutput[4]>=90) && (mocapNETOutput[4]<=180) )  { snprintf(textInfo,512,"Direction : Back B"); } 
+     cv::putText(img,textInfo,txtPosition,fontUsed,0.8,color,thickness,8);     
+    }
+ 
 
     //-----------------------
     //     NSDM matrix 
@@ -1016,6 +996,60 @@ int visualizePoints(
      //cv::addWeighted(*glMat, alpha, img, 1 - alpha, 0, img) ;
      
      img=cv::max(*glMat, img);
+   } else
+   {
+       
+
+//------------------------------------------------------------------------------------------
+//  Draw floor as a grid of lines 
+//------------------------------------------------------------------------------------------
+    if (drawFloor)
+        {
+            float floorX=0,floorY=0,floorZ=0;
+
+            if (mocapNETOutputWithGUIForcedView.size()>5)
+                {
+                    floorX=mocapNETOutputWithGUIForcedView[3];
+                    floorY=mocapNETOutputWithGUIForcedView[4];
+                    floorZ=mocapNETOutputWithGUIForcedView[5];
+                }
+
+            unsigned int floorDimension=20;
+            drawFloorFromPrimitives(
+                img,
+                floorX,
+                floorY,
+                floorZ,
+                floorDimension,
+                width,
+                height
+            );
+        }
+//------------------------------------------------------------------------------------------
+
+
+
+    //-----------------------------------------------------------------------------------------------------------------------------
+    if (endEffectorHistory)
+        {
+             drawEndEffectorTrack(img,points2DOutputGUIForcedView);
+        }
+    //-----------------------------------------------------------------------------------------------------------------------------
+
+ 
+
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+   //The main star of the show , the skeleton..
+    drawSkeleton(img,points2DOutputGUIForcedView);
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------
+
    }
     //-----------------------
 
