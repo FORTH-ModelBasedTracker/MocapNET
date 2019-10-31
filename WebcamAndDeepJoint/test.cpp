@@ -1038,7 +1038,7 @@ int main(int argc, char *argv[])
                                                             cv::imshow("3D Control",controlMat);
 
                                                             cv::createTrackbar("Stop Demo", "3D Control", &stop, 1);
-                                                            cv::createTrackbar("Visualization Demo", "3D Control", &visualizationType,14);
+                                                            cv::createTrackbar("Visualization Demo", "3D Control", &visualizationType,15);
                                                             cv::createTrackbar("Rotate Feed", "3D Control", &rotate, 4);
                                                             cv::createTrackbar("Gesture Detection", "3D Control", &doGestureDetection,1);
                                                             cv::createTrackbar("Filter Output", "3D Control", &doOutputFiltering,1);
