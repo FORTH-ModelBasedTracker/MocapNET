@@ -753,7 +753,15 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
          
             cv::Point jointPointPrev(plotPosX+ i-1,    plotPosY+history[i-1][joint] + heightOfGraphs/2 );
             cv::Point jointPointNext(plotPosX+ i,        plotPosY+history[i][joint] + heightOfGraphs/2);
-            cv::line(img,jointPointPrev,jointPointNext,getColorFromIndex(joint), 1.0); 
+            cv::Scalar usedColor = getColorFromIndex(joint);
+            
+            if (joint==4)
+            { 
+                //Bright RED color for the Y Orientation which is very important 
+                usedColor=cv::Scalar(0,0,255);
+            }
+            
+            cv::line(img,jointPointPrev,jointPointNext,usedColor, 1.0); 
             plotPosY+=heightOfGraphs;       
             
            if (plotPosY+heightOfGraphs+shiftY>1000)

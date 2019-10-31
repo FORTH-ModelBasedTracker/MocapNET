@@ -22,7 +22,23 @@ int executeCommandLineNum(
                          );
 
 
+/**
+ * @brief Get the CPU name 
+ * @param CString where the CPU name should be stored
+ * @param Size of array that will contain our result
+ * @ingroup tools
+ * @retval 1=Success/0=Failure
+ */
 int getCPUName(char * str,unsigned int maxLength);
+
+
+/**
+ * @brief Get the GPU name 
+ * @param CString where the GPU name should be stored
+ * @param Size of array that will contain our result
+ * @ingroup tools
+ * @retval 1=Success/0=Failure
+ */
 int getGPUName(char * str,unsigned int maxLength);
 
 /**

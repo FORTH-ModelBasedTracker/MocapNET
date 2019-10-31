@@ -23,6 +23,99 @@ int listNodesMN(const char * label , TF_Graph* graph)
     return 1;
 }
 
+
+int silenceDeadJoints(std::vector<float> & result)
+{
+  if (result.size()!=MOCAPNET_OUTPUT_NUMBER)
+  {
+     fprintf(stderr,RED "silenceDeadJoints: There is an inconsistency in the number of outputs\n" NORMAL); 
+     return 0;
+  }
+    
+ result[MOCAPNET_OUTPUT_LEFTEYE_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LEFTEYE_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LEFTEYE_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RIGHTEYE_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RIGHTEYE_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RIGHTEYE_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RCOLLAR_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RCOLLAR_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RCOLLAR_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RTHUMB1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RTHUMB1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RTHUMB1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RTHUMB2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RTHUMB2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RTHUMB2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RINDEX1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RINDEX1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RINDEX1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RINDEX2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RINDEX2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RINDEX2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RMID1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RMID1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RMID1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RMID2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RMID2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RMID2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RRING1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RRING1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RRING1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RRING2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RRING2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RRING2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RPINKY1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RPINKY1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RPINKY1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RPINKY2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RPINKY2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RPINKY2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LCOLLAR_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LCOLLAR_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LCOLLAR_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LTHUMB1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LTHUMB1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LTHUMB1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LTHUMB2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LTHUMB2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LTHUMB2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LINDEX1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LINDEX1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LINDEX1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LINDEX2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LINDEX2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LINDEX2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LMID1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LMID1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LMID1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LMID2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LMID2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LMID2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LRING1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LRING1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LRING1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LRING2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LRING2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LRING2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LPINKY1_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LPINKY1_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LPINKY1_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LPINKY2_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LPINKY2_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LPINKY2_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_RBUTTOCK_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_RBUTTOCK_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_RBUTTOCK_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LBUTTOCK_ZROTATION]=0;
+ result[MOCAPNET_OUTPUT_LBUTTOCK_XROTATION]=0;
+ result[MOCAPNET_OUTPUT_LBUTTOCK_YROTATION]=0;
+ 
+  return 1;  
+}
+
+
+
 int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetting,int mode,unsigned int forceCPU)
 {
     char modelPath[1024]= {0};
@@ -149,7 +242,7 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
         default:
             fprintf(stderr,RED "You requested a MocapNET configuration that is incorrect  ( mode=%u )\n" NORMAL , mode);
             return 0;
-            break;
+        break;
         };
 
     if (result)
@@ -173,6 +266,16 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
                             fprintf(stderr,RED "Caching and testing model %u (%s) was unsuccessful\n" NORMAL,i,mnet->models[i].modelPath);
                         }
                 }
+                
+           fprintf(stderr,"Initializing output filters : ");
+           //---------------------------------------------------
+           initButterWorth(&mnet->directionSignal,30.0,100.0);
+           for (int i=0;  i<MOCAPNET_OUTPUT_NUMBER; i++ )
+                {
+                   fprintf(stderr,"."); 
+                   initButterWorth(&mnet->outputSignals[i],30.0,100.0);     
+                }
+           fprintf(stderr,"\n");
         }
 
     return result;
@@ -358,96 +461,6 @@ std::vector<float>  MNET5Classes(struct MocapNET * mnet,std::vector<float> mnetI
 }
 
 
-int silenceDeadJoints(std::vector<float> & result)
-{
-  if (result.size()!=MOCAPNET_OUTPUT_NUMBER)
-  {
-     fprintf(stderr,RED "silenceDeadJoints: There is an inconsistency in the number of outputs\n" NORMAL); 
-     return 0;
-  }
-    
- result[MOCAPNET_OUTPUT_LEFTEYE_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LEFTEYE_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LEFTEYE_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RIGHTEYE_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RIGHTEYE_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RIGHTEYE_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RCOLLAR_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RCOLLAR_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RCOLLAR_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RTHUMB1_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RTHUMB1_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RTHUMB1_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RTHUMB2_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RTHUMB2_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RTHUMB2_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RINDEX1_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RINDEX1_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RINDEX1_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RINDEX2_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RINDEX2_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RINDEX2_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RMID1_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RMID1_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RMID1_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RMID2_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RMID2_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RMID2_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RRING1_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RRING1_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RRING1_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RRING2_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RRING2_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RRING2_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RPINKY1_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RPINKY1_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RPINKY1_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RPINKY2_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RPINKY2_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RPINKY2_YROTATION]=0;
- result[MOCAPNET_OUTPUT_LCOLLAR_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LCOLLAR_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LCOLLAR_YROTATION]=0;
- result[MOCAPNET_OUTPUT_LTHUMB1_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LTHUMB1_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LTHUMB1_YROTATION]=0;
- result[MOCAPNET_OUTPUT_LTHUMB2_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LTHUMB2_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LTHUMB2_YROTATION]=0;
- result[MOCAPNET_OUTPUT_LINDEX1_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LINDEX1_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LINDEX1_YROTATION]=0;
- result[MOCAPNET_OUTPUT_LINDEX2_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LINDEX2_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LINDEX2_YROTATION]=0;
- result[MOCAPNET_OUTPUT_LMID1_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LMID1_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LMID1_YROTATION]=0;
- result[MOCAPNET_OUTPUT_LMID2_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LMID2_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LMID2_YROTATION]=0;
- result[MOCAPNET_OUTPUT_LRING1_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LRING1_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LRING1_YROTATION]=0;
- result[MOCAPNET_OUTPUT_LRING2_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LRING2_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LRING2_YROTATION]=0;
- result[MOCAPNET_OUTPUT_LPINKY1_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LPINKY1_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LPINKY1_YROTATION]=0;
- result[MOCAPNET_OUTPUT_LPINKY2_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LPINKY2_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LPINKY2_YROTATION]=0;
- result[MOCAPNET_OUTPUT_RBUTTOCK_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_RBUTTOCK_XROTATION]=0;
- result[MOCAPNET_OUTPUT_RBUTTOCK_YROTATION]=0;
- result[MOCAPNET_OUTPUT_LBUTTOCK_ZROTATION]=0;
- result[MOCAPNET_OUTPUT_LBUTTOCK_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LBUTTOCK_YROTATION]=0;
- 
-  return 1;  
-}
-
 
 std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,int doGestureDetection,int doOutputFiltering)
 {
@@ -495,6 +508,11 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,i
     //network to get the full BVH result from it 
     //----------------------------------------------------------------------------------------------
     std::vector<float> direction = predictTensorflow(&mnet->models[0],mnetInput); 
+    
+    if ( (doOutputFiltering) && (direction.size()>0) )
+    {
+        direction[0] = filter(&mnet->directionSignal,direction[0]);
+    } 
     //----------------------------------------------------------------------------------------------
     if (direction.size()>0)
         {
@@ -510,6 +528,19 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,i
               break; 
             };
             
+            if (doOutputFiltering)
+            {
+              if (result.size()==MOCAPNET_OUTPUT_NUMBER)  
+              {
+                for (int i=0;  i<result.size(); i++ )
+                   {
+                     result[i] = filter(&mnet->outputSignals[i],result[i]);  
+                   }
+              } else
+              {
+               fprintf(stderr,RED "MocapNET: Cannot filter output due to incorrect number of output elements..!\n" NORMAL);   
+              }
+            }
             
             addToMotionHistory(&mnet->poseHistoryStorage,result);
              //----------------------------------------------------------------------------------------------

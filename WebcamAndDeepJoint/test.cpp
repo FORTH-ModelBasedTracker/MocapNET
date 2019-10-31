@@ -2,7 +2,6 @@
  *  @brief This is an all-in-one live demo. It combines data acquisition using OpenCV, 2D Joint estimation using Tensorflow ( via VNECT/OpenPose/FORTH estimators ),
  *  and 3D BVH output using MocapNET.
  *  @author Ammar Qammaz (AmmarkoV)
-
  */
 
 #include "opencv2/opencv.hpp"
@@ -17,6 +16,7 @@ using namespace cv;
 #include "../Tensorflow/tensorflow.hpp"
 #include "../MocapNETLib/mocapnet.hpp"
 #include "../MocapNETLib/bvh.hpp"
+#include "../MocapNETLib/csv.hpp"
 #include "../MocapNETLib/gestureRecognition.hpp"
 #include "../MocapNETLib/opengl.hpp"
 #include "../MocapNETLib/tools.h"
@@ -26,6 +26,8 @@ using namespace cv;
 #include "utilities.hpp"
 
 
+//Debug switch that will spam the screen with OpenCV windows for each of the 
+//joint heatmaps..
 #define DISPLAY_ALL_HEATMAPS 0
 
 
@@ -656,6 +658,7 @@ int main(int argc, char *argv[])
 
     std::vector<float> flatAndNormalized2DPoints;
     std::vector<float> previousFlatAndNormalized2DPoints;
+    std::vector<std::vector<float> > inputFrames;
     std::vector<std::vector<float> > bvhFrames;
     std::vector<float> bvhOutput;
     std::vector<float> previousBvhOutput;
@@ -878,6 +881,14 @@ int main(int argc, char *argv[])
                                                     flatAndNormalized2DPoints = fillInTheBlanks(previousFlatAndNormalized2DPoints,flatAndNormalized2DPoints);
                                                     previousFlatAndNormalized2DPoints = flatAndNormalized2DPoints;
                                                 }
+
+                                            //If we are not running live ( aka not from a webcam with no fixed frame limit )
+                                            //Then we record the 2D input to store it .. 
+                                            if (!live)
+                                                {
+                                                    inputFrames.push_back(flatAndNormalized2DPoints); //2d Input
+                                                }
+
 
 
                                             previousBvhOutput=bvhOutput;
@@ -1252,6 +1263,7 @@ int main(int argc, char *argv[])
                     if (!live)
                         {
                             fprintf(stderr,"Will now write BVH file to %s.. \n",outputPath);
+                            //----------------------------------------------------------------------------------------------------------------------------------
                             //just use BVH header
                             if ( writeBVHFile(outputPath,0,bvhFrames) )
                                 {
@@ -1265,6 +1277,18 @@ int main(int argc, char *argv[])
                                 {
                                     fprintf(stderr,"Please note that while getting input %u frames where skipped due to OpenCV related errors\n",skippedFrames);
                                 }
+                            //----------------------------------------------------------------------------------------------------------------------------------
+                                
+                            fprintf(stderr,"Will now write 2D input to in.csv.. \n");
+                            //----------------------------------------------------------------------------------------------------------------------------------  
+                            if ( writeCSVHeaderFromLabelsAndVectorOfVectors("in.csv",MocapNETInputUncompressedArrayNames,MOCAPNET_UNCOMPRESSED_JOINT_PARTS*3,inputFrames) )
+                             { 
+                                 fprintf(stderr,GREEN "Successfully wrote %lu frames to csv file.. \n" NORMAL,inputFrames.size());
+                             }   
+                              else
+                             {
+                                 fprintf(stderr,RED "Failed to write %lu frames to bvh file.. \n" NORMAL,inputFrames.size()); 
+                             }
                         }
                     else
                         {

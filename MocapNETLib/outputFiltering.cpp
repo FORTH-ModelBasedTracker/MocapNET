@@ -23,8 +23,10 @@ void initButterWorth(struct ButterWorth * sensor,float fsampling,float fcutoff)
     sensor->a   =(float) (2.0*3.14159265359*sensor->ff)/(2.0*3.14159265359*sensor->ff+1.0); 
 }
 
-float filter(struct ButterWorth * sensor)
+float filter(struct ButterWorth * sensor,float unfilteredValue)
 {
+ sensor->unfilteredValue = unfilteredValue;   
+ 
  float y = sensor->unfilteredValue; 
  float out;
  if ((sensor->i>2)&&(1))
@@ -42,5 +44,6 @@ float filter(struct ButterWorth * sensor)
     sensor->x_pp = sensor->x_p;
     sensor->x_p = out;
     
+    sensor->filteredValue = out;
     return out; 
 }

@@ -122,10 +122,10 @@ int main(int argc, char *argv[])
                 {
                     if (processed==0)
                         {
-                            writeCSVHeader(outputPathFull,&skeleton,width,height);
+                            writeCSVHeaderFromSkeleton(outputPathFull,&skeleton,width,height);
                         }
 
-                    writeCSVBody(outputPathFull,&skeleton,width,height);
+                    writeCSVBodyFromSkeleton(outputPathFull,&skeleton,width,height);
                     ++processed;
                 }
             else

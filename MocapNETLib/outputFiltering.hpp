@@ -25,3 +25,9 @@ struct ButterWorth
   float  x_pp;
 };
 
+
+void initButterWorth(struct ButterWorth * sensor,float fsampling,float fcutoff);
+
+
+
+float filter(struct ButterWorth * sensor,float unfilteredValue);
