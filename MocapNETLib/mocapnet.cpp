@@ -268,12 +268,14 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
                 }
                 
            fprintf(stderr,"Initializing output filters : ");
+           
+           float approximateFramerate = 30.0;
            //---------------------------------------------------
-           initButterWorth(&mnet->directionSignal,30.0,100.0);
+           initButterWorth(&mnet->directionSignal,approximateFramerate,5.0);
            for (int i=0;  i<MOCAPNET_OUTPUT_NUMBER; i++ )
                 {
                    fprintf(stderr,"."); 
-                   initButterWorth(&mnet->outputSignals[i],30.0,100.0);     
+                   initButterWorth(&mnet->outputSignals[i],approximateFramerate,5.0);     
                 }
            fprintf(stderr,"\n");
         }

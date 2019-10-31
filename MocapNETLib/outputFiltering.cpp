@@ -1,11 +1,6 @@
 #include "outputFiltering.hpp"
 #include <math.h>
-
-
-
-struct ButterWorth readings[3]={0}; 
-
-
+ 
 void initButterWorth(struct ButterWorth * sensor,float fsampling,float fcutoff)
 {
     sensor->fs = fsampling;
