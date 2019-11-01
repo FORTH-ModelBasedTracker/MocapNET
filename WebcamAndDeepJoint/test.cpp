@@ -392,7 +392,7 @@ int main(int argc, char *argv[])
     unsigned int deadInputPoints=0;
     int live=0,stop=0,visualizationType=0;
     int constrainPositionRotation=1,rotate=0;
-    int doCrop=1,tryForMaximumCrop=0,doSmoothing=5,drawFloor=1,drawNSDM=1,doGestureDetection=1,doOutputFiltering=1,frameSkip=0;
+    int doCrop=1,tryForMaximumCrop=0,doSmoothing=5,drawFloor=1,drawNSDM=1,doGestureDetection=0,doOutputFiltering=1,frameSkip=0;
     int targetSpecificFramerate=0;
     float fpsTotal=1.0,fpsTarget=30.0,fpsAcquisition=1.0,fps2DJointDetector=1.0,fpsMocapNET=1.0;
 
