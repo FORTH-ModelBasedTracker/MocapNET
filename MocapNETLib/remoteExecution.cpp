@@ -1,6 +1,11 @@
 #include "remoteExecution.hpp"
 #include "../MocapNETLib/InputParser_C.h"
+
+
+ #if USE_NETWORKING
 #include "../AmmarServer/src/AmmClient/AmmClient.h"
+#endif
+
 
 #include <stdio.h>
 #include <stdlib.h>
