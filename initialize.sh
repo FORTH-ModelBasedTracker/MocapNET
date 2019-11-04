@@ -115,7 +115,7 @@ elif [ -f libtensorflow/lib/libtensorflow.so ]; then
 else 
  echo "Did not find tensorflow already installed..!"
  if [ ! -f libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz ]; then
-   echo "Did not find tensorflow already installed..!"
+   echo "Did not find tensorflow tarball so will have to download it..!"
    wget https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
    #Is the Google link down ? we have a mirror :)
    #wget https://ammar.gr/mocapnet/libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
@@ -123,19 +123,27 @@ else
    echo "The tensorflow tarball was already downloaded.."
  fi
  
+
+if [ -f libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz ]; then
  #Doing a local installation that requires no SUDO 
  mkdir libtensorflow
- tar -C libtensorflow -xzf libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
-  
+ tar -C libtensorflow -xzf libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz  
  #echo "Please give me sudo permissions to install Tensorflow $TENSORFLOW_VERSION C Bindings.."
  #sudo tar -C /usr/local -xzf libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
+ else
+   echo "Failed to download/extract tensorflow.."
+fi
+
 fi
 #---------------------------------------------------------------------------------------------------------------------------
 
 
 
 
-if [ ! -f RGBDAcquisition ]; then
+if [ -f RGBDAcquisition ]; then
+then
+echo "RGBDAcquisition appears to already exist .."
+else
  git clone https://github.com/AmmarkoV/RGBDAcquisition
  cd RGBDAcquisition
  mkdir build
@@ -156,16 +164,32 @@ if [ ! -f RGBDAcquisition ]; then
 fi
 
 
-#Dont bother with the HTTP code until it is ready..
-#if [ ! -f AmmarServer ]; then
-# git clone https://github.com/AmmarkoV/AmmarServer
-# cd AmmarServer
-# mkdir build
-# cd build
-# cmake ..
-# make 
-# cd "$DIR"
-#fi
+
+
+
+if [ -f AmmarServer ]
+then
+echo "AmmarServer appears to already exist .."
+else
+  echo "Do you want to download AmmarServer and enable MocapNETServer build ? " 
+  echo
+  echo -n " (Y/N)?"
+  read answer
+  if test "$answer" != "N" -a "$answer" != "n";
+  then 
+      cd "$DIR"
+      git clone https://github.com/AmmarkoV/AmmarServer
+      AmmarServer/scripts/get_dependencies.sh
+      cd AmmarServer
+      mkdir build
+      cd build
+      cmake ..
+     make 
+     cd "$DIR"
+  fi
+fi
+
+ 
  
  
 #Now that we have everything lets build..

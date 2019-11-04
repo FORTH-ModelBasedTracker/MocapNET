@@ -1,6 +1,7 @@
 #include "../Tensorflow/tf_utils.hpp"
 #include "mocapnet.hpp"
 #include "nsdm.hpp"
+#include "remoteExecution.hpp"
 #include "gestureRecognition.hpp"
 #include "jsonCocoSkeleton.h"
 
@@ -115,12 +116,8 @@ int silenceDeadJoints(std::vector<float> & result)
 }
 
 
-
-int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetting,int mode,unsigned int forceCPU)
-{
-    char modelPath[1024]= {0};
-    int result = 0;
-   
+void commonInitialization(struct MocapNET * mnet)
+{ 
    //Reset pose history..
    mnet->poseHistoryStorage.maxPoseHistory=150;
    mnet->poseHistoryStorage.history.clear();
@@ -129,7 +126,44 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
    {
        fprintf(stderr,RED "Failed to read recognized Gestures\n" NORMAL);
    }
-  
+   
+  fprintf(stderr,"Initializing output filters : "); 
+  float approximateFramerate = 30.0;
+  //---------------------------------------------------
+  initButterWorth(&mnet->directionSignal,approximateFramerate,5.0);
+  for (int i=0;  i<MOCAPNET_OUTPUT_NUMBER; i++ )
+                {
+                   fprintf(stderr,"."); 
+                   initButterWorth(&mnet->outputSignals[i],approximateFramerate,5.0);     
+                }
+  fprintf(stderr,"\n");    
+}
+
+
+int connectToMocapNETServer(struct MocapNET * mnet,const char * url,int port)
+{
+   mnet->useRemoteMocapNETServer=1;
+   snprintf(mnet->remoteMocapNETServerURL,128,"%s",url);
+   mnet->remoteMocapNETServerPort=port;
+   
+   mnet->remoteContext =  intializeRemoteExecution(url,port,10000);
+   
+   commonInitialization(mnet);
+   //Do a connection test here..
+   return 1;
+}
+
+
+
+
+int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetting,int mode,unsigned int forceCPU)
+{
+    char modelPath[1024]= {0};
+    int result = 0;
+   
+    
+   commonInitialization(mnet);
+   
     switch (mode)
         {
         case 3:
@@ -267,17 +301,6 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
                         }
                 }
                 
-           fprintf(stderr,"Initializing output filters : ");
-           
-           float approximateFramerate = 30.0;
-           //---------------------------------------------------
-           initButterWorth(&mnet->directionSignal,approximateFramerate,5.0);
-           for (int i=0;  i<MOCAPNET_OUTPUT_NUMBER; i++ )
-                {
-                   fprintf(stderr,"."); 
-                   initButterWorth(&mnet->outputSignals[i],approximateFramerate,5.0);     
-                }
-           fprintf(stderr,"\n");
         }
 
     return result;
@@ -464,6 +487,36 @@ std::vector<float>  MNET5Classes(struct MocapNET * mnet,std::vector<float> mnetI
 
 
 
+
+std::vector<float> localExecution(struct MocapNET * mnet,std::vector<float> mnetInput,int doOutputFiltering)
+{
+    std::vector<float> result; 
+    std::vector<float> direction = predictTensorflow(&mnet->models[0],mnetInput); 
+    
+    if ( (doOutputFiltering) && (direction.size()>0) )
+    {
+        direction[0] = filter(&mnet->directionSignal,direction[0]);
+    } 
+    //----------------------------------------------------------------------------------------------
+    if (direction.size()>0)
+        {
+            switch(mnet->mode)
+            {
+              case 3: result=MNET3Classes(mnet,mnetInput,direction); break;   
+              case 5: result=MNET5Classes(mnet,mnetInput,direction); break;
+              //-----------------------------------------------------------
+              default:
+               fprintf(stderr,RED "MocapNET: Incorrect Mode %u ..\n" NORMAL,mnet->mode); 
+              break; 
+            };
+        } else
+        {
+         fprintf(stderr,RED "Unable to predict pose direction..\n" NORMAL);
+        }
+   return result;
+}
+
+
 std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,int doGestureDetection,int doOutputFiltering)
 {
     std::vector<float> mnetInput;
@@ -509,27 +562,32 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,i
     //First run the network that can predict the orientation of the skeleton so we will use the correct
     //network to get the full BVH result from it 
     //----------------------------------------------------------------------------------------------
-    std::vector<float> direction = predictTensorflow(&mnet->models[0],mnetInput); 
+    std::vector<float> result; 
     
-    if ( (doOutputFiltering) && (direction.size()>0) )
+    
+    if (mnet->useRemoteMocapNETServer)
     {
-        direction[0] = filter(&mnet->directionSignal,direction[0]);
-    } 
-    //----------------------------------------------------------------------------------------------
-    if (direction.size()>0)
+      //Send smaller input so that the network is not spammed
+      result = remoteExecution(mnet,input); 
+    } else
+    {
+      result = localExecution(mnet,mnetInput,doOutputFiltering); 
+    }
+    
+    //Debugging visualization
+    //----------------------------------------------------------------------------
+    /*
+    fprintf(stderr,"runMocapNET: Evaluation yielded %lu results\n",result.size());
+    for (int i=0; i<result.size(); i++)
+    {
+       fprintf(stderr,"%u - %s - %0.2f\n",i,MocapNETOutputArrayNames[i],result[i]); 
+    }
+    */
+    //----------------------------------------------------------------------------
+    
+             
+    if (result.size()>0)
         {
-            std::vector<float> result; 
-            
-            switch(mnet->mode)
-            {
-              case 3: result=MNET3Classes(mnet,mnetInput,direction); break;   
-              case 5: result=MNET5Classes(mnet,mnetInput,direction); break;
-              //-----------------------------------------------------------
-              default:
-               fprintf(stderr,RED "MocapNET: Incorrect Mode %u ..\n" NORMAL,mnet->mode); 
-              break; 
-            };
-            
             if (doOutputFiltering)
             {
               if (result.size()==MOCAPNET_OUTPUT_NUMBER)  
@@ -540,14 +598,14 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,i
                    }
               } else
               {
-               fprintf(stderr,RED "MocapNET: Cannot filter output due to incorrect number of output elements..!\n" NORMAL);   
+               fprintf(stderr,RED "MocapNET: Incorrect number of output elements/Cannot filter output as a result..!\n" NORMAL);   
               }
             }
             
             addToMotionHistory(&mnet->poseHistoryStorage,result);
              //----------------------------------------------------------------------------------------------
              if (doGestureDetection)
-             { 
+             {
              int gestureDetected=compareHistoryWithKnownGestures(
                                                                  &mnet->recognizedGestures,
                                                                  &mnet->poseHistoryStorage,
@@ -569,12 +627,9 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,i
             //----------------------------------------------------------------------------------------------
             
             return result;
-        }
-    else
-        {
-            fprintf(stderr,RED "Unable to predict pose direction..\n" NORMAL);
-        }
+        } 
 
+    fprintf(stderr,RED "MocapNET: failed to retrieve a result..\n" NORMAL);
     //-----------------
     return emptyResult;
 }

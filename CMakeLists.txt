@@ -4,7 +4,7 @@ cmake_minimum_required( VERSION 2.8.7 )
 set(CMAKE_CXX_FLAGS "-fPIC ")
 set(CMAKE_C_FLAGS "-fPIC") 
 
-OPTION (ENABLE_OPENGL OFF)
+OPTION (ENABLE_OPENGL OFF) 
 
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -228,6 +228,19 @@ ENDIF(OpenCV_FOUND)
 
  
  
+#If ammarserver is present then use it..
+set(NETWORK_CLIENT_LIBRARIES   "")
+IF(EXISTS "${CMAKE_SOURCE_DIR}/AmmarServer/src/AmmServerlib")
+ add_definitions(-DUSE_NETWORKING)
+ MESSAGE("AmmarServer support will be compiled in")
+ #add_subdirectory (AmmarServer/) #You can force add everything but this adds too much to the build time
+ set(NETWORK_CLIENT_LIBRARIES "AmmClient")
+ add_subdirectory (AmmarServer/src/AmmClient)
+ add_subdirectory (AmmarServer/src/AmmServerlib)
+ add_subdirectory (AmmarServer/src/Hashmap)
+ add_subdirectory (AmmarServer/src/InputParser) 
+ENDIF()
+
 
 
 
@@ -241,18 +254,15 @@ add_subdirectory (MocapNETLib/)
 add_subdirectory (MocapNETFromJSON/)
 add_subdirectory (MocapNETSimpleBenchmark/)
 
+IF(EXISTS "${CMAKE_SOURCE_DIR}/AmmarServer/src/AmmServerlib")
+ add_subdirectory (MocapNETServerHTTP/)
+ENDIF()
 
 if (OpenCV_FOUND)
 add_subdirectory (Webcam/)
 add_subdirectory (WebcamAndDeepJoint/)
 ENDIF(OpenCV_FOUND)
 
-
-#If ammarserver is present then use it..
-#IF(EXISTS "${CMAKE_SOURCE_DIR}/AmmarServer/src/AmmServerlib")
-# add_subdirectory (AmmarServer/)
-# add_subdirectory (MocapNETHTTP/)
-#ENDIF()
 
 
 # TODO FIX INSTALLATION DIRECTORIES 

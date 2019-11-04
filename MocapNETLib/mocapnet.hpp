@@ -1536,13 +1536,21 @@ enum MOCAPNET_Orientation
  */
 struct MocapNET
 {
+   char useRemoteMocapNETServer;
+   char remoteMocapNETServerURL[128];  
+   int  remoteMocapNETServerPort;
+   void * remoteContext;
+   //--------------------------------
+    
    struct TensorflowInstance models[16]; 
    unsigned int mode;
    unsigned int loadedModels;
    struct MocapNETModelLimits modelLimits[16];  
    
+   //--------------------------------
    struct ButterWorth directionSignal;
    struct ButterWorth outputSignals[MOCAPNET_OUTPUT_NUMBER];
+   //--------------------------------
    
    unsigned int lastActivatedGesture;
    unsigned int gestureTimestamp;
@@ -1554,6 +1562,7 @@ struct MocapNET
 
 
 
+int connectToMocapNETServer(struct MocapNET * mnet,const char * url,int port);
 
 /**
  * @brief Load a MocapNET from .pb files on disk

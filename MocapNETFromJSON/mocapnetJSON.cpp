@@ -17,6 +17,12 @@
 #include "../MocapNETLib/bvh.hpp"
 #include "../MocapNETLib/visualization.hpp"
 
+#define NORMAL   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
+
 
 unsigned int getNumberOfEmptyElements(std::vector<float> mocapNETInput)
 {
@@ -51,6 +57,8 @@ int main(int argc, char *argv[])
     unsigned int isJSONFile=1;
     unsigned int isCSVFile=0;
 
+    struct MocapNET mnet={0};
+    
     if (initializeBVHConverter())
         {
             fprintf(stderr,"BVH code initalization successfull..\n");
@@ -59,6 +67,16 @@ int main(int argc, char *argv[])
 
     for (int i=0; i<argc; i++)
         {
+            if (strcmp(argv[i],"--connect")==0)
+                {
+                  if ( connectToMocapNETServer(&mnet,argv[i+1],atoi(argv[i+2])) )
+                    {
+                      fprintf(stderr,GREEN "Connected to a remote MocapNET server..\n" NORMAL);  
+                    } else
+                    {
+                      fprintf(stderr,RED "Failed to connect to a remote MocapNET server..\n" NORMAL);  
+                    }    
+                } else
             if (strcmp(argv[i],"--show")==0)
                 {
                     visualizationType=atoi(argv[i+1]);
@@ -154,10 +172,8 @@ int main(int argc, char *argv[])
                     return 0;
                 }
         }
-
-
-    struct MocapNET mnet= {0};
-    if ( loadMocapNET(&mnet,"test",quality,mocapNETMode,useCPUOnly) )
+ 
+    if ( (mnet.useRemoteMocapNETServer) || ( loadMocapNET(&mnet,"test",quality,mocapNETMode,useCPUOnly) ) )
         {
             char filePathOfJSONFile[1024]= {0};
             snprintf(filePathOfJSONFile,1024,"%s/colorFrame_0_00001.jpg",path);
@@ -238,6 +254,7 @@ int main(int argc, char *argv[])
                                if (getNumberOfEmptyElements(inputValues)>102)
                                {
                                   //Throttle result.. 
+                                 fprintf(stderr,YELLOW "Ignoring result due to many missing joints..\n" NORMAL ); 
                                  result=previousResult;
                                }
                            }

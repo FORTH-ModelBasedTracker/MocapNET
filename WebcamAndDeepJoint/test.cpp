@@ -31,6 +31,16 @@ using namespace cv;
 #define DISPLAY_ALL_HEATMAPS 0
 
 
+void printWgetCommand(std::vector<float> pose2D)
+{
+  fprintf(stderr,"wget \"http://127.0.0.1:8080/control.html?skeleton=");   
+  for (int i=0; i<pose2D.size(); i++)
+  {
+      fprintf(stderr,"%0.2f,",pose2D[i]);
+  }
+ fprintf(stderr,"\"\n");     
+}
+
 
 /**
  * @brief This function performs 2D estimation.. You give her a Tensorflow instance of a 2D estimator, a BGR image some thresholds and sizes and it will yield a vector of 2D points.
@@ -655,7 +665,6 @@ int main(int argc, char *argv[])
     struct MocapNET mnet= {0};
 
 
-
     std::vector<float> flatAndNormalized2DPoints;
     std::vector<float> previousFlatAndNormalized2DPoints;
     std::vector<std::vector<float> > inputFrames;
@@ -669,14 +678,13 @@ int main(int argc, char *argv[])
         {
             if (
                 loadTensorflowInstance(
-                    &net,
-                    networkPath,
-                    networkInputLayer,
-                    networkOutputLayer,
-                    forceCPU2DJointEstimation
-                )
-
-            )
+                                       &net,
+                                       networkPath,
+                                       networkInputLayer,
+                                       networkOutputLayer,
+                                       forceCPU2DJointEstimation
+                                      ) 
+               )
                 {
                     frameNumber=0;
                     while ( ( (live) || (frameNumber<frameLimit) ) &&  (!stop) )
@@ -874,7 +882,8 @@ int main(int argc, char *argv[])
                                                                             numberOfOutputTensors,
                                                                             doFeetHeuristics
                                                                         );
-
+                                                                        
+                                            printWgetCommand(flatAndNormalized2DPoints);
 
                                             if (rememberPrevious2DPositions)
                                                 {
