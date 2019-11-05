@@ -536,10 +536,45 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
                                     float parentPointX = points2DOutputGUIForcedView[parentID][0];
                                     float parentPointY = points2DOutputGUIForcedView[parentID][1];
                                     cv::Point parentPoint(parentPointX,parentPointY);
-
+                                    
+                                    cv::Scalar color = cv::Scalar(0,255,0);
+                                    const char * jointName = getBVHJointName(jointID);
+                                    const char * parentName = getBVHJointName(parentID);
+                                    if ( (parentName!=0) && (jointName!=0) )
+                                      {
+                                        if (strcmp("hip",jointName)==0)     { color = cv::Scalar(255,0,0); }  else
+                                        if (strcmp("head",jointName)==0)    { color = cv::Scalar(255,0,0); }  else
+                                        if (strcmp("neck",jointName)==0)    { color = cv::Scalar(255,0,0); }  else
+                                        if (strcmp("chest",jointName)==0)   { color = cv::Scalar(255,0,0); }  else
+                                        if (strcmp("chest",parentName)==0)  { color = cv::Scalar(255,0,0); }  else
+                                        if (strcmp("abdomen",jointName)==0) { color = cv::Scalar(255,0,0); }  else
+                                        if (strcmp("head",parentName)==0)   { color = cv::Scalar(255,0,0); }  else 
+                                        //-------------------------------------------------------------------------
+                                        if (strcmp("lShldr",jointName)==0)  { color = cv::Scalar(0,0,255);  }  else
+                                        if (strcmp("lForeArm",jointName)==0){ color = cv::Scalar(0,0,255);  }  else
+                                        if (strcmp("lHand",jointName)==0)   { color = cv::Scalar(0,0,255);  }  else
+                                        if (strcmp("lHand",parentName)==0)  { color = cv::Scalar(0,0,255);  }  else
+                                        if (strcmp("lButtock",jointName)==0){ color = cv::Scalar(0,0,255);  }  else
+                                        if (strcmp("lShin",jointName)==0)   { color = cv::Scalar(0,0,255);  }  else
+                                        if (strcmp("lFoot",jointName)==0)   { color = cv::Scalar(0,0,255);  }  else
+                                        if (strcmp("lFoot",parentName)==0)  { color = cv::Scalar(0,0,255);  }  
+                                        //-------------------------------------------------------------------------
+                                        /* //Default is Green so don't need to spam strcmp..
+                                        if (strcmp("rShldr",jointName)==0)  { color = cv::Scalar(0,255,0);  }  else
+                                        if (strcmp("rForeArm",jointName)==0){ color = cv::Scalar(0,255,0);  }  else
+                                        if (strcmp("rHand",jointName)==0)   { color = cv::Scalar(0,255,0);  }  else
+                                        if (strcmp("rHand",parentName)==0)  { color = cv::Scalar(0,255,0);  }  else
+                                        if (strcmp("rButtock",jointName)==0){ color = cv::Scalar(0,255,0);  }  else
+                                        if (strcmp("rShin",jointName)==0)   { color = cv::Scalar(0,255,0);  }  else
+                                        if (strcmp("rFoot",jointName)==0)   { color = cv::Scalar(0,255,0);  }  else
+                                        if (strcmp("rFoot",parentName)==0)  { color = cv::Scalar(0,255,0);  }
+                                        */
+                                    }
+                                    
+                                    
                                     if ( (parentPointX!=0) && (parentPointY!=0) )
                                         {
-                                            cv::line(outputMat,jointPoint,parentPoint, cv::Scalar(0,255,0), 5.0);
+                                            cv::line(outputMat,jointPoint,parentPoint,color,5.0);
                                         }
                                 }
                             else
@@ -553,7 +588,7 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
         }
 
 
-//Just the points and text ( foreground )
+   //Just the points and text ( foreground )
     for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
         {
             float jointPointX = points2DOutputGUIForcedView[jointID][0];
@@ -564,8 +599,8 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
             if ( (jointPointX!=0) && (jointPointY!=0) )
                 {
                     cv::Point jointPoint(jointPointX,jointPointY);
-                    int thickness=3;
-                    cv::circle(outputMat,jointPoint,5,cv::Scalar(255,0,0),thickness,8,0);
+                    int thickness=-2;
+                    cv::circle(outputMat,jointPoint,5,cv::Scalar(255,0,255),thickness,8,0);
 
                     int filterOut = 1;    
                     const char * jointName = getBVHJointName(jointID);
@@ -573,17 +608,17 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
                         {
                             snprintf(textInfo,512,"%s",jointName);
                             
-                            if (strcmp("head",jointName)==0)    { filterOut = 0; }  else
-                            if (strcmp("neck",jointName)==0)    { filterOut = 0; }  else
-                            if (strcmp("chest",jointName)==0)    { filterOut = 0; }  else
+                            if (strcmp("head",jointName)==0)      { filterOut = 0; }  else
+                            if (strcmp("neck",jointName)==0)      { filterOut = 0; }  else
+                            if (strcmp("chest",jointName)==0)     { filterOut = 0; }  else
                             if (strcmp("lShldr",jointName)==0)    { filterOut = 0; }  else
                             if (strcmp("rShldr",jointName)==0)    { filterOut = 0; }  else
-                            if (strcmp("rShin",jointName)==0)    { filterOut = 0; }  else
-                            if (strcmp("lShin",jointName)==0)    { filterOut = 0; }  else
-                            if (strcmp("rForeArm",jointName)==0)    { filterOut = 0; }  else
-                            if (strcmp("lForeArm",jointName)==0)    { filterOut = 0; }  else
-                            if (strcmp("rFoot",jointName)==0)    { filterOut = 0; }  else
-                            if (strcmp("lFoot",jointName)==0)    { filterOut = 0; }   
+                            if (strcmp("rShin",jointName)==0)     { filterOut = 0; }  else
+                            if (strcmp("lShin",jointName)==0)     { filterOut = 0; }  else
+                            if (strcmp("rForeArm",jointName)==0)  { filterOut = 0; }  else
+                            if (strcmp("lForeArm",jointName)==0)  { filterOut = 0; }  else
+                            if (strcmp("rFoot",jointName)==0)     { filterOut = 0; }  else
+                            if (strcmp("lFoot",jointName)==0)     { filterOut = 0; }   
                         }
                     else
                         {
@@ -628,8 +663,8 @@ int drawEndEffectorTrack(cv::Mat &outputMat,std::vector<std::vector<float> > poi
                     float stepColor = 255 - step*stepColorD;
                     if (step>1)
                     {
-                                            cv::line(outputMat,leftEndEffector[step],leftEndEffector[step-1], cv::Scalar(0,stepColor,stepColor), 1.0);
-                                            cv::line(outputMat,rightEndEffector[step],rightEndEffector[step-1], cv::Scalar(0,stepColor,stepColor), 1.0);
+                       cv::line(outputMat,leftEndEffector[step],leftEndEffector[step-1], cv::Scalar(0,stepColor,stepColor), 1.0);
+                       cv::line(outputMat,rightEndEffector[step],rightEndEffector[step-1], cv::Scalar(0,stepColor,stepColor), 1.0);
                         
                     }
                     cv::circle(outputMat,leftEndEffector[step],1,cv::Scalar(0,stepColor,stepColor),3,8,0);

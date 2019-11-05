@@ -1,6 +1,12 @@
 /*
- * Export utility from OpenPose BODY 25 JSON format to a more regular CSV file
- * Sample call :   ./convertBody25JSONToCSV --from frames/GOPR3223.MP4-data/ --label colorFrame_0_ -o .
+ * Export utility from out BVH Files back to CSV compatible input  
+ * Sample call :     
+*    We can turn one of the gestures included to a 360 pose bvh file to test orientation code
+*       ./GroundTruthDumper --from dataset/gestures/comeleft.bvh --360 1 --bvh test.bvh
+*    We can use this utility to convert the bvh file to a CSV file 
+*       ./convertBVHToCSV --from test.bvh -o test.csv
+*    We can then try using the file  
+*       ./MocapNETJSON --from test.csv --visualize
  * */
 
 #include <iostream>
@@ -99,7 +105,7 @@ int main(int argc, char *argv[])
 
 //       ./GroundTruthDumper --from dataset/gestures/comeleft.bvh --360 1 --bvh test.bvh
 //       ./convertBVHToCSV --from test.bvh -o test.csv
-//       ./MocapNETJSON --from test.csv --visualize
+//       ./MocapNETJSON --from test.csv --visualize --unconstrained --delay 100
 
     struct skeletonCOCO skeleton= {0};
      writeCSVHeaderFromSkeleton(outputPathFull,&skeleton,width,height);
