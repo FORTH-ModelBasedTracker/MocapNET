@@ -40,6 +40,31 @@ unsigned int getNumberOfEmptyElements(std::vector<float> mocapNETInput)
 }
 
 
+int  findFirstJSONFileInDirectory(const char * path,const char * formatString, const char * label, unsigned int * frameIDOutput)
+{
+    char filePathOfJSONFile[1025]={0};
+    
+    unsigned int frameID=0;
+    int found=0;
+    while (!found)
+    {
+          snprintf(filePathOfJSONFile,1024,formatString,path,label,frameID);
+        
+         if( fileExists(filePathOfJSONFile) )
+         {
+             *frameIDOutput=frameID;
+             return 1;
+         }
+        
+         ++frameID;
+         if (frameID==10000) 
+               { return 0; }
+   }
+   
+  return 0;   
+}
+
+
 int main(int argc, char *argv[])
 {
     const char   outputPathStatic[]="out.bvh";
@@ -97,8 +122,14 @@ int main(int argc, char *argv[])
                     }
             else if (strcmp(argv[i],"--visualize")==0)
                 {
+                    fprintf(stderr,"Visualization enabled\n");
                     visualize=1;
                 }
+            else if (strcmp(argv[i],"--nofilter")==0)
+                {
+                    fprintf(stderr,"Filtering Disabled\n");
+                    doOutputFiltering=0;
+                } 
             else if (strcmp(argv[i],"--maxFrames")==0)
                 {
                     frameLimit=atoi(argv[i+1]);
@@ -203,18 +234,32 @@ int main(int argc, char *argv[])
             snprintf(formatString,256,"%%s/%%s%%0%uu_keypoints.json",serialLength);
 
 
-            unsigned int frameID=1;
-            while (frameID<frameLimit)
-                {
-                    int okayToProceed=0;
-                    snprintf(filePathOfJSONFile,1024,formatString,path,label,frameID);
+            unsigned int frameID=0;
 
                     if (isJSONFile)
                         {
-                            if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton))
+                            if (  findFirstJSONFileInDirectory(path, formatString,label,&frameID) )
                                 {
-                                    okayToProceed=1;
+                                   frameLimit+=frameID;  
+                                   fprintf(stderr,"First frame is %u, last will be %u \n",frameID,frameLimit);
+                                } else
+                                {
+                                    fprintf(stderr,RED "Failed to find a JSON file..!\n " NORMAL);
                                 }
+                        }
+
+
+            while (frameID<frameLimit)
+                {
+                    int okayToProceed=0;
+
+                    if (isJSONFile)
+                        {
+                             snprintf(filePathOfJSONFile,1024,formatString,path,label,frameID);
+                             if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton))
+                                    {
+                                       okayToProceed=1;
+                                    }
                         }
                     else if (isCSVFile)
                         {
@@ -230,7 +275,7 @@ int main(int argc, char *argv[])
 
                             if (isCSVFile)
                                 {
-                                    //CSV files come prenormalize so let's normalize them to 1x1 ( so leave them as they where )
+                                    //CSV files come prenormalized so let's normalize them to 1x1 ( so leave them as they where )
                                     flatWidth=1;
                                     flatHeight=1;
                                 }
@@ -312,6 +357,7 @@ int main(int argc, char *argv[])
                                                      1,
                                                      0,//Dead Input Points
                                                      0,0,0,//gesture stuff
+                                                     mnet.lastSkeletonOrientation,
                                                      inputValues,
                                                      result,
                                                      result,

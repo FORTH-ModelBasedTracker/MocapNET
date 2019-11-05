@@ -169,6 +169,7 @@ int visualizePoints(
                      unsigned int gestureDetected,
                      const char * gestureName, 
                      unsigned int gestureFrame,
+                     float originalOrientation,
                      std::vector<float> mocapNETInput,
                      std::vector<float> mocapNETOutput,
                      std::vector<float> mocapNETOutputWithGUIForcedView,

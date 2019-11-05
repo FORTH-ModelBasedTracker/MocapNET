@@ -805,6 +805,7 @@ int visualizePoints(
     unsigned int gestureDetected,
     const char * gestureName,
     unsigned int gestureFrame,
+    float originalOrientation,
     std::vector<float> mocapNETInput,
     std::vector<float> mocapNETOutput,
     std::vector<float> mocapNETOutputWithGUIForcedView,
@@ -968,11 +969,16 @@ int visualizePoints(
     {
       int foundDirection=0;  
      
-     if ( (mocapNETOutput[4]>=-45) && (mocapNETOutput[4]<=45) )  { snprintf(textInfo,512,"Direction : Front");  foundDirection=1; } else
-     if ( (mocapNETOutput[4]<=-45) && (mocapNETOutput[4]>=-135) )  { snprintf(textInfo,512,"Direction : Left"); foundDirection=1;  } else
-     if ( (mocapNETOutput[4]>=45) && (mocapNETOutput[4]<=135) )  { snprintf(textInfo,512,"Direction : Right"); foundDirection=1;  } else 
-     if ( (mocapNETOutput[4]<=-90) && (mocapNETOutput[4]>=-180) )  { snprintf(textInfo,512,"Direction : Back A");  foundDirection=1; }  else  
-     if ( (mocapNETOutput[4]>=90) && (mocapNETOutput[4]<=180) )  { snprintf(textInfo,512,"Direction : Back B"); foundDirection=1;  } 
+     if ( (mocapNETOutput[4]>=-45) && (mocapNETOutput[4]<=45) )  
+           { snprintf(textInfo,512,"Direction : Front (%0.2f->%0.2f) " , originalOrientation, mocapNETOutput[4]);  foundDirection=1; } else
+     if ( (mocapNETOutput[4]<=-45) && (mocapNETOutput[4]>=-135) )  
+           { snprintf(textInfo,512,"Direction : Left (%0.2f->%0.2f) " ,originalOrientation,  mocapNETOutput[4]); foundDirection=1;  } else
+     if ( (mocapNETOutput[4]>=45) && (mocapNETOutput[4]<=135) )  
+           { snprintf(textInfo,512,"Direction : Right (%0.2f->%0.2f) " ,originalOrientation,  mocapNETOutput[4]); foundDirection=1;  } else 
+     if ( (mocapNETOutput[4]<=-135) && (mocapNETOutput[4]>=-225) )  
+           { snprintf(textInfo,512,"Direction : Back A (%0.2f->%0.2f) " , originalOrientation, mocapNETOutput[4]);  foundDirection=1; }  else  
+     if ( (mocapNETOutput[4]>=135) && (mocapNETOutput[4]<=225) )  
+          { snprintf(textInfo,512,"Direction : Back B (%0.2f->%0.2f) " ,originalOrientation,  mocapNETOutput[4]); foundDirection=1;  } 
      if (foundDirection)
           { 
               txtPosition.y+=30;

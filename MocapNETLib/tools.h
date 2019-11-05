@@ -56,6 +56,10 @@ unsigned long GetTickCountMicrosecondsMN();
 unsigned long GetTickCountMillisecondsMN();
 
 
+
+char fileExists(const char * filename);
+
+
 /**
  * @brief Convert start and end time to a framerate ( frames per second )
  * @ingroup demo

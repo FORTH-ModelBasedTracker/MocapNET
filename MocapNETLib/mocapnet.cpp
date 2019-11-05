@@ -1,9 +1,10 @@
 #include "../Tensorflow/tf_utils.hpp"
-#include "mocapnet.hpp"
-#include "nsdm.hpp"
-#include "remoteExecution.hpp"
-#include "gestureRecognition.hpp"
-#include "jsonCocoSkeleton.h"
+
+#include "../MocapNETLib/mocapnet.hpp"
+#include "../MocapNETLib/nsdm.hpp"
+#include "../MocapNETLib/remoteExecution.hpp"
+#include "../MocapNETLib/gestureRecognition.hpp"
+#include "../MocapNETLib/jsonCocoSkeleton.h"
 
 #define NORMAL   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
@@ -355,39 +356,44 @@ int  getMocapNETOrientationFromOutputVector(std::vector<float> direction)
 {
   if (direction.size()>0)
         {
-             if ( (direction[0]>=-45.0) && (direction[0]<=45.0) )
+            float orientation = direction[0];
+              
+             if ( (orientation>=-45.0) && (orientation<=45.0) )
                 {
                     //Front ---------------------------------------------- 
                     return MOCAPNET_ORIENTATION_FRONT;
                 }
             else
-            if ( (direction[0]>=45.0) && (direction[0]<=135.0) )
+            if ( (orientation>=45.0) && (orientation<=135.0) )
                 {
                     //Right ----------------------------------------------
                     return MOCAPNET_ORIENTATION_RIGHT;
                 }
             else
-            if ( (direction[0]>=-135.0) && (direction[0]<=-45.0) )
+            if ( (orientation>=-135.0) && (orientation<=-45.0) )
                 {
                     //Left ---------------------------------------------- 
                     return MOCAPNET_ORIENTATION_LEFT;  
                 }
             else
-            if ( (direction[0]<=-90) && (direction[0]>=-180) )
+            if ( (orientation<=-135) && (orientation>=-225) )
                 {
                     //Back  ----------------------------------------------
                     return MOCAPNET_ORIENTATION_BACK;
                 }
                else
-            if ( (direction[0]>=90) && (direction[0]<=180) )
+            if ( (orientation>=135) && (orientation<=225) )
                 {
                     //Back  ---------------------------------------------- 
                     return MOCAPNET_ORIENTATION_BACK;
                 }  else
                 {
-                    fprintf(stderr,RED "Unhandled orientation \n" NORMAL);
+                    fprintf(stderr,RED "[Unhandled orientation]\n" NORMAL);
+                    fprintf(stderr,"This probably means difficult input\n");
+                    return MOCAPNET_ORIENTATION_BACK;
                 }
         }
+  fprintf(stderr,RED "Empty Direction Vector\n" NORMAL);
   return MOCAPNET_ORIENTATION_NONE;
 }
  
@@ -500,6 +506,8 @@ std::vector<float> localExecution(struct MocapNET * mnet,std::vector<float> mnet
     //----------------------------------------------------------------------------------------------
     if (direction.size()>0)
         {
+            mnet->lastSkeletonOrientation=direction[0];
+            
             switch(mnet->mode)
             {
               case 3: result=MNET3Classes(mnet,mnetInput,direction); break;   

@@ -1555,6 +1555,8 @@ struct MocapNET
    unsigned int lastActivatedGesture;
    unsigned int gestureTimestamp;
    
+   float lastSkeletonOrientation;
+   
    struct PoseHistory poseHistoryStorage;
    struct GestureDatabase recognizedGestures;
 };

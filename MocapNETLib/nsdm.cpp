@@ -1,6 +1,6 @@
-#include "nsdm.hpp"
-#include "mocapnet.hpp"
-#include "jsonCocoSkeleton.h"
+#include "../MocapNETLib/nsdm.hpp"
+#include "../MocapNETLib/mocapnet.hpp"
+#include "../MocapNETLib/jsonCocoSkeleton.h"
 #include <math.h>
 
 #define NORMAL   "\033[0m"

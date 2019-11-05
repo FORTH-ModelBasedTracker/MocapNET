@@ -40,3 +40,7 @@ void addLeftFinger(
 );
 
 std::vector<float> flattenskeletonCOCOToVector(struct skeletonCOCO * sk,unsigned int width ,unsigned int height);
+
+
+
+int convertBVHFrameToSkeletonCOCO(struct skeletonCOCO * sk,std::vector<float>  bvhFrame,unsigned int width ,unsigned int height);

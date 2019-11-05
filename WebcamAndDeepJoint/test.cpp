@@ -1153,7 +1153,9 @@ int main(int argc, char *argv[])
                                                                             mnet.lastActivatedGesture,
                                                                             gestureName,
                                                                             mnet.recognizedGestures.gestureChecksPerformed - mnet.gestureTimestamp ,//gesture stuff
-
+                                                                            
+                                                                            
+                                                                            mnet.lastSkeletonOrientation, 
                                                                             flatAndNormalized2DPoints,
                                                                             bvhOutput,
                                                                             bvhForcedViewOutput,

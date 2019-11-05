@@ -21,10 +21,10 @@ const float fY = 582.52915;  //570.0
 
 
 int writeBVHFile(
-    const char * filename,
-    const char * header,
-    std::vector<std::vector<float> > bvhFrames
-)
+                                      const char * filename,
+                                      const char * header,
+                                      std::vector<std::vector<float> > bvhFrames
+                                    )
 {
     FILE * fp = fopen(filename,"w");
     if (fp!=0)
@@ -235,23 +235,23 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
             if (motionBuffer!=0)
                 {
                     if (
-                        bvh_loadTransformForMotionBuffer(
-                            &bvhMotion,
-                            motionBuffer,
-                            &bvhTransform
+                           bvh_loadTransformForMotionBuffer(
+                                                                                                            &bvhMotion,
+                                                                                                               motionBuffer,
+                                                                                                            &bvhTransform
+                                                                                                          )
                         )
-                    )
                         {
                             //-----------------
                             if (
-                                bvh_projectTo2D(
-                                    &bvhMotion,
-                                    &bvhTransform,
-                                    &renderer,
-                                    0,
-                                    0
-                                )
-                            )
+                                   bvh_projectTo2D(
+                                                                          &bvhMotion,
+                                                                           &bvhTransform,
+                                                                           &renderer,
+                                                                           0,
+                                                                           0
+                                                                        )
+                               )
                                 {
                                     //-----------------
                                     for (unsigned int jID=0; jID<bvhMotion.jointHierarchySize; jID++)

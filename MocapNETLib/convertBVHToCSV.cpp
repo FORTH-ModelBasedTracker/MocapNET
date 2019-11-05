@@ -9,8 +9,10 @@
 #include <string.h>
 
 #include "../MocapNETLib/mocapnet.hpp"
+#include "../MocapNETLib/jsonMocapNETHelpers.hpp"
 #include "../MocapNETLib/tools.h"
 #include "../MocapNETLib/csv.hpp"
+#include "../MocapNETLib/bvh.hpp"
 
 
 int main(int argc, char *argv[])
@@ -90,51 +92,28 @@ int main(int argc, char *argv[])
             }
         }
 
-
-    char formatString[256]= {0};
-    snprintf(formatString,256,"%%s/%%s%%0%uu_keypoints.json",serialLength);
-
-    char filePathOfJSONFile[2048]= {0};
-    snprintf(filePathOfJSONFile,2048,"%s/colorFrame_0_00001.jpg",path);
-
-    if ( getImageWidthHeight(filePathOfJSONFile,&width,&height) )
-        {
-            fprintf(stderr,"Image dimensions changed from default to %ux%u",width,height);
-        }
-    else
-        {
-            fprintf(stderr,"Assuming default image dimensions %ux%u , you can change this using --size x y\n",width,height);
-        }
+   
+   
+    std::vector<std::vector<float> > bvhFile = loadBVHFileMotionFrames(path);
 
 
-    float totalTime=0.0;
-    unsigned int totalSamples=0;
+//       ./GroundTruthDumper --from dataset/gestures/comeleft.bvh --360 1 --bvh test.bvh
+//       ./convertBVHToCSV --from test.bvh -o test.csv
+//       ./MocapNETJSON --from test.csv --visualize
 
     struct skeletonCOCO skeleton= {0};
+     writeCSVHeaderFromSkeleton(outputPathFull,&skeleton,width,height);
+    for (int frameID=0; frameID<bvhFile.size(); frameID++)
+    { 
+          fprintf(stderr,".");
+          convertBVHFrameToSkeletonCOCO(&skeleton,bvhFile[frameID],width,height); 
+          writeCSVBodyFromSkeleton(outputPathFull,&skeleton,width,height);
+    }
 
-    unsigned int frameID=1;
-    while (frameID<frameLimit)
-        {
-            snprintf(filePathOfJSONFile,1024,formatString,path,label,frameID);
-            fprintf(stderr,"Processing %s (%ux%u)\n",filePathOfJSONFile,width,height);
 
-            if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton))
-                {
-                    if (processed==0)
-                        {
-                            writeCSVHeaderFromSkeleton(outputPathFull,&skeleton,width,height);
-                        }
+  fprintf(stderr,"Done..\n");
 
-                    writeCSVBodyFromSkeleton(outputPathFull,&skeleton,width,height);
-                    ++processed;
-                }
-            else
-                { 
-                    fprintf(stderr,"Done processing %u frames..\n",frameID);
-                    fprintf(stderr,"Output has been stored at %s \n",outputPathFull);
-                    break;
-                }
 
-            ++frameID;
-        }
+
+ 
 }

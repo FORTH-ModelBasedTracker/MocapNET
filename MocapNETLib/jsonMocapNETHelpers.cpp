@@ -1,5 +1,8 @@
 #include "jsonMocapNETHelpers.hpp"
 #include <stdio.h>
+#include <string.h>
+
+#include "../MocapNETLib/bvh.hpp"
 
 
 #define NORMAL   "\033[0m"
@@ -537,4 +540,76 @@ std::vector<float> flattenskeletonCOCOToVector(struct skeletonCOCO * sk,unsigned
             return result;
         }
     return result;
+}
+
+
+
+
+
+
+//       ./GroundTruthDumper --from dataset/gestures/comeleft.bvh --360 1 --bvh test.bvh
+//       ./convertBVHToCSV --from test.bvh -o test.csv
+//       ./MocapNETJSON --from test.csv --visualize
+
+
+
+int convertBVHFrameToSkeletonCOCO(struct skeletonCOCO * sk,std::vector<float>  bvhFrame,unsigned int width ,unsigned int height)
+{ 
+          std::vector<std::vector<float> > bvhFrame2DOutput = convertBVHFrameTo2DPoints(bvhFrame,width,height);
+           
+           const int INVALID_JOINT=6666;
+          fprintf(stderr,"Converting BVH frame to a SkeletonCOCO assuming a  %ux%u frame\n",width,height);
+           for (unsigned int jointID=0; jointID<bvhFrame2DOutput.size();  jointID++)
+           {
+                   fprintf(stderr,"Joint %u - %s - %0.2f,%0.2f \n",jointID,getBVHJointName(jointID),bvhFrame2DOutput[jointID][0],bvhFrame2DOutput[jointID][1]);
+                   
+                  const  char * jointName = getBVHJointName(jointID);
+                  unsigned int jointTargetID = INVALID_JOINT;
+                   if (strcmp("hip",jointName)==0)     { jointTargetID=BODY25_MidHip; }  else
+                   if (strcmp("neck",jointName)==0) { jointTargetID=BODY25_Neck;      }  else
+                   if (strcmp("head",jointName)==0) { jointTargetID=BODY25_Nose;     }  else
+                   if (strcmp("rShldr",jointName)==0)  { jointTargetID=BODY25_RShoulder;  }  else
+                   if (strcmp("rForeArm",jointName)==0)  { jointTargetID=BODY25_RElbow; }    else
+                   if (strcmp("rHand",jointName)==0)  { jointTargetID=BODY25_RWrist;  }  else
+                   if (strcmp("lShldr",jointName)==0)  { jointTargetID=BODY25_LShoulder;  }  else
+                   if (strcmp("lForeArm",jointName)==0)  { jointTargetID=BODY25_LElbow; }  else
+                   if (strcmp("lHand",jointName)==0)  { jointTargetID=BODY25_LWrist;  }  else
+                   if (strcmp("rThigh",jointName)==0)  { jointTargetID=BODY25_RHip;  }  else
+                   if (strcmp("rShin",jointName)==0)  { jointTargetID=BODY25_RKnee;  }  else
+                   if (strcmp("rFoot",jointName)==0)  { jointTargetID=BODY25_RAnkle; }  else
+                   if (strcmp("lThigh",jointName)==0)  { jointTargetID=BODY25_LHip;  }  else
+                   if (strcmp("lShin",jointName)==0)  { jointTargetID=BODY25_LKnee;  }  else
+                   if (strcmp("lFoot",jointName)==0)  { jointTargetID=BODY25_LAnkle; }  else
+                   if (strcmp("rightEye",jointName)==0)  { jointTargetID=BODY25_REye;  }  else
+                   if (strcmp("leftEye",jointName)==0)  { jointTargetID=BODY25_LEye;  }   else
+                   if (strcmp("hip",jointName)==0)  { jointTargetID=BODY25_MidHip;  }   else
+                   if (strcmp("hip",jointName)==0)  { jointTargetID=BODY25_MidHip;  }   else
+                   if (strcmp("hip",jointName)==0)  { jointTargetID=BODY25_MidHip; }  
+                                                                                           
+                   if (jointTargetID!=INVALID_JOINT)
+                   {
+                       sk->joint2D[jointTargetID].x=(float) bvhFrame2DOutput[jointID][0];
+                       sk->joint2D[jointTargetID].y=(float) bvhFrame2DOutput[jointID][1]; 
+                     fprintf(stderr,"-> %0.2f,%0.2f \n",sk->joint2D[jointTargetID].x,sk->joint2D[jointTargetID].y);
+                   }                                                                                           
+                   /*  
+    ,                      //,
+    ,                        //, 
+    BODY25_Nose,                        //,
+    BODY25_Nose,                        //,
+    BODY25_REye,                        //BODY25_REar,
+    BODY25_LEye,                        //BODY25_LEar,
+    BODY25_LHeel,                       //BODY25_LBigToe,
+    BODY25_LBigToe,                     //BODY25_LSmallToe,
+    BODY25_LAnkle,                      //BODY25_LHeel,
+    BODY25_RHeel,                       //BODY25_RBigToe,
+    BODY25_RBigToe,                     //BODY25_RSmallToe,
+    BODY25_RAnkle,                      // BODY25_RHeel,
+    BODY25_Bkg                          //BODY25_Bkg
+                   */
+                   
+                   
+           }  
+          
+          return 0;
 }
