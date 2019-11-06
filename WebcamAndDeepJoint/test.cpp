@@ -17,6 +17,7 @@ using namespace cv;
 #include "../MocapNETLib/mocapnet.hpp"
 #include "../MocapNETLib/bvh.hpp"
 #include "../MocapNETLib/csv.hpp"
+#include "../MocapNETLib/nsdm.hpp"
 #include "../MocapNETLib/gestureRecognition.hpp"
 #include "../MocapNETLib/opengl.hpp"
 #include "../MocapNETLib/tools.h"
@@ -415,6 +416,8 @@ int main(int argc, char *argv[])
     int coveringRectangle=0;
     int coveringRectangleX=0, coveringRectangleY=0, coveringRectangleWidth=0, coveringRectangleHeight=0;
 
+    int stereoCamera=0,stereoShift=0;
+
     unsigned int delay=1; //Just a little time to view the window..
 
     unsigned int quitAfterNBadFrames = 10000;
@@ -547,6 +550,11 @@ int main(int argc, char *argv[])
                     {
                         networkPath=argv[i+1];
                     }
+                else if (strcmp(argv[i],"--stereo")==0)
+                    {
+                        stereoCamera=1;
+                        stereoShift=atoi(argv[i+1]);
+                    } 
                 else if  (  (strcmp(argv[i],"-o")==0) || (strcmp(argv[i],"--output")==0) )
                     {
                         outputPath=argv[i+1];
@@ -657,6 +665,7 @@ int main(int argc, char *argv[])
         }
 
     cv::Mat frame;
+    cv::Mat frameBeforeSplit;
     cv::Mat openGLFramePermanentMat;
     struct boundingBox cropBBox= {0};
     unsigned int croppedDimensionWidth=0,croppedDimensionHeight=0,offsetX=0,offsetY=0;
@@ -692,12 +701,29 @@ int main(int argc, char *argv[])
                             // Get Image
                             unsigned long acquisitionStart = GetTickCountMicroseconds();
 
+                             if (stereoCamera)
+                             { //This is a frame that has two views and we will alternate between them  
+                                 if (stereoCamera==1) 
+                                     { 
+                                        cap >> frameBeforeSplit;
+                                        cv::Rect rectangleROI(stereoShift,0,frameBeforeSplit.size().width/2 - stereoShift ,frameBeforeSplit.size().height);
+                                        frame = frameBeforeSplit(rectangleROI);    
+                                        stereoCamera=2; 
+                                     }  else
+                                   if (stereoCamera==2) 
+                                     {  
+                                        cv::Rect rectangleROI(frameBeforeSplit.size().width/2,0,frameBeforeSplit.size().width/2-stereoShift,frameBeforeSplit.size().height);
+                                        frame = frameBeforeSplit(rectangleROI);    
+                                        stereoCamera=1; 
+                                     }
+                             }
+                                else
+                            { //Regular monocular video source       
                             //---------------------------------------------------------------------------------------------------
                             //---------------------------------------------------------------------------------------------------
                             cap >> frame; // get a new frame from camera
                             //---------------------------------------------------------------------------------------------------
                             //---------------------------------------------------------------------------------------------------
-
 
                             //A typical problem with low-end computers is that they might
                             //struggle to run the 2D joint estimator. We can  workaround this
@@ -731,6 +757,8 @@ int main(int argc, char *argv[])
                                         fpsMocapNET
                                     );
                                 }
+                                
+                              }
                                 //-------------------------------------------------------------------------------------------------------
                                 
                                 
@@ -911,7 +939,7 @@ int main(int argc, char *argv[])
                                             if (doOutputFiltering)
                                                 {
                                                     deadInputPoints = getNumberOfEmptyNSDMElements(flatAndNormalized2DPoints);
-                                                    if (deadInputPoints>102)
+                                                    if (deadInputPoints>MAXIMUM_NUMBER_OF_NSDM_ELEMENTS_MISSING) 
                                                         {
                                                             fprintf(stderr,RED "Too many dead input elements %u\n" NORMAL,deadInputPoints);
                                                             bvhOutput=previousBvhOutput;

@@ -12,6 +12,7 @@
 #include <unistd.h>
 
 #include "../MocapNETLib/tools.h"
+#include "../MocapNETLib/nsdm.hpp"
 #include "../MocapNETLib/jsonCocoSkeleton.h"
 #include "../MocapNETLib/jsonMocapNETHelpers.hpp"
 #include "../MocapNETLib/bvh.hpp"
@@ -296,7 +297,7 @@ int main(int argc, char *argv[])
 
                            if (doOutputFiltering)
                            {
-                               if (getNumberOfEmptyElements(inputValues)>102)
+                               if (getNumberOfEmptyElements(inputValues)>MAXIMUM_NUMBER_OF_NSDM_ELEMENTS_MISSING)
                                {
                                   //Throttle result.. 
                                  fprintf(stderr,YELLOW "Ignoring result due to many missing joints..\n" NORMAL ); 

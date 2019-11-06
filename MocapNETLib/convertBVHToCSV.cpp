@@ -3,10 +3,12 @@
  * Sample call :     
 *    We can turn one of the gestures included to a 360 pose bvh file to test orientation code
 *       ./GroundTruthDumper --from dataset/gestures/comeleft.bvh --360 1 --bvh test.bvh
+*         or
+*       ./GroundTruthDumper --from MotionCapture/02/02_03.bvh --360 0 --bvh test.bvh
 *    We can use this utility to convert the bvh file to a CSV file 
 *       ./convertBVHToCSV --from test.bvh -o test.csv
 *    We can then try using the file  
-*       ./MocapNETJSON --from test.csv --visualize
+*       ./MocapNETJSON --from test.csv --visualize --unconstrained --nofilter --delay 100 
  * */
 
 #include <iostream>

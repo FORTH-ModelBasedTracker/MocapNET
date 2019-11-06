@@ -6,7 +6,11 @@
 #include <iostream>
 #include <vector>
 
-
+ /**
+ * @brief NSDM matrices need to be full to function properly, the more elements missing the worse the occlusions are and the worse the retrieved result is going to be
+ * this is a limit to protect the output from noise when facing sever occlusions
+*/
+extern int MAXIMUM_NUMBER_OF_NSDM_ELEMENTS_MISSING;
 
  /**
  * @brief One of the most basic concepts of MocapNET is the NSDM or Normalized Signed Distance Matrix.

@@ -1153,7 +1153,7 @@ int visualizePoints(
 
 
 
-   if (deadInputPoints>102)
+   if (deadInputPoints>MAXIMUM_NUMBER_OF_NSDM_ELEMENTS_MISSING) 
    {
      txtPosition.y+=30;
      cv::putText(img,"Bad Input - Filtered out..",txtPosition,fontUsed,1.0,cv::Scalar(0,0,255),thickness,8);   
