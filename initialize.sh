@@ -99,7 +99,7 @@ cd "$DIR"
 
 
 #If you have an old GPU then use older version 
-TENSORFLOW_VERSION="1.14.0" # 1.12.0 for CUDA 9.0 / 1.11.0 for CUDA9 with  older compute capabilities (5.2) .. / 1.4.1 for CUDA 8 
+TENSORFLOW_VERSION="1.14.0" # 1.12.0 for CUDA 9.0 / 1.11.0 for CUDA9 with  older compute capabilities (5.2) .. / 1.8.0 for CUDA9 and a device with compute capability 3.0  / 1.4.1 for CUDA 8 
 ARCHITECTURE="gpu" #can be gpu or cpu
 #https://www.tensorflow.org/install/lang_c
 #https://github.com/tensorflow/tensorflow/tree/master/tensorflow/c
@@ -107,6 +107,9 @@ ARCHITECTURE="gpu" #can be gpu or cpu
 #if you want the latest version 
 #you can download it from https://storage.googleapis.com/tensorflow-nightly/github/tensorflow/lib_package/libtensorflow-gpu-linux-x86_64.tar.gz
 #however it is based on TF2.0 which is not yet tested ..!
+
+#I have a special version of tensorflow 1.11.0 tailored for Intel Core 2 and NVIDIA 7XX cards ( compute capabilities ) that you can find here
+#wget https://ammar.gr/mocapnet/libtensorflow-oldgpu-linux-x86_64-1.11.0.tar.gz
 
 if [ -f /usr/local/lib/libtensorflow.so ]; then
  echo "Found a system wide tensorflow installation, not altering anything"
@@ -172,6 +175,7 @@ then
 echo "AmmarServer appears to already exist .."
 else
   echo "Do you want to download AmmarServer and enable MocapNETServer build ? " 
+  echo "(You probably don't need this)" 
   echo
   echo -n " (Y/N)?"
   read answer

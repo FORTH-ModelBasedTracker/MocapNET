@@ -911,7 +911,7 @@ int main(int argc, char *argv[])
                                                                             doFeetHeuristics
                                                                         );
                                                                         
-                                            printWgetCommand(flatAndNormalized2DPoints);
+                                            //printWgetCommand(flatAndNormalized2DPoints);
 
                                             if (rememberPrevious2DPositions)
                                                 {
