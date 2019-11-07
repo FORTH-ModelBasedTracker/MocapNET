@@ -172,7 +172,7 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             //                                                  Regular 3 Model setup such as the BMVC 2019 Work..
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            snprintf(modelPath,1024,"combinedModel/%0.1f/all.pb",qualitySetting);
+            snprintf(modelPath,1024,"dataset/combinedModel/%0.1f/all.pb",qualitySetting);
             result += loadTensorflowInstance(&mnet->models[0]  ,modelPath  ,"input_all"  ,"result_all/concat",forceCPU);
             mnet->modelLimits[0].isFlipped=0;
             mnet->modelLimits[0].numberOfLimits=1;
@@ -180,7 +180,7 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
             mnet->modelLimits[0].maximumYaw1=360.0;
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            snprintf(modelPath,1024,"combinedModel/%0.1f/front.pb",qualitySetting);
+            snprintf(modelPath,1024,"dataset/combinedModel/%0.1f/front.pb",qualitySetting);
             result += loadTensorflowInstance(&mnet->models[1],modelPath,"input_front","result_front/concat",forceCPU);
             mnet->modelLimits[1].isFlipped=0;
             mnet->modelLimits[1].numberOfLimits=1;
@@ -188,7 +188,7 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
             mnet->modelLimits[1].maximumYaw1=90.0;
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            snprintf(modelPath,1024,"combinedModel/%0.1f/back.pb",qualitySetting);
+            snprintf(modelPath,1024,"dataset/combinedModel/%0.1f/back.pb",qualitySetting);
             result += loadTensorflowInstance(&mnet->models[2] ,modelPath ,"input_back" ,"result_back/concat",forceCPU);
             mnet->modelLimits[2].isFlipped=0;
             mnet->modelLimits[2].numberOfLimits=2;
@@ -220,7 +220,7 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             //                                                  Regular 3 Model setup such as the BMVC 2019 Work..
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            snprintf(modelPath,1024,"combinedModel/%0.1f/all.pb",qualitySetting);
+            snprintf(modelPath,1024,"dataset/combinedModel/%0.1f/all.pb",qualitySetting);
             result += loadTensorflowInstance(&mnet->models[0]  ,modelPath  ,"input_all"  ,"result_all/concat",forceCPU);
             mnet->modelLimits[0].isFlipped=0;
             mnet->modelLimits[0].numberOfLimits=1;
@@ -228,7 +228,7 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
             mnet->modelLimits[0].maximumYaw1=360.0;
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            snprintf(modelPath,1024,"combinedModel/%0.1f/front.pb",qualitySetting);
+            snprintf(modelPath,1024,"dataset/combinedModel/%0.1f/front.pb",qualitySetting);
             result += loadTensorflowInstance(&mnet->models[1],modelPath,"input_front","result_front/concat",forceCPU);
             mnet->modelLimits[1].isFlipped=0;
             mnet->modelLimits[1].numberOfLimits=1;
@@ -236,7 +236,7 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
             mnet->modelLimits[1].maximumYaw1=45.0;
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            snprintf(modelPath,1024,"combinedModel/%0.1f/back.pb",qualitySetting);
+            snprintf(modelPath,1024,"dataset/combinedModel/%0.1f/back.pb",qualitySetting);
             result += loadTensorflowInstance(&mnet->models[2],modelPath,"input_back","result_back/concat",forceCPU);
             mnet->modelLimits[2].isFlipped=0;
             mnet->modelLimits[2].numberOfLimits=1;
@@ -244,7 +244,7 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
             mnet->modelLimits[2].maximumYaw1=225.0;//-270.0;
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            snprintf(modelPath,1024,"combinedModel/%0.1f/left.pb",qualitySetting);
+            snprintf(modelPath,1024,"dataset/combinedModel/%0.1f/left.pb",qualitySetting);
             result += loadTensorflowInstance(&mnet->models[3] ,modelPath ,"input_left" ,"result_left/concat",forceCPU);
             mnet->modelLimits[3].isFlipped=0;
             mnet->modelLimits[3].numberOfLimits=1;
@@ -252,7 +252,7 @@ int loadMocapNET(struct MocapNET * mnet,const char * filename,float qualitySetti
             mnet->modelLimits[3].maximumYaw1=45.0; 
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            snprintf(modelPath,1024,"combinedModel/%0.1f/right.pb",qualitySetting);//
+            snprintf(modelPath,1024,"dataset/combinedModel/%0.1f/right.pb",qualitySetting);//
             result += loadTensorflowInstance(&mnet->models[4] ,modelPath ,"input_right" ,"result_right/concat",forceCPU);
             mnet->modelLimits[4].isFlipped=0;
             mnet->modelLimits[4].numberOfLimits=1;

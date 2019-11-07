@@ -10,7 +10,7 @@ white=$(printf "\033[37m")
 normal=$(printf "\033[m")
 
 
-datasetDir="MotionCapture"
+datasetDir="dataset/MotionCapture"
 datasetSubDir="01 02 03 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19"
 #datasetSubDir="05"
 outputDir="dataset/"

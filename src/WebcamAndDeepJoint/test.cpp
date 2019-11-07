@@ -429,9 +429,9 @@ int main(int argc, char *argv[])
     unsigned int numberOfHeatmaps = 19;
     const char   outputPathStatic[]="out.bvh";
     char * outputPath = (char*) outputPathStatic;
-    const char   networkPathOpenPoseMiniStatic[]="combinedModel/openpose_model.pb";
-    const char   networkPathVnectStatic[]="combinedModel/vnect_sm_pafs_8.1k.pb";
-    const char   networkPathFORTHStatic[]="combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb";
+    const char   networkPathOpenPoseMiniStatic[]="dataset/combinedModel/openpose_model.pb";
+    const char   networkPathVnectStatic[]="dataset/combinedModel/vnect_sm_pafs_8.1k.pb";
+    const char   networkPathFORTHStatic[]="dataset/combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb";
 
     char   networkInputLayer[]="input_1";
     char   networkOutputLayer[]="k2tfout_0";

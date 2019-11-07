@@ -21,13 +21,15 @@ chmod +x mocapnet.desktop
 
 # sudo apt-get install build-essential cmake libopencv-dev libjpeg-dev libpng-dev
 
-if [ ! -f MotionCapture/READMEFIRST.txt ]; then
+if [ ! -f dataset/MotionCapture/READMEFIRST.txt ]; then
+cd "$DIR/dataset"
 echo "Could not find MotionCapture"
 wget http://ammar.gr/datasets/CMUMotionCaptureDatasets.zip
 unzip CMUMotionCaptureDatasets.zip
 mv CMUMotionCaptureDatasets.zip MotionCapture
 fi
 
+cd "$DIR"
 
 #also force download a Video sample
 if [ ! -f shuffle.webm ]; then
@@ -36,28 +38,25 @@ fi
 #--------------------------------------------
 
 if [ ! -f dataset/makehuman.tri ]; then
+  cd "$DIR/dataset"
   wget http://ammar.gr/mocapnet/makehuman.tri
-  mv makehuman.tri dataset/
 fi
 
-
-#A sample is now included in repo datasets/sample.csv
-#also force download a CSV sample
-#if [ ! -f tektonik.csv ]; then
-#  wget http://ammar.gr/mocapnet/tektonik.csv
-#fi
-#--------------------------------------------
+cd "$DIR"
+  
 
 
+
+cd "$DIR/dataset"
 mkdir combinedModel
 cd combinedModel
 
-LIST_OF_QUALITY="1.0 1.5 2.0"
+LIST_OF_QUALITY="1.0 2.0" # 1.5 2.0
 
 for QUALITY in $LIST_OF_QUALITY; do
 #--------------------------------------------------------------------
 echo "Downloading Models for quality setting $QUALITY"
-cd "$DIR/combinedModel"
+cd "$DIR/dataset/combinedModel"
 mkdir $QUALITY
 cd $QUALITY 
 
@@ -78,7 +77,7 @@ done
 #--------------------------------------------------------------------
 
 #Rest of combined models..
-cd "$DIR/combinedModel"
+cd "$DIR/dataset/combinedModel"
 
 if [ ! -f openpose_model.pb ]; then
   wget http://ammar.gr/datasets/combinedModel/openpose_model.pb
@@ -111,14 +110,17 @@ ARCHITECTURE="gpu" #can be gpu or cpu
 #I have a special version of tensorflow 1.11.0 tailored for Intel Core 2 and NVIDIA 7XX cards ( compute capabilities ) that you can find here
 #wget https://ammar.gr/mocapnet/libtensorflow-oldgpu-linux-x86_64-1.11.0.tar.gz
 
+
+cd "$DIR"
 if [ -f /usr/local/lib/libtensorflow.so ]; then
  echo "Found a system wide tensorflow installation, not altering anything"
-elif [ -f libtensorflow/lib/libtensorflow.so ]; then
+elif [ -f dependencies/libtensorflow/lib/libtensorflow.so ]; then
  echo "Found a local tensorflow installation, not altering anything"
 else 
  echo "Did not find tensorflow already installed..!"
- if [ ! -f libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz ]; then
+ if [ ! -f dependencies/libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz ]; then
    echo "Did not find tensorflow tarball so will have to download it..!"
+   cd "$DIR/dependencies"
    wget https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
    #Is the Google link down ? we have a mirror :)
    #wget https://ammar.gr/mocapnet/libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
@@ -127,8 +129,10 @@ else
  fi
  
 
-if [ -f libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz ]; then
+cd "$DIR"
+if [ -f dependencies/libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz ]; then
  #Doing a local installation that requires no SUDO 
+ cd "$DIR/dependencies"
  mkdir libtensorflow
  tar -C libtensorflow -xzf libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz  
  #echo "Please give me sudo permissions to install Tensorflow $TENSORFLOW_VERSION C Bindings.."
@@ -143,10 +147,12 @@ fi
 
 
 
-if [ -f RGBDAcquisition ]; then
+cd "$DIR"
+if [ -f dependencies/RGBDAcquisition ]; then
 then
 echo "RGBDAcquisition appears to already exist .."
 else
+ cd "$DIR/dependencies"
  git clone https://github.com/AmmarkoV/RGBDAcquisition
  cd RGBDAcquisition
  mkdir build
@@ -154,7 +160,6 @@ else
  cmake ..
  #We dont need to make it 
  #make 
- cd "$DIR"
  cd ../opengl_acquisition_shared_library/opengl_depth_and_color_renderer
  mkdir build
  cd build
@@ -163,14 +168,15 @@ else
  #make 
  cd "$DIR"
  #Also retrieve Renderer 
- #ln -s RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/Renderer 
+ #ln -s dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/Renderer 
 fi
 
 
 
 
 
-if [ -f AmmarServer ]
+cd "$DIR"
+if [ -f dependencies/AmmarServer ]
 then
 echo "AmmarServer appears to already exist .."
 else
@@ -181,7 +187,7 @@ else
   read answer
   if test "$answer" != "N" -a "$answer" != "n";
   then 
-      cd "$DIR"
+      cd "$DIR/dependencies"
       git clone https://github.com/AmmarkoV/AmmarServer
       AmmarServer/scripts/get_dependencies.sh
       cd AmmarServer
@@ -197,6 +203,7 @@ fi
  
  
 #Now that we have everything lets build..
+echo "Now to try and build MocapNET.."
 cd "$DIR"
 mkdir build
 cd build

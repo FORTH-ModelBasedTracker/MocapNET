@@ -3,7 +3,7 @@
 
 
  #if USE_NETWORKING
-#include "../AmmarServer/src/AmmClient/AmmClient.h"
+#include "../../dependencies/AmmarServer/src/AmmClient/AmmClient.h"
 #endif
 
 

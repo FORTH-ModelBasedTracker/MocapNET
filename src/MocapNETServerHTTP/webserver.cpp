@@ -6,14 +6,14 @@
 
 #include <pthread.h>
 
-#include "../AmmarServer/src/AmmServerlib/AmmServerlib.h"
+#include "../../dependencies/AmmarServer/src/AmmServerlib/AmmServerlib.h"
 
 #include "../MocapNETLib/InputParser_C.h"
 
 #define DEFAULT_BINDING_PORT 8080  // <--- Change this to 80 if you want to bind to the default http port..!
 
 
-#define WORKING_PATH "MocapNETServerHTTP/res/"
+#define WORKING_PATH "src/MocapNETServerHTTP/res/"
 char webserver_root[MAX_FILE_PATH]=WORKING_PATH; // <- change this to the directory that contains your content if you dont want to use the default public_html dir..
 char templates_root[MAX_FILE_PATH]="public_html/templates/";
 
