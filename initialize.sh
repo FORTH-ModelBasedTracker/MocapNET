@@ -148,8 +148,7 @@ fi
 
 
 cd "$DIR"
-if [ -f dependencies/RGBDAcquisition ]; then
-then
+if [ -f dependencies/RGBDAcquisition/README.md ]; then
 echo "RGBDAcquisition appears to already exist .."
 else
  cd "$DIR/dependencies"
