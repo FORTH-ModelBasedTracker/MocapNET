@@ -14,8 +14,9 @@ datasetDir="dataset/MotionCapture"
 datasetSubDir="01 02 03 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19"
 #datasetSubDir="05"
 outputDir="dataset/"
-                          #Why is this 20 , shouldn't it be 12?
-RANDOMIZEANGLES="--perturbJointAngles 20 30.0 rshoulder relbow rhand lshoulder lelbow lhand rhip rknee rfoot lhip lknee lfoot"
+                          #Why was this 20 , shouldn't it be 12?
+RANDOMIZEANGLES="--perturbJointAngles 12 30.0 rshoulder relbow rhand lshoulder lelbow lhand rhip rknee rfoot lhip lknee lfoot"
+ERASEHANDS="--eraseJoints 20 rthumb1 rthumb2 rindex1 rindex2 rmid1 rmid2 rring1 rring2 rpinky1 rpinky2 lthumb1 lthumb2 lindex1 lindex2 lmid1 lmid2 lring1 lring2 lpinky1 lpinky2"
 
 #FAR
 MINIMUM_DEPTH="900"
@@ -54,7 +55,7 @@ function generateDataset
                   echo "$green Found $datasetDir/$d/$f file $normal" 
                     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
                        BVHFILE="$datasetDir/$d/$f"                       # --svg $outputDir  
-                       ./GroundTruthDumper --from $BVHFILE $MIRROR_DATASET_HANDS $RANDOMIZEANGLES --repeat $ITERATIONS $2 --occlusions --csv $outputDir $1 2d+bvh # --bvh $outputDir/$f-random.bvh
+                       ./GroundTruthDumper --from $BVHFILE $MIRROR_DATASET_HANDS $RANDOMIZEANGLES $ERASEHANDS --repeat $ITERATIONS $2 --occlusions --csv $outputDir $1 2d+bvh # --bvh $outputDir/$f-random.bvh
                     #|||||||||||||||||||||||||||||||||||||||||||||||||||||||| 
                 done
 
