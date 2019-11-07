@@ -818,6 +818,53 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
 }
 
 
+
+
+
+int drawScale(cv::Mat &outputMat,float x,float y,float distance)
+{ 
+  distance=-1*distance*10;  
+  cv::Point startPoint(x,y);
+  cv::Point endPoint(x,y+200); 
+
+
+  cv::Scalar color = cv::Scalar(123,123,123);
+  cv::line(outputMat,startPoint,endPoint, color , 3.0);  
+  //
+  
+  float fraction = (float) distance/5000;
+  
+  float yPos = y + 200 * fraction; 
+  
+  cv::Point distancePos(x,yPos); 
+  cv::circle(outputMat,distancePos,1,cv::Scalar(0,255,0),3,8,0);
+  
+  
+  char label[64];
+
+  snprintf(label,64,"Distance");
+  startPoint.x=startPoint.x-20;
+  startPoint.y=startPoint.y-10;
+  cv::putText(outputMat,label, startPoint, cv::FONT_HERSHEY_DUPLEX, 0.3, cv::Scalar::all(255), 0.2, 8 );
+
+
+  snprintf(label,64,"%0.2f",distance);
+  distancePos.x=distancePos.x-20;
+  distancePos.y=distancePos.y-10;
+  cv::putText(outputMat,label, distancePos, cv::FONT_HERSHEY_DUPLEX, 0.3, cv::Scalar::all(255), 0.2, 8 );
+  
+ return 1;        
+}
+
+
+
+
+
+
+
+
+
+
 int visualizePoints(
     const char* windowName,
     unsigned int frameNumber,
@@ -1037,8 +1084,11 @@ int visualizePoints(
             );
         }
     //-----------------------    
-
-
+    
+    if (mocapNETOutput.size()>4)
+    {
+      drawScale(img,990,480,mocapNETOutput[2]);
+    }
 
     //-----------------------
     //      OpenGL stuff 

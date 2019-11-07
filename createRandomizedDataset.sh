@@ -18,8 +18,8 @@ outputDir="dataset/"
 RANDOMIZEANGLES="--perturbJointAngles 20 30.0 rshoulder relbow rhand lshoulder lelbow lhand rhip rknee rfoot lhip lknee lfoot"
 
 #FAR
-MINIMUM_DEPTH="1000"
-MAXIMUM_DEPTH="5500"
+MINIMUM_DEPTH="900"
+MAXIMUM_DEPTH="3000"
 
 MINIMUM_POSITION="-1400 -300 $MINIMUM_DEPTH"
 MINIMUM_ROTATION="-25 -178 -35"
@@ -119,10 +119,27 @@ function generateDataset
 #   /                \
 #------------------------------------------------------------------------------------------------------------
 
-generateDataset data_front.csv "--csvOrientation front --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -45 -35 35 45 35"
-generateDataset data_back.csv "--csvOrientation back --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 135 -35 35 225 35"
-generateDataset data_left.csv "--csvOrientation left --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -135 -35 35 -45 35"
-generateDataset data_right.csv "--csvOrientation right --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 45 -35 35 135 35"
+#I have added 20 degrees on every limit more than the default
+#to have some overlap and redundancy when switching between datasets
+#---------------------------
+FRONT_MIN_ORIENTATION="-55" #-45  default  
+FRONT_MAX_ORIENTATION="55"  # 45  default
+#---------------------------
+BACK_MIN_ORIENTATION="125"  # 135 default 
+BACK_MAX_ORIENTATION="235"  # 225 default
+#---------------------------
+LEFT_MIN_ORIENTATION="-145" #-135 default
+LEFT_MAX_ORIENTATION="-35"  #-45  default
+#---------------------------
+RIGHT_MIN_ORIENTATION="35"  # 45  default 
+RIGHT_MAX_ORIENTATION="145" # 135 default
+
+
+
+generateDataset data_front.csv "--csvOrientation front --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 $FRONT_MIN_ORIENTATION -35 35 $FRONT_MAX_ORIENTATION 35"
+generateDataset data_back.csv "--csvOrientation back --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 $BACK_MIN_ORIENTATION -35 35 $BACK_MAX_ORIENTATION 35"
+generateDataset data_left.csv "--csvOrientation left --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 $LEFT_MIN_ORIENTATION -35 35 $LEFT_MAX_ORIENTATION 35"
+generateDataset data_right.csv "--csvOrientation right --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 $RIGHT_MIN_ORIENTATION -35 35 $RIGHT_MAX_ORIENTATION 35"
 generateDataset data_all.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 180 35"
 
 
