@@ -1,5 +1,14 @@
 #!/bin/bash
 
+
+function getStatistics 
+{ 
+  #use R to generate statistics 
+  #sudo apt-get install r-base
+  R -q -e "x <- read.csv('$1', header = T); summary(x); sd(x[ , 1])" > $2
+  cat $1 | wc -l >> $2 
+}  
+
 red=$(printf "\033[31m")
 green=$(printf "\033[32m")
 yellow=$(printf "\033[33m")
@@ -19,7 +28,7 @@ RANDOMIZEANGLES="--perturbJointAngles 12 30.0 rshoulder relbow rhand lshoulder l
 ERASEHANDS="--eraseJoints 20 rthumb1 rthumb2 rindex1 rindex2 rmid1 rmid2 rring1 rring2 rpinky1 rpinky2 lthumb1 lthumb2 lindex1 lindex2 lmid1 lmid2 lring1 lring2 lpinky1 lpinky2"
 
 #FAR
-MINIMUM_DEPTH="900"
+MINIMUM_DEPTH="1000"
 MAXIMUM_DEPTH="3000"
 
 MINIMUM_POSITION="-1400 -300 $MINIMUM_DEPTH"
@@ -28,7 +37,7 @@ MAXIMUM_POSITION="1400 300 $MAXIMUM_DEPTH"
 MAXIMUM_ROTATION="25 178 35"
   
 MIRROR_DATASET_HANDS=""
-ITERATIONS="1" #Smallest size..
+ITERATIONS="2" #Smallest size..
 #ITERATIONS="2" #float32 targeting 16GB RAM
 #ITERATIONS="8" #float16 targeting 16GB RAM
 
@@ -63,6 +72,7 @@ function generateDataset
              else
               echo "$red Could not find $d directory $normal"
              fi
+  
   done
 }
 
@@ -143,16 +153,38 @@ generateDataset data_left.csv "--csvOrientation left --randomize2D $MINIMUM_DEPT
 generateDataset data_right.csv "--csvOrientation right --randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 $RIGHT_MIN_ORIENTATION -35 35 $RIGHT_MAX_ORIENTATION 35"
 generateDataset data_all.csv "--randomize2D $MINIMUM_DEPTH $MAXIMUM_DEPTH -35 -179.999999 -35 35 180 35"
 
+echo "Getting statistics for front view.."
+cat dataset/bvh_data_front.csv | cut -d',' -f 5 > frontOrientations
+getStatistics frontOrientations dataset/bvh_data_front_statistics.txt
+cat dataset/bvh_data_front_statistics.txt
+rm frontOrientations
+
+echo "Getting statistics for back view.."
+cat dataset/bvh_data_back.csv | cut -d',' -f 5 > backOrientations
+getStatistics backOrientations dataset/bvh_data_back_statistics.txt
+cat dataset/bvh_data_back_statistics.txt
+rm backOrientations
+
+echo "Getting statistics for left view.."
+cat dataset/bvh_data_left.csv | cut -d',' -f 5 > leftOrientations
+getStatistics leftOrientations dataset/bvh_data_left_statistics.txt
+cat dataset/bvh_data_left_statistics.txt
+rm leftOrientations
+
+echo "Getting statistics for right view.."
+cat dataset/bvh_data_right.csv | cut -d',' -f 5 > rightOrientations
+getStatistics rightOrientations dataset/bvh_data_right_statistics.txt
+cat dataset/bvh_data_right_statistics.txt
+rm rightOrientations
+
+echo "Getting statistics for all view.."
+cat dataset/bvh_data_all.csv | cut -d',' -f 5 > allOrientations
+getStatistics allOrientations dataset/bvh_data_all_statistics.txt
+cat dataset/bvh_data_all_statistics.txt
+rm allOrientations
 
 
 
 
-
-
-
-
-
-
-
-
+echo "Done.."
 exit 0
