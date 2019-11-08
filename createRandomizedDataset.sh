@@ -37,9 +37,28 @@ MAXIMUM_POSITION="1400 300 $MAXIMUM_DEPTH"
 MAXIMUM_ROTATION="25 178 35"
   
 MIRROR_DATASET_HANDS=""
-ITERATIONS="2" #Smallest size..
+ITERATIONS="1" #Smallest size..
 #ITERATIONS="2" #float32 targeting 16GB RAM
 #ITERATIONS="8" #float16 targeting 16GB RAM
+
+
+RAM=`free | grep Mem | tr -s ' '| cut -f2 -d ' '`
+
+
+
+if [ "$RAM" -gt "11286464" ]; then
+  echo "More than 12GB";
+ITERATIONS="2"  
+fi
+if [ "$RAM" -gt "15297500" ]; then
+  echo "More than 16GB";
+ITERATIONS="3"  
+fi
+if [ "$RAM" -gt "31861780" ]; then
+  echo "More than 32GB";
+ITERATIONS="16"  
+fi
+
 
 #We are also mirroring so bear in mind that this will effectively be doubled 
 #MIRROR_DATASET_HANDS="--mirror lCollar rCollar"
