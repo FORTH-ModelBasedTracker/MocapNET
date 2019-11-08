@@ -61,7 +61,7 @@ If you are interested in generating BVH training data for your research, we have
 To compile the library issue :
 
 ```
- sudo apt-get install build-essential cmake libopencv-dev libjpeg-dev libpng-dev
+ sudo apt-get install build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev
 
 ./initialize.sh
 
