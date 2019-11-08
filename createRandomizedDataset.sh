@@ -42,8 +42,12 @@ ITERATIONS="1" #Smallest size..
 #ITERATIONS="8" #float16 targeting 16GB RAM
 
 
-RAM=`free | grep Mem | tr -s ' '| cut -f2 -d ' '`
+if ! [ -x "$(command -v R)" ]; then
+  echo 'Warning: R is not installed.' >&2
+  sudo apt-get install r-base 
+fi 
 
+RAM=`free | grep Mem | tr -s ' '| cut -f2 -d ' '`
 
 
 if [ "$RAM" -gt "11286464" ]; then
