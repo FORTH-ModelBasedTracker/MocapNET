@@ -836,6 +836,10 @@ int drawScale(cv::Mat &outputMat,float x,float y,float distance)
   
   float yPos = y + 200 * fraction; 
   
+  //Don't let it get out of range..
+  if (yPos<y) { yPos=y; } 
+  if (yPos>y+200) { yPos=y+200; } 
+
   cv::Point distancePos(x,yPos); 
   cv::circle(outputMat,distancePos,1,cv::Scalar(0,255,0),3,8,0);
   
