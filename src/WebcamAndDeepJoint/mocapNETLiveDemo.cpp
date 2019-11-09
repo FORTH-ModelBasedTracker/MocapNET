@@ -403,12 +403,11 @@ int main(int argc, char *argv[])
     unsigned int deadInputPoints=0;
     int live=0,stop=0,visualizationType=0;
     int constrainPositionRotation=1,rotate=0;
-    int doCrop=1,tryForMaximumCrop=0,doSmoothing=5,drawFloor=1,drawNSDM=1,doGestureDetection=0,doOutputFiltering=1,frameSkip=0;
+    int doCrop=1,tryForMaximumCrop=0,doSmoothing=5,drawFloor=1,drawNSDM=1,doGestureDetection=0,doInputFiltering=0,doOutputFiltering=1,frameSkip=0;
     int targetSpecificFramerate=0;
     float fpsTotal=1.0,fpsTarget=30.0,fpsAcquisition=1.0,fps2DJointDetector=1.0,fpsMocapNET=1.0;
 
-    int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0,autoDirection=0,autoCount=0;
-    int doFeetHeuristics=0;
+    int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0,autoDirection=0,autoCount=0; 
     int rememberPrevious2DPositions=0;
 
     int borderTop=0, borderBottom=0, borderLeft=0, borderRight=0;
@@ -908,7 +907,7 @@ int main(int argc, char *argv[])
                                                                             heatmapHeight2DJointDetector,
                                                                             numberOfHeatmaps,
                                                                             numberOfOutputTensors,
-                                                                            doFeetHeuristics
+                                                                            0//doFeetHeuristics
                                                                         );
 
                                             //printWgetCommand(flatAndNormalized2DPoints);
@@ -1078,12 +1077,12 @@ int main(int argc, char *argv[])
                                                             cv::createTrackbar("Visualization Demo", "3D Control", &visualizationType,15);
                                                             cv::createTrackbar("Rotate Feed", "3D Control", &rotate, 4);
                                                             cv::createTrackbar("Gesture Detection", "3D Control", &doGestureDetection,1);
+                                                            cv::createTrackbar("Filter Input", "3D Control", &doInputFiltering,1);
                                                             cv::createTrackbar("Filter Output", "3D Control", &doOutputFiltering,1);
                                                             cv::createTrackbar("Constrain Position/Rotation", "3D Control", &constrainPositionRotation, 2);
                                                             cv::createTrackbar("Automatic Crop", "3D Control", &doCrop, 1);
                                                             cv::createTrackbar("2D NN Sensitivity", "3D Control", &joint2DSensitivityPercent,100);
                                                             cv::createTrackbar("Remember Previous 2D", "3D Control", &rememberPrevious2DPositions,1);
-                                                            cv::createTrackbar("Feet Heuristics", "3D Control", &doFeetHeuristics,1);
                                                             cv::createTrackbar("Smooth 3D Output", "3D Control", &doSmoothing, 10);
                                                             cv::createTrackbar("Maximize Crop", "3D Control", &tryForMaximumCrop, 1);
                                                             cv::createTrackbar("Draw Floor", "3D Control", &drawFloor, 1);
