@@ -26,6 +26,75 @@ int listNodesMN(const char * label , TF_Graph* graph)
 }
 
 
+std::vector <float> fillInTheBlanks(std::vector <float> previousVector,std::vector <float> currentVector)
+{
+    //fprintf(stderr,"filling In Blanks from previous 2D detection:\n");
+
+    if (previousVector.size()==currentVector.size())
+    {
+        std::vector <float> smoothedVector=currentVector;
+        unsigned int filledBlanks=0;
+        unsigned int observedBlanks=0;
+        int i=0;
+        for (int i=0; i<smoothedVector.size()/3; i++)
+             {
+               if (
+                    //(smoothedVector[i*3+0]==0) &&
+                    //(smoothedVector[i*3+1]==0) &&
+                    (smoothedVector[i*3+2]==0)
+                  )
+                  {
+                    ++observedBlanks;
+                    //fprintf(stderr,"Joint %s is blank (%0.2f,%0.2f,%0.2f)\n",MocapNETInputUncompressedArrayNames[i*3+2],smoothedVector[i*3+0],smoothedVector[i*3+1],smoothedVector[i*3+2]);
+                    //We have a hole..! Can we fill it?
+                    if (
+                        //(previousVector[i*3+0]!=0) &&
+                        //(previousVector[i*3+1]!=0) &&
+                        (previousVector[i*3+2]!=0)
+                       )
+                       {
+                         smoothedVector[i*3+0]=previousVector[i*3+0];
+                         smoothedVector[i*3+1]=previousVector[i*3+1];
+                         smoothedVector[i*3+2]=previousVector[i*3+2];
+                         fprintf(stderr,GREEN "2DJoint %s got filled (%0.2f,%0.2f,%0.2f)\n" NORMAL,MocapNETInputUncompressedArrayNames[i*3+2],smoothedVector[i*3+0],smoothedVector[i*3+1],smoothedVector[i*3+2]);
+                         ++filledBlanks;
+                       }
+                  } else
+                  {
+                    //fprintf(stderr,"%s is not blank (%0.2f,%0.2f,%0.2f)\n",MocapNETInputUncompressedArrayNames[i*3+2],smoothedVector[i*3+0],smoothedVector[i*3+1],smoothedVector[i*3+2]);
+                  }
+             }
+
+        fprintf(stderr,"observed %u blanks / filled %u blanks\n",observedBlanks,filledBlanks);
+        return smoothedVector;
+    }
+
+    fprintf(stderr,"nothing done\n");
+    return currentVector;
+}
+
+
+
+std::vector <float> smoothVector(std::vector <float> previousVector,std::vector <float> currentVector,float magnitude)
+{
+    if (previousVector.size()==currentVector.size())
+    {
+        std::vector <float> smoothedVector;
+        int i=0;
+        for (i=0; i<previousVector.size(); i++)
+        {
+            float smoothedValue =  currentVector[i]+ ( currentVector[i]-previousVector[i] ) * magnitude;
+
+            smoothedVector.push_back(smoothedValue);
+        }
+        return smoothedVector;
+    }
+
+    return currentVector;
+}
+
+
+
 int silenceDeadJoints(std::vector<float> & result)
 {
   if (result.size()!=MOCAPNET_OUTPUT_NUMBER)

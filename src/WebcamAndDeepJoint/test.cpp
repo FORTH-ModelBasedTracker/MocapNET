@@ -27,19 +27,19 @@ using namespace cv;
 #include "utilities.hpp"
 
 
-//Debug switch that will spam the screen with OpenCV windows for each of the 
+//Debug switch that will spam the screen with OpenCV windows for each of the
 //joint heatmaps..
 #define DISPLAY_ALL_HEATMAPS 0
 
 
 void printWgetCommand(std::vector<float> pose2D)
 {
-  fprintf(stderr,"wget \"http://127.0.0.1:8080/control.html?skeleton=");   
+  fprintf(stderr,"wget \"http://127.0.0.1:8080/control.html?skeleton=");
   for (int i=0; i<pose2D.size(); i++)
   {
       fprintf(stderr,"%0.2f,",pose2D[i]);
   }
- fprintf(stderr,"\"\n");     
+ fprintf(stderr,"\"\n");
 }
 
 
@@ -308,7 +308,7 @@ unsigned int getNumberOfEmptyNSDMElements(std::vector<float> mocapNETInput)
                     ++numberOfZeros;
                 }
 
-        } 
+        }
     return numberOfZeros;
 }
 
@@ -412,7 +412,7 @@ int main(int argc, char *argv[])
     int rememberPrevious2DPositions=0;
 
     int borderTop=0, borderBottom=0, borderLeft=0, borderRight=0;
-    
+
     int coveringRectangle=0;
     int coveringRectangleX=0, coveringRectangleY=0, coveringRectangleWidth=0, coveringRectangleHeight=0;
 
@@ -537,13 +537,13 @@ int main(int argc, char *argv[])
                     {
                         borderTop=atoi(argv[i+1])/2;
                         borderBottom=atoi(argv[i+1])/2;
-                    } 
+                    }
                 else if (strcmp(argv[i],"--rectangle")==0)
                     {
-                        coveringRectangle=1; 
+                        coveringRectangle=1;
                         coveringRectangleX=atoi(argv[i+1]);
                         coveringRectangleY=atoi(argv[i+2]);
-                        coveringRectangleWidth=atoi(argv[i+3]); 
+                        coveringRectangleWidth=atoi(argv[i+3]);
                         coveringRectangleHeight=atoi(argv[i+4]);
                     }
                 else if (strcmp(argv[i],"--2dmodel")==0)
@@ -554,7 +554,7 @@ int main(int argc, char *argv[])
                     {
                         stereoCamera=1;
                         stereoShift=atoi(argv[i+1]);
-                    } 
+                    }
                 else if  (  (strcmp(argv[i],"-o")==0) || (strcmp(argv[i],"--output")==0) )
                     {
                         outputPath=argv[i+1];
@@ -692,7 +692,7 @@ int main(int argc, char *argv[])
                                        networkInputLayer,
                                        networkOutputLayer,
                                        forceCPU2DJointEstimation
-                                      ) 
+                                      )
                )
                 {
                     frameNumber=0;
@@ -702,23 +702,23 @@ int main(int argc, char *argv[])
                             unsigned long acquisitionStart = GetTickCountMicroseconds();
 
                              if (stereoCamera)
-                             { //This is a frame that has two views and we will alternate between them  
-                                 if (stereoCamera==1) 
-                                     { 
+                             { //This is a frame that has two views and we will alternate between them
+                                 if (stereoCamera==1)
+                                     {
                                         cap >> frameBeforeSplit;
                                         cv::Rect rectangleROI(stereoShift,0,frameBeforeSplit.size().width/2 - stereoShift ,frameBeforeSplit.size().height);
-                                        frame = frameBeforeSplit(rectangleROI);    
-                                        stereoCamera=2; 
+                                        frame = frameBeforeSplit(rectangleROI);
+                                        stereoCamera=2;
                                      }  else
-                                   if (stereoCamera==2) 
-                                     {  
+                                   if (stereoCamera==2)
+                                     {
                                         cv::Rect rectangleROI(frameBeforeSplit.size().width/2,0,frameBeforeSplit.size().width/2-stereoShift,frameBeforeSplit.size().height);
-                                        frame = frameBeforeSplit(rectangleROI);    
-                                        stereoCamera=1; 
+                                        frame = frameBeforeSplit(rectangleROI);
+                                        stereoCamera=1;
                                      }
                              }
                                 else
-                            { //Regular monocular video source       
+                            { //Regular monocular video source
                             //---------------------------------------------------------------------------------------------------
                             //---------------------------------------------------------------------------------------------------
                             cap >> frame; // get a new frame from camera
@@ -733,7 +733,7 @@ int main(int argc, char *argv[])
                             //the execution of the gesture.
                             //There are two flavors of frame skipping, a constant frame skip ( --frameskip X  )
                             //An adaptable target framerate ( --targetframerate X ) that will try to speed up/slow down
-                            //Depending on your current situation  
+                            //Depending on your current situation
                             //Please note that there is no frame skipping involved in any of the
                             //reported framerates of the paper.
                             //---------------------------------------------------------------------------------------------------
@@ -757,21 +757,21 @@ int main(int argc, char *argv[])
                                         fpsMocapNET
                                     );
                                 }
-                                
+
                               }
                                 //-------------------------------------------------------------------------------------------------------
-                                
-                                
+
+
                             //Some datasets have persons that appear in parts of the image, we might want to cover them using a rectangle
-                            //We do this before adding any borders or otherwise change of the ROI of the image, however we do this 
+                            //We do this before adding any borders or otherwise change of the ROI of the image, however we do this
                             //after possible frame skips for the obviously increased performance..
                             if (coveringRectangle)
                             {
                                 cv::Point pt1(coveringRectangleX,coveringRectangleY);
                                 cv::Point pt2(coveringRectangleX+coveringRectangleWidth,coveringRectangleY+coveringRectangleHeight);
-                                cv::rectangle(frame,pt1,pt2,cv::Scalar(0,0,0),-1,8,0); 
-                            }    
-                                
+                                cv::rectangle(frame,pt1,pt2,cv::Scalar(0,0,0),-1,8,0);
+                            }
+
                             //If we want to add a border to our frame to pad it this is done here
                             //----------------------------------------------------------------------------------------------------------
                             if ( ( borderTop!=0 ) || ( borderBottom!=0 ) || ( borderLeft!=0 ) || ( borderRight==0 ) )
@@ -790,7 +790,7 @@ int main(int argc, char *argv[])
                             //If we want to  rotate our frame this is done here
                             //----------------------------------------------------------------------------------------------------------
                             if (rotate)
-                                { 
+                                {
                                     switch(rotate)
                                         {
                                         case 1 :
@@ -804,14 +804,14 @@ int main(int argc, char *argv[])
                                             break;
                                         } ;
                                 }
-                                
+
                              //Our frame at this point is considered captured and almost ready for use..!
                              //-------------------------------------------------------------------------------------------------------------
-                                
-                                
+
+
                              //We keep a copy of the cv::Mat since we will add a ROI on it
                              //We could perform a deep copy but this is too wasteful
-                            cv::Mat frameOriginal = frame; //ECONOMY .clone();  
+                            cv::Mat frameOriginal = frame; //ECONOMY .clone();
                             unsigned int frameWidth  =  frame.size().width;  //frame.cols
                             unsigned int frameHeight =  frame.size().height; //frame.rows
 
@@ -828,14 +828,14 @@ int main(int argc, char *argv[])
                                     visHeight=(unsigned int) frameHeight*2.0;
                                 }
                             visWidth=1024;
-                            visHeight=768; 
+                            visHeight=768;
                             //-------------------------------------------------------------
 
-                            
+
                             //We need to guard against broken input  of empty frames..
                             if ( (frameWidth!=0)  && (frameHeight!=0)  )
                                 {
-                                    unsigned long acquisitionEnd = GetTickCountMicroseconds(); 
+                                    unsigned long acquisitionEnd = GetTickCountMicroseconds();
                                     fpsAcquisition = convertStartEndTimeFromMicrosecondsToFPS(acquisitionStart,acquisitionEnd);
 
                                     //------------------------------------------------------------------------
@@ -910,7 +910,7 @@ int main(int argc, char *argv[])
                                                                             numberOfOutputTensors,
                                                                             doFeetHeuristics
                                                                         );
-                                                                        
+
                                             //printWgetCommand(flatAndNormalized2DPoints);
 
                                             if (rememberPrevious2DPositions)
@@ -920,7 +920,7 @@ int main(int argc, char *argv[])
                                                 }
 
                                             //If we are not running live ( aka not from a webcam with no fixed frame limit )
-                                            //Then we record the 2D input to store it .. 
+                                            //Then we record the 2D input to store it ..
                                             if (!live)
                                                 {
                                                     inputFrames.push_back(flatAndNormalized2DPoints); //2d Input
@@ -939,7 +939,7 @@ int main(int argc, char *argv[])
                                             if (doOutputFiltering)
                                                 {
                                                     deadInputPoints = getNumberOfEmptyNSDMElements(flatAndNormalized2DPoints);
-                                                    if (deadInputPoints>MAXIMUM_NUMBER_OF_NSDM_ELEMENTS_MISSING) 
+                                                    if (deadInputPoints>MAXIMUM_NUMBER_OF_NSDM_ELEMENTS_MISSING)
                                                         {
                                                             fprintf(stderr,RED "Too many dead input elements %u\n" NORMAL,deadInputPoints);
                                                             bvhOutput=previousBvhOutput;
@@ -1115,7 +1115,7 @@ int main(int argc, char *argv[])
                                                         {
                                                             //fprintf(stderr,"updateOpenGLView\n");
                                                             updateOpenGLView(bvhOutput);
-                                                            
+
                                                             //fprintf(stderr,"visualizeOpenGL\n");
                                                             unsigned int openGLFrameWidth=visWidth,openGLFrameHeight=visHeight;
                                                             char * openGLFrame = visualizeOpenGL(&openGLFrameWidth,&openGLFrameHeight);
@@ -1149,13 +1149,13 @@ int main(int argc, char *argv[])
                                                     if ( (visualizationType==0) || (visualizationType==1) )
                                                         {
                                                             cv::Mat * openGLMatForVisualizationSelected = openGLMatForVisualization;
-                                                            
+
                                                             if (visualizationType==1)
                                                             {
                                                                 openGLMatForVisualizationSelected=0;
                                                             }
-                                                                
-                                                            
+
+
                                                             visualizePoints(
                                                                             "3D Points Output",
                                                                             frameNumber,
@@ -1181,9 +1181,9 @@ int main(int argc, char *argv[])
                                                                             mnet.lastActivatedGesture,
                                                                             gestureName,
                                                                             mnet.recognizedGestures.gestureChecksPerformed - mnet.gestureTimestamp ,//gesture stuff
-                                                                            
-                                                                            
-                                                                            mnet.lastSkeletonOrientation, 
+
+
+                                                                            mnet.lastSkeletonOrientation,
                                                                             flatAndNormalized2DPoints,
                                                                             bvhOutput,
                                                                             bvhForcedViewOutput,
@@ -1317,16 +1317,16 @@ int main(int argc, char *argv[])
                                     fprintf(stderr,"Please note that while getting input %u frames where skipped due to OpenCV related errors\n",skippedFrames);
                                 }
                             //----------------------------------------------------------------------------------------------------------------------------------
-                                
+
                             fprintf(stderr,"Will now write 2D input to in.csv.. \n");
-                            //----------------------------------------------------------------------------------------------------------------------------------  
+                            //----------------------------------------------------------------------------------------------------------------------------------
                             if ( writeCSVHeaderFromLabelsAndVectorOfVectors("in.csv",MocapNETInputUncompressedArrayNames,MOCAPNET_UNCOMPRESSED_JOINT_PARTS*3,inputFrames) )
-                             { 
+                             {
                                  fprintf(stderr,GREEN "Successfully wrote %lu frames to csv file.. \n" NORMAL,inputFrames.size());
-                             }   
+                             }
                               else
                              {
-                                 fprintf(stderr,RED "Failed to write %lu frames to bvh file.. \n" NORMAL,inputFrames.size()); 
+                                 fprintf(stderr,RED "Failed to write %lu frames to bvh file.. \n" NORMAL,inputFrames.size());
                              }
                         }
                     else

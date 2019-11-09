@@ -1560,7 +1560,11 @@ struct MocapNET
    struct PoseHistory poseHistoryStorage;
    struct GestureDatabase recognizedGestures;
 };
+ 
 
+std::vector <float> fillInTheBlanks(std::vector <float> previousVector,std::vector <float> currentVector);
+
+std::vector <float> smoothVector(std::vector <float> previousVector,std::vector <float> currentVector,float magnitude);
 
 
 

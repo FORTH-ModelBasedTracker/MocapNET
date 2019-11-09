@@ -821,9 +821,8 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
 
 
 
-int drawScale(cv::Mat &outputMat,float x,float y,float distance)
-{ 
-  distance=-1*distance*10;  
+int drawScale(cv::Mat &outputMat,const char * description,float x,float y,float value,float minimum,float maximum)
+{  
   cv::Point startPoint(x,y);
   cv::Point endPoint(x,y+200); 
 
@@ -832,7 +831,7 @@ int drawScale(cv::Mat &outputMat,float x,float y,float distance)
   cv::line(outputMat,startPoint,endPoint, color , 3.0);  
   //
   
-  float fraction = (float) distance/5000;
+  float fraction = (float) value/(maximum-minimum);
   
   float yPos = y + 200 * fraction; 
   
@@ -846,13 +845,13 @@ int drawScale(cv::Mat &outputMat,float x,float y,float distance)
   
   char label[64];
 
-  snprintf(label,64,"Distance");
+  snprintf(label,64,"%s",description);
   startPoint.x=startPoint.x-20;
   startPoint.y=startPoint.y-10;
   cv::putText(outputMat,label, startPoint, cv::FONT_HERSHEY_DUPLEX, 0.3, cv::Scalar::all(255), 0.2, 8 );
 
 
-  snprintf(label,64,"%0.2f",distance);
+  snprintf(label,64,"%0.2f",value);
   distancePos.x=distancePos.x-20;
   distancePos.y=distancePos.y-10;
   cv::putText(outputMat,label, distancePos, cv::FONT_HERSHEY_DUPLEX, 0.3, cv::Scalar::all(255), 0.2, 8 );
@@ -1091,7 +1090,8 @@ int visualizePoints(
     
     if (mocapNETOutput.size()>4)
     {
-      drawScale(img,990,480,mocapNETOutput[2]);
+      drawScale(img,"Distance",990,480,-1*mocapNETOutput[2]*10,800,4000);
+      //drawScale(img,"Height",950,480,mocapNETOutput[1]*10,-500,500);
     }
 
     //-----------------------

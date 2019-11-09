@@ -282,13 +282,15 @@ std::vector<float> predictTensorflow(struct TensorflowInstance * net,std::vector
 
 
 
-    tf_utils::DeleteTensor(input_tensor);
 
     for (int i=0; i<outputSize; i++)
         {
             result.push_back((float) data[i]);
         }
 
+    tf_utils::DeleteTensor(input_tensor);
+    tf_utils::DeleteTensor(output_tensor);
+    
     return result;
 }
 
@@ -432,6 +434,8 @@ std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
                     matrix.push_back(heatmap);
                 }
         } //We have output..
+        
     tf_utils::DeleteTensor(input_tensor);
+    tf_utils::DeleteTensor(output_tensor);
     return matrix;
 }

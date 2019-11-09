@@ -109,12 +109,6 @@ static const int UT_COCOSkeletonJointsParentRelationMap[] =
 
 
 
-
-std::vector <float> fillInTheBlanks(std::vector <float> previousVector,std::vector <float> currentVector);
-
-std::vector <float> smoothVector(std::vector <float> previousVector,std::vector <float> currentVector,float magnitude);
-
-
 /**
  * @brief This function converts receives an RGB image and a vector of heatmaps and returns a vector of 2D Points with the peaks of the heatmaps
  * @ingroup utilities

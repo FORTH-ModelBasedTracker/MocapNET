@@ -175,7 +175,7 @@ fi
 
 
 cd "$DIR"
-if [ -f dependencies/AmmarServer ]
+if [ -f dependencies/AmmarServer/README.md ]
 then
 echo "AmmarServer appears to already exist .."
 else
