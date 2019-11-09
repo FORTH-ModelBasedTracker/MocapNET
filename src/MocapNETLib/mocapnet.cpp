@@ -89,7 +89,6 @@ std::vector <float> smoothVector(std::vector <float> previousVector,std::vector 
         }
         return smoothedVector;
     }
-
     return currentVector;
 }
 
