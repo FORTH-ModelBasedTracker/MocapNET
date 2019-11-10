@@ -50,13 +50,15 @@ cd "$DIR"
 cd "$DIR/dataset"
 mkdir combinedModel
 cd combinedModel
+mkdir mode3
+mkdir mode5
 
 LIST_OF_QUALITY="1.0 2.0" # 1.5 2.0
 
 for QUALITY in $LIST_OF_QUALITY; do
 #--------------------------------------------------------------------
-echo "Downloading Models for quality setting $QUALITY"
-cd "$DIR/dataset/combinedModel"
+echo "Downloading Models for mode 3/quality setting $QUALITY"
+cd "$DIR/dataset/combinedModel/mode3"
 mkdir $QUALITY
 cd $QUALITY 
 
@@ -77,6 +79,7 @@ done
 #--------------------------------------------------------------------
 
 #Rest of combined models..
+echo "Downloading 2D Joint Estimator models"
 cd "$DIR/dataset/combinedModel"
 
 if [ ! -f openpose_model.pb ]; then
