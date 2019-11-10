@@ -7,11 +7,23 @@
  *  @author Ammar Qammaz (AmmarkoV)
  */
 #include "../Tensorflow/tensorflow.hpp"
-
+#include "../MocapNETLib/jsonCocoSkeleton.h"
 
 #include <iostream>
 #include <vector>
 
+ 
+
+
+
+/**
+ * @brief 2D Skeletons Retreieved
+ */
+struct Skeletons2DDetected
+{
+   unsigned int numberOfSkeletonsDetected;
+   struct skeletonCOCO skeletons[16];
+};
 
 
 
@@ -21,10 +33,22 @@
  */
 struct JointEstimator2D
 {
-
+   struct TensorflowInstance network;
 };
 
 
+/**
+ * @brief This is a list of included Joint 2D Estimators included.
+ */
+enum JOINT_2D_ESTIMATOR_SELECTED
+{
+ JOINT_2D_ESTIMATOR_NONE=0,
+ JOINT_2D_ESTIMATOR_FORTH,
+ JOINT_2D_ESTIMATOR_VNECT,
+ JOINT_2D_ESTIMATOR_OPENPOSE, 
+ //----------------------------- 
+ JOINT_2D_ESTIMATOR_NUMBER
+};
 
 
 /**
@@ -36,4 +60,10 @@ struct JointEstimator2D
  * @param Force the usage of CPU for MocapNET ( should be 1 as MocapNET is designed for CPU while GPU handles 2D ) 
  * @retval 1 = Success loading the files  , 0 = Failure
  */
-int loadJointEstimator2D(struct JointEstimator2D * jnet,float qualitySetting,int usePAFs,unsigned int forceCPU);
+int loadJointEstimator2D(struct JointEstimator2D * jnet,int joint2DEstimatorSelected,int usePAFs,unsigned int forceCPU);
+
+
+int unloadJointEstimator2D(struct JointEstimator2D * jnet);
+
+
+int  estimate2DSkeletonsFromImage(struct JointEstimator2D * jnet,struct Skeletons2DDetected * result,char * rgbData,unsigned int width,unsigned int height);

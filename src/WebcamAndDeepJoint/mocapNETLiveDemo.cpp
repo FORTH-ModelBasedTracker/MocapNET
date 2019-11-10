@@ -237,7 +237,7 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
     if (!visualize)
         {
             //If we don't visualize using OpenCV output performance
-            fprintf(stderr,"OpenPose 2DSkeleton @ %0.2f fps \n",*fps);
+            fprintf(stderr,"2D Joint Estimator @ %0.2f fps \n",*fps);
         }
 
 

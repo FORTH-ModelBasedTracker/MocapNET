@@ -5,6 +5,7 @@ set(CMAKE_CXX_FLAGS "-fPIC ")
 set(CMAKE_C_FLAGS "-fPIC") 
 
 OPTION (ENABLE_OPENGL OFF) 
+OPTION (ENABLE_NEW_JOINT_ESTIMATOR OFF) 
 
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -263,6 +264,12 @@ add_subdirectory (src/Webcam/)
 add_subdirectory (src/WebcamAndDeepJoint/)
 ENDIF(OpenCV_FOUND)
 
+
+
+if (ENABLE_NEW_JOINT_ESTIMATOR)
+MESSAGE("Including New Joint Estimator")
+add_subdirectory(src/JointEstimator2D)
+ENDIF(ENABLE_NEW_JOINT_ESTIMATOR)
 
 
 # TODO FIX INSTALLATION DIRECTORIES 
