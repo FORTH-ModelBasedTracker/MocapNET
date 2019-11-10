@@ -63,15 +63,15 @@ mkdir $QUALITY
 cd $QUALITY 
 
 if [ ! -f all.pb ]; then
-  wget http://ammar.gr/datasets/combinedModel/$QUALITY/all.pb
+  wget http://ammar.gr/datasets/combinedModel/mode3/$QUALITY/all.pb
 fi
 
 if [ ! -f back.pb ]; then
-  wget http://ammar.gr/datasets/combinedModel/$QUALITY/back.pb
+  wget http://ammar.gr/datasets/combinedModel/mode3/$QUALITY/back.pb
 fi
 
 if [ ! -f front.pb ]; then
-  wget http://ammar.gr/datasets/combinedModel/$QUALITY/front.pb
+  wget http://ammar.gr/datasets/combinedModel/mode3/$QUALITY/front.pb
 fi
 
 cd ..
