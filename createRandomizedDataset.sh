@@ -23,13 +23,13 @@ datasetDir="dataset/MotionCapture"
 datasetSubDir="01 02 03 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19"
 #datasetSubDir="05"
 outputDir="dataset/"
-                          #Why was this 20 , shouldn't it be 12?
-RANDOMIZEANGLES="--perturbJointAngles 12 30.0 rshoulder relbow rhand lshoulder lelbow lhand rhip rknee rfoot lhip lknee lfoot"
+                       
+RANDOMIZEANGLES="--perturbJointAngles 4 38.0 rshoulder lshoulder rhip lhip --perturbJointAngles 8 10.0 rhand relbow lelbow lhand lknee rknee lfoot rfoot"
 ERASEHANDS="--eraseJoints 20 rthumb1 rthumb2 rindex1 rindex2 rmid1 rmid2 rring1 rring2 rpinky1 rpinky2 lthumb1 lthumb2 lindex1 lindex2 lmid1 lmid2 lring1 lring2 lpinky1 lpinky2"
 
 #FAR
-MINIMUM_DEPTH="1000"
-MAXIMUM_DEPTH="4500" #3000 is too small
+MINIMUM_DEPTH="1000" #1000 original
+MAXIMUM_DEPTH="5000" #3000 is too small
 
 MINIMUM_POSITION="-1400 -300 $MINIMUM_DEPTH"
 MINIMUM_ROTATION="-25 -178 -35"
@@ -60,9 +60,11 @@ ITERATIONS="3"
 fi
 if [ "$RAM" -gt "31861780" ]; then
   echo "More than 32GB";
-ITERATIONS="16"  
+ITERATIONS="15"  #16 will not leave any memory
 fi
 
+#Uncomment next line to override settings and make the minimum training set for development
+#ITERATIONS="0"
 
 #We are also mirroring so bear in mind that this will effectively be doubled 
 #MIRROR_DATASET_HANDS="--mirror lCollar rCollar"

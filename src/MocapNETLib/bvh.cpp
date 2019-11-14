@@ -23,6 +23,7 @@ const float fY = 582.52915;  //570.0
 int writeBVHFile(
                                       const char * filename,
                                       const char * header,
+                                      int prependTPose,
                                       std::vector<std::vector<float> > bvhFrames
                                     )
 {
@@ -35,21 +36,46 @@ int writeBVHFile(
                 }
             fprintf(fp,"%s",header);
             fprintf(fp,"\nMOTION\n");
-            fprintf(fp,"Frames: %lu \n",bvhFrames.size());
+            
+            unsigned long numberOfFramesToWrite =  bvhFrames.size();
+            if (prependTPose)
+            {
+                numberOfFramesToWrite+=1;
+            }   
+            
+            
+            
+            fprintf(fp,"Frames: %lu \n",numberOfFramesToWrite);
             fprintf(fp,"Frame Time: 0.04\n");
 
             unsigned int i=0,j=0;
+            
+            if (prependTPose)
+            {
+               if (bvhFrames.size()>1)
+               { 
+                for (j=0; j< bvhFrames[0].size(); j++)
+                        {
+                            fprintf(fp,"0 ");
+                        }
+                    fprintf(fp,"\n");
+               } 
+            }
+                    
             for (i=0; i< bvhFrames.size(); i++)
                 {
                     std::vector<float> frame = bvhFrames[i];
+                    if (frame.size()>0)
+                    {
                     //fprintf(fp,"%lu joints",frame.size());
 
                     //fprintf(fp,"0.0 0.0 0.0 ");
-                    for (j=0; j<frame.size(); j++)
+                     for (j=0; j<frame.size(); j++)
                         {
                             fprintf(fp,"%0.4f ",frame[j]);
                         }
-                    fprintf(fp,"\n");
+                     fprintf(fp,"\n"); 
+                    }
                 }
             fclose(fp);
             return 1;

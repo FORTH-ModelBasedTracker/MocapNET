@@ -408,7 +408,7 @@ int main(int argc, char *argv[])
     float fpsTotal=1.0,fpsTarget=30.0,fpsAcquisition=1.0,fps2DJointDetector=1.0,fpsMocapNET=1.0;
 
     int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0,autoDirection=0,autoCount=0; 
-    int rememberPrevious2DPositions=0;
+    int rememberPrevious2DPositions=0 , prependTPose=0;
 
     int borderTop=0, borderBottom=0, borderLeft=0, borderRight=0;
 
@@ -585,6 +585,10 @@ int main(int argc, char *argv[])
                     {
                         rotate=atoi(argv[i+1]);
                     }
+                else if (strcmp(argv[i],"--tpose")==0)
+                    {
+                      prependTPose=1;
+                    }   
                 else if (strcmp(argv[i],"--cpu")==0)
                     {
                         //setenv("CUDA_VISIBLE_DEVICES", "", 1);   //Alternate way to force CPU everywhere
@@ -1018,7 +1022,10 @@ int main(int argc, char *argv[])
                                             //Then we record the current bvh frame in order to save a .bvh file in the end..
                                             if (!live)
                                                 {
-                                                    bvhFrames.push_back(bvhForcedViewOutput); //bvhOutput
+                                                    if (bvhForcedViewOutput.size()>0)
+                                                        {
+                                                          bvhFrames.push_back(bvhForcedViewOutput); //bvhOutput
+                                                        }
                                                 }
 
 
@@ -1303,7 +1310,7 @@ int main(int argc, char *argv[])
                             fprintf(stderr,"Will now write BVH file to %s.. \n",outputPath);
                             //----------------------------------------------------------------------------------------------------------------------------------
                             //just use BVH header
-                            if ( writeBVHFile(outputPath,0,bvhFrames) )
+                            if ( writeBVHFile(outputPath,0,prependTPose,bvhFrames) )
                                 {
                                     fprintf(stderr,GREEN "Successfully wrote %lu frames to bvh file.. \n" NORMAL,bvhFrames.size());
                                 }

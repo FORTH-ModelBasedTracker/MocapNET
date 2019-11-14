@@ -34,6 +34,15 @@ struct Skeletons2DDetected
 struct JointEstimator2D
 {
    struct TensorflowInstance network;
+   char * networkPath;
+   unsigned int joint2DSensitivityPercent;
+   unsigned int numberOfOutputTensors;
+   unsigned int heatmapWidth2DJointDetector;
+   unsigned int heatmapHeight2DJointDetector;
+   unsigned int inputWidth2DJointDetector;
+   unsigned int inputHeight2DJointDetector;
+   unsigned int numberOfHeatmaps;
+
 };
 
 
@@ -66,4 +75,7 @@ int loadJointEstimator2D(struct JointEstimator2D * jnet,int joint2DEstimatorSele
 int unloadJointEstimator2D(struct JointEstimator2D * jnet);
 
 
-int  estimate2DSkeletonsFromImage(struct JointEstimator2D * jnet,struct Skeletons2DDetected * result,char * rgbData,unsigned int width,unsigned int height);
+int  estimate2DSkeletonsFromImage(struct JointEstimator2D * jnet,struct Skeletons2DDetected * result,unsigned char * rgbData,unsigned int width,unsigned int height);
+
+
+std::vector<std::vector<float> >  getHeatmaps(struct JointEstimator2D * jnet,struct Skeletons2DDetected * result,unsigned char * rgbData,unsigned int width,unsigned int height);

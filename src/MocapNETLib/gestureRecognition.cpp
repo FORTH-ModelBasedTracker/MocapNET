@@ -25,7 +25,7 @@ int addToMotionHistory(struct PoseHistory * poseHistoryStorage,std::vector<float
 
 int dumpMotionHistory(const char * filename,struct PoseHistory * poseHistoryStorage)
 {
-    return writeBVHFile(filename,0,poseHistoryStorage->history);
+    return writeBVHFile(filename,0,0,poseHistoryStorage->history);
 }
 
 

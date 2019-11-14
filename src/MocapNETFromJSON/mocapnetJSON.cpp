@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     const char * label=0;
     float quality=1.0;
     
-    int doGestureDetection=0,doOutputFiltering=1;
+    int doGestureDetection=0,doOutputFiltering=1,prependTPose=0;
 
     unsigned int isJSONFile=1;
     unsigned int isCSVFile=0;
@@ -115,6 +115,10 @@ int main(int argc, char *argv[])
                 {
                     visualize=1;
                 }
+            else if (strcmp(argv[i],"--tpose")==0)
+                {
+                    prependTPose=1;
+                } 
                 else if (strcmp(argv[i],"--delay")==0)
                     {
                         //If you want to take some time to check the results that
@@ -404,7 +408,7 @@ int main(int argc, char *argv[])
             if (totalSamples>0)
                 {
                     char * bvhHeaderToWrite=0;
-                    if ( writeBVHFile(outputPath,bvhHeaderToWrite, bvhFrames) )
+                    if ( writeBVHFile(outputPath,bvhHeaderToWrite,prependTPose,bvhFrames) )
                         {
                             fprintf(stderr,"Successfully wrote %lu frames to bvh file %s.. \n",bvhFrames.size(),outputPath);
                         }

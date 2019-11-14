@@ -301,6 +301,7 @@ static const char * bvhHeader="HIERARCHY\n"
 int writeBVHFile(
                   const char * filename,
                   const char * header,
+                  int prependTPose,
                    std::vector<std::vector<float> > bvhFrames
                 );
 
