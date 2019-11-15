@@ -262,7 +262,7 @@ ENDIF()
 
 if (OpenCV_FOUND)
 add_subdirectory (src/Webcam/)
-add_subdirectory (src/WebcamAndDeepJoint/)
+add_subdirectory (src/MocapNETLiveWebcamDemo/)
 ENDIF(OpenCV_FOUND)
 
 
