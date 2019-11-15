@@ -14,7 +14,6 @@ We present MocapNET, an ensemble of SNN encoders that estimates the 3D human bod
 
 ------------------------------------------------------------------ 
 
-### Demonstration of the code in this github repository
 
 
 ## Citation
