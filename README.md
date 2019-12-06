@@ -183,7 +183,7 @@ A utility has been included that can convert the JSON files to a single CSV file
 
 A CSV file has been included that can be run by issuing : 
 ```
- ./MocapNETJSON --from sample.csv --visualize
+ ./MocapNETJSON --from sample.csv --visualize --delay 30
 ```
 
 
