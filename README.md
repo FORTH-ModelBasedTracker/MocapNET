@@ -157,6 +157,9 @@ If your target is a headless environment then you might consider deactivating th
 ![MocapNETLiveWebcamDemo](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoview.jpg)
 
 
+![MocapNETLiveWebcamDemo rotation per joint visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoperjoint.png)
+
+
 BVH output files can be easily viewed using a variety of compatible applicatons. We suggest [Blender](https://www.blender.org/) which is a very powerful open-source 3D editing and animation suite or [BVHacker](https://www.bvhacker.com/) that is freeware and compatible with [Wine](https://wiki.winehq.org/)
 
 
@@ -185,6 +188,9 @@ A CSV file has been included that can be run by issuing :
 ```
  ./MocapNETJSON --from sample.csv --visualize --delay 30
 ```
+The delay is added in every frame so that there is enough time for the user to see the results, of course the visualization only contains the armature since the CSV file does not have the input images.
+
+![MocapNETJSON](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demojson.png)
 
 
 ## License
