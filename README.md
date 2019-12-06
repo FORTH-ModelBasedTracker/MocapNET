@@ -56,7 +56,7 @@ In order to enable a series of easy to use mini-demos with as few dependencies a
 
 If you are interested in generating BVH training data for your research, we have also provided the code that handles randomization and pose perturbation from the CMU dataset. After a successful compilation, dataset generation is accessible using the scripts  [createRandomizedDataset.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/createRandomizedDataset.sh) and [createTestDataset.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/createTestDataset.sh). All BVH manipulation code is imported from a secondary [github project](https://github.com/AmmarkoV/RGBDAcquisition/tree/master/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader) that is automatically downloaded, included and built using the [initialize.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) script. These [createRandomizedDataset.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/createRandomizedDataset.sh) and [createTestDataset.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/createTestDataset.sh) scripts will populate the dataset/ directory with CSV files that contain valid training samples based on the CMU dataset. It is [trivial](https://pythonspot.com/reading-csv-files-in-python/) to load these files using python. After loading them using them as training samples in conjunction with a deep learning framework like [Keras](https://keras.io/) you can facilitate learning of 2D to 3D BVH. 
 
-## Building
+## Building the library
 ------------------------------------------------------------------ 
 
 To compile the library issue :
@@ -78,7 +78,7 @@ cd ..
 ```
 
 
-## Testing
+## Testing the library and performing benchmarks 
 ------------------------------------------------------------------ 
 
 To test the library performance on the CPU of your computer issue :
