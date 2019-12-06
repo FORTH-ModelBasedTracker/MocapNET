@@ -106,12 +106,12 @@ The very old CPU tested (2006) achieves 54.22 fps for the same task. However eve
 
 After testing the tensorflow installation using MocapNETBenchmark, to test your OpenCV installation as well as support of your webcam issue :
 ```
-./WebcamTest --from /dev/video0 
+./OpenCVTest --from /dev/video0 
 ```
 
 To test OpenCV support of your video files issue :
 ```
-./WebcamTest --from /path/to/yourfile.mp4
+./OpenCVTest --from /path/to/yourfile.mp4
 ```
 
 These tests only use OpenCV (without Tensorflow or any other dependencies) and are intended as a quick method that can identify and debug configuration problems on your system.
@@ -120,7 +120,7 @@ In case of problems playing back video files or your webcam you might want to co
 ## Live Demo
 ------------------------------------------------------------------ 
 
-Assuming that the WecamTest executable described previously is working correctly with your input source, to do a live test of the MocapNET library using a webcam issue :
+Assuming that the OpenCVTest executable described previously is working correctly with your input source, to do a live test of the MocapNET library using a webcam issue :
 
 ```
 ./MocapNETLiveWebcamDemo --from /dev/video0 --live
