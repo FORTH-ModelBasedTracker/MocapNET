@@ -307,6 +307,7 @@ unsigned int getNumberOfEmptyNSDMElements(std::vector<float> mocapNETInput)
                 {
                     ++numberOfZeros;
                 }
+
         }
     return numberOfZeros;
 }

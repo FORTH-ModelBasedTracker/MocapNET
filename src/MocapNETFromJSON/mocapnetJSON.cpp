@@ -135,6 +135,10 @@ int main(int argc, char *argv[])
                     fprintf(stderr,"Filtering Disabled\n");
                     doOutputFiltering=0;
                 } 
+            else if (strcmp(argv[i],"--frames")==0)
+                {
+                    frameLimit=atoi(argv[i+1]);
+                }
             else if (strcmp(argv[i],"--maxFrames")==0)
                 {
                     frameLimit=atoi(argv[i+1]);
@@ -206,6 +210,9 @@ int main(int argc, char *argv[])
                 {
                     fprintf(stderr,"Unable to open CSV file %s \n",path);
                     return 0;
+                } else
+                {
+                    fprintf(stderr,"CSV file had %u lines\n",csv.lineNumber);
                 }
         }
  
@@ -249,7 +256,7 @@ int main(int argc, char *argv[])
                                    fprintf(stderr,"First frame is %u, last will be %u \n",frameID,frameLimit);
                                 } else
                                 {
-                                    fprintf(stderr,RED "Failed to find a JSON file..!\n " NORMAL);
+                                   fprintf(stderr,RED "Failed to find a JSON file..!\n " NORMAL);
                                 }
                         }
 
@@ -340,7 +347,8 @@ int main(int argc, char *argv[])
                                 {
                                     std::vector<std::vector<float> > points2DOutput = convertBVHFrameTo2DPoints(result,visWidth,visHeight);
                                     
-                                    visualizeInput("Input Visualization",frameID,path,points2DOutput);
+                                    if (!isCSVFile)
+                                     { visualizeInput("TEST",frameID,path,points2DOutput); }
                                     
                                     if (visualizationType==0)
                                     { 
