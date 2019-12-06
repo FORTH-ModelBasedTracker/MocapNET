@@ -156,6 +156,7 @@ If your target is a headless environment then you might consider deactivating th
 
 ![MocapNETLiveWebcamDemo default visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoview.jpg)
 
+By using the "Visualization Demo" slider bar you can alternate between different visualizations. A particularly useful visualization is the one that plots the joint rotations. 
 
 ![MocapNETLiveWebcamDemo rotation per joint visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoperjoint.png)
 
