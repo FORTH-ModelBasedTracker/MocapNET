@@ -348,8 +348,8 @@ int main(int argc, char *argv[])
                                     std::vector<std::vector<float> > points2DOutput = convertBVHFrameTo2DPoints(result,visWidth,visHeight);
                                     
                                     if (!isCSVFile)
-                                     { visualizeInput("TEST",frameID,path,points2DOutput); }
-                                    
+                                     { visualizeInput("Input Visualization",frameID,path,points2DOutput); }
+
                                     if (visualizationType==0)
                                     { 
                                      visualizePoints(

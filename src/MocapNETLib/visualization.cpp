@@ -6,6 +6,7 @@ using namespace cv;
 #include "jsonCocoSkeleton.h"
 #include "visualization.hpp"
 #include "bvh.hpp"
+#include "tools.h"
 #include "../MocapNETLib/mocapnet.hpp"
 #include "../MocapNETLib/nsdm.hpp"
 
@@ -513,14 +514,14 @@ int visualizeFigure(const char* windowName,cv::Mat &img)
 
 
 
-int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOutputGUIForcedView)
+int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOutputGUIForcedView,float offsetX,float offsetY)
 {
     char textInfo[512];
     
     for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
         {
-            float jointPointX = points2DOutputGUIForcedView[jointID][0];
-            float jointPointY = points2DOutputGUIForcedView[jointID][1];
+            float jointPointX = points2DOutputGUIForcedView[jointID][0]+offsetX;
+            float jointPointY = points2DOutputGUIForcedView[jointID][1]+offsetY;
             cv::Point jointPoint(jointPointX,jointPointY);
             //fprintf(stderr,"L x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
 
@@ -533,8 +534,8 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
                         {
                             if (parentID<points2DOutputGUIForcedView.size())
                                 {
-                                    float parentPointX = points2DOutputGUIForcedView[parentID][0];
-                                    float parentPointY = points2DOutputGUIForcedView[parentID][1];
+                                    float parentPointX = points2DOutputGUIForcedView[parentID][0]+offsetX;
+                                    float parentPointY = points2DOutputGUIForcedView[parentID][1]+offsetY;
                                     cv::Point parentPoint(parentPointX,parentPointY);
                                     
                                     cv::Scalar color = cv::Scalar(0,255,0);
@@ -591,8 +592,8 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
    //Just the points and text ( foreground )
     for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
         {
-            float jointPointX = points2DOutputGUIForcedView[jointID][0];
-            float jointPointY = points2DOutputGUIForcedView[jointID][1];
+            float jointPointX = points2DOutputGUIForcedView[jointID][0]+offsetX;
+            float jointPointY = points2DOutputGUIForcedView[jointID][1]+offsetY;
             //fprintf(stderr,"P x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
 
 
@@ -734,7 +735,7 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
     unsigned int visualizeHeight=1024;
     cv::Mat img(visualizeHeight,visualizeWidth, CV_8UC3, cv::Scalar(0,0,0));
     
-    drawSkeleton(img,place2DSkeletonElsewhere(450,350,200,200,skeleton2D));
+    drawSkeleton(img,place2DSkeletonElsewhere(450,350,200,200,skeleton2D),0.0,0.0);
     
     unsigned int widthOfGraphs=165;
     unsigned int heightOfGraphs=100;
@@ -876,16 +877,28 @@ int visualizeInput(
     char finalFilename[1024];
     snprintf(finalFilename,1024,"%s/colorFrame_0_%05d.jpg",path,frameNumber);
     
+    if (fileExists(finalFilename))
+    {
+     cv::Mat image = imread(finalFilename, CV_LOAD_IMAGE_COLOR);   // Read the file
+     if(image.data!=0)
+      { 
+       float scale=(float) 1024/image.size().width; 
+        if (scale>1.0) { scale=1.0; }
+        if (scale!=1.0)
+         {  
+             cv::resize(image, image, cv::Size(0,0), scale, scale);
+         }
     
-    cv::Mat image = cv::imread(finalFilename, CV_LOAD_IMAGE_COLOR);   // Read the file 
-    if(image.data!=0)
-    { 
-      drawSkeleton(image,points2DOutputGUIForcedView);
+       drawSkeleton(image,points2DOutputGUIForcedView,-200,0);
     
-      cv::imshow(windowName,image);
+       cv::imshow(windowName,image);
+     
+       return 1;
+      } 
+    } 
     
-      return 1; 
-    }
+    //Did not find a file to show ..
+    return 0; 
 #else
     fprintf(stderr,"OpenCV code not present in this build, cannot show visualization..\n");
 #endif
@@ -1195,7 +1208,7 @@ int visualizePoints(
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
    //The main star of the show , the skeleton..
-    drawSkeleton(img,points2DOutputGUIForcedView);
+    drawSkeleton(img,points2DOutputGUIForcedView,0.0,0.0);
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
