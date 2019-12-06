@@ -123,23 +123,23 @@ To dump 5000 frames from the webcam to out.bvh instead of the live directive iss
 ```
 
 
-To test the library using a pre recorded video file issue :
+Testing the library using a pre-recorded video file (i.e. not live input) means you can use a slower but more precise 2D Joint estimation algorithm like the included OpenPose implementation. You should keep in mind that [this OpenPose implementation](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLiveWebcamDemo/utilities.cpp#L213) does not use PAFs and so it is still not as precise as  the official OpenPose implementation. To run the demo with a prerecorded file issue :
 
 ```
-./MocapNETLiveWebcamDemo --from /path/to/yourfile.mp4
+./MocapNETLiveWebcamDemo --from /path/to/yourfile.mp4 --openpose
 ```
 
 We have included a [video file](http://ammar.gr/mocapnet/shuffle.webm) that should be automatically downloaded by the initialize.sh script. Issuing the following command should run it and produce an out.bvh file even if you don't have any webcam or other video files available!  :
 
 ```
-./MocapNETLiveWebcamDemo --from shuffle.webm --frames 375
+./MocapNETLiveWebcamDemo --from shuffle.webm --openpose --frames 375
 ```
 
 
 Since high-framerate output is hard to examine, if you need some more time to elaborate on the output you can use the delay flag to add programmable delays between frames. Issuing the following will add 1 second of delay after each processed frame  :
 
 ```
-./MocapNETLiveWebcamDemo --from shuffle.webm --frames 375 --delay 1000
+./MocapNETLiveWebcamDemo --from shuffle.webm --openpose --frames 375 --delay 1000
 ```
 
 
@@ -159,7 +159,7 @@ If your target is a headless environment then you might consider deactivating th
 
 ![MocapNETLiveWebcamDemo rotation per joint visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoperjoint.png)
 
-By using the --opengl flag and also the ENABLE_OPENGL cmake configuration flag you can also see an experimental OpenGL visualization rendering a makehuman skinned mesh
+By enabling the ENABLE_OPENGL cmake configuration flag during compilation and using the --opengl flag to run the MocapNETLiveWebcamDemo you can also see an experimental OpenGL visualization rendering a skinned mesh generated using [makehuman](http://www.makehumancommunity.org/).
 
 ![MocapNETLiveWebcamDemo OpenGL visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoogl.png)
 
