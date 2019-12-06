@@ -99,12 +99,12 @@ The same benchmark when run on a medium-range CPU (considered medium-range due t
 
 ![MocapNETBenchmark Low-Range](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/benchmarkold.png)
 
-The very old CPU tested (2006) achieves 54.22 fps for the same task. However even this configuration can perform better using a different quality setting so by giving --quality 2.0 it performs @ 100hz alghough the mean average error is higher due to the less powerful ensemble.
+The very old CPU tested (2006) achieves 54.22 fps for the same task. However even this configuration can perform better using a different quality setting so by giving --quality 2.0 it performs @ 100hz although the mean average error is higher due to the less powerful ensemble.
 
 
 ------------------------------------------------------------------ 
 
-To test your environment and OpenCV installation as well as support of your webcam issue :
+After testing the tensorflow installation using MocapNETBenchmark, to test your OpenCV installation as well as support of your webcam issue :
 ```
 ./WebcamBIN --from /dev/video0 
 ```
