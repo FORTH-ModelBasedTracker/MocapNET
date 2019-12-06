@@ -237,26 +237,112 @@ static const int Body25SkeletonJointsParentRelationMap[] =
 //https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/media/keypoints_hand.png
 enum COCOHandJoints
 {
-    COCO_Hand_Wrist=0,
-    COCO_Hand_Thumb_1,
-    COCO_Hand_Thumb_2,
-    COCO_Hand_Thumb_3,
-    COCO_Hand_Index_1,
-    COCO_Hand_Index_2,
-    COCO_Hand_Index_3,
-    COCO_Hand_Middle_1,
-    COCO_Hand_Middle_2,
-    COCO_Hand_Middle_3,
-    COCO_Hand_Ring_1,
-    COCO_Hand_Ring_2,
-    COCO_Hand_Ring_3,
-    COCO_Hand_Pinky_1,
-    COCO_Hand_Pinky_2,
-    COCO_Hand_Pinky_3,
+    COCO_Hand_Wrist=0, //0
+    COCO_Hand_Thumb_1, //1
+    COCO_Hand_Thumb_2, //2
+    COCO_Hand_Thumb_3, //3
+    COCO_Hand_Thumb_4,//4
+    COCO_Hand_Index_1,//5
+    COCO_Hand_Index_2,//6
+    COCO_Hand_Index_3,//7
+    COCO_Hand_Index_4,//8
+    COCO_Hand_Middle_1,//9
+    COCO_Hand_Middle_2,//10
+    COCO_Hand_Middle_3,//11
+    COCO_Hand_Middle_4,//12
+    COCO_Hand_Ring_1,//13
+    COCO_Hand_Ring_2,//14
+    COCO_Hand_Ring_3,//15
+    COCO_Hand_Ring_4,//16
+    COCO_Hand_Pinky_1,//17
+    COCO_Hand_Pinky_2,//18
+    COCO_Hand_Pinky_3,//19
+    COCO_Hand_Pinky_4,//20
     //---------------------
     COCO_HAND_PARTS
 };
 
+
+
+/**
+ * @brief An enumerator of COCO Hand joints
+ */
+//https://raw.githubusercontent.com/CMU-Perceptual-Computing-Lab/openpose/master/doc/media/keypoints_face.png
+enum OP_HeadJoints
+{
+    OP_Head_RChin_0=0, //0
+    OP_Head_RChin_1,      //1
+    OP_Head_RChin_2,      //2     
+    OP_Head_RChin_3,      //3
+    OP_Head_RChin_4,      //4
+    OP_Head_RChin_5,      //5
+    OP_Head_RChin_6,      //6
+    OP_Head_RChin_7,      //7
+    OP_Head_Chin,             //8
+    OP_Head_LChin_7     , //9
+    OP_Head_LChin_6,      //10
+    OP_Head_LChin_5,      //11
+    OP_Head_LChin_4,      //12
+    OP_Head_LChin_3,      //13
+    OP_Head_LChin_2,      //14
+    OP_Head_LChin_1,      //15
+    OP_Head_LChin_0,      //16
+    OP_Head_REyebrow_0, //17
+    OP_Head_REyebrow_1, //18
+    OP_Head_REyebrow_2, //19
+    OP_Head_REyebrow_3, //20
+    OP_Head_REyebrow_4, //21
+    OP_Head_LEyebrow_4, //22
+    OP_Head_LEyebrow_3, //23
+    OP_Head_LEyebrow_2, //24
+    OP_Head_LEyebrow_1, //25
+    OP_Head_LEyebrow_0, //26
+    OP_Head_NoseBone_0,//27 
+    OP_Head_NoseBone_1,//28
+    OP_Head_NoseBone_2,//29
+    OP_Head_NoseBone_3,//30
+    OP_Head_Nostrills_0,//31 
+    OP_Head_Nostrills_1,//32 
+    OP_Head_Nostrills_2,//33 
+    OP_Head_Nostrills_3,//34 
+    OP_Head_Nostrills_4,//35 
+    OP_Head_REye_0,//36 
+    OP_Head_REye_1,//37 
+    OP_Head_REye_2,//38 
+    OP_Head_REye_3,//39 
+    OP_Head_REye_4,//40 
+    OP_Head_REye_5,//41 
+    OP_Head_LEye_0,//42 
+    OP_Head_LEye_1,//43 
+    OP_Head_LEye_2,//44 
+    OP_Head_LEye_3,//45 
+    OP_Head_LEye_4,//46 
+    OP_Head_LEye_5,//47 
+    OP_Head_OutMouth_0,//48 
+    OP_Head_OutMouth_1,//49 
+    OP_Head_OutMouth_2,//50 
+    OP_Head_OutMouth_3,//51 
+    OP_Head_OutMouth_4,//52 
+    OP_Head_OutMouth_5,//53 
+    OP_Head_OutMouth_6,//54 
+    OP_Head_OutMouth_7,//55 
+    OP_Head_OutMouth_8,//56 
+    OP_Head_OutMouth_9,//57 
+    OP_Head_OutMouth_10,//58 
+    OP_Head_OutMouth_11,//59 
+    OP_Head_InMouth_0,//60
+    OP_Head_InMouth_1,//61
+    OP_Head_InMouth_2,//62
+    OP_Head_InMouth_3,//63
+    OP_Head_InMouth_4,//64
+    OP_Head_InMouth_5,//65
+    OP_Head_InMouth_6,//66
+    OP_Head_InMouth_7,//67
+    OP_Head_REye,//68 
+    OP_Head_LEye,//69  
+    //---------------------
+    OP_HEAD_PARTS
+};
 
 
 /**
@@ -273,6 +359,16 @@ struct handCOCO
     struct point3D joint[COCO_HAND_PARTS];
 };
 
+/**
+ * @brief A C struct to hold a hand. It contains its 2D points, its 3D points and some flags that signal
+ */
+struct headOP
+{  
+    struct point2D joint2D[OP_HEAD_PARTS];
+    float  jointAccuracy[OP_HEAD_PARTS];
+    unsigned int active[OP_HEAD_PARTS];
+    struct point3D joint[OP_HEAD_PARTS];
+};
 
 /**
  * @brief A C struct to hold a skeleton. It contains its 2D points, its 3D points and some flags that signal
@@ -290,6 +386,8 @@ struct skeletonCOCO
 
     struct handCOCO leftHand;
     struct handCOCO rightHand;
+    
+    struct headOP head;
 };
 
 
@@ -297,13 +395,10 @@ struct skeletonCOCO
  * @brief Parse a JSON file and retrieve a skeleton
  * @param Path to JSON file
  * @param Pointer to a struct skeletonCOCO that will hold the information loaded
+ * @param Threshold to set a joint to active ( 0.4-0.5 is a good value )
  * @retval 1=Success/0=Failure
- */
-int parseJsonCOCOSkeleton(
-    const char * filename ,
-    struct skeletonCOCO * skel
-);
-
+ */ 
+int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,float acceptableThreshold);
 
 #define MAX_CSV_HEADER_FIELDS 512
 

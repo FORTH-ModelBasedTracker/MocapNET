@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
                     if (isJSONFile)
                         {
                              snprintf(filePathOfJSONFile,1024,formatString,path,label,frameID);
-                             if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton))
+                             if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton,0.4))
                                     {
                                        okayToProceed=1;
                                     }
@@ -339,6 +339,8 @@ int main(int argc, char *argv[])
                             if (visualize)
                                 {
                                     std::vector<std::vector<float> > points2DOutput = convertBVHFrameTo2DPoints(result,visWidth,visHeight);
+                                    
+                                    visualizeInput("Input Visualization",frameID,path,points2DOutput);
                                     
                                     if (visualizationType==0)
                                     { 

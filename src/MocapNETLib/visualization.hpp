@@ -134,6 +134,14 @@ static const int lineColorIndex[] =
 128,0,38
 };
 
+
+int visualizeInput(
+                                        const char* windowName,
+                                        unsigned int frameNumber,
+                                        const char * path, 
+                                        std::vector<std::vector<float> > points2DOutputGUIForcedView
+                                     );
+
 /**
  * @brief Visualize MocapNET BVH output on a window
  * @ingroup visualization
