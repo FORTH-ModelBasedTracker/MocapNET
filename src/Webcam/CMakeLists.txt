@@ -1,4 +1,4 @@
-project( WebcamBIN ) 
+project( WebcamTest ) 
 #cmake_minimum_required( VERSION 2.8.7 )   
 cmake_minimum_required(VERSION 3.5)
 find_package(OpenCV REQUIRED)
@@ -6,12 +6,12 @@ INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 
  
 
-add_executable(WebcamBIN webcam.cpp)   
-target_link_libraries(WebcamBIN rt dl m ${OpenCV_LIBRARIES}    )
-set_target_properties(WebcamBIN PROPERTIES DEBUG_POSTFIX "D") 
+add_executable(WebcamTest webcam.cpp)   
+target_link_libraries(WebcamTest rt dl m ${OpenCV_LIBRARIES}    )
+set_target_properties(WebcamTest PROPERTIES DEBUG_POSTFIX "D") 
        
 
-set_target_properties(WebcamBIN PROPERTIES 
+set_target_properties(WebcamTest PROPERTIES 
                        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
                        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
                        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
