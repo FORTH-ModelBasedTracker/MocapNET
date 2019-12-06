@@ -1,7 +1,7 @@
 # MocapNET Project
 ## Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images
 
-We present MocapNET, an ensemble of SNN encoders that estimates the 3D human body pose based on 2D joint estimations extracted from monocular RGB images. MocapNET provides an efficient divide and conquer strategy for supervised learning. It outputs skeletal information directly into the BVH format which can be rendered in real-time or imported without any additional processing in most popular 3D animation software. The proposed architecture achieves 3D human pose estimations at state of the art rates of 400Hz using only CPU processing.
+We present MocapNET, an ensemble of SNN encoders that estimates the 3D human body pose based on 2D joint estimations extracted from monocular RGB images. MocapNET provides an efficient divide and conquer strategy for supervised learning. It outputs skeletal information directly into the BVH format which can be rendered in real-time or imported without any additional processing in most popular 3D animation software. The proposed architecture achieves 3D human pose estimations at state of the art rates of 400Hz in high-end systems using only CPU processing.
 
 ![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/mocapnetBannerImages.png)
 
@@ -89,7 +89,13 @@ To test the library performance on the CPU of your computer issue :
 
 The output should provide you with a model name of your CPU as well as the average framerate for 1000 samples evaluated, as seen in the following screenshot.
 
-![MocapNETBenchmark](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/benchmarkview.png)
+![MocapNETBenchmark Medium-Range](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/benchmarkview.png)
+
+The medium-range CPU due to being relatively old (2014) achieves 194.823 fps when executing the proposed benchmark of the code to convert 2D points to a 3D pose.
+
+![MocapNETBenchmark Medium-Range](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/benchmarkold.png)
+
+The very CPU (2006) achieves 54.22 fps for the same task.
 
 
 ------------------------------------------------------------------ 
@@ -160,7 +166,7 @@ By using the "Visualization Demo" slider bar you can alternate between different
 
 ![MocapNETLiveWebcamDemo rotation per joint visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoperjoint.png)
 
-By enabling the ENABLE_OPENGL cmake configuration flag during compilation and using the --opengl flag to run the MocapNETLiveWebcamDemo you can also see an experimental OpenGL visualization rendering a skinned mesh generated using [makehuman](http://www.makehumancommunity.org/).
+By enabling the ENABLE_OPENGL cmake configuration flag during compilation and using the --opengl flag when running the MocapNETLiveWebcamDemo you can also see an experimental OpenGL visualization rendering a skinned mesh that was generated using [makehuman](http://www.makehumancommunity.org/).
 
 ![MocapNETLiveWebcamDemo OpenGL visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoogl.png)
 
