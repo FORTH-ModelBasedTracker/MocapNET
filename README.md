@@ -87,19 +87,19 @@ To test the library performance on the CPU of your computer issue :
 ./MocapNETBenchmark --cpu
 ```
 
-The output should provide you with a model name of your CPU as well as the average framerate for 1000 samples evaluated, as seen in the following screenshot.
+The output should provide you with a model name of your CPU as well as the average framerate for 1000 samples evaluated, as seen in the following screenshots.
 
 ![MocapNETBenchmark High-Range](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/benchmarknew.png)
 
-The high-range CPU achieves 385.08 fps when executing the proposed benchmark of the code to convert 2D points to a 3D pose.
+The high-range CPU achieves 385.08 fps when executing the proposed method to convert 2D points to a 3D pose.
 
 ![MocapNETBenchmark Medium-Range](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/benchmarkview.png)
 
-The medium-range CPU due to being relatively old (2014) achieves a lower 194.823 fps. 
+The same benchmark when run on a medium-range CPU (considered medium-range due to being relatively old, 2014) achieves a lower 194.823 fps. 
 
 ![MocapNETBenchmark Low-Range](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/benchmarkold.png)
 
-The very old CPU (2006) achieves 54.22 fps for the same task.
+The very old CPU tested (2006) achieves 54.22 fps for the same task. However even this configuration can perform better using a different quality setting so by giving --quality 2.0 it performs @ 100hz alghough the mean average error is higher due to the less powerful ensemble.
 
 
 ------------------------------------------------------------------ 
