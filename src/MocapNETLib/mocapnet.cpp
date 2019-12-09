@@ -650,6 +650,39 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,i
       result = localExecution(mnet,mnetInput,doOutputFiltering); 
     }
     
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------    
+//The original armature of the BMVC 2019 paper used the DAZ friendly CMU BVH conversion armature for datasets 01-19
+//https://www.sites.google.com/a/cgspeed.com/cgspeed/motion-capture/cmu-bvh-conversion/
+//I have added a head on top of it, in order to keep everything compatible  we detect if we use an
+//old 132 d.o.f neural network and adding some zeros to pad the empty head joints.. 
+//---------------------------------------------------------------------------------------------------------------------------------------------    
+    if (result.size()==132)
+    {    //This is output that targets the old body only armature..!
+          //We will add 78 - (6 we had eyes before) empty joints @ joint 15
+          
+         std::vector<float> emptyHeadJoints;
+         for (int i=0; i<234-15-9; i++)
+         {
+             emptyHeadJoints.push_back(0.0);
+         }
+        std::vector<float> resultOld=result; 
+        
+        result.insert(result.begin()+15, emptyHeadJoints.begin(), emptyHeadJoints.end());
+         
+         /*
+         fprintf(stderr,"Old Result size is %lu \n",result.size());
+         fprintf(stderr,"New Result size is %lu \n",result.size());
+         for (int i =0; i<resultOld.size(); i++)
+         {  fprintf(stderr,"i=%u / old=%0.2f / new=%0.2f \n",i,resultOld[i],result[i]); }
+         for (int i =resultOld.size(); i<result.size();  i++)
+         { fprintf(stderr,"i=%u / old= - / new=%0.2f \n",i,result[i]); }
+         */ 
+    }
+//---------------------------------------------------------------------------------------------------------------------------------------------    
+    
+    
     //Debugging visualization
     //----------------------------------------------------------------------------
     /*
@@ -675,6 +708,7 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,i
               } else
               {
                fprintf(stderr,RED "MocapNET: Incorrect number of output elements/Cannot filter output as a result..!\n" NORMAL);   
+               fprintf(stderr,RED "Result size = %lu , MocapNET output = %u \n" NORMAL,result.size(),MOCAPNET_OUTPUT_NUMBER); 
               }
             }
             

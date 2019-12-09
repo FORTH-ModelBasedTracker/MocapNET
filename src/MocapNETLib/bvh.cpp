@@ -156,8 +156,9 @@ int freeBVHFile(void * bvhMemoryHandler)
 int initializeBVHConverter()
 {
 #if USE_BVH
-    if ( bvh_loadBVH("dataset/headerAndOneMotion.bvh",&bvhMotion,1.0) )
-        {
+    //if ( bvh_loadBVH("dataset/headerAndOneMotion.bvh",&bvhMotion,1.0) ) //This is the old armature that only has the eyes
+     if ( bvh_loadBVH("dataset/headerWithHeadAndOneMotion.bvh",&bvhMotion,1.0) ) // This is the new armature that includes the head
+           {
             haveBVHInit=1;
             return 1;
         }
@@ -262,21 +263,21 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
                 {
                     if (
                            bvh_loadTransformForMotionBuffer(
-                                                                                                            &bvhMotion,
-                                                                                                               motionBuffer,
-                                                                                                            &bvhTransform
-                                                                                                          )
+                                                            &bvhMotion,
+                                                            motionBuffer,
+                                                            &bvhTransform
+                                                           )
                         )
                         {
                             //-----------------
                             if (
                                    bvh_projectTo2D(
-                                                                          &bvhMotion,
-                                                                           &bvhTransform,
-                                                                           &renderer,
-                                                                           0,
-                                                                           0
-                                                                        )
+                                                   &bvhMotion,
+                                                   &bvhTransform,
+                                                   &renderer,
+                                                   0,
+                                                   0
+                                                  )
                                )
                                 {
                                     //-----------------

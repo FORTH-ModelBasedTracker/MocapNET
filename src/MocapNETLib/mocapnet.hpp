@@ -16,7 +16,6 @@
 
 
 
-
 /**
  * @brief This is an array of names for the input Joints expected from MocapNET.
  * Please notice that these 57 joints have actually result to three times the number of parameters since we require
@@ -1225,30 +1224,254 @@ static const char * MocapNETInputUncompressedAndCompressedArrayNames[] =
  */
 static const char * MocapNETOutputArrayNames[] =
 {
- "hip_Xposition",
- "hip_Yposition",
- "hip_Zposition",
- "hip_Zrotation",
- "hip_Yrotation",
- "hip_Xrotation",
- "abdomen_Zrotation",
- "abdomen_Xrotation",
- "abdomen_Yrotation",
- "chest_Zrotation",
- "chest_Xrotation",
- "chest_Yrotation",
- "neck_Zrotation",
- "neck_Xrotation",
- "neck_Yrotation",
- "head_Zrotation",
- "head_Xrotation",
- "head_Yrotation",
- "lefteye_Zrotation",
- "lefteye_Xrotation",
- "lefteye_Yrotation",
- "righteye_Zrotation",
- "righteye_Xrotation",
- "righteye_Yrotation",
+ "hip_Xposition", // 0
+ "hip_Yposition", // 1
+ "hip_Zposition", // 2
+ "hip_Zrotation", // 3
+ "hip_Yrotation", // 4
+ "hip_Xrotation", // 5
+ "abdomen_Zrotation", // 6
+ "abdomen_Xrotation", // 7
+ "abdomen_Yrotation", // 8
+ "chest_Zrotation", // 9
+ "chest_Xrotation", // 10
+ "chest_Yrotation", // 11
+ "neck_Zrotation", // 12
+ "neck_Xrotation", // 13
+ "neck_Yrotation", // 14
+//--------------------------------------------------------------------------------
+//Old armature had the following ..
+// "head_Zrotation", //15
+// "head_Xrotation", //16
+// "head_Yrotation", //17
+// "lefteye_Zrotation", //18
+// "lefteye_Xrotation", //19
+// "lefteye_Yrotation", //20
+// "righteye_Zrotation",//21
+// "righteye_Xrotation",//22
+// "righteye_Yrotation",//23
+//--------------------------------------------------------------------------------
+//New armature has the following...
+ "neck1_Zrotation", // 15
+ "neck1_Xrotation", // 16
+ "neck1_Yrotation", // 17
+ "head_Zrotation", // 18
+ "head_Xrotation", // 19
+ "head_Yrotation", // 20
+ "__jaw_Zrotation", // 21
+ "__jaw_Xrotation", // 22
+ "__jaw_Yrotation", // 23
+ "jaw_Zrotation", // 24
+ "jaw_Xrotation", // 25
+ "jaw_Yrotation", // 26
+ "special04_Zrotation", // 27
+ "special04_Xrotation", // 28
+ "special04_Yrotation", // 29
+ "oris02_Zrotation", // 30
+ "oris02_Xrotation", // 31
+ "oris02_Yrotation", // 32
+ "oris01_Zrotation", // 33
+ "oris01_Xrotation", // 34
+ "oris01_Yrotation", // 35
+ "oris06.l_Zrotation", // 36
+ "oris06.l_Xrotation", // 37
+ "oris06.l_Yrotation", // 38
+ "oris07.l_Zrotation", // 39
+ "oris07.l_Xrotation", // 40
+ "oris07.l_Yrotation", // 41
+ "oris06.r_Zrotation", // 42
+ "oris06.r_Xrotation", // 43
+ "oris06.r_Yrotation", // 44
+ "oris07.r_Zrotation", // 45
+ "oris07.r_Xrotation", // 46
+ "oris07.r_Yrotation", // 47
+ "tongue00_Zrotation", // 48
+ "tongue00_Xrotation", // 49
+ "tongue00_Yrotation", // 50
+ "tongue01_Zrotation", // 51
+ "tongue01_Xrotation", // 52
+ "tongue01_Yrotation", // 53
+ "tongue02_Zrotation", // 54
+ "tongue02_Xrotation", // 55
+ "tongue02_Yrotation", // 56
+ "tongue03_Zrotation", // 57
+ "tongue03_Xrotation", // 58
+ "tongue03_Yrotation", // 59
+ "__tongue04_Zrotation", // 60
+ "__tongue04_Xrotation", // 61
+ "__tongue04_Yrotation", // 62
+ "tongue04_Zrotation", // 63
+ "tongue04_Xrotation", // 64
+ "tongue04_Yrotation", // 65
+ "tongue07.l_Zrotation", // 66
+ "tongue07.l_Xrotation", // 67
+ "tongue07.l_Yrotation", // 68
+ "tongue07.r_Zrotation", // 69
+ "tongue07.r_Xrotation", // 70
+ "tongue07.r_Yrotation", // 71
+ "tongue06.l_Zrotation", // 72
+ "tongue06.l_Xrotation", // 73
+ "tongue06.l_Yrotation", // 74
+ "tongue06.r_Zrotation", // 75
+ "tongue06.r_Xrotation", // 76
+ "tongue06.r_Yrotation", // 77
+ "tongue05.l_Zrotation", // 78
+ "tongue05.l_Xrotation", // 79
+ "tongue05.l_Yrotation", // 80
+ "tongue05.r_Zrotation", // 81
+ "tongue05.r_Xrotation", // 82
+ "tongue05.r_Yrotation", // 83
+ "__levator02.l_Zrotation", // 84
+ "__levator02.l_Xrotation", // 85
+ "__levator02.l_Yrotation", // 86
+ "levator02.l_Zrotation", // 87
+ "levator02.l_Xrotation", // 88
+ "levator02.l_Yrotation", // 89
+ "levator03.l_Zrotation", // 90
+ "levator03.l_Xrotation", // 91
+ "levator03.l_Yrotation", // 92
+ "levator04.l_Zrotation", // 93
+ "levator04.l_Xrotation", // 94
+ "levator04.l_Yrotation", // 95
+ "levator05.l_Zrotation", // 96
+ "levator05.l_Xrotation", // 97
+ "levator05.l_Yrotation", // 98
+ "__levator02.r_Zrotation", // 99
+ "__levator02.r_Xrotation", // 100
+ "__levator02.r_Yrotation", // 101
+ "levator02.r_Zrotation", // 102
+ "levator02.r_Xrotation", // 103
+ "levator02.r_Yrotation", // 104
+ "levator03.r_Zrotation", // 105
+ "levator03.r_Xrotation", // 106
+ "levator03.r_Yrotation", // 107
+ "levator04.r_Zrotation", // 108
+ "levator04.r_Xrotation", // 109
+ "levator04.r_Yrotation", // 110
+ "levator05.r_Zrotation", // 111
+ "levator05.r_Xrotation", // 112
+ "levator05.r_Yrotation", // 113
+ "__special01_Zrotation", // 114
+ "__special01_Xrotation", // 115
+ "__special01_Yrotation", // 116
+ "special01_Zrotation", // 117
+ "special01_Xrotation", // 118
+ "special01_Yrotation", // 119
+ "oris04.l_Zrotation", // 120
+ "oris04.l_Xrotation", // 121
+ "oris04.l_Yrotation", // 122
+ "oris03.l_Zrotation", // 123
+ "oris03.l_Xrotation", // 124
+ "oris03.l_Yrotation", // 125
+ "oris04.r_Zrotation", // 126
+ "oris04.r_Xrotation", // 127
+ "oris04.r_Yrotation", // 128
+ "oris03.r_Zrotation", // 129
+ "oris03.r_Xrotation", // 130
+ "oris03.r_Yrotation", // 131
+ "oris06_Zrotation", // 132
+ "oris06_Xrotation", // 133
+ "oris06_Yrotation", // 134
+ "oris05_Zrotation", // 135
+ "oris05_Xrotation", // 136
+ "oris05_Yrotation", // 137
+ "__special03_Zrotation", // 138
+ "__special03_Xrotation", // 139
+ "__special03_Yrotation", // 140
+ "special03_Zrotation", // 141
+ "special03_Xrotation", // 142
+ "special03_Yrotation", // 143
+ "__levator06.l_Zrotation", // 144
+ "__levator06.l_Xrotation", // 145
+ "__levator06.l_Yrotation", // 146
+ "levator06.l_Zrotation", // 147
+ "levator06.l_Xrotation", // 148
+ "levator06.l_Yrotation", // 149
+ "__levator06.r_Zrotation", // 150
+ "__levator06.r_Xrotation", // 151
+ "__levator06.r_Yrotation", // 152
+ "levator06.r_Zrotation", // 153
+ "levator06.r_Xrotation", // 154
+ "levator06.r_Yrotation", // 155
+ "special06.l_Zrotation", // 156
+ "special06.l_Xrotation", // 157
+ "special06.l_Yrotation", // 158
+ "special05.l_Zrotation", // 159
+ "special05.l_Xrotation", // 160
+ "special05.l_Yrotation", // 161
+ "eye.l_Zrotation", // 162
+ "eye.l_Xrotation", // 163
+ "eye.l_Yrotation", // 164
+ "orbicularis03.l_Zrotation", // 165
+ "orbicularis03.l_Xrotation", // 166
+ "orbicularis03.l_Yrotation", // 167
+ "orbicularis04.l_Zrotation", // 168
+ "orbicularis04.l_Xrotation", // 169
+ "orbicularis04.l_Yrotation", // 170
+ "special06.r_Zrotation", // 171
+ "special06.r_Xrotation", // 172
+ "special06.r_Yrotation", // 173
+ "special05.r_Zrotation", // 174
+ "special05.r_Xrotation", // 175
+ "special05.r_Yrotation", // 176
+ "eye.r_Zrotation", // 177
+ "eye.r_Xrotation", // 178
+ "eye.r_Yrotation", // 179
+ "orbicularis03.r_Zrotation", // 180
+ "orbicularis03.r_Xrotation", // 181
+ "orbicularis03.r_Yrotation", // 182
+ "orbicularis04.r_Zrotation", // 183
+ "orbicularis04.r_Xrotation", // 184
+ "orbicularis04.r_Yrotation", // 185
+ "__temporalis01.l_Zrotation", // 186
+ "__temporalis01.l_Xrotation", // 187
+ "__temporalis01.l_Yrotation", // 188
+ "temporalis01.l_Zrotation", // 189
+ "temporalis01.l_Xrotation", // 190
+ "temporalis01.l_Yrotation", // 191
+ "oculi02.l_Zrotation", // 192
+ "oculi02.l_Xrotation", // 193
+ "oculi02.l_Yrotation", // 194
+ "oculi01.l_Zrotation", // 195
+ "oculi01.l_Xrotation", // 196
+ "oculi01.l_Yrotation", // 197
+ "__temporalis01.r_Zrotation", // 198
+ "__temporalis01.r_Xrotation", // 199
+ "__temporalis01.r_Yrotation", // 200
+ "temporalis01.r_Zrotation", // 201
+ "temporalis01.r_Xrotation", // 202
+ "temporalis01.r_Yrotation", // 203
+ "oculi02.r_Zrotation", // 204
+ "oculi02.r_Xrotation", // 205
+ "oculi02.r_Yrotation", // 206
+ "oculi01.r_Zrotation", // 207
+ "oculi01.r_Xrotation", // 208
+ "oculi01.r_Yrotation", // 209
+ "__temporalis02.l_Zrotation", // 210
+ "__temporalis02.l_Xrotation", // 211
+ "__temporalis02.l_Yrotation", // 212
+ "temporalis02.l_Zrotation", // 213
+ "temporalis02.l_Xrotation", // 214
+ "temporalis02.l_Yrotation", // 215
+ "risorius02.l_Zrotation", // 216
+ "risorius02.l_Xrotation", // 217
+ "risorius02.l_Yrotation", // 218
+ "risorius03.l_Zrotation", // 219
+ "risorius03.l_Xrotation", // 220
+ "risorius03.l_Yrotation", // 221
+ "__temporalis02.r_Zrotation", // 222
+ "__temporalis02.r_Xrotation", // 223
+ "__temporalis02.r_Yrotation", // 224
+ "temporalis02.r_Zrotation", // 225
+ "temporalis02.r_Xrotation", // 226
+ "temporalis02.r_Yrotation", // 227
+ "risorius02.r_Zrotation", // 228
+ "risorius02.r_Xrotation", // 229
+ "risorius02.r_Yrotation", // 230
+ "risorius03.r_Zrotation", // 231
+ "risorius03.r_Xrotation", // 232
+ "risorius03.r_Yrotation", // 233
+ //--------------------------------------------------------------------------------
  "rcollar_Zrotation",
  "rcollar_Xrotation",
  "rcollar_Yrotation",
@@ -1381,15 +1604,239 @@ enum MOCAPNET_Output_Joints
  MOCAPNET_OUTPUT_NECK_ZROTATION,
  MOCAPNET_OUTPUT_NECK_XROTATION,
  MOCAPNET_OUTPUT_NECK_YROTATION,
- MOCAPNET_OUTPUT_HEAD_ZROTATION,
- MOCAPNET_OUTPUT_HEAD_XROTATION,
- MOCAPNET_OUTPUT_HEAD_YROTATION,
- MOCAPNET_OUTPUT_LEFTEYE_ZROTATION,
- MOCAPNET_OUTPUT_LEFTEYE_XROTATION,
- MOCAPNET_OUTPUT_LEFTEYE_YROTATION,
- MOCAPNET_OUTPUT_RIGHTEYE_ZROTATION,
- MOCAPNET_OUTPUT_RIGHTEYE_XROTATION,
- MOCAPNET_OUTPUT_RIGHTEYE_YROTATION,
+//--------------------------------------------------------------------------------
+//Old armature had the following ..
+// MOCAPNET_OUTPUT_HEAD_ZROTATION,
+// MOCAPNET_OUTPUT_HEAD_XROTATION,
+// MOCAPNET_OUTPUT_HEAD_YROTATION,
+// MOCAPNET_OUTPUT_LEFTEYE_ZROTATION,
+// MOCAPNET_OUTPUT_LEFTEYE_XROTATION,
+// MOCAPNET_OUTPUT_LEFTEYE_YROTATION,
+// MOCAPNET_OUTPUT_RIGHTEYE_ZROTATION,
+// MOCAPNET_OUTPUT_RIGHTEYE_XROTATION,
+// MOCAPNET_OUTPUT_RIGHTEYE_YROTATION,
+//--------------------------------------------------------------------------------
+//New armature has the following..
+MOCAPNET_OUTPUT_NECK1_ZROTATION,//15 
+MOCAPNET_OUTPUT_NECK1_XROTATION,//16 
+MOCAPNET_OUTPUT_NECK1_YROTATION,//17 
+MOCAPNET_OUTPUT_HEAD_ZROTATION,//18 
+MOCAPNET_OUTPUT_HEAD_XROTATION,//19 
+MOCAPNET_OUTPUT_HEAD_YROTATION,//20 
+MOCAPNET_OUTPUT___JAW_ZROTATION,//21 
+MOCAPNET_OUTPUT___JAW_XROTATION,//22 
+MOCAPNET_OUTPUT___JAW_YROTATION,//23 
+MOCAPNET_OUTPUT_JAW_ZROTATION,//24 
+MOCAPNET_OUTPUT_JAW_XROTATION,//25 
+MOCAPNET_OUTPUT_JAW_YROTATION,//26 
+MOCAPNET_OUTPUT_SPECIAL04_ZROTATION,//27 
+MOCAPNET_OUTPUT_SPECIAL04_XROTATION,//28 
+MOCAPNET_OUTPUT_SPECIAL04_YROTATION,//29 
+MOCAPNET_OUTPUT_ORIS02_ZROTATION,//30 
+MOCAPNET_OUTPUT_ORIS02_XROTATION,//31 
+MOCAPNET_OUTPUT_ORIS02_YROTATION,//32 
+MOCAPNET_OUTPUT_ORIS01_ZROTATION,//33 
+MOCAPNET_OUTPUT_ORIS01_XROTATION,//34 
+MOCAPNET_OUTPUT_ORIS01_YROTATION,//35 
+MOCAPNET_OUTPUT_ORIS06L_ZROTATION,//36 
+MOCAPNET_OUTPUT_ORIS06L_XROTATION,//37 
+MOCAPNET_OUTPUT_ORIS06L_YROTATION,//38 
+MOCAPNET_OUTPUT_ORIS07L_ZROTATION,//39 
+MOCAPNET_OUTPUT_ORIS07L_XROTATION,//40 
+MOCAPNET_OUTPUT_ORIS07L_YROTATION,//41 
+MOCAPNET_OUTPUT_ORIS06R_ZROTATION,//42 
+MOCAPNET_OUTPUT_ORIS06R_XROTATION,//43 
+MOCAPNET_OUTPUT_ORIS06R_YROTATION,//44 
+MOCAPNET_OUTPUT_ORIS07R_ZROTATION,//45 
+MOCAPNET_OUTPUT_ORIS07R_XROTATION,//46 
+MOCAPNET_OUTPUT_ORIS07R_YROTATION,//47 
+MOCAPNET_OUTPUT_TONGUE00_ZROTATION,//48 
+MOCAPNET_OUTPUT_TONGUE00_XROTATION,//49 
+MOCAPNET_OUTPUT_TONGUE00_YROTATION,//50 
+MOCAPNET_OUTPUT_TONGUE01_ZROTATION,//51 
+MOCAPNET_OUTPUT_TONGUE01_XROTATION,//52 
+MOCAPNET_OUTPUT_TONGUE01_YROTATION,//53 
+MOCAPNET_OUTPUT_TONGUE02_ZROTATION,//54 
+MOCAPNET_OUTPUT_TONGUE02_XROTATION,//55 
+MOCAPNET_OUTPUT_TONGUE02_YROTATION,//56 
+MOCAPNET_OUTPUT_TONGUE03_ZROTATION,//57 
+MOCAPNET_OUTPUT_TONGUE03_XROTATION,//58 
+MOCAPNET_OUTPUT_TONGUE03_YROTATION,//59 
+MOCAPNET_OUTPUT___TONGUE04_ZROTATION,//60 
+MOCAPNET_OUTPUT___TONGUE04_XROTATION,//61 
+MOCAPNET_OUTPUT___TONGUE04_YROTATION,//62 
+MOCAPNET_OUTPUT_TONGUE04_ZROTATION,//63 
+MOCAPNET_OUTPUT_TONGUE04_XROTATION,//64 
+MOCAPNET_OUTPUT_TONGUE04_YROTATION,//65 
+MOCAPNET_OUTPUT_TONGUE07L_ZROTATION,//66 
+MOCAPNET_OUTPUT_TONGUE07L_XROTATION,//67 
+MOCAPNET_OUTPUT_TONGUE07L_YROTATION,//68 
+MOCAPNET_OUTPUT_TONGUE07R_ZROTATION,//69 
+MOCAPNET_OUTPUT_TONGUE07R_XROTATION,//70 
+MOCAPNET_OUTPUT_TONGUE07R_YROTATION,//71 
+MOCAPNET_OUTPUT_TONGUE06L_ZROTATION,//72 
+MOCAPNET_OUTPUT_TONGUE06L_XROTATION,//73 
+MOCAPNET_OUTPUT_TONGUE06L_YROTATION,//74 
+MOCAPNET_OUTPUT_TONGUE06R_ZROTATION,//75 
+MOCAPNET_OUTPUT_TONGUE06R_XROTATION,//76 
+MOCAPNET_OUTPUT_TONGUE06R_YROTATION,//77 
+MOCAPNET_OUTPUT_TONGUE05L_ZROTATION,//78 
+MOCAPNET_OUTPUT_TONGUE05L_XROTATION,//79 
+MOCAPNET_OUTPUT_TONGUE05L_YROTATION,//80 
+MOCAPNET_OUTPUT_TONGUE05R_ZROTATION,//81 
+MOCAPNET_OUTPUT_TONGUE05R_XROTATION,//82 
+MOCAPNET_OUTPUT_TONGUE05R_YROTATION,//83 
+MOCAPNET_OUTPUT___LEVATOR02L_ZROTATION,//84 
+MOCAPNET_OUTPUT___LEVATOR02L_XROTATION,//85 
+MOCAPNET_OUTPUT___LEVATOR02L_YROTATION,//86 
+MOCAPNET_OUTPUT_LEVATOR02L_ZROTATION,//87 
+MOCAPNET_OUTPUT_LEVATOR02L_XROTATION,//88 
+MOCAPNET_OUTPUT_LEVATOR02L_YROTATION,//89 
+MOCAPNET_OUTPUT_LEVATOR03L_ZROTATION,//90 
+MOCAPNET_OUTPUT_LEVATOR03L_XROTATION,//91 
+MOCAPNET_OUTPUT_LEVATOR03L_YROTATION,//92 
+MOCAPNET_OUTPUT_LEVATOR04L_ZROTATION,//93 
+MOCAPNET_OUTPUT_LEVATOR04L_XROTATION,//94 
+MOCAPNET_OUTPUT_LEVATOR04L_YROTATION,//95 
+MOCAPNET_OUTPUT_LEVATOR05L_ZROTATION,//96 
+MOCAPNET_OUTPUT_LEVATOR05L_XROTATION,//97 
+MOCAPNET_OUTPUT_LEVATOR05L_YROTATION,//98 
+MOCAPNET_OUTPUT___LEVATOR02R_ZROTATION,//99 
+MOCAPNET_OUTPUT___LEVATOR02R_XROTATION,//100 
+MOCAPNET_OUTPUT___LEVATOR02R_YROTATION,//101 
+MOCAPNET_OUTPUT_LEVATOR02R_ZROTATION,//102 
+MOCAPNET_OUTPUT_LEVATOR02R_XROTATION,//103 
+MOCAPNET_OUTPUT_LEVATOR02R_YROTATION,//104 
+MOCAPNET_OUTPUT_LEVATOR03R_ZROTATION,//105 
+MOCAPNET_OUTPUT_LEVATOR03R_XROTATION,//106 
+MOCAPNET_OUTPUT_LEVATOR03R_YROTATION,//107 
+MOCAPNET_OUTPUT_LEVATOR04R_ZROTATION,//108 
+MOCAPNET_OUTPUT_LEVATOR04R_XROTATION,//109 
+MOCAPNET_OUTPUT_LEVATOR04R_YROTATION,//110 
+MOCAPNET_OUTPUT_LEVATOR05R_ZROTATION,//111 
+MOCAPNET_OUTPUT_LEVATOR05R_XROTATION,//112 
+MOCAPNET_OUTPUT_LEVATOR05R_YROTATION,//113 
+MOCAPNET_OUTPUT___SPECIAL01_ZROTATION,//114 
+MOCAPNET_OUTPUT___SPECIAL01_XROTATION,//115 
+MOCAPNET_OUTPUT___SPECIAL01_YROTATION,//116 
+MOCAPNET_OUTPUT_SPECIAL01_ZROTATION,//117 
+MOCAPNET_OUTPUT_SPECIAL01_XROTATION,//118 
+MOCAPNET_OUTPUT_SPECIAL01_YROTATION,//119 
+MOCAPNET_OUTPUT_ORIS04L_ZROTATION,//120 
+MOCAPNET_OUTPUT_ORIS04L_XROTATION,//121 
+MOCAPNET_OUTPUT_ORIS04L_YROTATION,//122 
+MOCAPNET_OUTPUT_ORIS03L_ZROTATION,//123 
+MOCAPNET_OUTPUT_ORIS03L_XROTATION,//124 
+MOCAPNET_OUTPUT_ORIS03L_YROTATION,//125 
+MOCAPNET_OUTPUT_ORIS04R_ZROTATION,//126 
+MOCAPNET_OUTPUT_ORIS04R_XROTATION,//127 
+MOCAPNET_OUTPUT_ORIS04R_YROTATION,//128 
+MOCAPNET_OUTPUT_ORIS03R_ZROTATION,//129 
+MOCAPNET_OUTPUT_ORIS03R_XROTATION,//130 
+MOCAPNET_OUTPUT_ORIS03R_YROTATION,//131 
+MOCAPNET_OUTPUT_ORIS06_ZROTATION,//132 
+MOCAPNET_OUTPUT_ORIS06_XROTATION,//133 
+MOCAPNET_OUTPUT_ORIS06_YROTATION,//134 
+MOCAPNET_OUTPUT_ORIS05_ZROTATION,//135 
+MOCAPNET_OUTPUT_ORIS05_XROTATION,//136 
+MOCAPNET_OUTPUT_ORIS05_YROTATION,//137 
+MOCAPNET_OUTPUT___SPECIAL03_ZROTATION,//138 
+MOCAPNET_OUTPUT___SPECIAL03_XROTATION,//139 
+MOCAPNET_OUTPUT___SPECIAL03_YROTATION,//140 
+MOCAPNET_OUTPUT_SPECIAL03_ZROTATION,//141 
+MOCAPNET_OUTPUT_SPECIAL03_XROTATION,//142 
+MOCAPNET_OUTPUT_SPECIAL03_YROTATION,//143 
+MOCAPNET_OUTPUT___LEVATOR06L_ZROTATION,//144 
+MOCAPNET_OUTPUT___LEVATOR06L_XROTATION,//145 
+MOCAPNET_OUTPUT___LEVATOR06L_YROTATION,//146 
+MOCAPNET_OUTPUT_LEVATOR06L_ZROTATION,//147 
+MOCAPNET_OUTPUT_LEVATOR06L_XROTATION,//148 
+MOCAPNET_OUTPUT_LEVATOR06L_YROTATION,//149 
+MOCAPNET_OUTPUT___LEVATOR06R_ZROTATION,//150 
+MOCAPNET_OUTPUT___LEVATOR06R_XROTATION,//151 
+MOCAPNET_OUTPUT___LEVATOR06R_YROTATION,//152 
+MOCAPNET_OUTPUT_LEVATOR06R_ZROTATION,//153 
+MOCAPNET_OUTPUT_LEVATOR06R_XROTATION,//154 
+MOCAPNET_OUTPUT_LEVATOR06R_YROTATION,//155 
+MOCAPNET_OUTPUT_SPECIAL06L_ZROTATION,//156 
+MOCAPNET_OUTPUT_SPECIAL06L_XROTATION,//157 
+MOCAPNET_OUTPUT_SPECIAL06L_YROTATION,//158 
+MOCAPNET_OUTPUT_SPECIAL05L_ZROTATION,//159 
+MOCAPNET_OUTPUT_SPECIAL05L_XROTATION,//160 
+MOCAPNET_OUTPUT_SPECIAL05L_YROTATION,//161 
+MOCAPNET_OUTPUT_LEFTEYE_ZROTATION,//162 
+MOCAPNET_OUTPUT_LEFTEYE_XROTATION,//163 
+MOCAPNET_OUTPUT_LEFTEYE_YROTATION,//164 
+MOCAPNET_OUTPUT_ORBICULARIS03L_ZROTATION,//165 
+MOCAPNET_OUTPUT_ORBICULARIS03L_XROTATION,//166 
+MOCAPNET_OUTPUT_ORBICULARIS03L_YROTATION,//167 
+MOCAPNET_OUTPUT_ORBICULARIS04L_ZROTATION,//168 
+MOCAPNET_OUTPUT_ORBICULARIS04L_XROTATION,//169 
+MOCAPNET_OUTPUT_ORBICULARIS04L_YROTATION,//170 
+MOCAPNET_OUTPUT_SPECIAL06R_ZROTATION,//171 
+MOCAPNET_OUTPUT_SPECIAL06R_XROTATION,//172 
+MOCAPNET_OUTPUT_SPECIAL06R_YROTATION,//173 
+MOCAPNET_OUTPUT_SPECIAL05R_ZROTATION,//174 
+MOCAPNET_OUTPUT_SPECIAL05R_XROTATION,//175 
+MOCAPNET_OUTPUT_SPECIAL05R_YROTATION,//176 
+MOCAPNET_OUTPUT_RIGHTEYE_ZROTATION,//177 
+MOCAPNET_OUTPUT_RIGHTEYE_XROTATION,//178 
+MOCAPNET_OUTPUT_RIGHTEYE_YROTATION,//179 
+MOCAPNET_OUTPUT_ORBICULARIS03R_ZROTATION,//180 
+MOCAPNET_OUTPUT_ORBICULARIS03R_XROTATION,//181 
+MOCAPNET_OUTPUT_ORBICULARIS03R_YROTATION,//182 
+MOCAPNET_OUTPUT_ORBICULARIS04R_ZROTATION,//183 
+MOCAPNET_OUTPUT_ORBICULARIS04R_XROTATION,//184 
+MOCAPNET_OUTPUT_ORBICULARIS04R_YROTATION,//185 
+MOCAPNET_OUTPUT___TEMPORALIS01L_ZROTATION,//186 
+MOCAPNET_OUTPUT___TEMPORALIS01L_XROTATION,//187 
+MOCAPNET_OUTPUT___TEMPORALIS01L_YROTATION,//188 
+MOCAPNET_OUTPUT_TEMPORALIS01L_ZROTATION,//189 
+MOCAPNET_OUTPUT_TEMPORALIS01L_XROTATION,//190 
+MOCAPNET_OUTPUT_TEMPORALIS01L_YROTATION,//191 
+MOCAPNET_OUTPUT_OCULI02L_ZROTATION,//192 
+MOCAPNET_OUTPUT_OCULI02L_XROTATION,//193 
+MOCAPNET_OUTPUT_OCULI02L_YROTATION,//194 
+MOCAPNET_OUTPUT_OCULI01L_ZROTATION,//195 
+MOCAPNET_OUTPUT_OCULI01L_XROTATION,//196 
+MOCAPNET_OUTPUT_OCULI01L_YROTATION,//197 
+MOCAPNET_OUTPUT___TEMPORALIS01R_ZROTATION,//198 
+MOCAPNET_OUTPUT___TEMPORALIS01R_XROTATION,//199 
+MOCAPNET_OUTPUT___TEMPORALIS01R_YROTATION,//200 
+MOCAPNET_OUTPUT_TEMPORALIS01R_ZROTATION,//201 
+MOCAPNET_OUTPUT_TEMPORALIS01R_XROTATION,//202 
+MOCAPNET_OUTPUT_TEMPORALIS01R_YROTATION,//203 
+MOCAPNET_OUTPUT_OCULI02R_ZROTATION,//204 
+MOCAPNET_OUTPUT_OCULI02R_XROTATION,//205 
+MOCAPNET_OUTPUT_OCULI02R_YROTATION,//206 
+MOCAPNET_OUTPUT_OCULI01R_ZROTATION,//207 
+MOCAPNET_OUTPUT_OCULI01R_XROTATION,//208 
+MOCAPNET_OUTPUT_OCULI01R_YROTATION,//209 
+MOCAPNET_OUTPUT___TEMPORALIS02L_ZROTATION,//210 
+MOCAPNET_OUTPUT___TEMPORALIS02L_XROTATION,//211 
+MOCAPNET_OUTPUT___TEMPORALIS02L_YROTATION,//212 
+MOCAPNET_OUTPUT_TEMPORALIS02L_ZROTATION,//213 
+MOCAPNET_OUTPUT_TEMPORALIS02L_XROTATION,//214 
+MOCAPNET_OUTPUT_TEMPORALIS02L_YROTATION,//215 
+MOCAPNET_OUTPUT_RISORIUS02L_ZROTATION,//216 
+MOCAPNET_OUTPUT_RISORIUS02L_XROTATION,//217 
+MOCAPNET_OUTPUT_RISORIUS02L_YROTATION,//218 
+MOCAPNET_OUTPUT_RISORIUS03L_ZROTATION,//219 
+MOCAPNET_OUTPUT_RISORIUS03L_XROTATION,//220 
+MOCAPNET_OUTPUT_RISORIUS03L_YROTATION,//221 
+MOCAPNET_OUTPUT___TEMPORALIS02R_ZROTATION,//222 
+MOCAPNET_OUTPUT___TEMPORALIS02R_XROTATION,//223 
+MOCAPNET_OUTPUT___TEMPORALIS02R_YROTATION,//224 
+MOCAPNET_OUTPUT_TEMPORALIS02R_ZROTATION,//225 
+MOCAPNET_OUTPUT_TEMPORALIS02R_XROTATION,//226 
+MOCAPNET_OUTPUT_TEMPORALIS02R_YROTATION,//227 
+MOCAPNET_OUTPUT_RISORIUS02R_ZROTATION,//228 
+MOCAPNET_OUTPUT_RISORIUS02R_XROTATION,//229 
+MOCAPNET_OUTPUT_RISORIUS02R_YROTATION,//230 
+MOCAPNET_OUTPUT_RISORIUS03R_ZROTATION,//231 
+MOCAPNET_OUTPUT_RISORIUS03R_XROTATION,//232 
+MOCAPNET_OUTPUT_RISORIUS03R_YROTATION,//233
+ //-------------------------------------------------------------------------------------
  MOCAPNET_OUTPUT_RCOLLAR_ZROTATION,
  MOCAPNET_OUTPUT_RCOLLAR_XROTATION,
  MOCAPNET_OUTPUT_RCOLLAR_YROTATION,
