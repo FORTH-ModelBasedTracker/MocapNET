@@ -1988,10 +1988,12 @@ struct MocapNET
    int  remoteMocapNETServerPort;
    void * remoteContext;
    //--------------------------------
+   
     
    struct TensorflowInstance models[16]; 
    unsigned int mode;
    unsigned int loadedModels;
+   unsigned int framesReceived;
    struct MocapNETModelLimits modelLimits[16];  
    
    //--------------------------------
@@ -2006,8 +2008,11 @@ struct MocapNET
    
    struct PoseHistory poseHistoryStorage;
    struct GestureDatabase recognizedGestures;
+   void * newGestureEventCallback;
 };
  
+ 
+int registerGestureEventCallbackWithMocapNET(struct MocapNET * mnet,void * callback);
 
 std::vector <float> fillInTheBlanks(std::vector <float> previousVector,std::vector <float> currentVector);
 

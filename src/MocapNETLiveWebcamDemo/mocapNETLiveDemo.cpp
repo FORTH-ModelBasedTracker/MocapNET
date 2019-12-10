@@ -46,6 +46,22 @@ void printWgetCommand(std::vector<float> pose2D)
 }
 
 
+
+void newGestureEventDetected(struct MocapNET * mnet,unsigned int gestureID)
+{
+    fprintf(stderr,"MocapNET Live Demo Callback received a gesture event at frame %u..\n",mnet->framesReceived);
+    fprintf(stderr,"Gesture Name : %s \n",mnet->recognizedGestures.gesture[gestureID].label);
+    
+    //-----------------------------------------------------------------------------------------
+    //A client application could want to do something here..!
+    //-----------------------------------------------------------------------------------------
+}
+
+
+
+
+
+
 /**
  * @brief This function performs 2D estimation.. You give her a Tensorflow instance of a 2D estimator, a BGR image some thresholds and sizes and it will yield a vector of 2D points.
  * @ingroup demo
@@ -696,6 +712,9 @@ int main(int argc, char *argv[])
 
     if ( loadMocapNET(&mnet,"test",quality,mocapNETMode,forceCPUMocapNET) )
         {
+            
+            registerGestureEventCallbackWithMocapNET(&mnet,(void *) & newGestureEventDetected);
+            
             if (
                 loadTensorflowInstance(
                                        &net,

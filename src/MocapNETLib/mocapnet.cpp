@@ -185,11 +185,23 @@ int silenceDeadJoints(std::vector<float> & result)
 }
 
 
+
+int registerGestureEventCallbackWithMocapNET(struct MocapNET * mnet,void * callback)
+{
+  fprintf(stderr,GREEN "New Gesture Event Callback registered\n" NORMAL);
+  mnet->newGestureEventCallback=callback;
+  return 1;
+}
+
+
 void commonInitialization(struct MocapNET * mnet)
 { 
+   mnet->newGestureEventCallback=0; 
+    
    //Reset pose history..
    mnet->poseHistoryStorage.maxPoseHistory=150;
    mnet->poseHistoryStorage.history.clear();
+   mnet->framesReceived=0;
    
    if (!loadGestures(&mnet->recognizedGestures))
    {
@@ -596,14 +608,15 @@ std::vector<float> localExecution(struct MocapNET * mnet,std::vector<float> mnet
 std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,int doGestureDetection,int doOutputFiltering)
 {
     std::vector<float> mnetInput;
-    std::vector<float> emptyResult;
-
+    std::vector<float> emptyResult; 
+    
     if (mnet==0)
     {
            fprintf(stderr,RED "MocapNET: Cannot work without initialization\n" NORMAL);
            return emptyResult;        
     }
     
+   ++mnet->framesReceived;
 
     //Check if input is ok or if prepareMocapNETInputFromUncompressedInput is needed
     //----------------------------------------------------------------------------------------------
@@ -727,7 +740,14 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,i
                 mnet->lastActivatedGesture=gestureDetected;
                 mnet->gestureTimestamp=mnet->recognizedGestures.gestureChecksPerformed;
                 fprintf(stderr,GREEN "Gesture Detection : %u\n" NORMAL,gestureDetected);
-              } 
+                
+                if (mnet->newGestureEventCallback!=0)
+                { //We have a callback associated..!
+                    void ( *DoCallback) (struct MocapNET * ,unsigned int)=0 ;
+                    DoCallback = (void(*) (struct MocapNET * ,unsigned int) ) mnet->newGestureEventCallback;
+                    DoCallback(mnet ,gestureDetected-1);
+                }
+              }
              }
             //----------------------------------------------------------------------------------------------
             
