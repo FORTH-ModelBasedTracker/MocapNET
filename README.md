@@ -168,18 +168,16 @@ BVH output files are by default stored to the "out.bvh" file, unless you want th
 
 ![MocapNETLiveWebcamDemo default visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoview.jpg)
 
-By using the "Visualization Demo" slider bar you can alternate between different visualizations. A particularly useful visualization is the one that plots the joint rotations. 
-
 ![MocapNETLiveWebcamDemo rotation per joint visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoperjoint.png)
 
-By enabling the ENABLE_OPENGL cmake configuration flag during compilation and using the --opengl flag when running the MocapNETLiveWebcamDemo you can also see an experimental OpenGL visualization rendering a skinned mesh that was generated using [makehuman](http://www.makehumancommunity.org/).
+By using the "Visualization Demo" slider bar you can alternate between different visualizations. A particularly useful visualization is the one that plots the joint rotations. 
 
 ![MocapNETLiveWebcamDemo OpenGL visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoogl.png)
 
-After enabling the ENABLE_OPENGL CMake flag and compiling the code :
 ```
 ./MocapNETLiveWebcamDemo --from shuffle.webm --openpose --opengl --frames 375
 ```
+By enabling the ENABLE_OPENGL CMake configuration flag during compilation and using the --opengl flag when running the MocapNETLiveWebcamDemo you can also see an experimental OpenGL visualization rendering a skinned mesh that was generated using [makehuman](http://www.makehumancommunity.org/).
 
 ![MocapNETLiveWebcamDemo gesture experiments](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demogesture.png)
 
