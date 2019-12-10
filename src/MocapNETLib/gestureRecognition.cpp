@@ -240,7 +240,12 @@ int compareHistoryWithGesture(
             gesture->percentageComplete = (float) matchingFrames/gesture->gesture.size();
             float percentComplete = 100*gesture->percentageComplete;
 
-            if (percentComplete >= percentageForDetection )
+         if (percentComplete > 100 )
+                {
+                    fprintf(stderr,RED);
+                    fprintf(stderr,"There is something wrong in the gesture files ( size = %lu )\n ",gesture->gesture.size());
+                }
+            else if (percentComplete >= percentageForDetection )
                 {
                     fprintf(stderr,GREEN);
                     gesture->lastActivation=checkSerialNumber;

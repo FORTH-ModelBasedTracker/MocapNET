@@ -24,12 +24,11 @@ static const char * hardcodedGestureName[] =
   "waveleft.bvh",              //4
   "doubleclap.bvh",            //5
   "waveright.bvh",             //6
-  ""                           //7
-  "tpose.bvh",                 //8
-  "comeright.bvh",             //9
-  "comeleft.bvh",              //10
-  "leftkick.bvh",              //11
-  "rightkick.bvh",             //12
+  "handsup.bvh"                  //7
+  "leftkick.bvh",              //8
+  "rightkick.bvh",             //9
+  ""                           //10
+  "tpose.bvh",                 //
   ""                           //13
   //hardcodedGestureNumber should be kept in sync
 };
@@ -37,7 +36,7 @@ static const char * hardcodedGestureName[] =
 
 /**
  * @brief This needs to be kept in sync with hardcodedGestureName */
-const unsigned int hardcodedGestureNumber=7;
+const unsigned int hardcodedGestureNumber=10;
 
 /**
  * @brief  history of poses
