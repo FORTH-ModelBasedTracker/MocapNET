@@ -178,6 +178,18 @@ By enabling the ENABLE_OPENGL cmake configuration flag during compilation and us
 BVH output files can be easily viewed using a variety of compatible applicatons. We suggest [Blender](https://www.blender.org/) which is a very powerful open-source 3D editing and animation suite or [BVHacker](https://www.bvhacker.com/) that is freeware and compatible with [Wine](https://wiki.winehq.org/)
 
 
+
+![MocapNETLiveWebcamDemo gesture experiments](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demogesture.png)
+
+
+```
+./MocapNETLiveWebcamDemo --from shuffle.webm --openpose --gestures --frames 375
+```
+
+By starting the live demo using the --gestures argument or using the "Gesture Detection" slider bar you can enable a simple form of gesture detection. Gestures are stored as [mini BVH files](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/master/dataset/gestures) and controlled through the [gestureRecognition.hpp](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLib/gestureRecognition.hpp#L18) file. The gesture detection code is experimental and has been included as a proof of concept, since due to our high-level output you can easily facilitate gesture detections by comparing subsequent BVH frames as [seen in the code](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLib/gestureRecognition.cpp#L148). That being said gestures where not a part of the original [MocapNET paper](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf)
+
+
+
 ## Higher accuracy using OpenPose JSON files
 ------------------------------------------------------------------ 
 
