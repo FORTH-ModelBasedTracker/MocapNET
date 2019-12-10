@@ -189,7 +189,6 @@ int areTwoBVHFramesCloseEnough(std::vector<float> vecA,std::vector<float> vecB,s
 }
 
 
-#define GESTURE_ACTIVATION_COOLDOWN_IN_FRAMES 40
 
 int compareHistoryWithGesture(
     struct RecordedGesture * gesture ,

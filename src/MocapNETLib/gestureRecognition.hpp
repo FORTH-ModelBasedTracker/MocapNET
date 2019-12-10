@@ -38,6 +38,15 @@ static const char * hardcodedGestureName[] =
  * @brief This needs to be kept in sync with hardcodedGestureName */
 const unsigned int hardcodedGestureNumber=10;
 
+
+/**
+ * @brief Gesture tuning controls for the brave.. 
+ **/
+const unsigned int GESTURE_ACTIVATION_COOLDOWN_IN_FRAMES=40;
+const float GESTURE_COMPLETION_PERCENT=80.0;
+const float GESTURE_ANGLE_SENSITIVITY=20.0;
+
+
 /**
  * @brief  history of poses
  */

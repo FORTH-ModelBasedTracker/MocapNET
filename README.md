@@ -174,6 +174,10 @@ By enabling the ENABLE_OPENGL cmake configuration flag during compilation and us
 
 ![MocapNETLiveWebcamDemo OpenGL visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoogl.png)
 
+```
+After enabling the ENABLE_OPENGL CMake flag and compiling the code :
+./MocapNETLiveWebcamDemo --from shuffle.webm --openpose --opengl --frames 375
+```
 
 BVH output files can be easily viewed using a variety of compatible applicatons. We suggest [Blender](https://www.blender.org/) which is a very powerful open-source 3D editing and animation suite or [BVHacker](https://www.bvhacker.com/) that is freeware and compatible with [Wine](https://wiki.winehq.org/)
 
@@ -186,7 +190,7 @@ BVH output files can be easily viewed using a variety of compatible applicatons.
 ./MocapNETLiveWebcamDemo --from shuffle.webm --openpose --gestures --frames 375
 ```
 
-By starting the live demo using the --gestures argument or using the "Gesture Detection" slider bar you can enable a simple form of gesture detection. Gestures are stored as [mini BVH files](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/master/dataset/gestures) and controlled through the [gestureRecognition.hpp](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLib/gestureRecognition.hpp#L18) file. The gesture detection code is experimental and has been included as a proof of concept, since due to our high-level output you can easily facilitate gesture detections by comparing subsequent BVH frames as [seen in the code](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLib/gestureRecognition.cpp#L148). That being said gestures where not a part of the original [MocapNET paper](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf)
+By starting the live demo using the --gestures argument or using the "Gesture Detection" slider bar you can enable a simple form of gesture detection. Gestures are stored as [BVH files](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/master/dataset/gestures) and controlled through the [gestureRecognition.hpp](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLib/gestureRecognition.hpp#L18) file. A client application can register a callback as seen in the [demo](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLiveWebcamDemo/mocapNETLiveDemo.cpp#L50). The gesture detection code is experimental and has been included as a proof of concept, since due to our high-level output you can easily facilitate gesture detections by comparing subsequent BVH frames as [seen in the code](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLib/gestureRecognition.cpp#L148). That being said gestures where not a part of the original [MocapNET paper](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf).
 
 
 
