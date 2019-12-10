@@ -126,7 +126,8 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
     unsigned int frameNumber,
     int visualize,
     int saveVisualization,
-    unsigned int handleMessages
+    unsigned int handleMessages,
+    unsigned int areWeUsingTheBestNetworkAvailable
 );
 
  

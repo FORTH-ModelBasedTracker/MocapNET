@@ -189,6 +189,7 @@ int areTwoBVHFramesCloseEnough(std::vector<float> vecA,std::vector<float> vecB,s
 }
 
 
+#define GESTURE_ACTIVATION_COOLDOWN_IN_FRAMES 40
 
 int compareHistoryWithGesture(
     struct RecordedGesture * gesture ,
@@ -213,7 +214,7 @@ int compareHistoryWithGesture(
         }
     else
         {
-            if (checkSerialNumber-gesture->lastActivation<20)
+            if (checkSerialNumber-gesture->lastActivation<GESTURE_ACTIVATION_COOLDOWN_IN_FRAMES)
                 {
                     fprintf(stderr,YELLOW "gesture %s on cooldown..\n" NORMAL,gesture->label);
                     return 0;

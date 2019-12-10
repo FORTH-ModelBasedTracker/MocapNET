@@ -26,6 +26,9 @@ using namespace cv;
 #include "cameraControl.hpp"
 #include "utilities.hpp"
 
+const char   networkPathOpenPoseMiniStatic[]="dataset/combinedModel/openpose_model.pb";
+const char   networkPathVnectStatic[]="dataset/combinedModel/vnect_sm_pafs_8.1k.pb";
+const char   networkPathFORTHStatic[]="dataset/combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb";
 
 //Debug switch that will spam the screen with OpenCV windows for each of the
 //joint heatmaps..
@@ -143,8 +146,14 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
                 }
         }
 #endif // DISPLAY_ALL_HEATMAPS
-
-    return dj_getNeuralNetworkDetectionsForColorImage(bgr,smallBGR,heatmaps,minThreshold,frameNumber,visualize,saveVisualization,0);
+  
+    unsigned int areWeUsingTheBestNetworkAvailable=0;
+    if (strcmp(net->modelPath,networkPathOpenPoseMiniStatic)==0)
+    {
+        areWeUsingTheBestNetworkAvailable=1;
+    }
+  
+    return dj_getNeuralNetworkDetectionsForColorImage(bgr,smallBGR,heatmaps,minThreshold,frameNumber,visualize,saveVisualization,0,areWeUsingTheBestNetworkAvailable);
 }
 
 
@@ -427,9 +436,6 @@ int main(int argc, char *argv[])
     unsigned int numberOfHeatmaps = 19;
     const char   outputPathStatic[]="out.bvh";
     char * outputPath = (char*) outputPathStatic;
-    const char   networkPathOpenPoseMiniStatic[]="dataset/combinedModel/openpose_model.pb";
-    const char   networkPathVnectStatic[]="dataset/combinedModel/vnect_sm_pafs_8.1k.pb";
-    const char   networkPathFORTHStatic[]="dataset/combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb";
 
     char   networkInputLayer[]="input_1";
     char   networkOutputLayer[]="k2tfout_0";
@@ -492,11 +498,14 @@ int main(int argc, char *argv[])
                     {
                         chdir(argv[i+1]);
                     }
+                else if (strcmp(argv[i],"--gestures")==0)
+                    {
+                        doGestureDetection=1;
+                    }
                 else if (strcmp(argv[i],"--quality")==0)
                     {
                         quality=atof(argv[i+1]);
                     }
-
                 else if (strcmp(argv[i],"--maxbadframes")==0)
                     {
                         quitAfterNBadFrames=atoi(argv[i+1]);

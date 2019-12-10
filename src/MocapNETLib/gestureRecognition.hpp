@@ -17,17 +17,17 @@
  */ 
 static const char * hardcodedGestureName[] =
 {
-  "comeleft.bvh",              //0
-  "help.bvh",                  //1
-  "push.bvh",                  //2
-  "comeright.bvh",             //3
-  "lefthandcircle.bvh",        //4
-  "righthandcircle.bvh",       //5
-  "waveleft.bvh",              //6
-  "doubleclap.bvh",            //7
-  "waveright.bvh",             //8
-  "tpose.bvh",                 //9
-  ""                           //10
+  "help.bvh",                  //0
+  "push.bvh",                  //1
+  "lefthandcircle.bvh",        //2
+  "righthandcircle.bvh",       //3
+  "waveleft.bvh",              //4
+  "doubleclap.bvh",            //5
+  "waveright.bvh",             //6
+  ""                           //7
+  "tpose.bvh",                 //8
+  "comeright.bvh",             //9
+  "comeleft.bvh",              //10
   "leftkick.bvh",              //11
   "rightkick.bvh",             //12
   ""                           //13
@@ -37,7 +37,7 @@ static const char * hardcodedGestureName[] =
 
 /**
  * @brief This needs to be kept in sync with hardcodedGestureName */
-const unsigned int hardcodedGestureNumber=10;
+const unsigned int hardcodedGestureNumber=7;
 
 /**
  * @brief  history of poses

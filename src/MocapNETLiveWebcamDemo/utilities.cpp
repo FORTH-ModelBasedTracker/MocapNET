@@ -218,7 +218,8 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
     unsigned int frameNumber,
     int visualize,
     int saveVisualization,
-    unsigned int handleMessages
+    unsigned int handleMessages,
+    unsigned int areWeUsingTheBestNetworkAvailable
 )
 {
     std::vector<cv::Point_<float> > outPoints;
@@ -290,6 +291,17 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
                 char filename[512];
                 snprintf(filename,512,"MocapNET2D_%05u.png",frameNumber) ;
                 cv::imwrite(filename,visualizationImage2DSkeleton);
+            }
+            
+            if (!areWeUsingTheBestNetworkAvailable)
+            {
+               float thickness=2;
+               int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
+               cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
+               cv::Point txtPosition(2,10);
+               cv::putText(visualizationImage2DSkeleton,"Consider running with --openpose for better",txtPosition,fontUsed,0.5,color,thickness,8);
+               txtPosition.y+=12;
+               cv::putText(visualizationImage2DSkeleton,"2D output that results in better 3D output",txtPosition,fontUsed,0.5,color,thickness,8);
             }
 
             cv::imshow("2D Detections",visualizationImage2DSkeleton);

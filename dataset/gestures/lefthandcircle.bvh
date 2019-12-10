@@ -1,754 +1,754 @@
 HIERARCHY
 ROOT hip
 {
-	OFFSET 0.000000 0.000000 0.000000 
-	CHANNELS 6 Xposition Yposition Zposition Zrotation Yrotation Xrotation
-	JOINT abdomen
-	{
-		OFFSET 0.000000 20.688101 -0.731520 
-		CHANNELS 3 Zrotation Xrotation Yrotation
-		JOINT chest
-		{
-			OFFSET 0.000000 11.704300 -0.487680 
-			CHANNELS 3 Zrotation Xrotation Yrotation
-			JOINT neck
-			{
-				OFFSET 0.000000 14.013250 1.361400 
-				CHANNELS 3 Zrotation Xrotation Yrotation
-				JOINT neck1
-				{
-					OFFSET 0.000000 5.364170 1.574630 
-					CHANNELS 3 Zrotation Xrotation Yrotation
-					JOINT head
-					{
-						OFFSET 0.000000 5.364141 1.574630 
-						CHANNELS 3 Zrotation Xrotation Yrotation
-						JOINT __jaw
-						{
-							OFFSET 0.000000 13.604700 -0.502080 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT jaw
-							{
-								OFFSET 0.000000 -13.499860 2.500710 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT special04
-								{
-									OFFSET -0.000000 -6.835370 4.375500 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT oris02
-									{
-										OFFSET 0.000000 1.711150 2.820850 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										JOINT oris01
-										{
-											OFFSET -0.000000 0.972390 0.845650 
-											CHANNELS 3 Zrotation Xrotation Yrotation
-											End Site
-											{
-												OFFSET 0.000000 1.162291 0.607091 
-											}
-										}
-									}
-									JOINT oris06.l
-									{
-										OFFSET 0.000000 1.711150 2.820850 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										JOINT oris07.l
-										{
-											OFFSET 1.168850 0.445180 0.506110 
-											CHANNELS 3 Zrotation Xrotation Yrotation
-											End Site
-											{
-												OFFSET 0.450611 1.195178 0.204519 
-											}
-										}
-									}
-									JOINT oris06.r
-									{
-										OFFSET 0.000000 1.711150 2.820850 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										JOINT oris07.r
-										{
-											OFFSET -1.168850 0.445180 0.506110 
-											CHANNELS 3 Zrotation Xrotation Yrotation
-											End Site
-											{
-												OFFSET -0.450611 1.195173 0.204519 
-											}
-										}
-									}
-								}
-								JOINT tongue00
-								{
-									OFFSET -0.000000 -6.835370 4.375500 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT tongue01
-									{
-										OFFSET 0.000000 3.973650 -3.762340 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										JOINT tongue02
-										{
-											OFFSET 0.000000 0.429760 2.924710 
-											CHANNELS 3 Zrotation Xrotation Yrotation
-											JOINT tongue03
-											{
-												OFFSET 0.000000 0.018530 2.059010 
-												CHANNELS 3 Zrotation Xrotation Yrotation
-												JOINT __tongue04
-												{
-													OFFSET 0.000000 -0.440240 0.838860 
-													CHANNELS 3 Zrotation Xrotation Yrotation
-													JOINT tongue04
-													{
-														OFFSET 0.000000 0.000000 0.000000 
-														CHANNELS 3 Zrotation Xrotation Yrotation
-														End Site
-														{
-															OFFSET 0.000000 -0.440230 0.838860 
-														}
-													}
-												}
-												JOINT tongue07.l
-												{
-													OFFSET 0.000000 -0.440240 0.838860 
-													CHANNELS 3 Zrotation Xrotation Yrotation
-													End Site
-													{
-														OFFSET 1.160923 -0.331531 0.018227 
-													}
-												}
-												JOINT tongue07.r
-												{
-													OFFSET 0.000000 -0.440240 0.838860 
-													CHANNELS 3 Zrotation Xrotation Yrotation
-													End Site
-													{
-														OFFSET -1.160922 -0.331531 0.018227 
-													}
-												}
-											}
-											JOINT tongue06.l
-											{
-												OFFSET 0.000000 0.018530 2.059010 
-												CHANNELS 3 Zrotation Xrotation Yrotation
-												End Site
-												{
-													OFFSET 1.644752 -0.526075 -0.203281 
-												}
-											}
-											JOINT tongue06.r
-											{
-												OFFSET 0.000000 0.018530 2.059010 
-												CHANNELS 3 Zrotation Xrotation Yrotation
-												End Site
-												{
-													OFFSET -1.644752 -0.526075 -0.203282 
-												}
-											}
-										}
-										JOINT tongue05.l
-										{
-											OFFSET 0.000000 0.429760 2.924710 
-											CHANNELS 3 Zrotation Xrotation Yrotation
-											End Site
-											{
-												OFFSET 1.971028 -0.388618 0.239206 
-											}
-										}
-										JOINT tongue05.r
-										{
-											OFFSET 0.000000 0.429760 2.924710 
-											CHANNELS 3 Zrotation Xrotation Yrotation
-											End Site
-											{
-												OFFSET -1.971028 -0.388618 0.239205 
-											}
-										}
-									}
-								}
-							}
-						}
-						JOINT __levator02.l
-						{
-							OFFSET 0.000000 13.604700 -0.502080 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT levator02.l
-							{
-								OFFSET 0.313580 -11.321120 11.599360 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT levator03.l
-								{
-									OFFSET 1.681690 -1.563730 -1.357570 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT levator04.l
-									{
-										OFFSET 0.504730 -1.676760 -0.058160 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										JOINT levator05.l
-										{
-											OFFSET 0.145440 -1.643170 -0.225470 
-											CHANNELS 3 Zrotation Xrotation Yrotation
-											End Site
-											{
-												OFFSET -0.310116 -0.760198 -0.121474 
-											}
-										}
-									}
-								}
-							}
-						}
-						JOINT __levator02.r
-						{
-							OFFSET 0.000000 13.604700 -0.502080 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT levator02.r
-							{
-								OFFSET -0.313580 -11.321120 11.599360 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT levator03.r
-								{
-									OFFSET -1.681690 -1.563740 -1.357570 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT levator04.r
-									{
-										OFFSET -0.504730 -1.676750 -0.058160 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										JOINT levator05.r
-										{
-											OFFSET -0.145440 -1.643170 -0.225470 
-											CHANNELS 3 Zrotation Xrotation Yrotation
-											End Site
-											{
-												OFFSET 0.310116 -0.760193 -0.121474 
-											}
-										}
-									}
-								}
-							}
-						}
-						JOINT __special01
-						{
-							OFFSET 0.000000 13.604700 -0.502080 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT special01
-							{
-								OFFSET -0.000000 -14.026930 -5.716970 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT oris04.l
-								{
-									OFFSET -0.000000 -0.492640 17.312620 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT oris03.l
-									{
-										OFFSET 1.215520 -0.627430 -0.393050 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										End Site
-										{
-											OFFSET 0.288776 -0.560899 -0.149645 
-										}
-									}
-								}
-								JOINT oris04.r
-								{
-									OFFSET -0.000000 -0.492640 17.312620 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT oris03.r
-									{
-										OFFSET -1.215520 -0.627440 -0.393050 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										End Site
-										{
-											OFFSET -0.288776 -0.560894 -0.149645 
-										}
-									}
-								}
-								JOINT oris06
-								{
-									OFFSET -0.000000 -0.492640 17.312620 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT oris05
-									{
-										OFFSET -0.000000 -0.486000 0.000950 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										End Site
-										{
-											OFFSET 0.000000 -0.630493 0.197635 
-										}
-									}
-								}
-							}
-						}
-						JOINT __special03
-						{
-							OFFSET 0.000000 13.604700 -0.502080 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT special03
-							{
-								OFFSET 0.000000 -13.499860 2.500710 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT __levator06.l
-								{
-									OFFSET -0.000000 1.035800 10.090229 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT levator06.l
-									{
-										OFFSET 0.522240 -0.615720 0.045900 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										End Site
-										{
-											OFFSET 1.107505 -0.131898 -2.142227 
-										}
-									}
-								}
-								JOINT __levator06.r
-								{
-									OFFSET -0.000000 1.035800 10.090229 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT levator06.r
-									{
-										OFFSET -0.522240 -0.615730 0.045900 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										End Site
-										{
-											OFFSET -1.107506 -0.131893 -2.142227 
-										}
-									}
-								}
-							}
-						}
-						JOINT special06.l
-						{
-							OFFSET 0.000000 13.604700 -0.502080 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT special05.l
-							{
-								OFFSET 2.108890 0.153870 5.595070 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT eye.l
-								{
-									OFFSET 0.857170 -10.254801 2.414670 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET 0.111609 0.006490 4.051424 
-									}
-								}
-								JOINT orbicularis03.l
-								{
-									OFFSET 0.857170 -10.254801 2.414670 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET 0.097789 1.146431 3.788029 
-									}
-								}
-								JOINT orbicularis04.l
-								{
-									OFFSET 0.857170 -10.254801 2.414670 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET 0.113609 -1.130505 3.863064 
-									}
-								}
-							}
-						}
-						JOINT special06.r
-						{
-							OFFSET 0.000000 13.604700 -0.502080 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT special05.r
-							{
-								OFFSET -2.108890 0.153870 5.595070 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT eye.r
-								{
-									OFFSET -0.857170 -10.254801 2.414670 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET -0.111609 0.006490 4.051424 
-									}
-								}
-								JOINT orbicularis03.r
-								{
-									OFFSET -0.857170 -10.254801 2.414670 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET -0.097789 1.146431 3.788029 
-									}
-								}
-								JOINT orbicularis04.r
-								{
-									OFFSET -0.857170 -10.254801 2.414670 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET -0.113609 -1.130505 3.863064 
-									}
-								}
-							}
-						}
-						JOINT __temporalis01.l
-						{
-							OFFSET 0.000000 13.604700 -0.502080 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT temporalis01.l
-							{
-								OFFSET 6.332510 -9.444281 6.595120 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT oculi02.l
-								{
-									OFFSET -0.804920 0.053010 1.621140 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT oculi01.l
-									{
-										OFFSET -2.161570 1.690970 2.142660 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										End Site
-										{
-											OFFSET -1.740622 0.281157 0.647323 
-										}
-									}
-								}
-							}
-						}
-						JOINT __temporalis01.r
-						{
-							OFFSET 0.000000 13.604700 -0.502080 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT temporalis01.r
-							{
-								OFFSET -6.332510 -9.444281 6.595120 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT oculi02.r
-								{
-									OFFSET 0.804920 0.053010 1.621140 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT oculi01.r
-									{
-										OFFSET 2.161570 1.690970 2.142660 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										End Site
-										{
-											OFFSET 1.740622 0.281157 0.647323 
-										}
-									}
-								}
-							}
-						}
-						JOINT __temporalis02.l
-						{
-							OFFSET 0.000000 13.604700 -0.502080 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT temporalis02.l
-							{
-								OFFSET 6.377600 -11.680510 6.235180 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT risorius02.l
-								{
-									OFFSET -0.814250 0.451130 1.721730 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT risorius03.l
-									{
-										OFFSET -0.649710 -2.514660 0.612550 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										End Site
-										{
-											OFFSET 0.479556 -1.760402 -1.642659 
-										}
-									}
-								}
-							}
-						}
-						JOINT __temporalis02.r
-						{
-							OFFSET 0.000000 13.604700 -0.502080 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT temporalis02.r
-							{
-								OFFSET -6.377600 -11.680510 6.235180 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT risorius02.r
-								{
-									OFFSET 0.814250 0.451130 1.721730 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									JOINT risorius03.r
-									{
-										OFFSET 0.649710 -2.514660 0.612550 
-										CHANNELS 3 Zrotation Xrotation Yrotation
-										End Site
-										{
-											OFFSET -0.479556 -1.760402 -1.642659 
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			JOINT rCollar
-			{
-				OFFSET -2.682240 19.263399 -4.876800 
-				CHANNELS 3 Zrotation Xrotation Yrotation
-				JOINT rShldr
-				{
-					OFFSET -8.778240 -1.950730 1.463040 
-					CHANNELS 3 Zrotation Xrotation Yrotation
-					JOINT rForeArm
-					{
-						OFFSET -28.174200 -1.711500 0.487680 
-						CHANNELS 3 Zrotation Xrotation Yrotation
-						JOINT rHand
-						{
-							OFFSET -22.587900 0.773209 7.071360 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT rThumb1
-							{
-								OFFSET -1.219200 -0.487915 3.413760 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT rThumb2
-								{
-									OFFSET -3.370350 -0.524490 3.413760 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET -1.782710 -1.182140 1.430490 
-									}
-								}
-							}
-							JOINT rIndex1
-							{
-								OFFSET -7.759470 0.938293 5.608320 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT rIndex2
-								{
-									OFFSET -2.540570 -0.884171 1.565380 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET -1.625190 -0.234802 1.165020 
-									}
-								}
-							}
-							JOINT rMid1
-							{
-								OFFSET -8.247140 1.182130 3.413760 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT rMid2
-								{
-									OFFSET -3.101650 -0.590103 1.064700 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET -2.485470 -0.328903 0.837420 
-									}
-								}
-							}
-							JOINT rRing1
-							{
-								OFFSET -8.828220 0.546677 1.516780 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT rRing2
-								{
-									OFFSET -2.609340 -0.819778 -0.019849 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET -2.338420 -0.294052 0.168128 
-									}
-								}
-							}
-							JOINT rPinky1
-							{
-								OFFSET -8.272020 -0.047791 -0.458400 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT rPinky2
-								{
-									OFFSET -1.827340 -0.647385 -0.700984 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET -1.692250 -0.517670 -0.607171 
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			JOINT lCollar
-			{
-				OFFSET 2.682240 19.263399 -4.876800 
-				CHANNELS 3 Zrotation Xrotation Yrotation
-				JOINT lShldr
-				{
-					OFFSET 8.778240 -1.950730 1.463040 
-					CHANNELS 3 Zrotation Xrotation Yrotation
-					JOINT lForeArm
-					{
-						OFFSET 28.174200 -1.711500 0.487680 
-						CHANNELS 3 Zrotation Xrotation Yrotation
-						JOINT lHand
-						{
-							OFFSET 22.587900 0.773209 7.071360 
-							CHANNELS 3 Zrotation Xrotation Yrotation
-							JOINT lThumb1
-							{
-								OFFSET 1.219200 -0.487915 3.413760 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT lThumb2
-								{
-									OFFSET 3.370350 -0.524490 3.413760 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET 1.782710 -1.182140 1.430490 
-									}
-								}
-							}
-							JOINT lIndex1
-							{
-								OFFSET 7.759470 0.938293 5.608320 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT lIndex2
-								{
-									OFFSET 2.540570 -0.884171 1.565380 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET 1.625190 -0.234802 1.165020 
-									}
-								}
-							}
-							JOINT lMid1
-							{
-								OFFSET 8.247140 1.182130 3.413760 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT lMid2
-								{
-									OFFSET 3.101650 -0.590103 1.064700 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET 2.485470 -0.328903 0.837420 
-									}
-								}
-							}
-							JOINT lRing1
-							{
-								OFFSET 8.828220 0.546677 1.516780 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT lRing2
-								{
-									OFFSET 2.609340 -0.819778 -0.019849 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET 2.338420 -0.294052 0.168128 
-									}
-								}
-							}
-							JOINT lPinky1
-							{
-								OFFSET 8.272020 -0.047791 -0.458400 
-								CHANNELS 3 Zrotation Xrotation Yrotation
-								JOINT lPinky2
-								{
-									OFFSET 1.827340 -0.647385 -0.700984 
-									CHANNELS 3 Zrotation Xrotation Yrotation
-									End Site
-									{
-										OFFSET 1.692250 -0.517670 -0.607171 
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	JOINT rButtock
-	{
-		OFFSET -8.778240 4.350840 1.219200 
-		CHANNELS 3 Zrotation Xrotation Yrotation
-		JOINT rThigh
-		{
-			OFFSET 0.000000 -1.706870 -2.194560 
-			CHANNELS 3 Zrotation Xrotation Yrotation
-			JOINT rShin
-			{
-				OFFSET 0.000000 -36.819901 0.731520 
-				CHANNELS 3 Zrotation Xrotation Yrotation
-				JOINT rFoot
-				{
-					OFFSET 0.731520 -45.110401 -5.120640 
-					CHANNELS 3 Zrotation Xrotation Yrotation
-					End Site
-					{
-						OFFSET -1.122100 -3.699640 12.103000 
-					}
-				}
-			}
-		}
-	}
-	JOINT lButtock
-	{
-		OFFSET 8.778240 4.350840 1.219200 
-		CHANNELS 3 Zrotation Xrotation Yrotation
-		JOINT lThigh
-		{
-			OFFSET 0.000000 -1.706870 -2.194560 
-			CHANNELS 3 Zrotation Xrotation Yrotation
-			JOINT lShin
-			{
-				OFFSET 0.000000 -36.819901 0.731520 
-				CHANNELS 3 Zrotation Xrotation Yrotation
-				JOINT lFoot
-				{
-					OFFSET -0.731520 -45.110401 -5.120640 
-					CHANNELS 3 Zrotation Xrotation Yrotation
-					End Site
-					{
-						OFFSET 1.122100 -3.699640 12.103000 
-					}
-				}
-			}
-		}
-	}
+  OFFSET 0.000000 0.000000 0.000000
+  CHANNELS 6 Xposition Yposition Zposition Zrotation Yrotation Xrotation 
+  JOINT abdomen
+  {
+    OFFSET 0.000000 20.688101 -0.731520
+    CHANNELS 3 Zrotation Xrotation Yrotation 
+    JOINT chest
+    {
+      OFFSET 0.000000 11.704300 -0.487680
+      CHANNELS 3 Zrotation Xrotation Yrotation 
+      JOINT neck
+      {
+        OFFSET 0.000000 14.013250 1.361400
+        CHANNELS 3 Zrotation Xrotation Yrotation 
+        JOINT neck1
+        {
+          OFFSET 0.000000 5.364170 1.574630
+          CHANNELS 3 Zrotation Xrotation Yrotation 
+          JOINT head
+          {
+            OFFSET 0.000000 5.364141 1.574630
+            CHANNELS 3 Zrotation Xrotation Yrotation 
+            JOINT __jaw
+            {
+              OFFSET 0.000000 13.604700 -0.502080
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT jaw
+              {
+                OFFSET 0.000000 -13.499860 2.500710
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT special04
+                {
+                  OFFSET -0.000000 -6.835370 4.375500
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT oris02
+                  {
+                    OFFSET 0.000000 1.711150 2.820850
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    JOINT oris01
+                    {
+                      OFFSET -0.000000 0.972390 0.845650
+                      CHANNELS 3 Zrotation Xrotation Yrotation 
+                      End Site
+                      {
+                        OFFSET 0.000000 1.162291 0.607091
+                      }
+                    }
+                  }
+                  JOINT oris06.l
+                  {
+                    OFFSET 0.000000 1.711150 2.820850
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    JOINT oris07.l
+                    {
+                      OFFSET 1.168850 0.445180 0.506110
+                      CHANNELS 3 Zrotation Xrotation Yrotation 
+                      End Site
+                      {
+                        OFFSET 0.450611 1.195178 0.204519
+                      }
+                    }
+                  }
+                  JOINT oris06.r
+                  {
+                    OFFSET 0.000000 1.711150 2.820850
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    JOINT oris07.r
+                    {
+                      OFFSET -1.168850 0.445180 0.506110
+                      CHANNELS 3 Zrotation Xrotation Yrotation 
+                      End Site
+                      {
+                        OFFSET -0.450611 1.195173 0.204519
+                      }
+                    }
+                  }
+                }
+                JOINT tongue00
+                {
+                  OFFSET -0.000000 -6.835370 4.375500
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT tongue01
+                  {
+                    OFFSET 0.000000 3.973650 -3.762340
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    JOINT tongue02
+                    {
+                      OFFSET 0.000000 0.429760 2.924710
+                      CHANNELS 3 Zrotation Xrotation Yrotation 
+                      JOINT tongue03
+                      {
+                        OFFSET 0.000000 0.018530 2.059010
+                        CHANNELS 3 Zrotation Xrotation Yrotation 
+                        JOINT __tongue04
+                        {
+                          OFFSET 0.000000 -0.440240 0.838860
+                          CHANNELS 3 Zrotation Xrotation Yrotation 
+                          JOINT tongue04
+                          {
+                            OFFSET 0.000000 0.000000 0.000000
+                            CHANNELS 3 Zrotation Xrotation Yrotation 
+                            End Site
+                            {
+                              OFFSET 0.000000 -0.440230 0.838860
+                            }
+                          }
+                        }
+                        JOINT tongue07.l
+                        {
+                          OFFSET 0.000000 -0.440240 0.838860
+                          CHANNELS 3 Zrotation Xrotation Yrotation 
+                          End Site
+                          {
+                            OFFSET 1.160923 -0.331531 0.018227
+                          }
+                        }
+                        JOINT tongue07.r
+                        {
+                          OFFSET 0.000000 -0.440240 0.838860
+                          CHANNELS 3 Zrotation Xrotation Yrotation 
+                          End Site
+                          {
+                            OFFSET -1.160922 -0.331531 0.018227
+                          }
+                        }
+                      }
+                      JOINT tongue06.l
+                      {
+                        OFFSET 0.000000 0.018530 2.059010
+                        CHANNELS 3 Zrotation Xrotation Yrotation 
+                        End Site
+                        {
+                          OFFSET 1.644752 -0.526075 -0.203281
+                        }
+                      }
+                      JOINT tongue06.r
+                      {
+                        OFFSET 0.000000 0.018530 2.059010
+                        CHANNELS 3 Zrotation Xrotation Yrotation 
+                        End Site
+                        {
+                          OFFSET -1.644752 -0.526075 -0.203282
+                        }
+                      }
+                    }
+                    JOINT tongue05.l
+                    {
+                      OFFSET 0.000000 0.429760 2.924710
+                      CHANNELS 3 Zrotation Xrotation Yrotation 
+                      End Site
+                      {
+                        OFFSET 1.971028 -0.388618 0.239206
+                      }
+                    }
+                    JOINT tongue05.r
+                    {
+                      OFFSET 0.000000 0.429760 2.924710
+                      CHANNELS 3 Zrotation Xrotation Yrotation 
+                      End Site
+                      {
+                        OFFSET -1.971028 -0.388618 0.239205
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            JOINT __levator02.l
+            {
+              OFFSET 0.000000 13.604700 -0.502080
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT levator02.l
+              {
+                OFFSET 0.313580 -11.321120 11.599360
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT levator03.l
+                {
+                  OFFSET 1.681690 -1.563730 -1.357570
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT levator04.l
+                  {
+                    OFFSET 0.504730 -1.676760 -0.058160
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    JOINT levator05.l
+                    {
+                      OFFSET 0.145440 -1.643170 -0.225470
+                      CHANNELS 3 Zrotation Xrotation Yrotation 
+                      End Site
+                      {
+                        OFFSET -0.310116 -0.760198 -0.121474
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            JOINT __levator02.r
+            {
+              OFFSET 0.000000 13.604700 -0.502080
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT levator02.r
+              {
+                OFFSET -0.313580 -11.321120 11.599360
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT levator03.r
+                {
+                  OFFSET -1.681690 -1.563740 -1.357570
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT levator04.r
+                  {
+                    OFFSET -0.504730 -1.676750 -0.058160
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    JOINT levator05.r
+                    {
+                      OFFSET -0.145440 -1.643170 -0.225470
+                      CHANNELS 3 Zrotation Xrotation Yrotation 
+                      End Site
+                      {
+                        OFFSET 0.310116 -0.760193 -0.121474
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            JOINT __special01
+            {
+              OFFSET 0.000000 13.604700 -0.502080
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT special01
+              {
+                OFFSET -0.000000 -14.026930 -5.716970
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT oris04.l
+                {
+                  OFFSET -0.000000 -0.492640 17.312620
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT oris03.l
+                  {
+                    OFFSET 1.215520 -0.627430 -0.393050
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    End Site
+                    {
+                      OFFSET 0.288776 -0.560899 -0.149645
+                    }
+                  }
+                }
+                JOINT oris04.r
+                {
+                  OFFSET -0.000000 -0.492640 17.312620
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT oris03.r
+                  {
+                    OFFSET -1.215520 -0.627440 -0.393050
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    End Site
+                    {
+                      OFFSET -0.288776 -0.560894 -0.149645
+                    }
+                  }
+                }
+                JOINT oris06
+                {
+                  OFFSET -0.000000 -0.492640 17.312620
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT oris05
+                  {
+                    OFFSET -0.000000 -0.486000 0.000950
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    End Site
+                    {
+                      OFFSET 0.000000 -0.630493 0.197635
+                    }
+                  }
+                }
+              }
+            }
+            JOINT __special03
+            {
+              OFFSET 0.000000 13.604700 -0.502080
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT special03
+              {
+                OFFSET 0.000000 -13.499860 2.500710
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT __levator06.l
+                {
+                  OFFSET -0.000000 1.035800 10.090229
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT levator06.l
+                  {
+                    OFFSET 0.522240 -0.615720 0.045900
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    End Site
+                    {
+                      OFFSET 1.107505 -0.131898 -2.142227
+                    }
+                  }
+                }
+                JOINT __levator06.r
+                {
+                  OFFSET -0.000000 1.035800 10.090229
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT levator06.r
+                  {
+                    OFFSET -0.522240 -0.615730 0.045900
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    End Site
+                    {
+                      OFFSET -1.107506 -0.131893 -2.142227
+                    }
+                  }
+                }
+              }
+            }
+            JOINT special06.l
+            {
+              OFFSET 0.000000 13.604700 -0.502080
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT special05.l
+              {
+                OFFSET 2.108890 0.153870 5.595070
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT eye.l
+                {
+                  OFFSET 0.857170 -10.254801 2.414670
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET 0.111609 0.006490 4.051424
+                  }
+                }
+                JOINT orbicularis03.l
+                {
+                  OFFSET 0.857170 -10.254801 2.414670
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET 0.097789 1.146431 3.788029
+                  }
+                }
+                JOINT orbicularis04.l
+                {
+                  OFFSET 0.857170 -10.254801 2.414670
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET 0.113609 -1.130505 3.863064
+                  }
+                }
+              }
+            }
+            JOINT special06.r
+            {
+              OFFSET 0.000000 13.604700 -0.502080
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT special05.r
+              {
+                OFFSET -2.108890 0.153870 5.595070
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT eye.r
+                {
+                  OFFSET -0.857170 -10.254801 2.414670
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET -0.111609 0.006490 4.051424
+                  }
+                }
+                JOINT orbicularis03.r
+                {
+                  OFFSET -0.857170 -10.254801 2.414670
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET -0.097789 1.146431 3.788029
+                  }
+                }
+                JOINT orbicularis04.r
+                {
+                  OFFSET -0.857170 -10.254801 2.414670
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET -0.113609 -1.130505 3.863064
+                  }
+                }
+              }
+            }
+            JOINT __temporalis01.l
+            {
+              OFFSET 0.000000 13.604700 -0.502080
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT temporalis01.l
+              {
+                OFFSET 6.332510 -9.444281 6.595120
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT oculi02.l
+                {
+                  OFFSET -0.804920 0.053010 1.621140
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT oculi01.l
+                  {
+                    OFFSET -2.161570 1.690970 2.142660
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    End Site
+                    {
+                      OFFSET -1.740622 0.281157 0.647323
+                    }
+                  }
+                }
+              }
+            }
+            JOINT __temporalis01.r
+            {
+              OFFSET 0.000000 13.604700 -0.502080
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT temporalis01.r
+              {
+                OFFSET -6.332510 -9.444281 6.595120
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT oculi02.r
+                {
+                  OFFSET 0.804920 0.053010 1.621140
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT oculi01.r
+                  {
+                    OFFSET 2.161570 1.690970 2.142660
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    End Site
+                    {
+                      OFFSET 1.740622 0.281157 0.647323
+                    }
+                  }
+                }
+              }
+            }
+            JOINT __temporalis02.l
+            {
+              OFFSET 0.000000 13.604700 -0.502080
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT temporalis02.l
+              {
+                OFFSET 6.377600 -11.680510 6.235180
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT risorius02.l
+                {
+                  OFFSET -0.814250 0.451130 1.721730
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT risorius03.l
+                  {
+                    OFFSET -0.649710 -2.514660 0.612550
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    End Site
+                    {
+                      OFFSET 0.479556 -1.760402 -1.642659
+                    }
+                  }
+                }
+              }
+            }
+            JOINT __temporalis02.r
+            {
+              OFFSET 0.000000 13.604700 -0.502080
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT temporalis02.r
+              {
+                OFFSET -6.377600 -11.680510 6.235180
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT risorius02.r
+                {
+                  OFFSET 0.814250 0.451130 1.721730
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  JOINT risorius03.r
+                  {
+                    OFFSET 0.649710 -2.514660 0.612550
+                    CHANNELS 3 Zrotation Xrotation Yrotation 
+                    End Site
+                    {
+                      OFFSET -0.479556 -1.760402 -1.642659
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      JOINT rcollar
+      {
+        OFFSET -2.682240 19.263399 -4.876800
+        CHANNELS 3 Zrotation Xrotation Yrotation 
+        JOINT rshoulder
+        {
+          OFFSET -8.778240 -1.950730 1.463040
+          CHANNELS 3 Zrotation Xrotation Yrotation 
+          JOINT relbow
+          {
+            OFFSET -28.174200 -1.711500 0.487680
+            CHANNELS 3 Zrotation Xrotation Yrotation 
+            JOINT rhand
+            {
+              OFFSET -22.587900 0.773209 7.071360
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT rthumb1
+              {
+                OFFSET -1.219200 -0.487915 3.413760
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT rthumb2
+                {
+                  OFFSET -3.370350 -0.524490 3.413760
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET -1.782710 -1.182140 1.430490
+                  }
+                }
+              }
+              JOINT rindex1
+              {
+                OFFSET -7.759470 0.938293 5.608320
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT rindex2
+                {
+                  OFFSET -2.540570 -0.884171 1.565380
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET -1.625190 -0.234802 1.165020
+                  }
+                }
+              }
+              JOINT rmid1
+              {
+                OFFSET -8.247140 1.182130 3.413760
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT rmid2
+                {
+                  OFFSET -3.101650 -0.590103 1.064700
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET -2.485470 -0.328903 0.837420
+                  }
+                }
+              }
+              JOINT rring1
+              {
+                OFFSET -8.828220 0.546677 1.516780
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT rring2
+                {
+                  OFFSET -2.609340 -0.819778 -0.019849
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET -2.338420 -0.294052 0.168128
+                  }
+                }
+              }
+              JOINT rpinky1
+              {
+                OFFSET -8.272020 -0.047791 -0.458400
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT rpinky2
+                {
+                  OFFSET -1.827340 -0.647385 -0.700984
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET -1.692250 -0.517670 -0.607171
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      JOINT lcollar
+      {
+        OFFSET 2.682240 19.263399 -4.876800
+        CHANNELS 3 Zrotation Xrotation Yrotation 
+        JOINT lshoulder
+        {
+          OFFSET 8.778240 -1.950730 1.463040
+          CHANNELS 3 Zrotation Xrotation Yrotation 
+          JOINT lelbow
+          {
+            OFFSET 28.174200 -1.711500 0.487680
+            CHANNELS 3 Zrotation Xrotation Yrotation 
+            JOINT lhand
+            {
+              OFFSET 22.587900 0.773209 7.071360
+              CHANNELS 3 Zrotation Xrotation Yrotation 
+              JOINT lthumb1
+              {
+                OFFSET 1.219200 -0.487915 3.413760
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT lthumb2
+                {
+                  OFFSET 3.370350 -0.524490 3.413760
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET 1.782710 -1.182140 1.430490
+                  }
+                }
+              }
+              JOINT lindex1
+              {
+                OFFSET 7.759470 0.938293 5.608320
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT lindex2
+                {
+                  OFFSET 2.540570 -0.884171 1.565380
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET 1.625190 -0.234802 1.165020
+                  }
+                }
+              }
+              JOINT lmid1
+              {
+                OFFSET 8.247140 1.182130 3.413760
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT lmid2
+                {
+                  OFFSET 3.101650 -0.590103 1.064700
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET 2.485470 -0.328903 0.837420
+                  }
+                }
+              }
+              JOINT lring1
+              {
+                OFFSET 8.828220 0.546677 1.516780
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT lring2
+                {
+                  OFFSET 2.609340 -0.819778 -0.019849
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET 2.338420 -0.294052 0.168128
+                  }
+                }
+              }
+              JOINT lpinky1
+              {
+                OFFSET 8.272020 -0.047791 -0.458400
+                CHANNELS 3 Zrotation Xrotation Yrotation 
+                JOINT lpinky2
+                {
+                  OFFSET 1.827340 -0.647385 -0.700984
+                  CHANNELS 3 Zrotation Xrotation Yrotation 
+                  End Site
+                  {
+                    OFFSET 1.692250 -0.517670 -0.607171
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  JOINT rbuttock
+  {
+    OFFSET -8.778240 4.350840 1.219200
+    CHANNELS 3 Zrotation Xrotation Yrotation 
+    JOINT rhip
+    {
+      OFFSET 0.000000 -1.706870 -2.194560
+      CHANNELS 3 Zrotation Xrotation Yrotation 
+      JOINT rknee
+      {
+        OFFSET 0.000000 -36.819901 0.731520
+        CHANNELS 3 Zrotation Xrotation Yrotation 
+        JOINT rfoot
+        {
+          OFFSET 0.731520 -45.110401 -5.120640
+          CHANNELS 3 Zrotation Xrotation Yrotation 
+          End Site
+          {
+            OFFSET -1.122100 -3.699640 12.103000
+          }
+        }
+      }
+    }
+  }
+  JOINT lbuttock
+  {
+    OFFSET 8.778240 4.350840 1.219200
+    CHANNELS 3 Zrotation Xrotation Yrotation 
+    JOINT lhip
+    {
+      OFFSET 0.000000 -1.706870 -2.194560
+      CHANNELS 3 Zrotation Xrotation Yrotation 
+      JOINT lknee
+      {
+        OFFSET 0.000000 -36.819901 0.731520
+        CHANNELS 3 Zrotation Xrotation Yrotation 
+        JOINT lfoot
+        {
+          OFFSET -0.731520 -45.110401 -5.120640
+          CHANNELS 3 Zrotation Xrotation Yrotation 
+          End Site
+          {
+            OFFSET 1.122100 -3.699640 12.103000
+          }
+        }
+      }
+    }
+  }
 }
 MOTION
 Frames: 29
-Frame Time: 0.040000
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 12.521000 2.058100 -1.906000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -71.639397 17.803499 5.948200 19.184500 -12.759900 -29.539499 -9.362600 -0.461200 -8.204600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0.000000 0.000000 0.000000 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 0.933100 9.716900 0.155300 -0.010400 -0.012000 0.051600 -7.782900 3.548300 -3.808800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 12.732000 1.586400 -3.650800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 63.948799 42.207401 1.495400 -14.176900 -7.382700 28.340000 4.894400 25.027201 5.366900 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -74.461601 19.566799 6.897900 17.821100 -11.479700 -27.806299 -9.961500 0.736300 -8.185800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -6.367800 -15.019100 -3.509400 1.062600 27.358101 -2.010000 -1.495000 -8.832900 -8.370100 0.000000 0.000000 0.000000 2.021900 -14.906500 -5.535300 2.611700 18.948900 -0.998700 2.245000 -11.270900 4.855400 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 0.307100 10.305900 -0.089000 -0.010400 -0.012000 0.051600 -7.837800 3.613700 -4.134300 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.341800 0.815100 -4.750300 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 64.683098 42.937500 1.873500 -13.752200 -7.229900 31.368200 5.352000 25.111200 5.353500 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -75.929497 20.875799 6.896600 16.440901 -10.600200 -26.080999 -10.357100 1.777600 -8.181900 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -6.632600 -17.359699 -3.341800 1.093600 25.631500 -2.126300 -1.448300 -8.889000 -8.334500 0.000000 0.000000 0.000000 1.731400 -14.817200 -6.816100 2.742800 19.517700 -0.852000 2.398000 -11.670700 5.243800 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 0.372500 10.387000 -0.156800 -0.010400 -0.012000 0.051600 -8.078200 3.640900 -4.227700 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.660800 0.540400 -5.012800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 64.655701 43.171101 2.329400 -13.702600 -7.010500 32.292702 5.465200 24.789000 5.291900 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -75.620796 22.762100 3.498100 16.149900 -10.429400 -26.369200 -10.021400 2.008300 -7.736900 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -5.526300 -18.576000 -2.709700 1.443300 24.084600 -2.178700 -1.435900 -8.898600 -8.277500 0.000000 0.000000 0.000000 2.021900 -14.224700 -7.729400 3.033600 19.197300 -0.858000 2.416600 -11.902300 5.410100 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 0.671300 10.546400 -0.217300 -0.010400 -0.012000 0.051600 -8.223100 3.659000 -4.207500 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.586300 0.857500 -4.911200 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 64.302803 43.403400 3.004400 -13.937800 -6.760000 31.625799 5.292100 24.128901 5.296100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -74.141502 25.348000 -1.641200 17.168301 -10.662000 -28.581600 -9.002900 1.353900 -6.753600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -2.854700 -18.382900 -2.047000 1.657200 25.294901 -2.119300 -1.440400 -8.918700 -8.258100 0.000000 0.000000 0.000000 3.260800 -14.485300 -7.316000 3.061500 18.876699 -0.882100 2.447600 -12.049600 5.379300 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 0.366600 11.385600 -0.531200 -0.010400 -0.012000 0.051500 -7.982900 3.700300 -4.172500 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.549900 1.207100 -4.785200 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 64.520203 43.090000 3.649400 -13.909000 -6.565200 31.406601 5.230800 24.433399 5.488900 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -73.154404 28.094700 -5.029500 18.267200 -10.844900 -30.306999 -8.051200 0.376300 -5.844000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -1.379100 -18.621901 -1.901400 1.336500 27.035000 -2.129900 -1.426500 -8.978300 -8.227800 0.000000 0.000000 0.000000 4.391500 -15.447700 -6.856400 2.909700 19.965200 -0.724400 2.657800 -12.217100 5.496400 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 -0.168700 12.052600 -0.916600 -0.010400 -0.012000 0.051400 -7.639200 3.693200 -4.155700 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.419300 1.591200 -4.731400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 64.683701 42.980701 3.748400 -13.784800 -6.425200 29.941299 5.171200 25.541500 5.754500 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -71.697502 30.146799 -8.513700 19.501801 -11.216700 -32.619900 -6.900500 -1.189700 -4.902300 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -2.489000 -19.019800 -1.946700 1.022900 26.183100 -2.271800 -1.421400 -9.020500 -8.163400 0.000000 0.000000 0.000000 4.305400 -15.763500 -6.811200 2.909900 21.363800 -0.553900 2.855300 -12.333600 5.516100 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 -0.089900 11.751200 -1.014200 -0.010400 -0.012000 0.051400 -7.539800 3.586200 -4.153600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.031300 1.607700 -4.576200 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 63.831699 43.766602 3.293900 -14.024200 -6.363100 26.296400 4.797300 26.267900 6.036400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -67.281097 29.403601 -14.648700 21.136801 -12.424600 -36.569901 -5.393000 -3.337500 -3.950600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -5.044600 -18.922800 -1.822000 1.087100 24.304001 -2.380800 -1.450200 -9.032400 -8.135700 0.000000 0.000000 0.000000 2.995000 -14.814300 -6.778000 2.987400 21.307301 -0.574900 2.836100 -12.234500 5.181000 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 0.823700 10.679500 -0.720500 -0.010400 -0.012000 0.051500 -7.784000 3.478200 -4.156400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 12.754900 0.848500 -3.910800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 62.029701 44.554001 2.885100 -14.651600 -6.419900 22.753599 4.104600 26.068899 6.380200 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -59.608299 24.962299 -22.550600 22.636200 -14.602400 -41.489201 -3.932300 -5.153300 -3.313000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -6.666200 -18.423401 -1.909800 1.482300 24.220699 -2.299100 -1.534800 -9.016600 -8.189000 0.000000 0.000000 0.000000 1.712800 -13.193400 -6.284100 2.897900 19.898199 -0.782500 2.627300 -11.931400 4.655000 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 1.877500 9.815700 -0.300200 -0.010400 -0.012000 0.051600 -8.056800 3.420300 -4.158600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 12.857800 0.029900 -2.541200 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 60.357101 44.462502 2.566000 -15.333600 -6.456300 21.043200 3.409200 25.910400 6.780600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -52.138802 18.835899 -28.016701 23.701700 -17.302401 -46.963001 -2.769200 -6.277700 -3.021800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -6.644400 -17.464600 -2.673200 1.696400 26.282499 -2.097300 -1.642900 -8.996000 -8.291500 0.000000 0.000000 0.000000 1.333600 -12.485500 -5.667300 2.630900 18.858999 -0.967100 2.443200 -11.562000 4.193200 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 2.582400 9.428300 -0.159100 -0.010400 -0.012000 0.051600 -8.030100 3.383000 -4.159400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.114900 -0.295300 -0.802500 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 59.641201 42.651001 2.160600 -15.802500 -6.378500 20.826500 2.919100 26.901800 7.189000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -47.352501 13.733000 -29.850201 24.437700 -20.393700 -53.060902 -1.712900 -6.788300 -2.988200 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -5.765200 -17.082600 -3.062200 1.532700 28.906200 -1.928500 -1.724200 -8.937200 -8.210500 0.000000 0.000000 0.000000 2.031200 -12.527200 -5.071400 2.344300 18.543501 -1.012200 2.416900 -11.242200 3.957700 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 2.984200 9.025400 -0.275300 -0.010400 -0.012000 0.051600 -7.775100 3.366000 -4.159300 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.273100 -0.300200 0.670000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 59.500900 39.216099 1.788000 -15.906700 -6.248300 21.166000 2.586600 28.830999 7.599900 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -44.442101 9.448000 -30.413300 24.840099 -23.613600 -57.462502 -0.863400 -6.051600 -3.285400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -5.087100 -17.479900 -2.724300 1.302800 30.820601 -1.814000 -1.809900 -8.819200 -7.980500 0.000000 0.000000 0.000000 3.601700 -12.355300 -4.046900 2.070200 18.502399 -0.995900 2.477300 -10.990000 3.979300 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 3.157200 8.753900 -0.122400 -0.010400 -0.012000 0.051600 -7.587700 3.366600 -4.159000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.270000 -0.225100 1.699600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 58.890301 36.492401 1.510300 -15.726100 -6.209200 21.403799 2.330700 30.720600 8.087700 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -42.296799 3.793300 -30.370199 24.862801 -25.770901 -56.470501 -0.620200 -3.980900 -3.885000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -5.112600 -16.993000 -2.722000 1.001300 31.365000 -1.773700 -1.891300 -8.812000 -8.012500 0.000000 0.000000 0.000000 4.665000 -12.192500 -3.787400 2.018500 19.370501 -0.986600 2.509100 -10.719400 4.100000 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 3.241000 8.938100 0.341000 -0.010400 -0.012000 0.051600 -7.604500 3.371600 -4.158000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.110500 -0.177300 2.558400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 57.747898 34.628399 1.197600 -15.571700 -6.309800 21.368200 2.127900 32.198101 8.648800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -40.816601 -2.497200 -28.875099 24.740299 -25.379900 -51.216999 -0.743700 -1.804400 -4.455300 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -5.270300 -15.249300 -3.141800 0.483700 30.939899 -1.814300 -1.896200 -8.992000 -8.242800 0.000000 0.000000 0.000000 4.512100 -12.267900 -5.008700 2.289100 20.485800 -0.970200 2.523200 -10.476700 4.287300 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 3.324500 9.272100 0.713800 -0.010400 -0.012000 0.051600 -7.701500 3.371600 -4.156300 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 12.894700 -0.165700 3.257500 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 56.876301 32.435699 0.811200 -15.476900 -6.439700 21.271700 2.009300 33.225399 9.063800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -40.186001 -7.462600 -26.169500 24.647900 -22.192200 -44.946098 -1.038900 -0.042000 -4.907200 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -5.292300 -13.604900 -3.437100 -0.085600 30.475800 -1.862500 -1.852900 -9.188000 -8.281500 0.000000 0.000000 0.000000 4.016100 -12.385100 -6.523000 2.599700 21.055099 -0.942500 2.542700 -10.359300 4.558800 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 3.427400 9.262200 0.918400 -0.010400 -0.012000 0.051600 -7.734300 3.328900 -3.995400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 12.785100 -0.170000 3.725200 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 56.695900 30.596001 0.589500 -15.280900 -6.511100 21.336500 2.006600 33.269100 9.121300 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -40.310398 -9.780100 -23.517099 24.543200 -18.394400 -39.672699 -1.691600 1.379700 -5.387800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -4.541800 -13.554200 -2.787900 -0.331800 30.325199 -1.868800 -1.839800 -9.220200 -8.002000 0.000000 0.000000 0.000000 3.786700 -11.913900 -7.605200 2.775000 21.415300 -0.927800 2.543100 -10.311700 4.787100 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 3.452000 9.081400 0.965100 -0.010400 -0.012000 0.051600 -7.687200 3.228700 -3.564400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 12.951400 -0.173500 3.803800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 57.358200 29.424400 0.559800 -15.039800 -6.523300 21.630899 2.146300 32.527699 8.770500 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -41.517399 -8.967100 -19.972601 24.394600 -16.118000 -36.562500 -2.683700 1.743600 -5.900600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -3.110700 -14.161400 -1.288400 -0.358200 30.776800 -1.845900 -1.810200 -9.117200 -7.611900 0.000000 0.000000 0.000000 3.828800 -11.219700 -8.066100 2.774000 20.789700 -0.911200 2.541200 -10.279100 4.977800 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 3.338000 9.092400 0.892100 -0.010400 -0.012000 0.051600 -7.626200 3.022700 -3.102100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.367600 0.036100 3.294100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 58.671501 29.447001 0.646600 -14.860000 -6.502800 22.049700 2.436600 31.666700 8.044300 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -44.379501 -5.136800 -14.378100 24.063000 -15.179200 -35.118000 -3.941000 0.687800 -6.458100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -1.817700 -14.362900 0.011600 -0.389600 31.330500 -1.824600 -1.727200 -9.000200 -7.381400 0.000000 0.000000 0.000000 3.977800 -11.352500 -8.076300 2.729500 19.658701 -0.903600 2.504100 -10.260100 5.125100 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 3.151500 9.168200 0.829600 -0.010400 -0.012000 0.051600 -7.579600 2.753900 -2.801200 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.585600 0.688400 2.385800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 59.960800 30.915600 0.816000 -14.639000 -6.521600 22.756399 2.820300 30.708500 7.203500 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -49.032501 1.304800 -7.900500 23.275999 -14.548600 -33.401001 -5.616600 -0.418300 -7.279500 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -0.864000 -14.717000 0.864400 -0.336600 31.260201 -1.815800 -1.647900 -8.898300 -7.356500 0.000000 0.000000 0.000000 3.959100 -12.110900 -8.048900 2.750200 19.297701 -0.928500 2.412000 -10.246800 5.179000 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 2.892500 9.366100 0.774100 -0.010400 -0.012000 0.051600 -7.575500 2.683100 -2.686100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.298500 1.493300 1.444600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 60.942902 32.659801 0.916800 -14.468900 -6.637700 23.684401 3.214400 29.709801 6.610100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -55.539600 7.823600 -2.076900 22.222099 -14.083000 -31.506901 -7.243900 -0.752400 -8.050900 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -0.296100 -14.354200 1.343600 -0.453100 31.005301 -1.839300 -1.557900 -8.853700 -7.439500 0.000000 0.000000 0.000000 3.508000 -13.038200 -8.196100 2.824000 19.184500 -0.955500 2.339400 -10.273200 5.182900 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 2.616300 9.624200 0.706600 -0.010400 -0.012000 0.051600 -7.638900 2.873800 -2.765100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 12.798800 2.017900 0.569600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 61.934200 35.149200 1.161800 -14.530100 -6.689400 24.177900 3.620200 28.527300 6.182900 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -62.766998 12.746000 1.455300 21.225500 -14.056200 -30.979700 -8.198600 -0.917500 -8.221400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -0.223800 -13.552700 1.463100 -0.581200 30.876400 -1.886900 -1.455700 -8.847200 -7.519800 0.000000 0.000000 0.000000 2.763700 -13.824000 -8.159300 2.897600 18.866600 -0.974100 2.304300 -10.350400 5.119900 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 2.411900 9.516200 0.609700 -0.010400 -0.012000 0.051600 -7.720500 3.119500 -2.941100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 12.474400 2.141200 -0.652800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 62.995201 38.443901 1.591600 -14.538300 -6.628100 24.417500 4.072600 27.152300 5.717500 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -68.500000 16.169001 2.807100 20.089300 -13.775700 -30.701799 -8.861500 -0.779900 -8.214000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -0.735600 -14.498300 1.281700 -0.155300 30.265100 -1.907400 -1.412700 -8.750300 -7.580900 0.000000 0.000000 0.000000 2.239900 -14.096800 -7.517400 2.876900 18.620600 -1.003700 2.265500 -10.470300 4.972000 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 2.227200 9.184300 0.484600 -0.010400 -0.012000 0.051600 -7.812900 3.275100 -3.184400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 12.505900 1.876500 -2.457800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 63.943501 40.701302 1.927400 -14.259100 -6.671000 25.663900 4.552900 25.938200 5.289800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -72.312798 18.215200 4.442800 18.558001 -12.963400 -29.264000 -9.720600 0.039500 -8.562100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -1.471700 -16.673599 0.993100 0.580800 29.281200 -1.902500 -1.416100 -8.616800 -7.662800 0.000000 0.000000 0.000000 1.923800 -14.044900 -6.660900 2.786900 18.483900 -1.033100 2.229200 -10.701700 4.869500 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 2.024100 9.146300 0.419900 -0.010400 -0.012000 0.051600 -8.033100 3.388300 -3.576800 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 12.822800 1.389900 -4.115700 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 64.564003 42.261200 2.426000 -13.955600 -6.802600 27.860201 4.963500 24.861099 5.025900 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -74.788902 19.575600 6.571400 16.938700 -12.393600 -27.371500 -10.471300 1.071100 -8.885700 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -1.783700 -17.206699 0.920500 1.093600 28.452900 -1.947100 -1.398600 -8.629100 -7.745400 0.000000 0.000000 0.000000 1.360800 -14.044400 -6.075500 2.761000 18.157700 -1.053900 2.212300 -11.039000 4.917000 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 1.627600 9.337700 0.350500 -0.010400 -0.012000 0.051600 -8.256000 3.486000 -3.981100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.216300 0.923400 -4.906000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 64.632896 43.687901 2.756300 -13.853200 -6.997800 29.639400 5.215000 23.971600 4.950900 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -75.847801 20.837999 6.661600 16.006500 -11.885100 -26.203800 -10.612400 1.695000 -8.646100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -2.601900 -16.572800 0.389100 1.458300 27.242701 -2.033800 -1.398900 -8.738700 -7.876300 0.000000 0.000000 0.000000 0.441000 -13.756700 -6.012700 2.804700 18.688700 -1.076400 2.180400 -11.322400 4.983100 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 0.973400 9.520100 0.211000 -0.010400 -0.012000 0.051700 -8.274100 3.537300 -4.188600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.432500 0.775600 -4.997600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 64.125198 44.394402 2.515300 -14.008700 -7.215500 30.154800 5.260400 23.349100 5.013500 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -75.279503 22.481199 3.104700 16.350201 -11.024300 -26.875401 -9.945300 1.638200 -7.705000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -4.733000 -16.842300 -1.344000 1.790000 26.046600 -2.058000 -1.461000 -8.842500 -8.120500 0.000000 0.000000 0.000000 -0.119100 -13.238000 -6.243100 2.763000 20.197300 -1.081900 2.148200 -11.534500 4.954400 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 0.171000 9.725200 -0.041600 -0.010400 -0.012000 0.051700 -8.014300 3.608500 -4.220100 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.381800 1.046700 -4.864400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 63.710300 44.579800 2.147400 -14.167600 -7.100500 29.067600 5.178300 23.573700 5.159000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -73.453201 24.634800 -2.649300 17.811600 -10.576400 -29.673800 -8.614500 0.859500 -6.294600 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -7.031100 -17.989300 -3.349100 1.993100 25.585100 -2.047600 -1.543900 -8.846300 -8.334900 0.000000 0.000000 0.000000 0.067700 -13.319200 -6.627400 2.560300 21.420500 -0.979400 2.239200 -11.747000 4.889100 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 -0.725700 9.929600 -0.432500 -0.010400 -0.012000 0.051600 -7.422300 3.729500 -4.189700 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 13.082500 1.450200 -4.759700 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 63.700298 44.508400 1.745100 -13.945900 -6.676700 27.097500 5.077800 25.168400 5.454200 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -70.966904 25.445700 -7.610000 19.407101 -11.210200 -32.964001 -7.332700 -0.276100 -5.153400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -9.042100 -19.395800 -4.477700 2.043000 25.331499 -2.091900 -1.632800 -8.703900 -8.409100 0.000000 0.000000 0.000000 -0.168900 -13.865800 -7.671500 2.221800 23.204100 -0.742500 2.459300 -11.801700 4.799200 
-0.000000 0.000000 -190.000000 0.000000 0.000000 0.000000 -0.906100 9.918300 -0.653500 -0.010400 -0.012000 0.051600 -7.072600 3.816800 -4.163300 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 12.486800 1.617900 -4.726900 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 63.532101 44.182499 1.400100 -13.888200 -6.339100 24.818600 4.799700 26.696800 5.834400 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -67.890800 24.288900 -11.160900 21.022699 -12.764100 -36.854599 -5.991700 -2.434600 -4.232300 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 -10.002400 -19.900700 -4.538000 2.026700 25.168301 -2.164000 -1.705400 -8.616800 -8.403600 0.000000 0.000000 0.000000 -1.008100 -13.541600 -8.515000 2.109700 25.011499 -0.624100 2.568900 -11.707700 4.620700 
+Frame Time: 0.04000000
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -71.639397 17.803499 5.948200 19.184500 -12.759900 -29.539499 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -74.461601 19.566799 6.897900 17.821100 -11.479700 -27.806299 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -75.929497 20.875799 6.896600 16.440901 -10.600200 -26.080999 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -75.620796 22.762100 3.498100 16.149900 -10.429400 -26.369200 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -74.141502 25.348000 -1.641200 17.168301 -10.662000 -28.581600 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -73.154404 28.094700 -5.029500 18.267200 -10.844900 -30.306999 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -71.697502 30.146799 -8.513700 19.501801 -11.216700 -32.619900 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -67.281097 29.403601 -14.648700 21.136801 -12.424600 -36.569901 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -59.608299 24.962299 -22.550600 22.636200 -14.602400 -41.489201 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -52.138802 18.835899 -28.016701 23.701700 -17.302401 -46.963001 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -47.352501 13.733000 -29.850201 24.437700 -20.393700 -53.060902 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -44.442101 9.448000 -30.413300 24.840099 -23.613600 -57.462502 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -42.296799 3.793300 -30.370199 24.862801 -25.770901 -56.470501 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -40.816601 -2.497200 -28.875099 24.740299 -25.379900 -51.216999 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -40.186001 -7.462600 -26.169500 24.647900 -22.192200 -44.946098 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -40.310398 -9.780100 -23.517099 24.543200 -18.394400 -39.672699 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -41.517399 -8.967100 -19.972601 24.394600 -16.118000 -36.562500 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -44.379501 -5.136800 -14.378100 24.063000 -15.179200 -35.118000 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -49.032501 1.304800 -7.900500 23.275999 -14.548600 -33.401001 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -55.539600 7.823600 -2.076900 22.222099 -14.083000 -31.506901 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -62.766998 12.746000 1.455300 21.225500 -14.056200 -30.979700 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -68.500000 16.169001 2.807100 20.089300 -13.775700 -30.701799 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -72.312798 18.215200 4.442800 18.558001 -12.963400 -29.264000 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -74.788902 19.575600 6.571400 16.938700 -12.393600 -27.371500 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -75.847801 20.837999 6.661600 16.006500 -11.885100 -26.203800 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -75.279503 22.481199 3.104700 16.350201 -11.024300 -26.875401 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -73.453201 24.634800 -2.649300 17.811600 -10.576400 -29.673800 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -70.966904 25.445700 -7.610000 19.407101 -11.210200 -32.964001 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 
+0 0 -190.000000 0 0 0 1.547200 9.385700 0.389300 -0.010400 -0.012000 0.051700 -7.700500 3.476900 -3.357500 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 12.521000 2.058100 -1.906000 0 0 0 0 0 0 0 0 0 63.210499 39.783901 0.999800 -14.523800 -7.403400 25.767900 4.429100 25.816999 5.538100 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -67.890800 24.288900 -11.160900 21.022699 -12.764100 -36.854599 -9.362600 -0.461200 -8.204600 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -6.713100 -13.714600 -3.910500 0.825000 27.998800 -1.967900 -1.538800 -8.817000 -8.373400 0 0 0 2.018900 -14.512100 -5.816700 2.714900 18.629299 -1.067400 2.163500 -10.823100 4.727300 

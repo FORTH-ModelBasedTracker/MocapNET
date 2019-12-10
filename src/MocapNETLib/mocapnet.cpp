@@ -719,8 +719,8 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,i
              int gestureDetected=compareHistoryWithKnownGestures(
                                                                  &mnet->recognizedGestures,
                                                                  &mnet->poseHistoryStorage,
-                                                                 85.0,//Percentage complete..
-                                                                 23.0 //Angle thrshold
+                                                                 99.0,//Percentage complete..
+                                                                 10.0 //Angle thrshold
                                                                 );
              if (gestureDetected!=0)
               {
