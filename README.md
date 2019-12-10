@@ -163,28 +163,28 @@ The output window of MocapNETLiveWebcamDemo contains a heatmap depicting the 2D 
 
 If your target is a headless environment then you might consider deactivating the visualization by passing the runtime argument --novisualization. This will prevent any windows from opening and thus not cause issues even on a headless environment.
 
-BVH output files are by default stored to the "out.bvh" file, unless you want them to be stored in a different path using -o . They can be easily viewed using a variety of compatible applicatons. We suggest [Blender](https://www.blender.org/) which is a very powerful open-source 3D editing and animation suite or [BVHacker](https://www.bvhacker.com/) that is freeware and compatible with [Wine](https://wiki.winehq.org/)
+BVH output files are stored to the "out.bvh" file by default. If you want them to be stored in a different path use the -o option. They can be easily viewed using a variety of compatible applicatons. We suggest [Blender](https://www.blender.org/) which is a very powerful open-source 3D editing and animation suite or [BVHacker](https://www.bvhacker.com/) that is freeware and compatible with [Wine](https://wiki.winehq.org/)
 
 
 ![MocapNETLiveWebcamDemo default visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoview.jpg)
 
 ![MocapNETLiveWebcamDemo rotation per joint visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoperjoint.png)
 
-By using the "Visualization Demo" slider bar you can alternate between different visualizations. A particularly useful visualization is the one that plots the joint rotations. 
+By using the "Visualization Demo" slider bar you can alternate between different visualizations. A particularly useful visualization is the one that plots the joint rotations as seen above. 
 
 ![MocapNETLiveWebcamDemo OpenGL visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoogl.png)
 
 ```
 ./MocapNETLiveWebcamDemo --from shuffle.webm --openpose --opengl --frames 375
 ```
-By enabling the ENABLE_OPENGL CMake configuration flag during compilation and using the --opengl flag when running the MocapNETLiveWebcamDemo you can also see an experimental OpenGL visualization rendering a skinned mesh that was generated using [makehuman](http://www.makehumancommunity.org/).
+By enabling the ENABLE_OPENGL CMake configuration flag during compilation and using the --opengl flag when running the MocapNETLiveWebcamDemo you can also see the experimental OpenGL visualization illustrated above, rendering a skinned mesh that was generated using [makehuman](http://www.makehumancommunity.org/). The BVH file armature used corresponds to the [CMU+Face](http://www.makehumancommunity.org/content/cmu_plus_face.html) armature of makehuman.
 
 ![MocapNETLiveWebcamDemo gesture experiments](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demogesture.png)
 
 ```
 ./MocapNETLiveWebcamDemo --from shuffle.webm --openpose --gestures --frames 375
 ```
-By starting the live demo using the --gestures argument or using the "Gesture Detection" slider bar you can enable a simple form of gesture detection. Gestures are stored as [BVH files](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/master/dataset/gestures) and controlled through the [gestureRecognition.hpp](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLib/gestureRecognition.hpp#L18) file. A client application can register a callback as seen in the [demo](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLiveWebcamDemo/mocapNETLiveDemo.cpp#L50). The gesture detection code is experimental and has been included as a proof of concept, since due to our high-level output you can easily facilitate gesture detections by comparing subsequent BVH frames as [seen in the code](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLib/gestureRecognition.cpp#L148). That being said gestures where not a part of the original [MocapNET paper](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf).
+By starting the live demo using the --gestures argument or using the "Gesture Detection" slider bar you can enable a simple form of gesture detection as seen in the illustration above. Gestures are stored as [BVH files](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/master/dataset/gestures) and controlled through the [gestureRecognition.hpp](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLib/gestureRecognition.hpp#L18) file. A client application can register a callback as seen in the [demo](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLiveWebcamDemo/mocapNETLiveDemo.cpp#L50). The gesture detection code is experimental and has been included as a proof of concept, since due to our high-level output you can easily facilitate gesture detections by comparing subsequent BVH frames as [seen in the code](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNETLib/gestureRecognition.cpp#L148). That being said gestures where not a part of the original [MocapNET paper](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf).
 
 
 
