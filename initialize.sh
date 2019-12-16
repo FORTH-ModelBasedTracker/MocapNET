@@ -24,6 +24,10 @@ chmod +x mocapnet.desktop
 if [ ! -f dataset/MotionCapture/READMEFIRST.txt ]; then
 cd "$DIR/dataset"
 echo "Could not find MotionCapture"
+#wget http://ammar.gr/datasets/CMUPlusHeadMotionCapture.zip
+#unzip CMUPlusHeadMotionCapture.zip
+#mv CMUPlusHeadMotionCapture.zip MotionCapture
+
 wget http://ammar.gr/datasets/CMUMotionCaptureDatasets.zip
 unzip CMUMotionCaptureDatasets.zip
 mv CMUMotionCaptureDatasets.zip MotionCapture

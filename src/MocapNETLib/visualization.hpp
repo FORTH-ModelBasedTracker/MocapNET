@@ -10,13 +10,13 @@
 
 #if USE_OPENCV
 #include "opencv2/opencv.hpp"
-using namespace cv; 
+using namespace cv;
   int visualizeCameraIntensities(const char* windowName,cv::Mat &imgOriginal,int forceColors);
   int visualizeCameraChannels(const char* windowName,cv::Mat &img,int channelNumber);
   int visualizeCameraEdges(const char* windowName,cv::Mat &img);
   int visualizeCameraFeatures(const char* windowName,cv::Mat &img);
-  int visualizeFigure(const char* windowName,cv::Mat &img); 
-#endif 
+  int visualizeFigure(const char* windowName,cv::Mat &img);
+#endif
 
 
   int visualizeHandleMessages();
@@ -135,10 +135,15 @@ static const int lineColorIndex[] =
 };
 
 
+#if USE_OPENCV
+int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOutputGUIForcedView,float offsetX,float offsetY);
+#endif
+
+
 int visualizeInput(
                                         const char* windowName,
                                         unsigned int frameNumber,
-                                        const char * path, 
+                                        const char * path,
                                         std::vector<std::vector<float> > points2DOutputGUIForcedView
                                      );
 
@@ -162,9 +167,9 @@ int visualizePoints(
                      signed int totalNumberOfFrames,
                      unsigned int numberOfFramesToGrab,
                      const char * CPUName,
-                     const char * GPUName,                              
+                     const char * GPUName,
                      int drawFloor,
-                     int drawNSDM, 
+                     int drawNSDM,
                      float fpsTotal,
                      float fpsAcquisition,
                      float joint2DEstimator,
@@ -175,7 +180,7 @@ int visualizePoints(
                      unsigned int handleMessages,
                      unsigned int deadInputPoints,
                      unsigned int gestureDetected,
-                     const char * gestureName, 
+                     const char * gestureName,
                      unsigned int gestureFrame,
                      float originalOrientation,
                      std::vector<float> mocapNETInput,
