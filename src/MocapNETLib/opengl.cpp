@@ -201,6 +201,17 @@ int updateOpenGLView(std::vector<float> bvhFrame)
                       ); 
     //------------------------------------------------------------- 
    
+   
+   //HEAD
+    //------------------------------------------------------------- 
+    controlOpenGLScene(
+                       "oris01", "oris01", rotationOrder,
+                       xDirection*bvhFrame[MOCAPNET_OUTPUT_ORIS01_XROTATION]+xAddition,
+                       yDirection*bvhFrame[MOCAPNET_OUTPUT_ORIS01_YROTATION]+yAddition,
+                       zDirection*bvhFrame[MOCAPNET_OUTPUT_ORIS01_ZROTATION]+zAddition
+                      ); 
+   
+   
     return 1;
   #else
     return 0; 
