@@ -30,7 +30,7 @@ static const char * bvhHeader=
 "      CHANNELS 3 Zrotation Xrotation Yrotation\n"
 "      JOINT neck\n"
 "      {\n"
-"          OFFSET 0.000000 14.013250 1.361400\n"
+"          OFFSET 0 22.1894 -2.19456\n"
 "          CHANNELS 3 Zrotation Xrotation Yrotation \n"
 "          JOINT neck1\n"
 "          {\n"
