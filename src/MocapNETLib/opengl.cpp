@@ -58,9 +58,274 @@ char * visualizeOpenGL(unsigned int *openGLFrameWidth,unsigned int *openGLFrameH
    fprintf(stderr,"Returning OpenGL frame..\n");
    return  getOpenGLColorPixels(0);
  #else
+  fprintf(stderr,"OpenGL code not included in this build..\n");
   return 0;  
  #endif
  }
+ 
+ 
+ 
+ /*
+  * cat dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/Motions/DAZFriendlyCMUPlusHead.bvh | grep JOINT
+  * 
+  JOINT abdomen
+    JOINT chest
+      JOINT neck
+          JOINT neck1
+            JOINT head
+              JOINT __jaw
+                JOINT jaw
+                  JOINT special04
+                    JOINT oris02
+                      JOINT oris01
+                    JOINT oris06.l
+                      JOINT oris07.l
+                    JOINT oris06.r
+                      JOINT oris07.r
+                  JOINT tongue00
+                    JOINT tongue01
+                      JOINT tongue02
+                        JOINT tongue03
+                          JOINT __tongue04
+                            JOINT tongue04
+                          JOINT tongue07.l
+                          JOINT tongue07.r
+                        JOINT tongue06.l
+                        JOINT tongue06.r
+                      JOINT tongue05.l
+                      JOINT tongue05.r
+              JOINT __levator02.l
+                JOINT levator02.l
+                  JOINT levator03.l
+                    JOINT levator04.l
+                      JOINT levator05.l
+              JOINT __levator02.r
+                JOINT levator02.r
+                  JOINT levator03.r
+                    JOINT levator04.r
+                      JOINT levator05.r
+              JOINT __special01
+                JOINT special01
+                  JOINT oris04.l
+                    JOINT oris03.l
+                  JOINT oris04.r
+                    JOINT oris03.r
+                  JOINT oris06
+                    JOINT oris05
+              JOINT __special03
+                JOINT special03
+                  JOINT __levator06.l
+                    JOINT levator06.l
+                  JOINT __levator06.r
+                    JOINT levator06.r
+              JOINT special06.l
+                JOINT special05.l
+                  JOINT eye.l
+                  JOINT orbicularis03.l
+                  JOINT orbicularis04.l
+              JOINT special06.r
+                JOINT special05.r
+                  JOINT eye.r
+                  JOINT orbicularis03.r
+                  JOINT orbicularis04.r
+              JOINT __temporalis01.l
+                JOINT temporalis01.l
+                  JOINT oculi02.l
+                    JOINT oculi01.l
+              JOINT __temporalis01.r
+                JOINT temporalis01.r
+                  JOINT oculi02.r
+                    JOINT oculi01.r
+              JOINT __temporalis02.l
+                JOINT temporalis02.l
+                  JOINT risorius02.l
+                    JOINT risorius03.l
+              JOINT __temporalis02.r
+                JOINT temporalis02.r
+                  JOINT risorius02.r
+                    JOINT risorius03.r
+      JOINT rCollar
+        JOINT rShldr
+          JOINT rForeArm
+            JOINT rHand
+              JOINT rThumb1
+                JOINT rThumb2
+              JOINT rIndex1
+                JOINT rIndex2
+              JOINT rMid1
+                JOINT rMid2
+              JOINT rRing1
+                JOINT rRing2
+              JOINT rPinky1
+                JOINT rPinky2
+      JOINT lCollar
+        JOINT lShldr
+          JOINT lForeArm
+            JOINT lHand
+              JOINT lThumb1
+                JOINT lThumb2
+              JOINT lIndex1
+                JOINT lIndex2
+              JOINT lMid1
+                JOINT lMid2
+              JOINT lRing1
+                JOINT lRing2
+              JOINT lPinky1
+                JOINT lPinky2
+  JOINT rButtock
+    JOINT rThigh
+      JOINT rShin
+        JOINT rFoot
+  JOINT lButtock
+    JOINT lThigh
+      JOINT lShin
+        JOINT lFoot
+  * */
+
+//cat human3D.conf | grep Bone | cut -d':' -f2  | tr '\n' '~' | tr -d '[:blank:]'  | sed  -e 's/\~/"\n\"/g' 
+static const char * OpenCOLLADANames[] =
+{
+"Hips",
+"Spine",
+"Spine1",
+"Neck",
+"Neck1",
+"Head",
+"-",
+"jaw",
+"special04",
+"oris02",
+"oris01",
+"oris06_L",
+"oris07_L",
+"oris06_R",
+"oris07_R",
+"tongue00",
+"tongue01",
+"tongue02",
+"tongue03",
+"tongue04",
+"tongue07_L",
+"tongue07_R",
+"tongue06_L",
+"tongue06_R",
+"tongue05_L",
+"tongue05_R",
+"-",
+"levator02_L",
+"levator03_L",
+"levator04_L",
+"levator05_L",
+"-",
+"levator02_R",
+"levator03_R",
+"levator04_R",
+"levator05_R",
+"-",
+"special01",
+"oris04_L",
+"oris03_L",
+"oris04_R",
+"oris03_R",
+"oris06",
+"oris05",
+"-",
+"special03",
+"levator06_L",
+"levator06_R",
+"special06_L",
+"special05_L",
+"eye_L",
+"orbicularis03_L",
+"orbicularis04_L",
+"special06_R",
+"special05_R",
+"eye_R",
+"orbicularis03_R",
+"orbicularis04_R",
+"-",
+"temporalis01_L",
+"oculi02_L",
+"oculi01_L",
+"-",
+"temporalis01_R",
+"oculi02_R",
+"oculi01_R",
+"-",
+"temporalis02_L",
+"risorius02_L",
+"risorius03_L",
+"-",
+"temporalis02_R",
+"risorius02_R",
+"risorius03_R",
+"RightShoulder",
+"RightArm",
+"RightForeArm",
+"RightHand",
+
+"RThumb",
+"finger1-2_R",
+//"finger1-3_R",
+//"metacarpal1_R",
+"finger2-1_R",
+"finger2-2_R",
+//"finger2-3_R",
+//"metacarpal2_R",
+"finger3-1_R",
+"finger3-2_R",
+//"finger3-3_R",
+//"metacarpal3_R",
+"finger4-1_R",
+"finger4-2_R",
+//"finger4-3_R",
+//"metacarpal4_R",
+"finger5-1_R",
+"finger5-2_R",
+//"finger5-3_R",
+
+"LeftShoulder",
+"LeftArm",
+"LeftForeArm",
+"LeftHand",
+"LThumb",
+"finger1-2_L",
+//"finger1-3_L",
+//"metacarpal1_L",
+"finger2-1_L",
+"finger2-2_L",
+//"finger2-3_L",
+//"metacarpal2_L",
+"finger3-1_L",
+"finger3-2_L",
+//"finger3-3_L",
+//"metacarpal3_L",
+"finger4-1_L",
+"finger4-2_L",
+//"finger4-3_L",
+//"metacarpal4_L",
+"finger5-1_L",
+"finger5-2_L",
+//"finger5-3_L",
+
+//"LowerBack",
+
+"-",
+"RHipJoint",
+"RightUpLeg",
+"RightLeg",
+"RightFoot",
+//"RightToeBase",
+
+"-",
+"LHipJoint",
+"LeftUpLeg",
+"LeftLeg",
+"LeftFoot",
+//"LeftToeBase",
+"END"
+};
+
 
 
  
@@ -79,6 +344,22 @@ int updateOpenGLView(std::vector<float> bvhFrame)
       float yAddition=0.0;
       float zAddition=0.0;
       unsigned int rotationOrder = OPENGL_ACQUISITION_JOINT_ROTATION_TEST;//Until i fix this..
+  
+  
+    for (int i=3; i<(MOCAPNET_OUTPUT_NUMBER-1)/3; i++)
+    {
+        if (OpenCOLLADANames[i][0]!='-')
+        {
+            controlOpenGLScene(
+                       "human",OpenCOLLADANames[i], rotationOrder,
+                       xDirection*bvhFrame[3+i*3+0]+xAddition,
+                       yDirection*bvhFrame[3+i*3+1]+yAddition,
+                       zDirection*bvhFrame[3+i*3+2]+zAddition
+                      );
+            
+        }
+        
+    }
   
       //-------------------------------------------------------------
       /*

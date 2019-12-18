@@ -90,7 +90,8 @@ int main(int argc, char *argv[])
             if (strcmp(argv[i],"--opengl")==0)
                     {
                         visualizeOpenGLEnabled=1;
-                        state.visualizationType=1;
+                        state.visualizationType=1; 
+                        state.previousVisualizationType=state.visualizationType;
                     }
         }
 
@@ -163,6 +164,10 @@ int main(int argc, char *argv[])
                         cv::cvtColor(openGLMat,viewMat,COLOR_RGB2BGR);
                         openGLMat.data=initialPointer;
                        }//=====================================================================
+                        else
+                       {
+                         fprintf(stderr,"Failed getting an OpenGL frame..!\n");
+                       }
                     } 
                       else
                     {
