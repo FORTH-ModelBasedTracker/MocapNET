@@ -101,7 +101,7 @@ int silenceDeadJoints(std::vector<float> & result)
      fprintf(stderr,RED "silenceDeadJoints: There is an inconsistency in the number of outputs\n" NORMAL); 
      return 0;
   }
-    
+    /*
  result[MOCAPNET_OUTPUT_LEFTEYE_ZROTATION]=0;
  result[MOCAPNET_OUTPUT_LEFTEYE_XROTATION]=0;
  result[MOCAPNET_OUTPUT_LEFTEYE_YROTATION]=0;
@@ -179,7 +179,7 @@ int silenceDeadJoints(std::vector<float> & result)
  result[MOCAPNET_OUTPUT_RBUTTOCK_YROTATION]=0;
  result[MOCAPNET_OUTPUT_LBUTTOCK_ZROTATION]=0;
  result[MOCAPNET_OUTPUT_LBUTTOCK_XROTATION]=0;
- result[MOCAPNET_OUTPUT_LBUTTOCK_YROTATION]=0;
+ result[MOCAPNET_OUTPUT_LBUTTOCK_YROTATION]=0;*/
  
   return 1;  
 }
@@ -675,23 +675,80 @@ std::vector<float> runMocapNET(struct MocapNET * mnet,std::vector<float> input,i
     {    //This is output that targets the old body only armature..!
           //We will add 78 - (6 we had eyes before) empty joints @ joint 15
           
-         std::vector<float> emptyHeadJoints;
-         for (int i=0; i<234-15-9; i++)
+         std::vector<float> newResult;
+         for (int i=0; i<MOCAPNET_OUTPUT_NUMBER; i++)
          {
-             emptyHeadJoints.push_back(0.0);
+             newResult.push_back(0.0);
          }
-        std::vector<float> resultOld=result; 
-        
-        result.insert(result.begin()+15, emptyHeadJoints.begin(), emptyHeadJoints.end());
          
-         /*
-         fprintf(stderr,"Old Result size is %lu \n",result.size());
-         fprintf(stderr,"New Result size is %lu \n",result.size());
-         for (int i =0; i<resultOld.size(); i++)
-         {  fprintf(stderr,"i=%u / old=%0.2f / new=%0.2f \n",i,resultOld[i],result[i]); }
-         for (int i =resultOld.size(); i<result.size();  i++)
-         { fprintf(stderr,"i=%u / old= - / new=%0.2f \n",i,result[i]); }
-         */ 
+         newResult[MOCAPNET_OUTPUT_HIP_XPOSITION]=result[LEGACY_OUTPUT_HIP_XPOSITION];
+         newResult[MOCAPNET_OUTPUT_HIP_YPOSITION]=result[LEGACY_OUTPUT_HIP_YPOSITION];
+         newResult[MOCAPNET_OUTPUT_HIP_ZPOSITION]=result[LEGACY_OUTPUT_HIP_ZPOSITION];
+         newResult[MOCAPNET_OUTPUT_HIP_ZROTATION]=result[LEGACY_OUTPUT_HIP_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_HIP_YROTATION]=result[LEGACY_OUTPUT_HIP_YROTATION];
+         newResult[MOCAPNET_OUTPUT_HIP_XROTATION]=result[LEGACY_OUTPUT_HIP_XROTATION];
+         newResult[MOCAPNET_OUTPUT_ABDOMEN_ZROTATION]=result[LEGACY_OUTPUT_ABDOMEN_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_ABDOMEN_XROTATION]=result[LEGACY_OUTPUT_ABDOMEN_XROTATION];
+         newResult[MOCAPNET_OUTPUT_ABDOMEN_YROTATION]=result[LEGACY_OUTPUT_ABDOMEN_YROTATION];
+         newResult[MOCAPNET_OUTPUT_CHEST_ZROTATION]=result[LEGACY_OUTPUT_CHEST_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_CHEST_XROTATION]=result[LEGACY_OUTPUT_CHEST_XROTATION];
+         newResult[MOCAPNET_OUTPUT_CHEST_YROTATION]=result[LEGACY_OUTPUT_CHEST_YROTATION];
+         newResult[MOCAPNET_OUTPUT_NECK_ZROTATION]=result[LEGACY_OUTPUT_NECK_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_NECK_XROTATION]=result[LEGACY_OUTPUT_NECK_XROTATION];
+         newResult[MOCAPNET_OUTPUT_NECK_YROTATION]=result[LEGACY_OUTPUT_NECK_YROTATION];
+         newResult[MOCAPNET_OUTPUT_HEAD_ZROTATION]=result[LEGACY_OUTPUT_HEAD_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_HEAD_XROTATION]=result[LEGACY_OUTPUT_HEAD_XROTATION];
+         newResult[MOCAPNET_OUTPUT_HEAD_YROTATION]=result[LEGACY_OUTPUT_HEAD_YROTATION];
+         newResult[MOCAPNET_OUTPUT_RCOLLAR_ZROTATION]=result[LEGACY_OUTPUT_RCOLLAR_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_RCOLLAR_XROTATION]=result[LEGACY_OUTPUT_RCOLLAR_XROTATION];
+         newResult[MOCAPNET_OUTPUT_RCOLLAR_YROTATION]=result[LEGACY_OUTPUT_RCOLLAR_YROTATION];
+         newResult[MOCAPNET_OUTPUT_RSHOULDER_ZROTATION]=result[LEGACY_OUTPUT_RSHOULDER_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_RSHOULDER_XROTATION]=result[LEGACY_OUTPUT_RSHOULDER_XROTATION];
+         newResult[MOCAPNET_OUTPUT_RSHOULDER_YROTATION]=result[LEGACY_OUTPUT_RSHOULDER_YROTATION];
+         newResult[MOCAPNET_OUTPUT_RELBOW_ZROTATION]=result[LEGACY_OUTPUT_RELBOW_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_RELBOW_XROTATION]=result[LEGACY_OUTPUT_RELBOW_XROTATION];
+         newResult[MOCAPNET_OUTPUT_RELBOW_YROTATION]=result[LEGACY_OUTPUT_RELBOW_YROTATION];
+         newResult[MOCAPNET_OUTPUT_RHAND_ZROTATION]=result[LEGACY_OUTPUT_RHAND_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_RHAND_XROTATION]=result[LEGACY_OUTPUT_RHAND_XROTATION];
+         newResult[MOCAPNET_OUTPUT_RHAND_YROTATION]=result[LEGACY_OUTPUT_RHAND_YROTATION];
+         newResult[MOCAPNET_OUTPUT_LCOLLAR_ZROTATION]=result[LEGACY_OUTPUT_LCOLLAR_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_LCOLLAR_XROTATION]=result[LEGACY_OUTPUT_LCOLLAR_XROTATION];
+         newResult[MOCAPNET_OUTPUT_LCOLLAR_YROTATION]=result[LEGACY_OUTPUT_LCOLLAR_YROTATION];
+         newResult[MOCAPNET_OUTPUT_LSHOULDER_ZROTATION]=result[LEGACY_OUTPUT_LSHOULDER_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_LSHOULDER_XROTATION]=result[LEGACY_OUTPUT_LSHOULDER_XROTATION];
+         newResult[MOCAPNET_OUTPUT_LSHOULDER_YROTATION]=result[LEGACY_OUTPUT_LSHOULDER_YROTATION];
+         newResult[MOCAPNET_OUTPUT_LELBOW_ZROTATION]=result[LEGACY_OUTPUT_LELBOW_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_LELBOW_XROTATION]=result[LEGACY_OUTPUT_LELBOW_XROTATION];
+         newResult[MOCAPNET_OUTPUT_LELBOW_YROTATION]=result[LEGACY_OUTPUT_LELBOW_YROTATION];
+         newResult[MOCAPNET_OUTPUT_LHAND_ZROTATION]=result[LEGACY_OUTPUT_LHAND_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_LHAND_XROTATION]=result[LEGACY_OUTPUT_LHAND_XROTATION];
+         newResult[MOCAPNET_OUTPUT_LHAND_YROTATION]=result[LEGACY_OUTPUT_LHAND_YROTATION];
+         newResult[MOCAPNET_OUTPUT_RBUTTOCK_ZROTATION]=result[LEGACY_OUTPUT_RBUTTOCK_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_RBUTTOCK_XROTATION]=result[LEGACY_OUTPUT_RBUTTOCK_XROTATION];
+         newResult[MOCAPNET_OUTPUT_RBUTTOCK_YROTATION]=result[LEGACY_OUTPUT_RBUTTOCK_YROTATION];
+         newResult[MOCAPNET_OUTPUT_RHIP_ZROTATION]=result[LEGACY_OUTPUT_RHIP_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_RHIP_XROTATION]=result[LEGACY_OUTPUT_RHIP_XROTATION];
+         newResult[MOCAPNET_OUTPUT_RHIP_YROTATION]=result[LEGACY_OUTPUT_RHIP_YROTATION];
+         newResult[MOCAPNET_OUTPUT_RKNEE_ZROTATION]=result[LEGACY_OUTPUT_RKNEE_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_RKNEE_XROTATION]=result[LEGACY_OUTPUT_RKNEE_XROTATION];
+         newResult[MOCAPNET_OUTPUT_RKNEE_YROTATION]=result[LEGACY_OUTPUT_RKNEE_YROTATION];
+         newResult[MOCAPNET_OUTPUT_RFOOT_ZROTATION]=result[LEGACY_OUTPUT_RFOOT_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_RFOOT_XROTATION]=result[LEGACY_OUTPUT_RFOOT_XROTATION];
+         newResult[MOCAPNET_OUTPUT_RFOOT_YROTATION]=result[LEGACY_OUTPUT_RFOOT_YROTATION];
+         newResult[MOCAPNET_OUTPUT_LBUTTOCK_ZROTATION]=result[LEGACY_OUTPUT_LBUTTOCK_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_LBUTTOCK_XROTATION]=result[LEGACY_OUTPUT_LBUTTOCK_XROTATION];
+         newResult[MOCAPNET_OUTPUT_LBUTTOCK_YROTATION]=result[LEGACY_OUTPUT_LBUTTOCK_YROTATION];
+         newResult[MOCAPNET_OUTPUT_LHIP_ZROTATION]=result[LEGACY_OUTPUT_LHIP_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_LHIP_XROTATION]=result[LEGACY_OUTPUT_LHIP_XROTATION];
+         newResult[MOCAPNET_OUTPUT_LHIP_YROTATION]=result[LEGACY_OUTPUT_LHIP_YROTATION];
+         newResult[MOCAPNET_OUTPUT_LKNEE_ZROTATION]=result[LEGACY_OUTPUT_LKNEE_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_LKNEE_XROTATION]=result[LEGACY_OUTPUT_LKNEE_XROTATION];
+         newResult[MOCAPNET_OUTPUT_LKNEE_YROTATION]=result[LEGACY_OUTPUT_LKNEE_YROTATION];
+         newResult[MOCAPNET_OUTPUT_LFOOT_ZROTATION]=result[LEGACY_OUTPUT_LFOOT_ZROTATION];
+         newResult[MOCAPNET_OUTPUT_LFOOT_XROTATION]=result[LEGACY_OUTPUT_LFOOT_XROTATION];
+         newResult[MOCAPNET_OUTPUT_LFOOT_YROTATION]=result[LEGACY_OUTPUT_LFOOT_YROTATION];
+         
+         result=newResult;
     }
 //---------------------------------------------------------------------------------------------------------------------------------------------    
     

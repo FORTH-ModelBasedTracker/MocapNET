@@ -756,12 +756,12 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
        for (joint=0; joint<history[i].size(); joint++)
        { 
         if ( 
-                   (  (joint>=MOCAPNET_OUTPUT_RTHUMB1_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_RPINKY2_YROTATION) )  ||
-                   (  (joint>=MOCAPNET_OUTPUT_LTHUMB1_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_LPINKY2_YROTATION) )    ||
+                   (  (joint>=MOCAPNET_OUTPUT_METACARPAL1_R_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_FINGER1_3_R_YROTATION) )  ||
+                   (  (joint>=MOCAPNET_OUTPUT_METACARPAL1_L_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_FINGER1_3_L_YROTATION) )    ||
                    (  (joint>=MOCAPNET_OUTPUT_RBUTTOCK_ZROTATION) && (joint<=MOCAPNET_OUTPUT_RBUTTOCK_YROTATION) )    || 
                    (  (joint>=MOCAPNET_OUTPUT_LBUTTOCK_ZROTATION) && (joint<=MOCAPNET_OUTPUT_LBUTTOCK_YROTATION) )     ||
                    (  (joint>=MOCAPNET_OUTPUT_CHEST_ZROTATION)    && (joint<=MOCAPNET_OUTPUT_CHEST_YROTATION) )||
-                   (  (joint>=MOCAPNET_OUTPUT_LEFTEYE_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_RIGHTEYE_YROTATION) )  ||
+                   //(  (joint>=MOCAPNET_OUTPUT_LEFTEYE_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_RIGHTEYE_YROTATION) )  ||
                    (  (joint>=MOCAPNET_OUTPUT_RCOLLAR_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_RCOLLAR_YROTATION) )   ||
                    (  (joint>=MOCAPNET_OUTPUT_LCOLLAR_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_LCOLLAR_YROTATION) ) 
               ) 
