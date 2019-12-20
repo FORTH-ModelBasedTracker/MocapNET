@@ -66,9 +66,9 @@ char * visualizeOpenGL(unsigned int *openGLFrameWidth,unsigned int *openGLFrameH
  
  
  /*
-  * cat dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/Motions/DAZFriendlyCMUPlusHead.bvh | grep JOINT
+  * cat dataset/headerWithHeadAndOneMotion.bvh | grep JOINT
   * 
-  JOINT abdomen
+    JOINT abdomen
     JOINT chest
       JOINT neck
           JOINT neck1
@@ -148,38 +148,91 @@ char * visualizeOpenGL(unsigned int *openGLFrameWidth,unsigned int *openGLFrameH
         JOINT rShldr
           JOINT rForeArm
             JOINT rHand
-              JOINT rThumb1
-                JOINT rThumb2
-              JOINT rIndex1
-                JOINT rIndex2
-              JOINT rMid1
-                JOINT rMid2
-              JOINT rRing1
-                JOINT rRing2
-              JOINT rPinky1
-                JOINT rPinky2
+                  JOINT metacarpal1.r
+                    JOINT finger2-1.r
+                      JOINT finger2-2.r
+                        JOINT finger2-3.r
+                  JOINT metacarpal2.r
+                    JOINT finger3-1.r
+                      JOINT finger3-2.r
+                        JOINT finger3-3.r
+                  JOINT __metacarpal3.r
+                    JOINT metacarpal3.r
+                      JOINT finger4-1.r
+                        JOINT finger4-2.r
+                          JOINT finger4-3.r
+                  JOINT __metacarpal4.r
+                    JOINT metacarpal4.r
+                      JOINT finger5-1.r
+                        JOINT finger5-2.r
+                          JOINT finger5-3.r
+                  JOINT __rthumb
+                    JOINT rthumb
+                      JOINT finger1-2.r
+                        JOINT finger1-3.r
       JOINT lCollar
         JOINT lShldr
           JOINT lForeArm
             JOINT lHand
-              JOINT lThumb1
-                JOINT lThumb2
-              JOINT lIndex1
-                JOINT lIndex2
-              JOINT lMid1
-                JOINT lMid2
-              JOINT lRing1
-                JOINT lRing2
-              JOINT lPinky1
-                JOINT lPinky2
+                  JOINT metacarpal1.l
+                    JOINT finger2-1.l
+                      JOINT finger2-2.l
+                        JOINT finger2-3.l
+                  JOINT metacarpal2.l
+                    JOINT finger3-1.l
+                      JOINT finger3-2.l
+                        JOINT finger3-3.l
+                  JOINT __metacarpal3.l
+                    JOINT metacarpal3.l
+                      JOINT finger4-1.l
+                        JOINT finger4-2.l
+                          JOINT finger4-3.l
+                  JOINT __metacarpal4.l
+                    JOINT metacarpal4.l
+                      JOINT finger5-1.l
+                        JOINT finger5-2.l
+                          JOINT finger5-3.l
+                  JOINT __lthumb
+                    JOINT lthumb
+                      JOINT finger1-2.l
+                        JOINT finger1-3.l
   JOINT rButtock
     JOINT rThigh
       JOINT rShin
         JOINT rFoot
+							JOINT toe1-1.R
+								JOINT toe1-2.R
+							JOINT toe2-1.R
+								JOINT toe2-2.R
+									JOINT toe2-3.R
+							JOINT toe3-1.R
+								JOINT toe3-2.R
+									JOINT toe3-3.R
+							JOINT toe4-1.R
+								JOINT toe4-2.R
+									JOINT toe4-3.R
+							JOINT toe5-1.R
+								JOINT toe5-2.R
+									JOINT toe5-3.R
   JOINT lButtock
     JOINT lThigh
       JOINT lShin
         JOINT lFoot
+							JOINT toe1-1.L
+								JOINT toe1-2.L
+							JOINT toe2-1.L
+								JOINT toe2-2.L
+									JOINT toe2-3.L
+							JOINT toe3-1.L
+								JOINT toe3-2.L
+									JOINT toe3-3.L
+							JOINT toe4-1.L
+								JOINT toe4-2.L
+									JOINT toe4-3.L
+							JOINT toe5-1.L
+								JOINT toe5-2.L
+									JOINT toe5-3.L
+
   * */
 
 //cat human3D.conf | grep Bone | cut -d':' -f2  | tr '\n' '~' | tr -d '[:blank:]'  | sed  -e 's/\~/"\n\"/g' 
@@ -345,7 +398,9 @@ int updateOpenGLView(std::vector<float> bvhFrame)
       float zAddition=0.0;
       unsigned int rotationOrder = OPENGL_ACQUISITION_JOINT_ROTATION_TEST;//Until i fix this..
   
-  
+  /* 
+   *  TODO:  update OpenCOLLADANames to match the bvh joints found here..
+   * 
     for (int i=3; i<(MOCAPNET_OUTPUT_NUMBER-1)/3; i++)
     {
         if (OpenCOLLADANames[i][0]!='-')
@@ -357,9 +412,8 @@ int updateOpenGLView(std::vector<float> bvhFrame)
                        zDirection*bvhFrame[3+i*3+2]+zAddition
                       );
             
-        }
-        
-    }
+        } 
+    }*/
   
       //-------------------------------------------------------------
       /*
