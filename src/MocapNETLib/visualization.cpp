@@ -959,7 +959,8 @@ int visualizePoints(
     std::vector<std::vector<float> > points2DInput,
     std::vector<std::vector<float> > points2DOutput,
     std::vector<std::vector<float> > points2DOutputGUIForcedView,
-    void* optionalOpenGLCVMat
+    void* optionalOpenGLCVMat,
+    unsigned int save3DVisualization
 )
 {  
 #if USE_OPENCV
@@ -1273,6 +1274,13 @@ int visualizePoints(
 
     //At last we are able to show the window..
     cv::imshow(windowName,img);
+    
+    if (save3DVisualization)
+    { 
+        char filename[512];
+        snprintf(filename,512,"MocapNET3D_%05u.png",frameNumber) ;
+        cv::imwrite(filename,img);
+    }
     
     //Only handle messages if they are not handled elsewhere
     if (handleMessages)

@@ -189,5 +189,6 @@ int visualizePoints(
                      std::vector<std::vector<float> > points2DInput,
                      std::vector<std::vector<float> > points2DOutput,
                      std::vector<std::vector<float> > points2DOutputGUIForcedView,
-                     void* optionalOpenGLCVMat
+                     void* optionalOpenGLCVMat,
+                     unsigned int save3DVisualization
                    );

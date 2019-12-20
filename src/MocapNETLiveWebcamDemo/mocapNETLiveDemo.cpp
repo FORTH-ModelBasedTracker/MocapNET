@@ -420,7 +420,7 @@ int main(int argc, char *argv[])
     float quality=1.0;
     float scale=1.0;
 
-    unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,frameLimitSet=0,visualize=1,save2DVisualization=0,visualizeOpenGLEnabled=0;
+    unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,frameLimitSet=0,visualize=1,save2DVisualization=0,save3DVisualization=1,visualizeOpenGLEnabled=0;
     int joint2DSensitivityPercent=38;
     const char * webcam = 0;
 
@@ -529,6 +529,10 @@ int main(int argc, char *argv[])
                 else if  ( (strcmp(argv[i],"--save2D")==0) || (strcmp(argv[i],"--save2d")==0) )
                     {
                         save2DVisualization=1;
+                    }
+                else if  ( (strcmp(argv[i],"--save3D")==0) || (strcmp(argv[i],"--save3d")==0) )
+                    {
+                        save3DVisualization=1;
                     }
                 else if (strcmp(argv[i],"--opengl")==0)
                     {
@@ -704,9 +708,11 @@ int main(int argc, char *argv[])
     std::vector<float> flatAndNormalized2DPoints;
     std::vector<float> previousFlatAndNormalized2DPoints;
     std::vector<std::vector<float> > inputFrames;
+    std::vector<std::vector<float> > output3DPositions;
     std::vector<std::vector<float> > bvhFrames;
     std::vector<float> bvhOutput;
     std::vector<float> previousBvhOutput;
+    std::vector<float> points3DFlatOutput;
     std::vector<std::vector<float> > points2DOutput;
     std::vector<std::vector<float> > points2DOutputGUIForcedView;
 
@@ -1073,6 +1079,11 @@ int main(int argc, char *argv[])
                                                                                                1920,//visWidth,
                                                                                                1080//visHeight
                                                                                               );
+                                                    if (!live)
+                                                     {
+                                                         points3DFlatOutput=convertBVHFrameToFlat3DPoints(bvhOutput,1920,1080);
+                                                         output3DPositions.push_back(points3DFlatOutput); //3d Input
+                                                     }
                                                 }
 
 
@@ -1223,7 +1234,8 @@ int main(int argc, char *argv[])
                                                                             points2DInput,
                                                                             points2DOutput,
                                                                             points2DOutputGUIForcedView,
-                                                                            (void*) openGLMatForVisualizationSelected//openGLMatForVisualization
+                                                                            (void*) openGLMatForVisualizationSelected,//openGLMatForVisualization
+                                                                            save3DVisualization
                                                                            );
                                                         }
                                                     else if (visualizationType==2)
@@ -1351,6 +1363,7 @@ int main(int argc, char *argv[])
                                 }
                             //----------------------------------------------------------------------------------------------------------------------------------
 
+
                             fprintf(stderr,"Will now write 2D input to in.csv.. \n");
                             //----------------------------------------------------------------------------------------------------------------------------------
                             if ( writeCSVHeaderFromLabelsAndVectorOfVectors("in.csv",MocapNETInputUncompressedArrayNames,MOCAPNET_UNCOMPRESSED_JOINT_PARTS*3,inputFrames) )
@@ -1361,6 +1374,24 @@ int main(int argc, char *argv[])
                              {
                                  fprintf(stderr,RED "Failed to write %lu frames to bvh file.. \n" NORMAL,inputFrames.size());
                              }
+                             
+                      
+
+                            fprintf(stderr,"Will now write 3D output to in.csv.. \n");
+                            fprintf(stderr,"The CSV header will be wrong ..!\n");
+                            //----------------------------------------------------------------------------------------------------------------------------------
+                            if ( writeCSVHeaderFromLabelsAndVectorOfVectors("out3DP.csv",MocapNETOutputArrayNames,MOCAPNET_OUTPUT_NUMBER,output3DPositions) )
+                             {
+                                 fprintf(stderr,GREEN "Successfully wrote %lu frames to csv file.. \n" NORMAL,output3DPositions.size());
+                             }
+                              else
+                             {
+                                 fprintf(stderr,RED "Failed to write %lu frames to bvh file.. \n" NORMAL,output3DPositions.size());
+                             }
+                                    
+                             
+                             
+                             
                         }
                     else
                         {

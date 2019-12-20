@@ -379,7 +379,8 @@ int main(int argc, char *argv[])
                                                      empty2DPointsInput,
                                                      points2DOutput,
                                                      points2DOutput,
-                                                     0 //No OpenGL code here..
+                                                     0, //No OpenGL code here..
+                                                     0 // No 3D visualization saved..
                                                   );
                                     } 
                                     else 

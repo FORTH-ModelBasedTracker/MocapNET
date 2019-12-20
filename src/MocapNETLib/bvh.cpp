@@ -317,6 +317,83 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
 
 
 
+std::vector<float>  convertBVHFrameToFlat3DPoints(std::vector<float> bvhFrame,unsigned int width, unsigned int height)
+{ 
+std::vector<float>  result;
+#if USE_BVH
+    struct simpleRenderer renderer= {0};
+    simpleRendererDefaults(
+        &renderer,
+        width,
+        height,
+        fX, //570.0
+        fY  //570.0
+    );
+    simpleRendererInitialize(&renderer);
+    if (!haveBVHInit)
+        {
+            initializeBVHConverter();
+        }
+
+
+    if (haveBVHInit)
+        {
+            float * motionBuffer= mallocVector(bvhFrame);
+
+            if (motionBuffer!=0)
+                {
+                    if (
+                           bvh_loadTransformForMotionBuffer(
+                                                            &bvhMotion,
+                                                            motionBuffer,
+                                                            &bvhTransform
+                                                           )
+                        )
+                        {
+                            //-----------------
+                            if (
+                                   bvh_projectTo2D(
+                                                   &bvhMotion,
+                                                   &bvhTransform,
+                                                   &renderer,
+                                                   0,
+                                                   0
+                                                  )
+                               )
+                                {
+                                    //-----------------
+                                    for (unsigned int jID=0; jID<bvhMotion.jointHierarchySize; jID++)
+                                        {
+                                            result.push_back((float) bvhTransform.joint[jID].pos3D[0]);
+                                            result.push_back((float) bvhTransform.joint[jID].pos3D[1]);
+                                            result.push_back((float) bvhTransform.joint[jID].pos3D[2]); 
+                                        }
+                                } //-----------------
+                        } //-----------------
+                    else
+                        {
+                            fprintf(stderr,"bvh_loadTransformForMotionBuffer failed..\n");
+                        }
+                    free(motionBuffer);
+                }
+            else
+                {
+                    fprintf(stderr,"Could not allocate enough memory..\n");
+                }
+        }
+    else
+        {
+            fprintf(stderr,"Could not initialize BVH subsystem..\n");
+        }
+
+
+#else
+    fprintf(stderr,"BVH code is not compiled in this version of MocapNET\n");
+
+#endif // USE_BVH
+    return result;
+}
+
 
 std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,float yaw,unsigned int width, unsigned int height,unsigned int dimensions)
 {
