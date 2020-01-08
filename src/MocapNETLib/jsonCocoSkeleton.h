@@ -237,8 +237,8 @@ static const int Body25SkeletonJointsParentRelationMap[] =
 //https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/media/keypoints_hand.png
 enum COCOHandJoints
 {
-    COCO_Hand_Wrist=0, //0
-    COCO_Hand_Thumb_1, //1
+    COCO_Hand_Wrist=0,//0
+    COCO_Hand_Thumb_1,//1
     COCO_Hand_Thumb_2, //2
     COCO_Hand_Thumb_3, //3
     COCO_Hand_Thumb_4,//4
@@ -262,6 +262,57 @@ enum COCOHandJoints
     COCO_HAND_PARTS
 };
 
+
+static const char * COCOLeftHandNames[] =
+{
+     "Left_Hand_Wrist=0",//0
+     "Left_Hand_Thumb_1",//1
+     "Left_Hand_Thumb_2", //2
+     "Left_Hand_Thumb_3", //3
+     "Left_Hand_Thumb_4",//4
+     "Left_Hand_Index_1",//5
+     "Left_Hand_Index_2",//6
+     "Left_Hand_Index_3",//7
+     "Left_Hand_Index_4",//8
+     "Left_Hand_Middle_1",//9
+     "Left_Hand_Middle_2",//10
+     "Left_Hand_Middle_3",//11
+     "Left_Hand_Middle_4",//12
+     "Left_Hand_Ring_1",//13
+     "Left_Hand_Ring_2",//14
+     "Left_Hand_Ring_3",//15
+     "Left_Hand_Ring_4",//16
+     "Left_Hand_Pinky_1",//17
+     "Left_Hand_Pinky_2",//18
+     "Left_Hand_Pinky_3",//19
+     "Left_Hand_Pinky_4"//20
+};
+
+
+static const char * COCORightHandNames[] =
+{
+     "Right_Hand_Wrist=0",//0
+     "Right_Hand_Thumb_1",//1
+     "Right_Hand_Thumb_2", //2
+     "Right_Hand_Thumb_3", //3
+     "Right_Hand_Thumb_4",//4
+     "Right_Hand_Index_1",//5
+     "Right_Hand_Index_2",//6
+     "Right_Hand_Index_3",//7
+     "Right_Hand_Index_4",//8
+     "Right_Hand_Middle_1",//9
+     "Right_Hand_Middle_2",//10
+     "Right_Hand_Middle_3",//11
+     "Right_Hand_Middle_4",//12
+     "Right_Hand_Ring_1",//13
+     "Right_Hand_Ring_2",//14
+     "Right_Hand_Ring_3",//15
+     "Right_Hand_Ring_4",//16
+     "Right_Hand_Pinky_1",//17
+     "Right_Hand_Pinky_2",//18
+     "Right_Hand_Pinky_3",//19
+     "Right_Hand_Pinky_4"//20
+};
 
 
 /**
@@ -342,6 +393,81 @@ enum OP_HeadJoints
     OP_Head_LEye,//69  
     //---------------------
     OP_HEAD_PARTS
+};
+
+
+static const char * HeadNames[] =
+{
+    "Head_RChin_0", //0
+    "Head_RChin_1",      //1
+    "Head_RChin_2",      //2     
+    "Head_RChin_3",      //3
+    "Head_RChin_4",      //4
+    "Head_RChin_5",      //5
+    "Head_RChin_6",      //6
+    "Head_RChin_7",      //7
+    "Head_Chin",             //8
+    "Head_LChin_7",      //9
+    "Head_LChin_6",      //10
+    "Head_LChin_5",      //11
+    "Head_LChin_4",      //12
+    "Head_LChin_3",      //13
+    "Head_LChin_2",      //14
+    "Head_LChin_1",      //15
+    "Head_LChin_0",      //16
+    "Head_REyebrow_0",//17
+    "Head_REyebrow_1",//18
+    "Head_REyebrow_2",//19
+    "Head_REyebrow_3",//20
+    "Head_REyebrow_4",//21
+    "Head_LEyebrow_4",//22
+    "Head_LEyebrow_3",//23
+    "Head_LEyebrow_2",//24
+    "Head_LEyebrow_1",//25
+    "Head_LEyebrow_0",//26
+    "Head_NoseBone_0",//27 
+    "Head_NoseBone_1",//28
+    "Head_NoseBone_2",//29
+    "Head_NoseBone_3",//30
+    "Head_Nostrills_0",//31 
+    "Head_Nostrills_1",//32 
+    "Head_Nostrills_2",//33 
+    "Head_Nostrills_3",//34 
+    "Head_Nostrills_4",//35 
+    "Head_REye_0",//36 
+    "Head_REye_1",//37 
+    "Head_REye_2",//38 
+    "Head_REye_3",//39 
+    "Head_REye_4",//40 
+    "Head_REye_5",//41 
+    "Head_LEye_0",//42 
+    "Head_LEye_1",//43 
+    "Head_LEye_2",//44 
+    "Head_LEye_3",//45 
+    "Head_LEye_4",//46 
+    "Head_LEye_5",//47 
+    "Head_OutMouth_0",//48 
+    "Head_OutMouth_1",//49 
+    "Head_OutMouth_2",//50 
+    "Head_OutMouth_3",//51 
+    "Head_OutMouth_4",//52 
+    "Head_OutMouth_5",//53 
+    "Head_OutMouth_6",//54 
+    "Head_OutMouth_7",//55 
+    "Head_OutMouth_8",//56 
+    "Head_OutMouth_9",//57 
+    "Head_OutMouth_10",//58 
+    "Head_OutMouth_11",//59 
+    "Head_InMouth_0",//60
+    "Head_InMouth_1",//61
+    "Head_InMouth_2",//62
+    "Head_InMouth_3",//63
+    "Head_InMouth_4",//64
+    "Head_InMouth_5",//65
+    "Head_InMouth_6",//66
+    "Head_InMouth_7",//67
+    "Head_REye",//68 
+    "Head_LEye"//69  
 };
 
 

@@ -54,3 +54,10 @@ int writeCSVBodyFromVector(const char * filename,std::vector<float> inputValues)
 
 
 int writeCSVHeaderFromLabelsAndVectorOfVectors(const char * filename,const char ** labels,unsigned int numberOfLabels,std::vector<std::vector<float> > inputFrames);
+
+
+
+int writeOpenPoseCSVHeaderFromSkeleton(const char * filename,struct skeletonCOCO * skeleton,unsigned int width,unsigned int height);
+
+
+int writeOpenPoseCSVBodyFromSkeleton(const char * filename,struct skeletonCOCO * skeleton,unsigned int width,unsigned int height);

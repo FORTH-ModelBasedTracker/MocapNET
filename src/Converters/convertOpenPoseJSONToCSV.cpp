@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     const char * label=0;
     char outputPathFull[2048]={0};
     const char * outputPath=0;
-    float version=1.21;
+    float version=1.4;
 
     for (int i=0; i<argc; i++)
         {
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
 
     unsigned int frameID=1;
     
-    fprintf(stderr,"Processing : \n",filePathOfJSONFile,width,height);
+    fprintf(stderr,"Processing : \n",filePathOfJSONFile);
 
     while (frameID<frameLimit)
         {
@@ -125,13 +125,15 @@ int main(int argc, char *argv[])
                 {
                     if (processed==0)
                         {
-                            writeCSVHeaderFromSkeleton(outputPathFull,&skeleton,width,height);
+                            writeOpenPoseCSVHeaderFromSkeleton(outputPathFull,&skeleton,width,height);
                         }
                      
-                     //if (skeleton->body.leftHand.)
-                    fprintf(stderr,"Processing %s (%ux%u)\n",filePathOfJSONFile,width,height);   
+                     if (skeleton.leftHand.isPopulated)    { fprintf(stderr,"Left Hand "); }   
+                     if (skeleton.rightHand.isPopulated)  { fprintf(stderr,"Right Hand "); }   
+                     if (skeleton.body.isPopulated)             { fprintf(stderr,"Body "); }   
+                     if (skeleton.head.isPopulated)             { fprintf(stderr,"Head "); }   
 
-                    writeCSVBodyFromSkeleton(outputPathFull,&skeleton,width,height);
+                    writeOpenPoseCSVBodyFromSkeleton(outputPathFull,&skeleton,width,height);
                     ++processed;
                 }
             else

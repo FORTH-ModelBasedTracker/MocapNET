@@ -52,7 +52,7 @@ int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,flo
     FILE * fp = fopen(filename,"r");
     if (fp!=0)
         {
-            fprintf(stderr,"Parsing COCO 2D skeleton from %s \n",filename);
+            fprintf(stderr,"Parsing 2D skeleton from %s \n",filename);
             struct InputParserC * ipc = InputParser_Create(2048,3);
             InputParser_SetDelimeter(ipc,0,',');
             InputParser_SetDelimeter(ipc,1,',');
@@ -132,6 +132,7 @@ int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,flo
                             fprintf(stderr,RED "The number of joints found in JSON file (%u) is more than our BODY25 internal structure (%u)\n" NORMAL,numberOfJoints,BODY25_PARTS);
                          } else
                          {
+                           if (numberOfJoints>0) {   skel->body.isPopulated=1; }  
                            for (int poseNum=0; poseNum<numberOfJoints; poseNum++)
                              {
                                skel->body.joint2D[poseNum].x = InputParser_GetWordFloat(ipc,poseNum*3+0);
@@ -165,6 +166,7 @@ int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,flo
                          { 
                            skel->leftHand.isRight=0;
                            skel->leftHand.isLeft=1;
+                           if (numberOfJoints>0) {   skel->leftHand.isPopulated=1; }  
                            for (int poseNum=0; poseNum<numberOfJoints; poseNum++)
                                {
                                    value = InputParser_GetWordFloat(ipc,poseNum*3+0);
@@ -193,6 +195,7 @@ int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,flo
                          { 
                            skel->rightHand.isRight=1;
                            skel->rightHand.isLeft=0;
+                           if (numberOfJoints>0) {   skel->rightHand.isPopulated=1; }  
                            for (int poseNum=0; poseNum<numberOfJoints; poseNum++)
                                {
                                    value = InputParser_GetWordFloat(ipc,poseNum*3+0);
@@ -220,6 +223,7 @@ int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,flo
                             fprintf(stderr,RED "The number of head joints found in JSON file (%u) is more than our internal structure (%u)\n" NORMAL,numberOfJoints,OP_HEAD_PARTS);
                          } else
                          { 
+                           if (numberOfJoints>0) {   skel->head.isPopulated=1; }  
                             for (int poseNum=0; poseNum<numberOfJoints; poseNum++)
                                   {
                                       value = InputParser_GetWordFloat(ipc,poseNum*3+0);
