@@ -8,18 +8,9 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories(${TENSORFLOW_INCLUDE_ROOT})
  
 
- 
-
-
-
-
-
-
-
-
 
 #-----------------------------------------------
-#       This is the converter utility..
+#       This is the converter utilities..
 #-----------------------------------------------
 project( convertBody25JSONToCSV )  
 add_executable(convertBody25JSONToCSV convertBody25JsonToCSV.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../MocapNETLib/jsonMocapNETHelpers.cpp ../../dependencies/InputParser/InputParser_C.cpp ${BVH_SOURCE} ../MocapNETLib/bvh.cpp ../MocapNETLib/csv.cpp)   
@@ -30,6 +21,17 @@ set_target_properties(convertBody25JSONToCSV PROPERTIES
                        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
                        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
                       )
+
+project( convertOpenPoseJSONToCSV )  
+add_executable(convertOpenPoseJSONToCSV convertOpenPoseJSONToCSV.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../MocapNETLib/jsonMocapNETHelpers.cpp ../../dependencies/InputParser/InputParser_C.cpp ${BVH_SOURCE} ../MocapNETLib/bvh.cpp ../MocapNETLib/csv.cpp)   
+target_link_libraries(convertOpenPoseJSONToCSV rt dl m )
+set_target_properties(convertOpenPoseJSONToCSV PROPERTIES DEBUG_POSTFIX "D") 
+set_target_properties(convertOpenPoseJSONToCSV PROPERTIES 
+                       ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                       LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                       RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                      )
+
 
 project( convertBVHToCSV )  
 add_executable(convertBVHToCSV convertBVHToCSV.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../MocapNETLib/jsonMocapNETHelpers.cpp ../../dependencies/InputParser/InputParser_C.cpp ${BVH_SOURCE} ../MocapNETLib/bvh.cpp ../MocapNETLib/csv.cpp)   
