@@ -1,0 +1,2 @@
+This code actually has it's own repository ( https://github.com/AmmarkoV/InputParser ) and also included in the AmmarServer dependency ( https://github.com/AmmarkoV/AmmarServer/tree/master/src/InputParser )
+However to simplify build process it is also included as standalone here.

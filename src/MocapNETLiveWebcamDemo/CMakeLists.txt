@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories(${TENSORFLOW_INCLUDE_ROOT})
 
 
-add_executable(MocapNETLiveWebcamDemo ${BVH_SOURCE} ${OPENGL_SOURCE} mocapNETLiveDemo.cpp cameraControl.cpp ../MocapNETLib/opengl.cpp ../MocapNETLib/bvh.cpp ../MocapNETLib/csv.cpp ../MocapNETLib/nsdm.cpp ../MocapNETLib/visualization.cpp ../MocapNETLib/remoteExecution.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../MocapNETLib/InputParser_C.cpp ../MocapNETLib/gestureRecognition.cpp ../MocapNETLib/outputFiltering.cpp utilities.cpp ../Tensorflow/tensorflow.cpp ../Tensorflow/tf_utils.cpp  )
+add_executable(MocapNETLiveWebcamDemo ${BVH_SOURCE} ${OPENGL_SOURCE} mocapNETLiveDemo.cpp cameraControl.cpp ../MocapNETLib/opengl.cpp ../MocapNETLib/bvh.cpp ../MocapNETLib/csv.cpp ../MocapNETLib/nsdm.cpp ../MocapNETLib/visualization.cpp ../MocapNETLib/remoteExecution.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../../dependencies/InputParser/InputParser_C.cpp ../MocapNETLib/gestureRecognition.cpp ../MocapNETLib/outputFiltering.cpp utilities.cpp ../Tensorflow/tensorflow.cpp ../Tensorflow/tf_utils.cpp  )
 
 target_link_libraries(MocapNETLiveWebcamDemo rt dl m ${OpenCV_LIBRARIES} ${OPENGL_LIBS} Tensorflow  TensorflowFramework MocapNETLib ${NETWORK_CLIENT_LIBRARIES} ${PNG_Libs} ${JPG_Libs} )
 set_target_properties(MocapNETLiveWebcamDemo PROPERTIES DEBUG_POSTFIX "D") 

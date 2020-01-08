@@ -1,5 +1,5 @@
 #include "remoteExecution.hpp"
-#include "../MocapNETLib/InputParser_C.h"
+#include "../../dependencies/InputParser/InputParser_C.h"
 
 
  #if USE_NETWORKING

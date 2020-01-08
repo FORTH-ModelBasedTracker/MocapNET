@@ -37,7 +37,7 @@ set_target_properties(MocapNETLib PROPERTIES
 #       This is the converter utility..
 #-----------------------------------------------
 project( convertBody25JSONToCSV )  
-add_executable(convertBody25JSONToCSV convertBody25JsonToCSV.cpp tools.cpp jsonCocoSkeleton.cpp jsonMocapNETHelpers.cpp InputParser_C.cpp nsdm.cpp ${BVH_SOURCE} bvh.cpp csv.cpp)   
+add_executable(convertBody25JSONToCSV convertBody25JsonToCSV.cpp tools.cpp jsonCocoSkeleton.cpp jsonMocapNETHelpers.cpp ../../dependencies/InputParser/InputParser_C.cpp nsdm.cpp ${BVH_SOURCE} bvh.cpp csv.cpp)   
 target_link_libraries(convertBody25JSONToCSV rt dl m )
 set_target_properties(convertBody25JSONToCSV PROPERTIES DEBUG_POSTFIX "D") 
 set_target_properties(convertBody25JSONToCSV PROPERTIES 
@@ -47,7 +47,7 @@ set_target_properties(convertBody25JSONToCSV PROPERTIES
                       )
 
 project( convertBVHToCSV )  
-add_executable(convertBVHToCSV convertBVHToCSV.cpp tools.cpp jsonCocoSkeleton.cpp jsonMocapNETHelpers.cpp InputParser_C.cpp nsdm.cpp ${BVH_SOURCE} bvh.cpp csv.cpp)   
+add_executable(convertBVHToCSV convertBVHToCSV.cpp tools.cpp jsonCocoSkeleton.cpp jsonMocapNETHelpers.cpp ../../dependencies/InputParser/InputParser_C.cpp nsdm.cpp ${BVH_SOURCE} bvh.cpp csv.cpp)   
 target_link_libraries(convertBVHToCSV rt dl m )
 set_target_properties(convertBVHToCSV PROPERTIES DEBUG_POSTFIX "D") 
 set_target_properties(convertBVHToCSV PROPERTIES 
