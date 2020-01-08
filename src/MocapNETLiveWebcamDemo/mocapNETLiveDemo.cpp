@@ -17,7 +17,7 @@ using namespace cv;
 #include "../MocapNETLib/mocapnet.hpp"
 #include "../MocapNETLib/bvh.hpp"
 #include "../MocapNETLib/csv.hpp"
-#include "../MocapNETLib/nsdm.hpp"
+#include "../MocapNETLib/NSDM/legacyNSDM.hpp"
 #include "../MocapNETLib/gestureRecognition.hpp"
 #include "../MocapNETLib/opengl.hpp"
 #include "../MocapNETLib/tools.h"

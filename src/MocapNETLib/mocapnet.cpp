@@ -1,7 +1,7 @@
 #include "../Tensorflow/tf_utils.hpp"
 
 #include "../MocapNETLib/mocapnet.hpp"
-#include "../MocapNETLib/nsdm.hpp"
+#include "../MocapNETLib/NSDM/legacyNSDM.hpp"
 #include "../MocapNETLib/remoteExecution.hpp"
 #include "../MocapNETLib/gestureRecognition.hpp"
 #include "../MocapNETLib/jsonCocoSkeleton.h"
@@ -402,7 +402,7 @@ std::vector<float> prepareMocapNETInputFromUncompressedInput(std::vector<float> 
 
     int addSyntheticPoints=1;
     int doScaleCompensation=1;
-    std::vector<float> mocapnetCompressed = compressMocapNETInputToNSDM(mocapnetInput,addSyntheticPoints,doScaleCompensation);
+    std::vector<float> mocapnetCompressed = compressLegacyMocapNETInputToNSDM(mocapnetInput,addSyntheticPoints,doScaleCompensation);
 
 
     mocapnetUncompressedAndCompressed.insert(mocapnetUncompressedAndCompressed.end(), mocapnetInput.begin(), mocapnetInput.end());

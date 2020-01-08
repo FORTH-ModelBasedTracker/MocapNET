@@ -8,7 +8,7 @@ using namespace cv;
 #include "bvh.hpp"
 #include "tools.h"
 #include "../MocapNETLib/mocapnet.hpp"
-#include "../MocapNETLib/nsdm.hpp"
+#include "../MocapNETLib/NSDM/legacyNSDM.hpp"
 
 
 #define NORMAL   "\033[0m"
@@ -40,7 +40,7 @@ int visualizeNSDM(
 
     int addSyntheticPoints=1;
     int doScaleCompensation=0;
-    std::vector<float> NSDM = compressMocapNETInputToNSDM(mocapNETInput,addSyntheticPoints,doScaleCompensation);
+    std::vector<float> NSDM = compressLegacyMocapNETInputToNSDM(mocapNETInput,addSyntheticPoints,doScaleCompensation);
 
     if (NSDM.size()>0)
         {

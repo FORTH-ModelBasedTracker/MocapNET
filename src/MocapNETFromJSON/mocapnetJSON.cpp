@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 #include "../MocapNETLib/tools.h"
-#include "../MocapNETLib/nsdm.hpp"
+#include "../MocapNETLib/NSDM/legacyNSDM.hpp"
 #include "../MocapNETLib/jsonCocoSkeleton.h"
 #include "../MocapNETLib/jsonMocapNETHelpers.hpp"
 #include "../MocapNETLib/bvh.hpp"

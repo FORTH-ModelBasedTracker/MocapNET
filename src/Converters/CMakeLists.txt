@@ -22,7 +22,7 @@ include_directories(${TENSORFLOW_INCLUDE_ROOT})
 #       This is the converter utility..
 #-----------------------------------------------
 project( convertBody25JSONToCSV )  
-add_executable(convertBody25JSONToCSV convertBody25JsonToCSV.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../MocapNETLib/jsonMocapNETHelpers.cpp ../../dependencies/InputParser/InputParser_C.cpp ../MocapNETLib/nsdm.cpp ${BVH_SOURCE} ../MocapNETLib/bvh.cpp ../MocapNETLib/csv.cpp)   
+add_executable(convertBody25JSONToCSV convertBody25JsonToCSV.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../MocapNETLib/jsonMocapNETHelpers.cpp ../../dependencies/InputParser/InputParser_C.cpp ${BVH_SOURCE} ../MocapNETLib/bvh.cpp ../MocapNETLib/csv.cpp)   
 target_link_libraries(convertBody25JSONToCSV rt dl m )
 set_target_properties(convertBody25JSONToCSV PROPERTIES DEBUG_POSTFIX "D") 
 set_target_properties(convertBody25JSONToCSV PROPERTIES 
@@ -32,7 +32,7 @@ set_target_properties(convertBody25JSONToCSV PROPERTIES
                       )
 
 project( convertBVHToCSV )  
-add_executable(convertBVHToCSV convertBVHToCSV.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../MocapNETLib/jsonMocapNETHelpers.cpp ../../dependencies/InputParser/InputParser_C.cpp ../MocapNETLib/nsdm.cpp ${BVH_SOURCE} ../MocapNETLib/bvh.cpp ../MocapNETLib/csv.cpp)   
+add_executable(convertBVHToCSV convertBVHToCSV.cpp ../MocapNETLib/tools.cpp ../MocapNETLib/jsonCocoSkeleton.cpp ../MocapNETLib/jsonMocapNETHelpers.cpp ../../dependencies/InputParser/InputParser_C.cpp ${BVH_SOURCE} ../MocapNETLib/bvh.cpp ../MocapNETLib/csv.cpp)   
 target_link_libraries(convertBVHToCSV rt dl m )
 set_target_properties(convertBVHToCSV PROPERTIES DEBUG_POSTFIX "D") 
 set_target_properties(convertBVHToCSV PROPERTIES 
