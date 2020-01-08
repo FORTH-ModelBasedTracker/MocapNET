@@ -253,6 +253,7 @@ ENDIF()
 #add_subdirectory (MocapNETStandalone/)
 
 add_subdirectory (src/MocapNETLib/)
+add_subdirectory (src/Converters/)
 add_subdirectory (src/MocapNETFromJSON/)
 add_subdirectory (src/MocapNETSimpleBenchmark/)
 
