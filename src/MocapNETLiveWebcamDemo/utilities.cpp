@@ -320,74 +320,74 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
 
 void convertUtilitiesSkeletonFormatToBODY25(struct skeletonCOCO * sk, std::vector<cv::Point_<float> > points)
 {
-    sk->joint2D[BODY25_Nose].x = points[UT_COCO_Nose].x;
-    sk->joint2D[BODY25_Nose].y = points[UT_COCO_Nose].y;
+    sk->body.joint2D[BODY25_Nose].x = points[UT_COCO_Nose].x;
+    sk->body.joint2D[BODY25_Nose].y = points[UT_COCO_Nose].y;
 
-    sk->joint2D[BODY25_Neck].x = points[UT_COCO_Neck].x;
-    sk->joint2D[BODY25_Neck].y = points[UT_COCO_Neck].y;
+    sk->body.joint2D[BODY25_Neck].x = points[UT_COCO_Neck].x;
+    sk->body.joint2D[BODY25_Neck].y = points[UT_COCO_Neck].y;
 
-    sk->joint2D[BODY25_RShoulder].x = points[UT_COCO_RShoulder].x;
-    sk->joint2D[BODY25_RShoulder].y = points[UT_COCO_RShoulder].y;
+    sk->body.joint2D[BODY25_RShoulder].x = points[UT_COCO_RShoulder].x;
+    sk->body.joint2D[BODY25_RShoulder].y = points[UT_COCO_RShoulder].y;
 
-    sk->joint2D[BODY25_RElbow].x = points[UT_COCO_RElbow].x;
-    sk->joint2D[BODY25_RElbow].y = points[UT_COCO_RElbow].y;
+    sk->body.joint2D[BODY25_RElbow].x = points[UT_COCO_RElbow].x;
+    sk->body.joint2D[BODY25_RElbow].y = points[UT_COCO_RElbow].y;
 
-    sk->joint2D[BODY25_RWrist].x = points[UT_COCO_RWrist].x;
-    sk->joint2D[BODY25_RWrist].y = points[UT_COCO_RWrist].y;
+    sk->body.joint2D[BODY25_RWrist].x = points[UT_COCO_RWrist].x;
+    sk->body.joint2D[BODY25_RWrist].y = points[UT_COCO_RWrist].y;
 
-    sk->joint2D[BODY25_LShoulder].x = points[UT_COCO_LShoulder].x;
-    sk->joint2D[BODY25_LShoulder].y = points[UT_COCO_LShoulder].y;
+    sk->body.joint2D[BODY25_LShoulder].x = points[UT_COCO_LShoulder].x;
+    sk->body.joint2D[BODY25_LShoulder].y = points[UT_COCO_LShoulder].y;
 
-    sk->joint2D[BODY25_LElbow].x = points[UT_COCO_LElbow].x;
-    sk->joint2D[BODY25_LElbow].y = points[UT_COCO_LElbow].y;
+    sk->body.joint2D[BODY25_LElbow].x = points[UT_COCO_LElbow].x;
+    sk->body.joint2D[BODY25_LElbow].y = points[UT_COCO_LElbow].y;
 
-    sk->joint2D[BODY25_LWrist].x = points[UT_COCO_LWrist].x;
-    sk->joint2D[BODY25_LWrist].y = points[UT_COCO_LWrist].y;
+    sk->body.joint2D[BODY25_LWrist].x = points[UT_COCO_LWrist].x;
+    sk->body.joint2D[BODY25_LWrist].y = points[UT_COCO_LWrist].y;
 
     if (
         (points[UT_COCO_RHip].x!=0) && (points[UT_COCO_LHip].x!=0) &&
         (points[UT_COCO_RHip].y!=0) && (points[UT_COCO_LHip].y!=0)
        )
         {
-            sk->joint2D[BODY25_MidHip].x = (points[UT_COCO_RHip].x+points[UT_COCO_LHip].x)/2;
-            sk->joint2D[BODY25_MidHip].y = (points[UT_COCO_RHip].y+points[UT_COCO_LHip].y)/2;
+            sk->body.joint2D[BODY25_MidHip].x = (points[UT_COCO_RHip].x+points[UT_COCO_LHip].x)/2;
+            sk->body.joint2D[BODY25_MidHip].y = (points[UT_COCO_RHip].y+points[UT_COCO_LHip].y)/2;
         } else
         {
-            sk->joint2D[BODY25_MidHip].x = 0;
-            sk->joint2D[BODY25_MidHip].y = 0;
+            sk->body.joint2D[BODY25_MidHip].x = 0;
+            sk->body.joint2D[BODY25_MidHip].y = 0;
         }
 
-    sk->joint2D[BODY25_RHip].x = points[UT_COCO_RHip].x;
-    sk->joint2D[BODY25_RHip].y = points[UT_COCO_RHip].y;
+    sk->body.joint2D[BODY25_RHip].x = points[UT_COCO_RHip].x;
+    sk->body.joint2D[BODY25_RHip].y = points[UT_COCO_RHip].y;
 
-    sk->joint2D[BODY25_RKnee].x = points[UT_COCO_RKnee].x;
-    sk->joint2D[BODY25_RKnee].y = points[UT_COCO_RKnee].y;
+    sk->body.joint2D[BODY25_RKnee].x = points[UT_COCO_RKnee].x;
+    sk->body.joint2D[BODY25_RKnee].y = points[UT_COCO_RKnee].y;
 
-    sk->joint2D[BODY25_RAnkle].x = points[UT_COCO_RAnkle].x;
-    sk->joint2D[BODY25_RAnkle].y = points[UT_COCO_RAnkle].y;
+    sk->body.joint2D[BODY25_RAnkle].x = points[UT_COCO_RAnkle].x;
+    sk->body.joint2D[BODY25_RAnkle].y = points[UT_COCO_RAnkle].y;
 
-    sk->joint2D[BODY25_LHip].x = points[UT_COCO_LHip].x;
-    sk->joint2D[BODY25_LHip].y = points[UT_COCO_LHip].y;
+    sk->body.joint2D[BODY25_LHip].x = points[UT_COCO_LHip].x;
+    sk->body.joint2D[BODY25_LHip].y = points[UT_COCO_LHip].y;
 
-    sk->joint2D[BODY25_LKnee].x = points[UT_COCO_LKnee].x;
-    sk->joint2D[BODY25_LKnee].y = points[UT_COCO_LKnee].y;
+    sk->body.joint2D[BODY25_LKnee].x = points[UT_COCO_LKnee].x;
+    sk->body.joint2D[BODY25_LKnee].y = points[UT_COCO_LKnee].y;
 
-    sk->joint2D[BODY25_LAnkle].x = points[UT_COCO_LAnkle].x;
-    sk->joint2D[BODY25_LAnkle].y = points[UT_COCO_LAnkle].y;
+    sk->body.joint2D[BODY25_LAnkle].x = points[UT_COCO_LAnkle].x;
+    sk->body.joint2D[BODY25_LAnkle].y = points[UT_COCO_LAnkle].y;
 
-    sk->joint2D[BODY25_REye].x = points[UT_COCO_REye].x;
-    sk->joint2D[BODY25_REye].y = points[UT_COCO_REye].y;
+    sk->body.joint2D[BODY25_REye].x = points[UT_COCO_REye].x;
+    sk->body.joint2D[BODY25_REye].y = points[UT_COCO_REye].y;
 
-    sk->joint2D[BODY25_LEye].x = points[UT_COCO_LEye].x;
-    sk->joint2D[BODY25_LEye].y = points[UT_COCO_LEye].y;
+    sk->body.joint2D[BODY25_LEye].x = points[UT_COCO_LEye].x;
+    sk->body.joint2D[BODY25_LEye].y = points[UT_COCO_LEye].y;
 
-    sk->joint2D[BODY25_REar].x = points[UT_COCO_REar].x;
-    sk->joint2D[BODY25_REar].y = points[UT_COCO_REar].y;
+    sk->body.joint2D[BODY25_REar].x = points[UT_COCO_REar].x;
+    sk->body.joint2D[BODY25_REar].y = points[UT_COCO_REar].y;
 
-    sk->joint2D[BODY25_LEar].x = points[UT_COCO_LEar].x;
-    sk->joint2D[BODY25_LEar].y = points[UT_COCO_LEar].y;
+    sk->body.joint2D[BODY25_LEar].x = points[UT_COCO_LEar].x;
+    sk->body.joint2D[BODY25_LEar].y = points[UT_COCO_LEar].y;
 
-    sk->joint2D[BODY25_Bkg].x = points[UT_COCO_Bkg].x;
-    sk->joint2D[BODY25_Bkg].y = points[UT_COCO_Bkg].y;
+    sk->body.joint2D[BODY25_Bkg].x = points[UT_COCO_Bkg].x;
+    sk->body.joint2D[BODY25_Bkg].y = points[UT_COCO_Bkg].y;
 
 }

@@ -23,17 +23,17 @@ float checkSkeletonDistance(struct skeletonCOCO * PreviousSkelA,struct skeletonC
     for (int i=0; i<COCO_PARTS; i++)
         {
             if (
-                (skelB->joint2D[i].x==0) &&
-                (skelB->joint2D[i].y==0)
+                (skelB->body.joint2D[i].x==0) &&
+                (skelB->body.joint2D[i].y==0)
             )
                 {
                     score+=1000;// Penalize holes..
                 }
             else
                 {
-                    xSq = PreviousSkelA->joint2D[i].x - skelB->joint2D[i].x ;
+                    xSq = PreviousSkelA->body.joint2D[i].x - skelB->body.joint2D[i].x ;
                     xSq = xSq * xSq;
-                    ySq = PreviousSkelA->joint2D[i].y - skelB->joint2D[i].y;
+                    ySq = PreviousSkelA->body.joint2D[i].y - skelB->body.joint2D[i].y;
                     ySq = ySq * ySq;
 
                     score+=sqrt(xSq+ySq);
@@ -134,10 +134,10 @@ int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,flo
                          {
                            for (int poseNum=0; poseNum<numberOfJoints; poseNum++)
                              {
-                               skel->joint2D[poseNum].x = InputParser_GetWordFloat(ipc,poseNum*3+0);
+                               skel->body.joint2D[poseNum].x = InputParser_GetWordFloat(ipc,poseNum*3+0);
                                //fprintf(stderr,"Pose%u x ( %u ) = %0.2f\n",poseNum,poseNum*3+0, skel->joint2D[poseNum].x  );
 
-                               skel->joint2D[poseNum].y = InputParser_GetWordFloat(ipc,poseNum*3+1);
+                               skel->body.joint2D[poseNum].y = InputParser_GetWordFloat(ipc,poseNum*3+1);
                                //fprintf(stderr,"Pose%u y ( %u ) = %0.2f\n",poseNum,poseNum*3+1,skel->joint2D[poseNum].y);
 
                                value = InputParser_GetWordFloat(ipc,poseNum*3+2);
@@ -145,8 +145,8 @@ int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,flo
                                   {
                                     fprintf(stderr,"Warning : Too large value for accuracy\n");
                                   }
-                               skel->jointAccuracy[poseNum] = value;
-                               skel->active[poseNum] = (value>acceptableThreshold);
+                               skel->body.jointAccuracy[poseNum] = value;
+                               skel->body.active[poseNum] = (value>acceptableThreshold);
                               //fprintf(stderr,"Pose%u A ( %u ) = %0.2f\n",poseNum,poseNum*3+2,value);
                              }
                          }
@@ -417,16 +417,16 @@ int parseNextCSVCOCOSkeleton(struct CSVFileContext * csv, struct skeletonCOCO * 
                    {
                      case 1:
                        //fprintf(stderr,"joint[%s].x=%0.2f\n",csv->field[i].str,value);
-                       skel->joint2D[jointID].x=value;
+                       skel->body.joint2D[jointID].x=value;
                      break;
                      case 2:
                        //fprintf(stderr,"joint[%s].y=%0.2f\n",csv->field[i].str,value);
-                       skel->joint2D[jointID].y=value;
+                       skel->body.joint2D[jointID].y=value;
                      break;
                      case 3:
                        //fprintf(stderr,"joint[%s].accuracy=%0.2f\n",csv->field[i].str,value);
-                       skel->jointAccuracy[jointID] = value;
-                       skel->active[jointID] = (value>0.5);
+                       skel->body.jointAccuracy[jointID] = value;
+                       skel->body.active[jointID] = (value>0.5);
                      break;
                      default:
                        fprintf(stderr,"Could not resolve CSV entry %u ( should be %s )\n",i,csv->field[i].str);
@@ -436,17 +436,17 @@ int parseNextCSVCOCOSkeleton(struct CSVFileContext * csv, struct skeletonCOCO * 
                        
                    if (jointID==BODY25_LBigToe) 
                        {
-                          skel->joint2D[BODY25_LSmallToe].x=skel->joint2D[BODY25_LBigToe].x;
-                          skel->joint2D[BODY25_LSmallToe].y=skel->joint2D[BODY25_LBigToe].y;
-                          skel->jointAccuracy[BODY25_LSmallToe]=skel->jointAccuracy[BODY25_LBigToe];
-                          skel->active[BODY25_LSmallToe]=skel->active[BODY25_LBigToe];
+                          skel->body.joint2D[BODY25_LSmallToe].x=skel->body.joint2D[BODY25_LBigToe].x;
+                          skel->body.joint2D[BODY25_LSmallToe].y=skel->body.joint2D[BODY25_LBigToe].y;
+                          skel->body.jointAccuracy[BODY25_LSmallToe]=skel->body.jointAccuracy[BODY25_LBigToe];
+                          skel->body.active[BODY25_LSmallToe]=skel->body.active[BODY25_LBigToe];
                        } else
                     if (jointID==BODY25_RBigToe) 
                        {
-                          skel->joint2D[BODY25_RSmallToe].x=skel->joint2D[BODY25_RBigToe].x;
-                          skel->joint2D[BODY25_RSmallToe].y=skel->joint2D[BODY25_RBigToe].y;
-                          skel->jointAccuracy[BODY25_RSmallToe]=skel->jointAccuracy[BODY25_RBigToe];
-                          skel->active[BODY25_RSmallToe]=skel->active[BODY25_RBigToe];
+                          skel->body.joint2D[BODY25_RSmallToe].x=skel->body.joint2D[BODY25_RBigToe].x;
+                          skel->body.joint2D[BODY25_RSmallToe].y=skel->body.joint2D[BODY25_RBigToe].y;
+                          skel->body.jointAccuracy[BODY25_RSmallToe]=skel->body.jointAccuracy[BODY25_RBigToe];
+                          skel->body.active[BODY25_RSmallToe]=skel->body.active[BODY25_RBigToe];
                        }
                }
                  

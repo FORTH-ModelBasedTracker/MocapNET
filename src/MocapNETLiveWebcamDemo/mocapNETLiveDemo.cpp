@@ -183,25 +183,25 @@ int feetHeuristics(struct skeletonCOCO * sk)
     if (sk!=0)
         {
             if (
-                ( sk->joint2D[BODY25_RAnkle] .x< sk->joint2D[BODY25_LAnkle].x ) &&
-                ( sk->joint2D[BODY25_RKnee].x  > sk->joint2D[BODY25_LKnee].x )  &&
-                ( sk->joint2D[BODY25_RHip].x < sk->joint2D[BODY25_LHip].x )
+                ( sk->body.joint2D[BODY25_RAnkle] .x < sk->body.joint2D[BODY25_LAnkle].x ) &&
+                ( sk->body.joint2D[BODY25_RKnee].x   > sk->body.joint2D[BODY25_LKnee].x )  &&
+                ( sk->body.joint2D[BODY25_RHip].x      < sk->body.joint2D[BODY25_LHip].x )
                )
                 {
-                    struct point2D tmp = sk->joint2D[BODY25_RKnee];
-                    sk->joint2D[BODY25_RKnee]=sk->joint2D[BODY25_LKnee];
-                    sk->joint2D[BODY25_LKnee] = tmp;
+                    struct point2D tmp = sk->body.joint2D[BODY25_RKnee];
+                    sk->body.joint2D[BODY25_RKnee]=sk->body.joint2D[BODY25_LKnee];
+                    sk->body.joint2D[BODY25_LKnee] = tmp;
                     return 1;
                 }
             else if (
-                     ( sk->joint2D[BODY25_RAnkle] .x > sk->joint2D[BODY25_LAnkle].x ) &&
-                     ( sk->joint2D[BODY25_RKnee].x  < sk->joint2D[BODY25_LKnee].x )  &&
-                     ( sk->joint2D[BODY25_RHip].x < sk->joint2D[BODY25_LHip].x )
+                     ( sk->body.joint2D[BODY25_RAnkle] .x > sk->body.joint2D[BODY25_LAnkle].x ) &&
+                     ( sk->body.joint2D[BODY25_RKnee].x  < sk->body.joint2D[BODY25_LKnee].x )  &&
+                     ( sk->body.joint2D[BODY25_RHip].x < sk->body.joint2D[BODY25_LHip].x )
                     )
                 {
-                    struct point2D tmp = sk->joint2D[BODY25_RAnkle];
-                    sk->joint2D[BODY25_RAnkle]=sk->joint2D[BODY25_LAnkle];
-                    sk->joint2D[BODY25_LAnkle] = tmp;
+                    struct point2D tmp = sk->body.joint2D[BODY25_RAnkle];
+                    sk->body.joint2D[BODY25_RAnkle]=sk->body.joint2D[BODY25_LAnkle];
+                    sk->body.joint2D[BODY25_LAnkle] = tmp;
                     return 1;
                 }
         }
@@ -303,8 +303,8 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
             for (i=0; i<BODY25_PARTS-1; i++)
                 {
                     std::vector<float> newPoint;
-                    newPoint.push_back(sk.joint2D[i].x);
-                    newPoint.push_back(sk.joint2D[i].y);
+                    newPoint.push_back(sk.body.joint2D[i].x);
+                    newPoint.push_back(sk.body.joint2D[i].y);
                     points2DInput.push_back(newPoint);
                 }
             //----------------------------------------------------------------------------------

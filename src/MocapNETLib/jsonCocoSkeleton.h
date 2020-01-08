@@ -350,6 +350,7 @@ enum OP_HeadJoints
  */
 struct handCOCO
 {
+    int isPopulated;
     int isLeft;
     int isRight;
 
@@ -364,11 +365,28 @@ struct handCOCO
  */
 struct headOP
 {  
+    int isPopulated;
     struct point2D joint2D[OP_HEAD_PARTS];
     float  jointAccuracy[OP_HEAD_PARTS];
     unsigned int active[OP_HEAD_PARTS];
     struct point3D joint[OP_HEAD_PARTS];
 };
+
+
+/**
+ * @brief A C struct to hold a body. It contains its 2D points, its 3D points and some flags that signal
+ */
+struct body25OP
+{  
+    int isPopulated;
+    struct point2D joint2D[BODY25_PARTS];
+    float  jointAccuracy[BODY25_PARTS];
+    unsigned int active[BODY25_PARTS];
+    struct point3D joint[BODY25_PARTS];
+    struct point3D bbox[8];
+};
+
+
 
 /**
  * @brief A C struct to hold a skeleton. It contains its 2D points, its 3D points and some flags that signal
@@ -377,16 +395,10 @@ struct skeletonCOCO
 {
     unsigned int observationNumber , observationTotal;
     unsigned int userID;
-
-    struct point2D joint2D[BODY25_PARTS];
-    float  jointAccuracy[BODY25_PARTS];
-    unsigned int active[BODY25_PARTS];
-    struct point3D joint[BODY25_PARTS];
-    struct point3D bbox[8];
-
+ 
+    struct body25OP body;
     struct handCOCO leftHand;
     struct handCOCO rightHand;
-    
     struct headOP head;
 };
 

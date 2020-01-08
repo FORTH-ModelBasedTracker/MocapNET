@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     const char * label=0;
     char outputPathFull[2048]={0};
     const char * outputPath=0;
-    float version=1.2;
+    float version=1.21;
 
     for (int i=0; i<argc; i++)
         {
@@ -113,10 +113,13 @@ int main(int argc, char *argv[])
     struct skeletonCOCO skeleton= {0};
 
     unsigned int frameID=1;
+    
+    fprintf(stderr,"Processing : \n",filePathOfJSONFile,width,height);
+
     while (frameID<frameLimit)
         {
             snprintf(filePathOfJSONFile,1024,formatString,path,label,frameID);
-            fprintf(stderr,"Processing %s (%ux%u)\n",filePathOfJSONFile,width,height);
+            fprintf(stderr,"%s (%ux%u)\n",filePathOfJSONFile,width,height);
 
             if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton,0.4))
                 {
@@ -124,6 +127,9 @@ int main(int argc, char *argv[])
                         {
                             writeCSVHeaderFromSkeleton(outputPathFull,&skeleton,width,height);
                         }
+                     
+                     //if (skeleton->body.leftHand.)
+                    fprintf(stderr,"Processing %s (%ux%u)\n",filePathOfJSONFile,width,height);   
 
                     writeCSVBodyFromSkeleton(outputPathFull,&skeleton,width,height);
                     ++processed;

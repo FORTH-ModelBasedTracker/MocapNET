@@ -19,7 +19,7 @@ int bothZero(float a,float b)
 
 int jointIsNotZero(struct skeletonCOCO * sk,int jointID)
 {
-    if ( bothZero(sk->joint2D[jointID].x,sk->joint2D[jointID].y) )
+    if ( bothZero(sk->body.joint2D[jointID].x,sk->body.joint2D[jointID].y) )
         {
             return 0;
         }
@@ -29,8 +29,8 @@ int jointIsNotZero(struct skeletonCOCO * sk,int jointID)
 int bothJointAreNotZero(struct skeletonCOCO * sk,int jointIDA,int jointIDB)
 {
     if (
-        ( (sk->joint2D[jointIDA].x==0.0)&&(sk->joint2D[jointIDA].y==0.0) ) ||
-        ( (sk->joint2D[jointIDB].x==0.0)&&(sk->joint2D[jointIDB].y==0.0) )
+        ( (sk->body.joint2D[jointIDA].x==0.0)&&(sk->body.joint2D[jointIDA].y==0.0) ) ||
+        ( (sk->body.joint2D[jointIDB].x==0.0)&&(sk->body.joint2D[jointIDB].y==0.0) )
     )
         {
             return 0;
@@ -46,12 +46,12 @@ void addSkeletonJointFromTwoJoints(
     int jointIDB
 )
 {
-    float x=(float) (sk->joint2D[jointIDA].x + sk->joint2D[jointIDB].x)/2;
-    float y=(float) (sk->joint2D[jointIDA].y + sk->joint2D[jointIDB].y)/2;
+    float x=(float) (sk->body.joint2D[jointIDA].x + sk->body.joint2D[jointIDB].x)/2;
+    float y=(float) (sk->body.joint2D[jointIDA].y + sk->body.joint2D[jointIDB].y)/2;
     float v=1.0;
     if (
-        ( (sk->joint2D[jointIDA].x==0.0)&&(sk->joint2D[jointIDA].y==0.0) ) ||
-        ( (sk->joint2D[jointIDB].x==0.0)&&(sk->joint2D[jointIDB].y==0.0) )
+        ( (sk->body.joint2D[jointIDA].x==0.0)&&(sk->body.joint2D[jointIDA].y==0.0) ) ||
+        ( (sk->body.joint2D[jointIDB].x==0.0)&&(sk->body.joint2D[jointIDB].y==0.0) )
     )
         {
             x=0.0;
@@ -71,8 +71,8 @@ void addSkeletonJoint(
 )
 
 {
-    float x=(float) sk->joint2D[jointID].x;
-    float y=(float) sk->joint2D[jointID].y;
+    float x=(float) sk->body.joint2D[jointID].x;
+    float y=(float) sk->body.joint2D[jointID].y;
     float v=1.0;
     if ( (x==0.0)&&(y==0.0) )
         {
@@ -259,11 +259,11 @@ std::vector<float> flattenskeletonCOCOToVector(struct skeletonCOCO * sk,unsigned
     float x,y,v;
     std::vector<float> result;
     //  MOCAPNET_UNCOMPRESSED_JOINT_HIP=0,        //0
-    x=(float) (sk->joint2D[BODY25_LHip].x + sk->joint2D[BODY25_RHip].x)/2;
-    y=(float) (sk->joint2D[BODY25_LHip].y + sk->joint2D[BODY25_RHip].y)/2;
+    x=(float) (sk->body.joint2D[BODY25_LHip].x + sk->body.joint2D[BODY25_RHip].x)/2;
+    y=(float) (sk->body.joint2D[BODY25_LHip].y + sk->body.joint2D[BODY25_RHip].y)/2;
     if (
-        ( (sk->joint2D[BODY25_LHip].x==0.0)&&(sk->joint2D[BODY25_LHip].y==0.0) ) ||
-        ( (sk->joint2D[BODY25_RHip].x==0.0)&&(sk->joint2D[BODY25_RHip].y==0.0) )
+        ( (sk->body.joint2D[BODY25_LHip].x==0.0)&&(sk->body.joint2D[BODY25_LHip].y==0.0) ) ||
+        ( (sk->body.joint2D[BODY25_RHip].x==0.0)&&(sk->body.joint2D[BODY25_RHip].y==0.0) )
     )
         {
             v=0.0;
@@ -283,16 +283,16 @@ std::vector<float> flattenskeletonCOCOToVector(struct skeletonCOCO * sk,unsigned
     //------------------------------------
 
 
-    float chestX= (float) (sk->joint2D[BODY25_Neck].x + hipX)/2;
-    float chestY= (float) (sk->joint2D[BODY25_Neck].y + hipY)/2;
-    int chestNotVisible= (( (sk->joint2D[BODY25_Neck].x==0.0)&&(sk->joint2D[BODY25_Neck].y==0.0) ) || ( (hipX==0.0)&&(hipY==0.0) ) );
+    float chestX= (float) (sk->body.joint2D[BODY25_Neck].x + hipX)/2;
+    float chestY= (float) (sk->body.joint2D[BODY25_Neck].y + hipY)/2;
+    int chestNotVisible= (( (sk->body.joint2D[BODY25_Neck].x==0.0)&&(sk->body.joint2D[BODY25_Neck].y==0.0) ) || ( (hipX==0.0)&&(hipY==0.0) ) );
 
 
 
     //MOCAPNET_UNCOMPRESSED_JOINT_ABDOMEN,      //1
-    x=(float) (sk->joint2D[BODY25_Neck].x + chestX)/2;
-    y=(float) (sk->joint2D[BODY25_Neck].y + chestY)/2;
-    if ( (chestNotVisible) || ((sk->joint2D[BODY25_Neck].x==0.0)&&(sk->joint2D[BODY25_Neck].y==0.0))  )
+    x=(float) (sk->body.joint2D[BODY25_Neck].x + chestX)/2;
+    y=(float) (sk->body.joint2D[BODY25_Neck].y + chestY)/2;
+    if ( (chestNotVisible) || ((sk->body.joint2D[BODY25_Neck].x==0.0)&&(sk->body.joint2D[BODY25_Neck].y==0.0))  )
         {
             v=0.0;
             x=0.0;
@@ -588,9 +588,9 @@ int convertBVHFrameToSkeletonCOCO(struct skeletonCOCO * sk,std::vector<float>  b
                                                                                            
                    if (jointTargetID!=INVALID_JOINT)
                    {
-                       sk->joint2D[jointTargetID].x=(float) bvhFrame2DOutput[jointID][0];
-                       sk->joint2D[jointTargetID].y=(float) bvhFrame2DOutput[jointID][1]; 
-                     fprintf(stderr,"-> %0.2f,%0.2f \n",sk->joint2D[jointTargetID].x,sk->joint2D[jointTargetID].y);
+                       sk->body.joint2D[jointTargetID].x=(float) bvhFrame2DOutput[jointID][0];
+                       sk->body.joint2D[jointTargetID].y=(float) bvhFrame2DOutput[jointID][1]; 
+                     fprintf(stderr,"-> %0.2f,%0.2f \n",sk->body.joint2D[jointTargetID].x,sk->body.joint2D[jointTargetID].y);
                    }                                                                                           
                    /*  
     ,                      //,
