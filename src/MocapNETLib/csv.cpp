@@ -224,29 +224,29 @@ int writeOpenPoseCSVBodyFromSkeleton(const char * filename,struct skeletonCOCO *
         { 
             for (int i=0; i<BODY25_PARTS; i++)
                 {
-                    fprintf(fp,"%0.2f,",skeleton->body.joint2D[i].x);
-                    fprintf(fp,"%0.2f,",skeleton->body.joint2D[i].y);
+                    fprintf(fp,"%f,",(float) skeleton->body.joint2D[i].x/width);
+                    fprintf(fp,"%f,",(float) skeleton->body.joint2D[i].y/height);
                     fprintf(fp,"%u,", ( (skeleton->body.joint2D[i].x!=0) && (skeleton->body.joint2D[i].y!=0) ) );
                 }
             
             for (int i=0; i<COCO_HAND_PARTS; i++)
                 {
-                    fprintf(fp,"%0.2f,",skeleton->leftHand.joint2D[i].x);
-                    fprintf(fp,"%0.2f,",skeleton->leftHand.joint2D[i].y);
+                    fprintf(fp,"%f,",(float) skeleton->leftHand.joint2D[i].x/width);
+                    fprintf(fp,"%f,",(float) skeleton->leftHand.joint2D[i].y/height);
                     fprintf(fp,"%u,", ( (skeleton->leftHand.joint2D[i].x!=0) && (skeleton->leftHand.joint2D[i].y!=0) ) );
                 }
                 
             for (int i=0; i<COCO_HAND_PARTS; i++)
                 {
-                    fprintf(fp,"%0.2f,",skeleton->rightHand.joint2D[i].x);
-                    fprintf(fp,"%0.2f,",skeleton->rightHand.joint2D[i].y);
+                    fprintf(fp,"%f,",(float) skeleton->rightHand.joint2D[i].x/width);
+                    fprintf(fp,"%f,",(float) skeleton->rightHand.joint2D[i].y/height);
                     fprintf(fp,"%u,", ( (skeleton->rightHand.joint2D[i].x!=0) && (skeleton->rightHand.joint2D[i].y!=0) ) );
                 }
                 
             for (int i=0; i<OP_HEAD_PARTS; i++)
                 {
-                    fprintf(fp,"%0.2f,",skeleton->head.joint2D[i].x);
-                    fprintf(fp,"%0.2f,",skeleton->head.joint2D[i].y);
+                    fprintf(fp,"%f,",(float) skeleton->head.joint2D[i].x/width);
+                    fprintf(fp,"%f,",(float) skeleton->head.joint2D[i].y/height);
                     fprintf(fp,"%u", ( (skeleton->head.joint2D[i].x!=0) && (skeleton->head.joint2D[i].y!=0) ) ); 
                     if (i<OP_HEAD_PARTS-1)
                         {
