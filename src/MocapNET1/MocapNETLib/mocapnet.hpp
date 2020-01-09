@@ -6,7 +6,7 @@
  *  frames that must be accompanied by a header. This library internally handles all of these details.
  *  @author Ammar Qammaz (AmmarkoV)
  */
-#include "../Tensorflow/tensorflow.hpp"
+#include "../../Tensorflow/tensorflow.hpp"
 
 #include "gestureRecognition.hpp"
 #include "outputFiltering.hpp"

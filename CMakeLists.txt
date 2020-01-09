@@ -252,10 +252,12 @@ ENDIF()
 #pip3 show protobuf
 #add_subdirectory (MocapNETStandalone/)
 
-add_subdirectory (src/MocapNETLib/)
+add_subdirectory (src/MocapNET1/MocapNETLib/)
+add_subdirectory (src/MocapNET1/MocapNETFromJSON/)
+add_subdirectory (src/MocapNET1/MocapNETSimpleBenchmark/)
+
 add_subdirectory (src/Converters/)
-add_subdirectory (src/MocapNETFromJSON/)
-add_subdirectory (src/MocapNETSimpleBenchmark/)
+
 
 IF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/AmmarServer/src/AmmServerlib")
  add_subdirectory (src/MocapNETServerHTTP/)
@@ -263,8 +265,8 @@ ENDIF()
 
 if (OpenCV_FOUND)
 add_subdirectory (src/Webcam/)
-add_subdirectory (src/MocapNETLiveWebcamDemo/)
 add_subdirectory (src/BVHGUI/)
+add_subdirectory (src/MocapNET1/MocapNETLiveWebcamDemo/)
 ENDIF(OpenCV_FOUND)
 
 

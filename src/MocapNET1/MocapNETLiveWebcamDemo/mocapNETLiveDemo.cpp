@@ -13,7 +13,7 @@ using namespace cv;
 #include "../MocapNETLib/jsonCocoSkeleton.h"
 #include "../MocapNETLib/jsonMocapNETHelpers.cpp"
 
-#include "../Tensorflow/tensorflow.hpp"
+#include "../../Tensorflow/tensorflow.hpp"
 #include "../MocapNETLib/mocapnet.hpp"
 #include "../MocapNETLib/bvh.hpp"
 #include "../MocapNETLib/csv.hpp"

@@ -5,7 +5,7 @@
 #if USE_OPENGL
  int openGLHasInitialization=0;
  int openGLHasFailed=0;
- #include "../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/OpenGLAcquisition.h"
+ #include "../../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/OpenGLAcquisition.h"
 #endif
  
 

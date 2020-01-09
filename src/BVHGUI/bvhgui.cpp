@@ -8,10 +8,10 @@
  *  @author Ammar Qammaz (AmmarkoV)
  */
 #include <stdio.h>
-#include "../MocapNETLib/mocapnet.hpp"
-#include "../MocapNETLib/bvh.hpp"
-#include "../MocapNETLib/visualization.hpp"
-#include "../MocapNETLib/opengl.hpp"
+#include "../MocapNET1/MocapNETLib/mocapnet.hpp"
+#include "../MocapNET1/MocapNETLib/bvh.hpp"
+#include "../MocapNET1/MocapNETLib/visualization.hpp"
+#include "../MocapNET1/MocapNETLib/opengl.hpp"
 #include <vector>
 
 using namespace cv;

@@ -8,9 +8,9 @@
 #include <math.h>
 #include <string.h>
 
-#include "../MocapNETLib/mocapnet.hpp"
-#include "../MocapNETLib/tools.h"
-#include "../MocapNETLib/csv.hpp"
+#include "../MocapNET1/MocapNETLib/mocapnet.hpp"
+#include "../MocapNET1/MocapNETLib/tools.h"
+#include "../MocapNET1/MocapNETLib/csv.hpp"
 
 
 int main(int argc, char *argv[])

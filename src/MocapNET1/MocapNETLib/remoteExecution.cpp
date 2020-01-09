@@ -1,9 +1,9 @@
 #include "remoteExecution.hpp"
-#include "../../dependencies/InputParser/InputParser_C.h"
+#include "../../../dependencies/InputParser/InputParser_C.h"
 
 
  #if USE_NETWORKING
-#include "../../dependencies/AmmarServer/src/AmmClient/AmmClient.h"
+#include "../../../dependencies/AmmarServer/src/AmmClient/AmmClient.h"
 #endif
 
 

@@ -2,10 +2,10 @@
 #include <string.h>
 
 #if USE_BVH
-#include "../../dependencies/RGBDAcquisition/tools/AmMatrix/matrix4x4Tools.h"
-#include "../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_loader.h"
-#include "../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_project.h"
-#include "../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_transform.h"
+#include "../../../dependencies/RGBDAcquisition/tools/AmMatrix/matrix4x4Tools.h"
+#include "../../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_loader.h"
+#include "../../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_project.h"
+#include "../../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_transform.h"
 struct BVH_MotionCapture bvhMotion= {0};
 struct BVH_Transform bvhTransform= {0};
 int haveBVHInit=0;
