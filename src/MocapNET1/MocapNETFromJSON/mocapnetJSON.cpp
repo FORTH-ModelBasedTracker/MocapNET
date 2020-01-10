@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
                     if (isJSONFile)
                         {
                              snprintf(filePathOfJSONFile,1024,formatString,path,label,frameID);
-                             if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton,0.4))
+                             if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton,0.4,frameID))
                                     {
                                        okayToProceed=1;
                                     }

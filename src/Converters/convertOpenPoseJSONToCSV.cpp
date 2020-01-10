@@ -114,14 +114,14 @@ int main(int argc, char *argv[])
 
     unsigned int frameID=1;
     
-    fprintf(stderr,"Processing : \n",filePathOfJSONFile);
+    fprintf(stderr,"Processing : \n");
 
     while (frameID<frameLimit)
         {
             snprintf(filePathOfJSONFile,1024,formatString,path,label,frameID);
             fprintf(stderr,"%s (%ux%u)\n",filePathOfJSONFile,width,height);
 
-            if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton,0.4))
+            if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton,0.4,processed))
                 {
                     if (processed==0)
                         {

@@ -43,7 +43,7 @@ float checkSkeletonDistance(struct skeletonCOCO * PreviousSkelA,struct skeletonC
     return score;
 }
 
-int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,float acceptableThreshold)
+int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,float acceptableThreshold,unsigned int frameID)
 {
     //memset(skel,0,sizeof(struct skeletonCOCO));
 
@@ -65,6 +65,8 @@ int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,flo
             */
             while ((read = getline(&line, &len, fp)) != -1)
                 {
+                    skel->observationNumber=frameID;
+                    
                     //We should have the whole output.. since it is one line
                     char * poseStart=0;
                     char * poseEnd=0;

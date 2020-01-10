@@ -53,7 +53,7 @@ int testMocapNETJSONCompression()
      snprintf(filePathOfJSONFile,1024,"%s/colorFrame_0_%05u_keypoints.json",path,i);
 
      std::vector<float> ourCompressed;
-     if (parseJsonCOCOSkeleton(filePathOfJSONFile,skeleton,0.4))
+     if (parseJsonCOCOSkeleton(filePathOfJSONFile,skeleton,0.4,i))
        {
         std::vector<float> inputValues171 = flattenskeletonCOCOToVector(skeleton,width,height);
         ourCompressed = prepareMocapNETInputFromUncompressedInput(inputValues171); //This works for sure..

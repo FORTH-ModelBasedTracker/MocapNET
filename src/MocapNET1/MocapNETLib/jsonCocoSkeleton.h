@@ -521,6 +521,7 @@ struct skeletonCOCO
 {
     unsigned int observationNumber , observationTotal;
     unsigned int userID;
+    unsigned int totalUsersPresent;
  
     struct body25OP body;
     struct handCOCO leftHand;
@@ -536,7 +537,7 @@ struct skeletonCOCO
  * @param Threshold to set a joint to active ( 0.4-0.5 is a good value )
  * @retval 1=Success/0=Failure
  */ 
-int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,float acceptableThreshold);
+int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,float acceptableThreshold,unsigned int frameID);
 
 #define MAX_CSV_HEADER_FIELDS 512
 

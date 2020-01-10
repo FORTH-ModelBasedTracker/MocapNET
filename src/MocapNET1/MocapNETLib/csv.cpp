@@ -175,7 +175,11 @@ int writeOpenPoseCSVHeaderFromSkeleton(const char * filename,struct skeletonCOCO
     FILE * fp = fopen(filename,"w");
     if (fp!=0)
         { 
-
+       
+             fprintf(fp,"frameNumber,");
+             fprintf(fp,"skeletonID,");
+             fprintf(fp,"totalSkeletons,"); 
+             
             for (int i=0; i<BODY25_PARTS; i++)
                 {
                     fprintf(fp,"2D_X_%s,",Body25BodyNames[i]);
@@ -222,6 +226,13 @@ int writeOpenPoseCSVBodyFromSkeleton(const char * filename,struct skeletonCOCO *
     FILE * fp = fopen(filename,"a");
     if (fp!=0)
         { 
+            
+       
+             fprintf(fp,"%u,",skeleton->observationNumber);
+             fprintf(fp,"%u,",skeleton->userID);
+             fprintf(fp,"%u,",skeleton->totalUsersPresent);
+                    
+            
             for (int i=0; i<BODY25_PARTS; i++)
                 {
                     fprintf(fp,"%f,",(float) skeleton->body.joint2D[i].x/width);
