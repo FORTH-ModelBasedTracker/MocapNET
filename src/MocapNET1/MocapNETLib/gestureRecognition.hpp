@@ -24,7 +24,7 @@ static const char * hardcodedGestureName[] =
   "waveleft.bvh",              //4
   "doubleclap.bvh",            //5
   "waveright.bvh",             //6
-  "handsup.bvh"                  //7
+  "handsup.bvh"                //7
   "leftkick.bvh",              //8
   "rightkick.bvh",             //9
   ""                           //10
