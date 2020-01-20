@@ -420,7 +420,7 @@ int main(int argc, char *argv[])
     float quality=1.0;
     float scale=1.0;
 
-    unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,frameLimitSet=0,visualize=1,save2DVisualization=0,save3DVisualization=1,visualizeOpenGLEnabled=0;
+    unsigned int frameNumber=0,skippedFrames=0,frameLimit=5000,frameLimitSet=0,visualize=1,save2DVisualization=0,save3DVisualization=0,visualizeOpenGLEnabled=0;
     int joint2DSensitivityPercent=38;
     const char * webcam = 0;
 
