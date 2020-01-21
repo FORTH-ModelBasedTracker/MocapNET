@@ -756,6 +756,11 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
        for (joint=0; joint<history[i].size(); joint++)
        { 
         if ( 
+
+                   (  (joint>=MOCAPNET_OUTPUT___JAW_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_RISORIUS03_R_YROTATION) )  ||
+                   (  (joint>=MOCAPNET_OUTPUT_TOE1_1_R_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_LBUTTOCK_YROTATION) )  ||
+                   (  (joint>=MOCAPNET_OUTPUT_TOE1_1_L_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_NUMBER) )  ||
+
                    (  (joint>=MOCAPNET_OUTPUT_METACARPAL1_R_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_FINGER1_3_R_YROTATION) )  ||
                    (  (joint>=MOCAPNET_OUTPUT_METACARPAL1_L_ZROTATION)  && (joint<=MOCAPNET_OUTPUT_FINGER1_3_L_YROTATION) )    ||
                    (  (joint>=MOCAPNET_OUTPUT_RBUTTOCK_ZROTATION) && (joint<=MOCAPNET_OUTPUT_RBUTTOCK_YROTATION) )    || 
