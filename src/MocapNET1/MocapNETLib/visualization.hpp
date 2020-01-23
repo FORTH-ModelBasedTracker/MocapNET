@@ -144,7 +144,9 @@ int visualizeInput(
                                         const char* windowName,
                                         unsigned int frameNumber,
                                         const char * path,
-                                        std::vector<std::vector<float> > points2DOutputGUIForcedView
+                                        std::vector<std::vector<float> > points2DOutputGUIForcedView,
+                                        std::vector<std::vector<float> > points2DOutputGUIForcedViewSide,
+                                        std::vector<std::vector<float> > points2DOutputGUIForcedViewBack
                                      );
 
 /**

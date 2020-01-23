@@ -873,37 +873,83 @@ int visualizeInput(
                                         const char* windowName,
                                         unsigned int frameNumber,
                                         const char * path,
-                                        std::vector<std::vector<float> > points2DOutputGUIForcedView
+                                        std::vector<std::vector<float> > points2DOutputGUIForcedView,
+                                        std::vector<std::vector<float> > points2DOutputGUIForcedViewSide,
+                                        std::vector<std::vector<float> > points2DOutputGUIForcedViewBack
                                      )
 {
 #if USE_OPENCV
-
+     int success=0;
+     
     //colorFrame_0_00001.jpg
     char finalFilename[1024];
     snprintf(finalFilename,1024,"%s/colorFrame_0_%05d.jpg",path,frameNumber);
+        
+     float scale=1.0;   
+    cv::Mat image;
+    cv::Rect roi;
+    cv::Mat destinationROI;
     
     if (fileExists(finalFilename))
     {
-     cv::Mat image = imread(finalFilename, CV_LOAD_IMAGE_COLOR);   // Read the file
+     image = imread(finalFilename, CV_LOAD_IMAGE_COLOR);   // Read the file
+     
      if(image.data!=0)
       { 
-       float scale=(float) 1024/image.size().width; 
+          if (   image.size().height > image.size().width )
+          {
+             scale=(float) 720/image.size().height;
+          } else
+          {
+             scale=(float) 1024/image.size().width; 
+          } 
         if (scale>1.0) { scale=1.0; }
         if (scale!=1.0)
          {  
              cv::resize(image, image, cv::Size(0,0), scale, scale);
          }
-    
-       drawSkeleton(image,points2DOutputGUIForcedView,-200,0);
-    
-       cv::imshow(windowName,image);
-     
-       return 1;
-      } 
+      
+      fprintf(stderr,"Image ( %u x %u )\n",image.size().width,image.size().height);
+      success=1;
+      }
+
     } 
+      
+      int offsetX=800;
+      cv::Mat visualization(image.size().height,offsetX+image.size().width, CV_8UC3, Scalar(0,0,0));
+      fprintf(stderr,"Visualization will be ( %u x %u )\n",visualization.size().width,visualization.size().height);
+       roi = cv::Rect( cv::Point(offsetX,0 ), cv::Size( image.size().width, image.size().height ));
+      destinationROI = visualization( roi );
+      image.copyTo( destinationROI );
+     
+     cv::Point pt1(offsetX,0);
+     cv::Point pt2(offsetX+00,image.size().height);
+     cv::rectangle(visualization,pt1,pt2,cv::Scalar(0,0,0),-1,8,0);
+     
+    cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
+    cv::Point txtPosition;
+    txtPosition.y=20;
+    float thickness=1;
+    int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
     
+    txtPosition.x=100;
+    cv::putText(visualization,"Front View",txtPosition,fontUsed,0.8,cv::Scalar(255,255,255),thickness,8);   
+    
+    txtPosition.x=350;
+    cv::putText(visualization,"Side View",txtPosition,fontUsed,0.8,cv::Scalar(255,255,255),thickness,8);   
+    
+    txtPosition.x=600;
+    cv::putText(visualization,"Back View",txtPosition,fontUsed,0.8,cv::Scalar(255,255,255),thickness,8);   
+     
+     
+     drawSkeleton(visualization,points2DOutputGUIForcedView,-350,-50);
+     drawSkeleton(visualization,points2DOutputGUIForcedViewSide,-100,-50);
+     drawSkeleton(visualization,points2DOutputGUIForcedViewBack,150,-50);
+      
+     cv::imshow(windowName,visualization);
+
     //Did not find a file to show ..
-    return 0; 
+    return success; 
 #else
     fprintf(stderr,"OpenCV code not present in this build, cannot show visualization..\n");
 #endif

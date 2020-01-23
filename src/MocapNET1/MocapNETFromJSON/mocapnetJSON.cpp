@@ -348,7 +348,13 @@ int main(int argc, char *argv[])
                                     std::vector<std::vector<float> > points2DOutput = convertBVHFrameTo2DPoints(result,visWidth,visHeight);
                                     
                                     if (!isCSVFile)
-                                     { visualizeInput("Input Visualization",frameID,path,points2DOutput); }
+                                     {
+                                          result[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) 90;
+                                         std::vector<std::vector<float> > points2DOutputSide = convertBVHFrameTo2DPoints(result,visWidth,visHeight);
+                                          result[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) 190;
+                                         std::vector<std::vector<float> > points2DOutputBack = convertBVHFrameTo2DPoints(result,visWidth,visHeight);
+                                          visualizeInput("Input Visualization",frameID,path,points2DOutput,points2DOutputSide,points2DOutputBack); 
+                                     }
 
                                     if (visualizationType==0)
                                     { 
