@@ -884,7 +884,7 @@ int visualizeInput2DSkeletonFromCOCOStruct(
         float xNormalized = skeleton->body.joint2D[jointID].x / skeletonWidth ;
         float yNormalized = skeleton->body.joint2D[jointID].y / skeletonHeight ;
         
-        if  ( (xNormalized==0) || (yNormalized==0) )
+        if  ( (xNormalized!=0) && (yNormalized!=0) )
         {
         
         targetPoint.x =  x+xNormalized *width; 
