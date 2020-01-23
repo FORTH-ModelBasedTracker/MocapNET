@@ -143,10 +143,16 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
 int visualizeInput(
                                         const char* windowName,
                                         unsigned int frameNumber,
+                                        unsigned int saveVisualization,
                                         const char * path,
+                                        struct skeletonCOCO * skeleton, 
+                                        unsigned int width,
+                                        unsigned int height,
+                                        std::vector<float> mocapNETInput,
                                         std::vector<std::vector<float> > points2DOutputGUIForcedView,
                                         std::vector<std::vector<float> > points2DOutputGUIForcedViewSide,
-                                        std::vector<std::vector<float> > points2DOutputGUIForcedViewBack
+                                        std::vector<std::vector<float> > points2DOutputGUIForcedViewBack,
+                                        unsigned int numberOfMissingJoints
                                      );
 
 /**

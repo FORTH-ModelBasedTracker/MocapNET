@@ -866,15 +866,64 @@ int drawScale(cv::Mat &outputMat,const char * description,float x,float y,float 
 
 
 
+int visualizeInput2DSkeletonFromCOCOStruct(
+                                                                                                     cv::Mat &outputMat,
+                                                                                                     struct skeletonCOCO * skeleton,
+                                                                                                     unsigned int skeletonWidth,
+                                                                                                     unsigned int skeletonHeight,
+                                                                                                     unsigned int x,unsigned int y,
+                                                                                                     unsigned int width,unsigned int height
+                                                                                                    )
+{
+    cv::Point targetPoint = cv::Point(x+100,y+100);
+    cv::Point linePointA ;
+    cv::Point linePointB; 
+        
+    for (int jointID=0; jointID<BODY25_PARTS; jointID++)
+    { 
+        float xNormalized = skeleton->body.joint2D[jointID].x / skeletonWidth ;
+        float yNormalized = skeleton->body.joint2D[jointID].y / skeletonHeight ;
+        
+        if  ( (xNormalized==0) || (yNormalized==0) )
+        {
+        
+        targetPoint.x =  x+xNormalized *width; 
+        targetPoint.y =  y+yNormalized *height;
+        //fprintf(stderr,"Point%u (%0.2f,%0.2f)",jointID,targetPoint.x, targetPoint.y );
+        
+        //cv::Scalar(0,123,123)
+        cv::circle(outputMat,targetPoint,3,cv::Scalar(0,123,250),3,8,0); 
+        
+        linePointA.x=targetPoint.x-10;
+        linePointA.y=targetPoint.y; 
+        linePointB.x=targetPoint.x+10;
+        linePointB.y=targetPoint.y; 
+        cv::line(outputMat,linePointA,linePointB,cv::Scalar(0,0,255),2.0);
+
+        linePointA.x=targetPoint.x;
+        linePointA.y=targetPoint.y-10; 
+        linePointB.x=targetPoint.x;
+        linePointB.y=targetPoint.y+10; 
+        cv::line(outputMat,linePointA,linePointB,cv::Scalar(0,0,255),2.0);
+        }
+    }
+     
+}
 
 
 int visualizeInput(
                                         const char* windowName,
                                         unsigned int frameNumber,
+                                        unsigned int saveVisualization,
                                         const char * path,
+                                        struct skeletonCOCO * skeleton, 
+                                        unsigned int width,
+                                        unsigned int height,
+                                        std::vector<float> mocapNETInput,
                                         std::vector<std::vector<float> > points2DOutputGUIForcedView,
                                         std::vector<std::vector<float> > points2DOutputGUIForcedViewSide,
-                                        std::vector<std::vector<float> > points2DOutputGUIForcedViewBack
+                                        std::vector<std::vector<float> > points2DOutputGUIForcedViewBack,
+                                        unsigned int numberOfMissingJoints
                                      )
 {
 #if USE_OPENCV
@@ -914,12 +963,14 @@ int visualizeInput(
 
     } 
       
-      int offsetX=800;
+      int offsetX=950;
       cv::Mat visualization(image.size().height,offsetX+image.size().width, CV_8UC3, Scalar(0,0,0));
       fprintf(stderr,"Visualization will be ( %u x %u )\n",visualization.size().width,visualization.size().height);
        roi = cv::Rect( cv::Point(offsetX,0 ), cv::Size( image.size().width, image.size().height ));
       destinationROI = visualization( roi );
       image.copyTo( destinationROI );
+      
+     visualizeInput2DSkeletonFromCOCOStruct(visualization,skeleton,width,height,offsetX,0, image.size().width,image.size().height);
      
      cv::Point pt1(offsetX,0);
      cv::Point pt2(offsetX+00,image.size().height);
@@ -927,25 +978,49 @@ int visualizeInput(
      
     cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
     cv::Point txtPosition;
-    txtPosition.y=20;
-    float thickness=1;
+    txtPosition.y=30;
+    float thickness=2;
     int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
     
-    txtPosition.x=100;
-    cv::putText(visualization,"Front View",txtPosition,fontUsed,0.8,cv::Scalar(255,255,255),thickness,8);   
-    
-    txtPosition.x=350;
-    cv::putText(visualization,"Side View",txtPosition,fontUsed,0.8,cv::Scalar(255,255,255),thickness,8);   
-    
-    txtPosition.x=600;
-    cv::putText(visualization,"Back View",txtPosition,fontUsed,0.8,cv::Scalar(255,255,255),thickness,8);   
      
-     
-     drawSkeleton(visualization,points2DOutputGUIForcedView,-350,-50,0);
-     drawSkeleton(visualization,points2DOutputGUIForcedViewSide,-100,-50,0);
-     drawSkeleton(visualization,points2DOutputGUIForcedViewBack,150,-50,0);
+       visualizeNSDM(
+                visualization,
+                mocapNETInput,
+                20,
+                500,
+                200,
+                200
+            );
+      
+      if (numberOfMissingJoints>40)
+      {
+           txtPosition.x=60;
+           txtPosition.y=350;
+           cv::putText(visualization,"Incomplete Data..!",txtPosition,fontUsed,2.8,color,thickness,8);    
+      } else
+      {
+        txtPosition.x=100;
+        cv::putText(visualization,"Front View",txtPosition,fontUsed,0.8,color,thickness,8);   
+    
+       txtPosition.x=400;
+       cv::putText(visualization,"Side View",txtPosition,fontUsed,0.8,color,thickness,8);   
+    
+      txtPosition.x=700;
+      cv::putText(visualization,"Diag. View",txtPosition,fontUsed,0.8,color,thickness,8);
+   
+       drawSkeleton(visualization,points2DOutputGUIForcedView,-350,-50,0);
+       drawSkeleton(visualization,points2DOutputGUIForcedViewSide,-50,-50,0);
+       drawSkeleton(visualization,points2DOutputGUIForcedViewBack,250,-50,0);
+      }
       
      cv::imshow(windowName,visualization);
+     
+     if (saveVisualization)
+     {
+          char filename[1024];
+          snprintf(filename,1024,"vis%05u.jpg",frameNumber);
+         imwrite(filename,visualization);
+     }
 
     //Did not find a file to show ..
     return success; 

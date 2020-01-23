@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
     const char   outputPathStatic[]="out.bvh";
     char * outputPath = (char*) outputPathStatic;
     
+    int saveVisualization=0;
     unsigned int mocapNETMode=3;
     unsigned int width=1920 , height=1080 , frameLimit=10000 , visualize = 0, useCPUOnly=1 , serialLength=5,delay=0,constrainPositionRotation=1,visualizationType=0;
     unsigned int visWidth=1024,visHeight=768;
@@ -79,7 +80,8 @@ int main(int argc, char *argv[])
     float quality=1.0;
     
     int doGestureDetection=0,doOutputFiltering=1,prependTPose=0;
-
+   
+    unsigned int numberOfMissingJoints=0;
     unsigned int isJSONFile=1;
     unsigned int isCSVFile=0;
 
@@ -187,6 +189,10 @@ int main(int argc, char *argv[])
                     {
                         width = atoi(argv[i+1]);
                         height = atoi(argv[i+2]);
+                    }
+                else if  ( (strcmp(argv[i],"--save3D")==0) || (strcmp(argv[i],"--save3d")==0) )
+                    {
+                        saveVisualization=1;
                     }
         }
 
@@ -308,7 +314,8 @@ int main(int argc, char *argv[])
 
                            if (doOutputFiltering)
                            {
-                               if (getNumberOfEmptyElements(inputValues)>MAXIMUM_NUMBER_OF_NSDM_ELEMENTS_MISSING)
+                               numberOfMissingJoints=getNumberOfEmptyElements(inputValues);
+                               if (numberOfMissingJoints>MAXIMUM_NUMBER_OF_NSDM_ELEMENTS_MISSING)
                                {
                                   //Throttle result.. 
                                  fprintf(stderr,YELLOW "Ignoring result due to many missing joints..\n" NORMAL ); 
@@ -351,10 +358,25 @@ int main(int argc, char *argv[])
                                      {
                                          result[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) 90;
                                          std::vector<std::vector<float> > points2DOutputSide = convertBVHFrameTo2DPoints(result,visWidth,visHeight);
-                                         result[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) 190;
+                                         result[MOCAPNET_OUTPUT_HIP_YROTATION]=(float) 55;
+                                         result[MOCAPNET_OUTPUT_HIP_XROTATION]=(float) 65;
+                                         result[MOCAPNET_OUTPUT_HIP_ZROTATION]=(float) 55;
                                          std::vector<std::vector<float> > points2DOutputBack = convertBVHFrameTo2DPoints(result,visWidth,visHeight);
                                          //-------------------------------------------------
-                                         visualizeInput("Input Visualization",frameID,path,points2DOutput,points2DOutputSide,points2DOutputBack); 
+                                         visualizeInput( 
+                                                                          "Input Visualization",
+                                                                          frameID,
+                                                                          saveVisualization,
+                                                                          path,
+                                                                          &skeleton,
+                                                                          width,
+                                                                          height,
+                                                                          inputValues, 
+                                                                          points2DOutput,
+                                                                          points2DOutputSide,
+                                                                          points2DOutputBack,
+                                                                          numberOfMissingJoints
+                                                                     ); 
                                      }
 
                                     if (visualizationType==0)
@@ -446,7 +468,18 @@ int main(int argc, char *argv[])
                     closeCSVFile(&csv);
                 }
 
-
+           if (saveVisualization)
+           {
+               int i=system("ffmpeg -framerate 30 -i vis%%05d.jpg -y -r 30 -threads 8 -crf 9 -pix_fmt yuv420p  lastRun3D.webm");
+               if (i==0)
+                     {
+                       fprintf(stderr,"Successfully wrote video file.. \n");
+                     } else
+                     {
+                       fprintf(stderr,"Failed to write a video file.. \n");
+                     }  
+               
+           }
 
             unloadMocapNET(&mnet);
         }
