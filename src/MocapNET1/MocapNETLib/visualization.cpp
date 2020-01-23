@@ -514,7 +514,7 @@ int visualizeFigure(const char* windowName,cv::Mat &img)
 
 
 
-int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOutputGUIForcedView,float offsetX,float offsetY)
+int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOutputGUIForcedView,float offsetX,float offsetY,int labels)
 {
     char textInfo[512];
     
@@ -596,7 +596,6 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
             float jointPointY = points2DOutputGUIForcedView[jointID][1]+offsetY;
             //fprintf(stderr,"P x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
 
-
             if ( (jointPointX!=0) && (jointPointY!=0) )
                 {
                     cv::Point jointPoint(jointPointX,jointPointY);
@@ -628,7 +627,7 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
                      
                     
                     jointPoint.x+=10;
-                    if (!filterOut)
+                    if ( (!filterOut) && (labels) )
                       { cv::putText(outputMat, textInfo  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(255), 0.2, 8 ); }
                 }
         }
@@ -735,7 +734,7 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
     unsigned int visualizeHeight=1024;
     cv::Mat img(visualizeHeight,visualizeWidth, CV_8UC3, cv::Scalar(0,0,0));
     
-    drawSkeleton(img,place2DSkeletonElsewhere(450,350,200,200,skeleton2D),0.0,0.0);
+    drawSkeleton(img,place2DSkeletonElsewhere(450,350,200,200,skeleton2D),0.0,0.0,1);
     
     unsigned int widthOfGraphs=165;
     unsigned int heightOfGraphs=100;
@@ -942,9 +941,9 @@ int visualizeInput(
     cv::putText(visualization,"Back View",txtPosition,fontUsed,0.8,cv::Scalar(255,255,255),thickness,8);   
      
      
-     drawSkeleton(visualization,points2DOutputGUIForcedView,-350,-50);
-     drawSkeleton(visualization,points2DOutputGUIForcedViewSide,-100,-50);
-     drawSkeleton(visualization,points2DOutputGUIForcedViewBack,150,-50);
+     drawSkeleton(visualization,points2DOutputGUIForcedView,-350,-50,0);
+     drawSkeleton(visualization,points2DOutputGUIForcedViewSide,-100,-50,0);
+     drawSkeleton(visualization,points2DOutputGUIForcedViewBack,150,-50,0);
       
      cv::imshow(windowName,visualization);
 
@@ -1260,7 +1259,7 @@ int visualizePoints(
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
    //The main star of the show , the skeleton..
-    drawSkeleton(img,points2DOutputGUIForcedView,0.0,0.0);
+    drawSkeleton(img,points2DOutputGUIForcedView,0.0,0.0,1);
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
