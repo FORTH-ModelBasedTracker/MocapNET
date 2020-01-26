@@ -933,46 +933,76 @@ int drawScale(cv::Mat &outputMat,const char * description,float x,float y,float 
 
 
 int visualizeInput2DSkeletonFromCOCOStruct(
-                                                                                                     cv::Mat &outputMat,
-                                                                                                     struct skeletonCOCO * skeleton,
-                                                                                                     unsigned int skeletonWidth,
-                                                                                                     unsigned int skeletonHeight,
-                                                                                                     unsigned int x,unsigned int y,
-                                                                                                     unsigned int width,unsigned int height
-                                                                                                    )
+                                                                                         cv::Mat &outputMat,
+                                                                                         struct skeletonCOCO * skeleton,
+                                                                                         unsigned int skeletonWidth,
+                                                                                         unsigned int skeletonHeight,
+                                                                                         unsigned int x,unsigned int y,
+                                                                                         unsigned int width,unsigned int height
+                                                                                        )
 {
-    cv::Point targetPoint = cv::Point(x+100,y+100);
-    cv::Point linePointA ;
-    cv::Point linePointB; 
+    
+    cv::Mat base;
+    outputMat.copyTo(base);
+    cv::Mat overlay(outputMat.size().height,outputMat.size().width, CV_8UC3, Scalar(0,0,0));
+    
+    cv::Point parentPoint = cv::Point(x+100,y+100);
+    cv::Point targetPoint = cv::Point(x+100,y+100); 
+    
+    cv::Scalar color;
         
     for (int jointID=0; jointID<BODY25_PARTS; jointID++)
     { 
         float xNormalized = skeleton->body.joint2D[jointID].x / skeletonWidth ;
         float yNormalized = skeleton->body.joint2D[jointID].y / skeletonHeight ;
         
+        float xParentNorm= skeleton->body.joint2D[Body25SkeletonJointsParentRelationMap[jointID]].x/skeletonWidth;
+        float yParentNorm= skeleton->body.joint2D[Body25SkeletonJointsParentRelationMap[jointID]].y/skeletonHeight;
+        
         if  ( (xNormalized!=0) && (yNormalized!=0) )
         {
         
         targetPoint.x =  x+xNormalized *width; 
         targetPoint.y =  y+yNormalized *height;
+        
+        parentPoint.x = x+xParentNorm*width;
+        parentPoint.y = y+yParentNorm*height;
         //fprintf(stderr,"Point%u (%0.2f,%0.2f)",jointID,targetPoint.x, targetPoint.y );
         
         //cv::Scalar(0,123,123)
-        cv::circle(outputMat,targetPoint,3,cv::Scalar(0,123,250),3,8,0); 
+        cv::circle(overlay,targetPoint,3,cv::Scalar(255,0,255),3,8,0);  
         
-        linePointA.x=targetPoint.x-10;
-        linePointA.y=targetPoint.y; 
-        linePointB.x=targetPoint.x+10;
-        linePointB.y=targetPoint.y; 
-        cv::line(outputMat,linePointA,linePointB,cv::Scalar(0,0,255),2.0);
-
-        linePointA.x=targetPoint.x;
-        linePointA.y=targetPoint.y-10; 
-        linePointB.x=targetPoint.x;
-        linePointB.y=targetPoint.y+10; 
-        cv::line(outputMat,linePointA,linePointB,cv::Scalar(0,0,255),2.0);
+        switch(jointID)
+        {
+            case BODY25_LAnkle :   color =  cv::Scalar(0,0,255); break;
+            case BODY25_LKnee :   color =  cv::Scalar(0,0,255); break;
+            case BODY25_LHip :   color =  cv::Scalar(0,0,255); break;
+            case BODY25_LBigToe :   color =  cv::Scalar(0,0,255); break;
+            case BODY25_LSmallToe :   color =  cv::Scalar(0,0,255); break;
+            case BODY25_LElbow :   color =  cv::Scalar(0,0,255); break;
+            case BODY25_LShoulder :   color =  cv::Scalar(0,0,255); break;
+            case BODY25_LWrist :   color =  cv::Scalar(0,0,255); break;
+            case BODY25_RAnkle :   color =  cv::Scalar(0,255,0); break;
+            case BODY25_RKnee :   color =  cv::Scalar(0,255,0); break;
+            case BODY25_RHip :   color =  cv::Scalar(0,255,0); break;
+            case BODY25_RBigToe :   color =  cv::Scalar(0,255,0); break;
+            case BODY25_RSmallToe :   color =  cv::Scalar(0,255,0); break;
+            case BODY25_RElbow :   color =  cv::Scalar(0,255,0); break;
+            case BODY25_RShoulder :   color =  cv::Scalar(0,255,0); break;
+            case BODY25_RWrist :   color =  cv::Scalar(0,255,0); break;
+            
+            default : 
+               color =  cv::Scalar(255,0,0);
+        };
+        
+        if  ( (xParentNorm!=0) && (yParentNorm!=0) )
+        {        
+          cv::line(overlay,targetPoint,parentPoint,color,3.0);
+        }
         }
     }
+    
+       cv::addWeighted(base,0.8, overlay, 0.3, 0.0, outputMat);
      
 }
 
