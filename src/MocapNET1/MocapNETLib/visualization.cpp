@@ -97,6 +97,72 @@ int visualizeNSDM(
 
 
 
+int visualizeNSDMAsBar(
+    cv::Mat &img,
+    std::vector<float> mocapNETInput,
+    unsigned int x,
+    unsigned int y,
+    unsigned int width,
+    unsigned int height
+)
+{
+    float thickness=2.5;
+    cv::Point topLeft(x,y);
+    cv::Point bottomRight(x+width,y+height);
+    //cv::line(img,topLeft,bottomRight, cv::Scalar(0,255,0),thickness);
+    //cv::rectangle(img, topLeft,bottomRight, cv::Scalar(0,255,0),thickness, 8, 0);
+
+    int addSyntheticPoints=1;
+    int doScaleCompensation=0;
+    std::vector<float> NSDM = compressLegacyMocapNETInputToNSDM(mocapNETInput,addSyntheticPoints,doScaleCompensation);
+
+    if (NSDM.size()>0)
+        {
+
+            float thickness=1;
+            int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
+            
+
+            unsigned int xI,yI,item=0,dim=sqrt(NSDM.size()/2);
+            unsigned int errors=0; 
+            
+            for (yI=0; yI<dim; yI++)
+                {
+                    for (xI=0; xI<dim; xI++)
+                        {
+                             if ( (NSDM[item]==0.0) && (NSDM[item+1]==0.0) )
+                             {
+                                 ++errors;
+                             } 
+                            item+=2;
+                        }
+                }
+                
+                
+                cv::Scalar color;
+                float qualityPercentage=(float) errors/(dim*dim*2);
+                qualityPercentage=(1.0-qualityPercentage);
+                
+                if (qualityPercentage>0.9) {color=cv::Scalar(0,255,0);  }     else
+                if (qualityPercentage>0.8) {color=cv::Scalar(0,123,123); qualityPercentage-=0.2; } else
+                                                                  {color=cv::Scalar(0,0,255);     qualityPercentage-=0.6;}  
+                
+                if (qualityPercentage>1.0) { qualityPercentage=1.0; }
+                if (qualityPercentage<0.0) { qualityPercentage=0.0; }
+                
+                cv::Point topLeft(x,y);
+                cv::Point bottomRight(x+(qualityPercentage*width),y+height);
+                
+                    
+                cv::rectangle(img, topLeft,bottomRight,color,-thickness, 8, 0);
+                
+                cv::Point txtPosition(x,y-15);
+                 cv::putText(img,"Quality : ",txtPosition,fontUsed,0.8,color,thickness,8);
+        }
+}
+
+
+
 
 int drawFloorFromPrimitives(
     cv::Mat &img,
@@ -963,7 +1029,8 @@ int visualizeInput(
 
     } 
       
-      int offsetX=950;
+      //int offsetX=950;
+      int offsetX=650;
       cv::Mat visualization(image.size().height,offsetX+image.size().width, CV_8UC3, Scalar(0,0,0));
       fprintf(stderr,"Visualization will be ( %u x %u )\n",visualization.size().width,visualization.size().height);
        roi = cv::Rect( cv::Point(offsetX,0 ), cv::Size( image.size().width, image.size().height ));
@@ -979,10 +1046,20 @@ int visualizeInput(
     cv::Scalar color= cv::Scalar(123,123,123,123 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
     cv::Point txtPosition;
     txtPosition.y=30;
-    float thickness=2;
+    float thickness=2.2;
     int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
     
-     
+      
+      visualizeNSDMAsBar
+          (
+                visualization,
+                mocapNETInput,
+                0,
+                visualization.size().height-30,
+                offsetX,
+                visualization.size().height
+            );
+            /*
        visualizeNSDM(
                 visualization,
                 mocapNETInput,
@@ -990,27 +1067,27 @@ int visualizeInput(
                 500,
                 200,
                 200
-            );
+            );*/
       
       if (numberOfMissingJoints>40)
       {
            txtPosition.x=60;
            txtPosition.y=350;
-           cv::putText(visualization,"Incomplete Data..!",txtPosition,fontUsed,2.8,color,thickness,8);    
+           cv::putText(visualization,"Incomplete Data..!",txtPosition,fontUsed,1.8,color,thickness,8);    
       } else
       {
         txtPosition.x=100;
-        cv::putText(visualization,"Front View",txtPosition,fontUsed,0.8,color,thickness,8);   
+        cv::putText(visualization,"Front View",txtPosition,fontUsed,1.1,color,thickness,8);   
     
        txtPosition.x=400;
-       cv::putText(visualization,"Side View",txtPosition,fontUsed,0.8,color,thickness,8);   
+       cv::putText(visualization,"Side View",txtPosition,fontUsed,1.1,color,thickness,8);   
     
-      txtPosition.x=700;
-      cv::putText(visualization,"Diag. View",txtPosition,fontUsed,0.8,color,thickness,8);
+      //txtPosition.x=700;
+      //cv::putText(visualization,"Diag. View",txtPosition,fontUsed,0.8,color,thickness,8);
    
        drawSkeleton(visualization,points2DOutputGUIForcedView,-350,-50,0);
        drawSkeleton(visualization,points2DOutputGUIForcedViewSide,-50,-50,0);
-       drawSkeleton(visualization,points2DOutputGUIForcedViewBack,250,-50,0);
+       //drawSkeleton(visualization,points2DOutputGUIForcedViewBack,250,-50,0);
       }
       
      cv::imshow(windowName,visualization);
