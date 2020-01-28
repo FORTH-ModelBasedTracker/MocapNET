@@ -43,6 +43,20 @@ float checkSkeletonDistance(struct skeletonCOCO * PreviousSkelA,struct skeletonC
     return score;
 }
 
+
+int skeletonHasFeet(struct skeletonCOCO * skel)
+{
+    return   ( 
+                       ( skel->body.active[BODY25_LAnkle] ) &&
+                       ( skel->body.active[BODY25_LKnee] ) &&
+                       ( skel->body.active[BODY25_LHip] ) &&
+                       ( skel->body.active[BODY25_RAnkle] ) &&
+                       ( skel->body.active[BODY25_RKnee] ) &&
+                       ( skel->body.active[BODY25_RHip] ) 
+                    );
+}
+
+
 int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,float acceptableThreshold,unsigned int frameID)
 {
     //memset(skel,0,sizeof(struct skeletonCOCO));

@@ -532,6 +532,9 @@ struct skeletonCOCO
 };
 
 
+
+int skeletonHasFeet(struct skeletonCOCO * skel);
+
 /**
  * @brief Parse a JSON file and retrieve a skeleton
  * @param Path to JSON file

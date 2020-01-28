@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
                                                                           visHeight
                                                                          );
                          }
-                       drawSkeleton(viewMat,state.bvh2DPoints,0,0,1);   
+                       drawSkeleton(viewMat,state.bvh2DPoints,0/*No input 2D Skeleton*/,0,0,1);   
                     }      
             
             

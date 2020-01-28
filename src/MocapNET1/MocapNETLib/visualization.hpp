@@ -136,7 +136,7 @@ static const int lineColorIndex[] =
 
 
 #if USE_OPENCV
-int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOutputGUIForcedView,float offsetX,float offsetY,int labels);
+int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOutputGUIForcedView,struct skeletonCOCO * skeleton2D,float offsetX,float offsetY,int labels);
 #endif
 
 

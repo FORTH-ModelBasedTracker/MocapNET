@@ -580,20 +580,25 @@ int visualizeFigure(const char* windowName,cv::Mat &img)
 
 
 
-int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOutputGUIForcedView,float offsetX,float offsetY,int labels)
+int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOutputGUIForcedView,struct skeletonCOCO * skeleton2D,float offsetX,float offsetY,int labels)
 {
     char textInfo[512];
-    
+
+    int feetInvisible=0;
+    if (skeleton2D!=0)
+            {
+                feetInvisible=(!skeletonHasFeet(skeleton2D));
+            }
+            
     for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
         {
             float jointPointX = points2DOutputGUIForcedView[jointID][0]+offsetX;
             float jointPointY = points2DOutputGUIForcedView[jointID][1]+offsetY;
             cv::Point jointPoint(jointPointX,jointPointY);
             //fprintf(stderr,"L x,y %0.2f,%0.2f \n",jointPointX,jointPointY);
-
+             
             if ( (jointPointX!=0) && (jointPointY!=0) )
                 {
-
                     //unsigned int parentID = Body25SkeletonJointsParentRelationMap[jointID];
                     unsigned int parentID = getBVHParentJoint(jointID);
                     if (parentID!=jointID)
@@ -604,42 +609,50 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
                                     float parentPointY = points2DOutputGUIForcedView[parentID][1]+offsetY;
                                     cv::Point parentPoint(parentPointX,parentPointY);
                                     
-                                    cv::Scalar color = cv::Scalar(0,255,0);
+                                    cv::Scalar color = cv::Scalar(255,0,0);
                                     const char * jointName = getBVHJointName(jointID);
                                     const char * parentName = getBVHJointName(parentID);
+                                    
+                                    int jointIsPartOfFeet=0;
                                     if ( (parentName!=0) && (jointName!=0) )
                                       {
-                                        if (strcmp("hip",jointName)==0)     { color = cv::Scalar(255,0,0); }  else
+                                          /* //Default is Blue so don't need to spam strcmp..
+                                        if (strcmp("hip",jointName)==0)       { color = cv::Scalar(255,0,0); }  else
                                         if (strcmp("head",jointName)==0)    { color = cv::Scalar(255,0,0); }  else
                                         if (strcmp("neck",jointName)==0)    { color = cv::Scalar(255,0,0); }  else
                                         if (strcmp("chest",jointName)==0)   { color = cv::Scalar(255,0,0); }  else
                                         if (strcmp("chest",parentName)==0)  { color = cv::Scalar(255,0,0); }  else
                                         if (strcmp("abdomen",jointName)==0) { color = cv::Scalar(255,0,0); }  else
-                                        if (strcmp("head",parentName)==0)   { color = cv::Scalar(255,0,0); }  else 
+                                        if (strcmp("head",parentName)==0)   { color = cv::Scalar(255,0,0); }  else */
                                         //-------------------------------------------------------------------------
-                                        if (strcmp("lShldr",jointName)==0)  { color = cv::Scalar(0,0,255);  }  else
+                                        if (strcmp("lShldr",jointName)==0)        { color = cv::Scalar(0,0,255);  }  else
                                         if (strcmp("lForeArm",jointName)==0){ color = cv::Scalar(0,0,255);  }  else
-                                        if (strcmp("lHand",jointName)==0)   { color = cv::Scalar(0,0,255);  }  else
-                                        if (strcmp("lHand",parentName)==0)  { color = cv::Scalar(0,0,255);  }  else
-                                        if (strcmp("lButtock",jointName)==0){ color = cv::Scalar(0,0,255);  }  else
-                                        if (strcmp("lShin",jointName)==0)   { color = cv::Scalar(0,0,255);  }  else
-                                        if (strcmp("lFoot",jointName)==0)   { color = cv::Scalar(0,0,255);  }  else
-                                        if (strcmp("lFoot",parentName)==0)  { color = cv::Scalar(0,0,255);  }  
+                                        if (strcmp("lHand",jointName)==0)       { color = cv::Scalar(0,0,255);  }  else
+                                        if (strcmp("lHand",parentName)==0)   { color = cv::Scalar(0,0,255);  }  else
+                                        if (strcmp("lButtock",jointName)==0) { color = cv::Scalar(0,0,255);  jointIsPartOfFeet=1;   }  else
+                                        if (strcmp("lShin",jointName)==0)         { color = cv::Scalar(0,0,255);  jointIsPartOfFeet=1;   }  else
+                                        if (strcmp("lFoot",jointName)==0)        { color = cv::Scalar(0,0,255);  jointIsPartOfFeet=1;   }  else
+                                        if (strcmp("lFoot",parentName)==0)    { color = cv::Scalar(0,0,255);  jointIsPartOfFeet=1;  }  
                                         //-------------------------------------------------------------------------
-                                        /* //Default is Green so don't need to spam strcmp..
                                         if (strcmp("rShldr",jointName)==0)  { color = cv::Scalar(0,255,0);  }  else
                                         if (strcmp("rForeArm",jointName)==0){ color = cv::Scalar(0,255,0);  }  else
                                         if (strcmp("rHand",jointName)==0)   { color = cv::Scalar(0,255,0);  }  else
                                         if (strcmp("rHand",parentName)==0)  { color = cv::Scalar(0,255,0);  }  else
-                                        if (strcmp("rButtock",jointName)==0){ color = cv::Scalar(0,255,0);  }  else
-                                        if (strcmp("rShin",jointName)==0)   { color = cv::Scalar(0,255,0);  }  else
-                                        if (strcmp("rFoot",jointName)==0)   { color = cv::Scalar(0,255,0);  }  else
-                                        if (strcmp("rFoot",parentName)==0)  { color = cv::Scalar(0,255,0);  }
-                                        */
+                                        if (strcmp("rButtock",jointName)==0){ color = cv::Scalar(0,255,0);  jointIsPartOfFeet=1;  }  else
+                                        if (strcmp("rShin",jointName)==0)   { color = cv::Scalar(0,255,0);      jointIsPartOfFeet=1;   }  else
+                                        if (strcmp("rFoot",jointName)==0)   { color = cv::Scalar(0,255,0);    jointIsPartOfFeet=1;  }  else
+                                        if (strcmp("rFoot",parentName)==0)  { color = cv::Scalar(0,255,0);  jointIsPartOfFeet=1;    }
                                     }
                                     
+                                    int doLineDraw=0;
+                                    if ( (parentPointX!=0) && (parentPointY!=0)  )
+                                      {
+                                              if   (!feetInvisible ) { doLineDraw=1;  } else
+                                              if   ( (feetInvisible) && (!jointIsPartOfFeet) ) { doLineDraw=1;  }
+                                      }
+                                        
                                     
-                                    if ( (parentPointX!=0) && (parentPointY!=0) )
+                                    if (doLineDraw)
                                         {
                                             cv::line(outputMat,jointPoint,parentPoint,color,5.0);
                                         }
@@ -664,36 +677,50 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
 
             if ( (jointPointX!=0) && (jointPointY!=0) )
                 {
-                    cv::Point jointPoint(jointPointX,jointPointY);
-                    int thickness=-2;
-                    cv::circle(outputMat,jointPoint,5,cv::Scalar(255,0,255),thickness,8,0);
 
+                   int jointIsPartOfFeet=0; 
                     int filterOut = 1;    
                     const char * jointName = getBVHJointName(jointID);
                     if (jointName!=0)
                         {
                             snprintf(textInfo,512,"%s",jointName);
                             
-                            if (strcmp("head",jointName)==0)      { filterOut = 0; }  else
-                            if (strcmp("neck",jointName)==0)      { filterOut = 0; }  else
-                            if (strcmp("chest",jointName)==0)     { filterOut = 0; }  else
-                            if (strcmp("lShldr",jointName)==0)    { filterOut = 0; }  else
-                            if (strcmp("rShldr",jointName)==0)    { filterOut = 0; }  else
-                            if (strcmp("rShin",jointName)==0)     { filterOut = 0; }  else
-                            if (strcmp("lShin",jointName)==0)     { filterOut = 0; }  else
+                                    
+                            if (strcmp("head",jointName)==0)           { filterOut = 0; }  else
+                            if (strcmp("neck",jointName)==0)           { filterOut = 0; }  else
+                            if (strcmp("chest",jointName)==0)         { filterOut = 0; }  else
+                            if (strcmp("lShldr",jointName)==0)         { filterOut = 0; }  else
+                            if (strcmp("rShldr",jointName)==0)        { filterOut = 0; }  else
                             if (strcmp("rForeArm",jointName)==0)  { filterOut = 0; }  else
                             if (strcmp("lForeArm",jointName)==0)  { filterOut = 0; }  else
-                            if (strcmp("rFoot",jointName)==0)     { filterOut = 0; }  else
-                            if (strcmp("lFoot",jointName)==0)     { filterOut = 0; }   
+                            if (strcmp("lButtock",jointName)==0)   { filterOut = 1;   jointIsPartOfFeet=1; }  else
+                            if (strcmp("rButtock",jointName)==0)  { filterOut = 1;   jointIsPartOfFeet=1; }  else
+                            if (strcmp("rShin",jointName)==0)          { filterOut = 0;   jointIsPartOfFeet=1; }  else
+                            if (strcmp("lShin",jointName)==0)           { filterOut = 0;   jointIsPartOfFeet=1; }  else
+                            if (strcmp("rFoot",jointName)==0)          { filterOut = 0;  jointIsPartOfFeet=1;  }  else
+                            if (strcmp("lFoot",jointName)==0)          { filterOut = 0;  jointIsPartOfFeet=1; }   
                         }
                     else
                         {
                             snprintf(textInfo,512,"-(%u)",jointID);
                         }
                      
+                     int doPointDraw=0;
+                     if   (!feetInvisible ) { doPointDraw=1;  } else
+                     if   ( (feetInvisible) && (!jointIsPartOfFeet) ) { doPointDraw=1;  } 
+                                        
+                                    
+                    cv::Point jointPoint(jointPointX,jointPointY);
+                    int thickness=-2;
+                    if (doPointDraw)
+                                        { 
+                                           cv::circle(outputMat,jointPoint,5,cv::Scalar(255,0,255),thickness,8,0);
+                                        }
+                    
+                    
                     
                     jointPoint.x+=10;
-                    if ( (!filterOut) && (labels) )
+                    if ( (!filterOut) && (labels) && (doPointDraw) )
                       { cv::putText(outputMat, textInfo  , jointPoint, cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar::all(255), 0.2, 8 ); }
                 }
         }
@@ -800,7 +827,7 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
     unsigned int visualizeHeight=1024;
     cv::Mat img(visualizeHeight,visualizeWidth, CV_8UC3, cv::Scalar(0,0,0));
     
-    drawSkeleton(img,place2DSkeletonElsewhere(450,350,200,200,skeleton2D),0.0,0.0,1);
+    drawSkeleton(img,place2DSkeletonElsewhere(450,350,200,200,skeleton2D),0/*No 2D skeleton*/,0.0,0.0,1);
     
     unsigned int widthOfGraphs=165;
     unsigned int heightOfGraphs=100;
@@ -1156,8 +1183,8 @@ int visualizeInput(
       //txtPosition.x=700;
       //cv::putText(visualization,"Diag. View",txtPosition,fontUsed,0.8,color,thickness,8);
    
-       drawSkeleton(visualization,points2DOutputGUIForcedView,-350,-50,0);
-       drawSkeleton(visualization,points2DOutputGUIForcedViewSide,-50,-50,0);
+       drawSkeleton(visualization,points2DOutputGUIForcedView,skeleton,-350,-50,0);
+       drawSkeleton(visualization,points2DOutputGUIForcedViewSide,skeleton,-50,-50,0);
        //drawSkeleton(visualization,points2DOutputGUIForcedViewBack,250,-50,0);
       }
       
@@ -1482,7 +1509,7 @@ int visualizePoints(
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
    //The main star of the show , the skeleton..
-    drawSkeleton(img,points2DOutputGUIForcedView,0.0,0.0,1);
+    drawSkeleton(img,points2DOutputGUIForcedView,0/*No 2D skeleton*/,0.0,0.0,1);
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------------
