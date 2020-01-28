@@ -470,7 +470,13 @@ int main(int argc, char *argv[])
 
            if (saveVisualization)
            {
-               int i=system("ffmpeg -framerate 30 -i vis%05d.jpg -y -r 30 -threads 8 -crf 9 -pix_fmt yuv420p  lastRun3D.webm");
+               //Low-Res video encoding
+               //int i=system("ffmpeg -framerate 25 -i vis%05d.jpg -y -r 30 -threads 8 -crf 9 -pix_fmt yuv420p  lastRun3D.webm");
+
+               //High-Res video encoding
+               int i=system("ffmpeg -framerate 25 -i vis%05d.jpg  -s 1200x720  -y -r 30 -threads 8  lastRun3DHiRes.mp4");
+                
+               
                if (i==0)
                      {
                        fprintf(stderr,"Successfully wrote video file.. \n");

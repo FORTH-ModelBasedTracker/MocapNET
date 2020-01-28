@@ -1002,6 +1002,47 @@ int visualizeInput2DSkeletonFromCOCOStruct(
         }
     }
     
+    if (skeleton->leftHand.isPopulated)
+    {    
+      for (int jointID=0; jointID<COCO_HAND_PARTS; jointID++)
+      {
+        float xNormalized = skeleton->leftHand.joint2D[jointID].x / skeletonWidth ;
+        float yNormalized = skeleton->leftHand.joint2D[jointID].y / skeletonHeight ;
+        targetPoint.x =  x+xNormalized *width; 
+        targetPoint.y =  y+yNormalized *height;
+        
+        cv::circle(overlay,targetPoint,1,cv::Scalar(0,0,255),1,8,0);  
+      } 
+    }
+
+    if (skeleton->rightHand.isPopulated)
+    {    
+      for (int jointID=0; jointID<COCO_HAND_PARTS; jointID++)
+      {
+        float xNormalized = skeleton->rightHand.joint2D[jointID].x / skeletonWidth ;
+        float yNormalized = skeleton->rightHand.joint2D[jointID].y / skeletonHeight ;
+        targetPoint.x =  x+xNormalized *width; 
+        targetPoint.y =  y+yNormalized *height;
+        
+        cv::circle(overlay,targetPoint,1,cv::Scalar(0,255,0),1,8,0);  
+      } 
+    }
+
+    
+    if (skeleton->head.isPopulated)
+    {
+      for (int jointID=0; jointID<OP_HEAD_PARTS; jointID++)
+      {
+        float xNormalized = skeleton->head.joint2D[jointID].x / skeletonWidth ;
+        float yNormalized = skeleton->head.joint2D[jointID].y / skeletonHeight ;
+        targetPoint.x =  x+xNormalized *width; 
+        targetPoint.y =  y+yNormalized *height;
+        
+        //fprintf(stderr,"head(%u,%u)",targetPoint.x,targetPoint.y);
+        cv::circle(overlay,targetPoint,1,cv::Scalar(0,255,255),1,8,0);  
+      }
+    } 
+    
        cv::addWeighted(base,0.8, overlay, 0.3, 0.0, outputMat);
      
 }

@@ -53,7 +53,7 @@ int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,flo
     if (fp!=0)
         {
             fprintf(stderr,"Parsing 2D skeleton from %s \n",filename);
-            struct InputParserC * ipc = InputParser_Create(2048,3);
+            struct InputParserC * ipc = InputParser_Create(4096,3);
             InputParser_SetDelimeter(ipc,0,',');
             InputParser_SetDelimeter(ipc,1,',');
 
@@ -233,7 +233,9 @@ int parseJsonCOCOSkeleton(const char * filename , struct skeletonCOCO * skel,flo
 
                                       value = InputParser_GetWordFloat(ipc,poseNum*3+1);
                                       skel->head.joint2D[poseNum].y = value;
-
+                                     
+                                     //fprintf(stderr,"head(%u)=%0.2f,%0.2f",poseNum,skel->head.joint2D[poseNum].x ,skel->head.joint2D[poseNum].y);
+                                     
                                       value = InputParser_GetWordFloat(ipc,poseNum*3+2);
                                       skel->head.jointAccuracy[poseNum] = value;
                                       skel->head.active[poseNum] = (value>acceptableThreshold);

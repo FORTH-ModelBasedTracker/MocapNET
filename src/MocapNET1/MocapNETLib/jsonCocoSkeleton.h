@@ -527,6 +527,8 @@ struct skeletonCOCO
     struct handCOCO leftHand;
     struct handCOCO rightHand;
     struct headOP head;
+    
+    char deadb33f[1024];
 };
 
 
