@@ -182,6 +182,9 @@ int feetHeuristics(struct skeletonCOCO * sk)
     //one pretty regular problem is that knees get somehow mixed up
     if (sk!=0)
         {
+          if (sk->body.joint2D[BODY25_LShoulder].x >sk->body.joint2D[BODY25_RShoulder].x)  
+          {
+            
             if (
                 ( sk->body.joint2D[BODY25_RAnkle] .x < sk->body.joint2D[BODY25_LAnkle].x ) &&
                 ( sk->body.joint2D[BODY25_RKnee].x   > sk->body.joint2D[BODY25_LKnee].x )  &&
@@ -192,18 +195,20 @@ int feetHeuristics(struct skeletonCOCO * sk)
                     sk->body.joint2D[BODY25_RKnee]=sk->body.joint2D[BODY25_LKnee];
                     sk->body.joint2D[BODY25_LKnee] = tmp;
                     return 1;
-                }
-            else if (
-                     ( sk->body.joint2D[BODY25_RAnkle] .x > sk->body.joint2D[BODY25_LAnkle].x ) &&
-                     ( sk->body.joint2D[BODY25_RKnee].x  < sk->body.joint2D[BODY25_LKnee].x )  &&
-                     ( sk->body.joint2D[BODY25_RHip].x < sk->body.joint2D[BODY25_LHip].x )
-                    )
+                } else 
+            if (
+                 ( sk->body.joint2D[BODY25_RAnkle] .x > sk->body.joint2D[BODY25_LAnkle].x ) &&
+                 ( sk->body.joint2D[BODY25_RKnee].x  < sk->body.joint2D[BODY25_LKnee].x )  &&
+                 ( sk->body.joint2D[BODY25_RHip].x < sk->body.joint2D[BODY25_LHip].x )
+               )
                 {
                     struct point2D tmp = sk->body.joint2D[BODY25_RAnkle];
                     sk->body.joint2D[BODY25_RAnkle]=sk->body.joint2D[BODY25_LAnkle];
                     sk->body.joint2D[BODY25_LAnkle] = tmp;
                     return 1;
                 }
+                
+          }
         }
     return 0;
 }
@@ -427,7 +432,7 @@ int main(int argc, char *argv[])
     unsigned int deadInputPoints=0;
     int live=0,stop=0,visualizationType=0;
     int constrainPositionRotation=1,rotate=0;
-    int doCrop=1,tryForMaximumCrop=0,doSmoothing=5,drawFloor=1,drawNSDM=1,doGestureDetection=0,doInputFiltering=0,doOutputFiltering=1,frameSkip=0;
+    int doCrop=1,tryForMaximumCrop=0,doSmoothing=5,drawFloor=1,drawNSDM=1,doGestureDetection=0,doInputFiltering=0,doOutputFiltering=1,frameSkip=0,doFeetHeuristics=1;
     int targetSpecificFramerate=0;
     float fpsTotal=1.0,fpsTarget=30.0,fpsAcquisition=1.0,fps2DJointDetector=1.0,fpsMocapNET=1.0;
 
@@ -493,6 +498,7 @@ int main(int argc, char *argv[])
                     networkOutputLayer[8]='1';
                     joint2DSensitivityPercent=40;
                     numberOfOutputTensors = 4;
+                    doFeetHeuristics=0;
                 }
             else if (strcmp(argv[i],"--forth")==0)
                 {
@@ -500,6 +506,7 @@ int main(int argc, char *argv[])
                     networkOutputLayer[8]='0';
                     joint2DSensitivityPercent=30;
                     numberOfOutputTensors = 3;
+                    doFeetHeuristics=1;
                 }
             else if (strcmp(argv[i],"--vnect")==0)
                 {
@@ -507,6 +514,7 @@ int main(int argc, char *argv[])
                     networkOutputLayer[8]='1';
                     joint2DSensitivityPercent=20;
                     numberOfOutputTensors = 4;
+                    doFeetHeuristics=0; 
                 }
             else
                 // Various other switches -------------------------------------------------------------------
@@ -944,7 +952,7 @@ int main(int argc, char *argv[])
                                                                             heatmapHeight2DJointDetector,
                                                                             numberOfHeatmaps,
                                                                             numberOfOutputTensors,
-                                                                            0//doFeetHeuristics
+                                                                            doFeetHeuristics
                                                                         );
 
                                             //printWgetCommand(flatAndNormalized2DPoints);
