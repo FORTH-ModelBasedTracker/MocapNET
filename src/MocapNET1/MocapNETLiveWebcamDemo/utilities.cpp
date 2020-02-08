@@ -210,6 +210,88 @@ void dj_drawExtractedSkeletons(
 
 
 
+
+int feetHeuristics(std::vector<cv::Point_<float> > &sk)
+{
+    //UT_COCOBodyNames[i]
+    
+    int result=0;
+    //There are various problems with the 2D detections when it comes to feet particularly
+    //with the FORTH neural network and sice it lacks PAFs  this code solves the common issue of mixed left/right ankles and knees
+    //one pretty regular problem is that knees get somehow mixed up
+    if (sk.size()!=0)
+        {
+            
+          if (sk[UT_COCO_RShoulder].x< sk[UT_COCO_LShoulder].x )  
+          { //Assuming front orientation
+           fprintf(stderr,YELLOW "FRONT orientation ..\n" NORMAL);
+            
+            int ankleOrder=( sk[UT_COCO_RAnkle].x < sk[UT_COCO_LAnkle].x);
+            int kneeOrder=( sk[UT_COCO_RKnee] .x < sk[UT_COCO_LKnee].x);
+            int hipOrder=( sk[UT_COCO_RHip].x< sk[UT_COCO_LHip].x );
+            int leftAnkleDoesNotExist= ( ( sk[UT_COCO_LAnkle].x==0 ) && ( sk[UT_COCO_LAnkle].y==0  ) );
+            int rightAnkleDoesNotExist= ( ( sk[UT_COCO_RAnkle].x==0 ) && ( sk[UT_COCO_RAnkle].y==0  ) );
+            
+           fprintf(stderr,YELLOW "AnkleOrder(%u) KneeOrder(%u) HipOrder(%u) ..\n" NORMAL,ankleOrder,kneeOrder,hipOrder);
+            
+            float tmp;
+            
+            if (!hipOrder)
+            {
+                fprintf(stderr,YELLOW "Swapped hips..\n" NORMAL);
+                tmp = sk[UT_COCO_RHip].x;
+                sk[UT_COCO_RHip].x=sk[UT_COCO_LHip].x;
+                sk[UT_COCO_LHip].x = tmp;
+                
+                tmp = sk[UT_COCO_RHip].y;
+                sk[UT_COCO_RHip].y=sk[UT_COCO_LHip].y;
+                sk[UT_COCO_LHip].y = tmp;
+                
+                hipOrder=( sk[UT_COCO_RHip].x< sk[UT_COCO_LHip].x );
+                result=1;
+            }
+            
+            if (  (!kneeOrder)  && (hipOrder) )
+                {//Need to swap knees
+                    fprintf(stderr,YELLOW "Swapped knees..\n" NORMAL);
+                    tmp = sk[UT_COCO_RKnee].x;
+                    sk[UT_COCO_RKnee].x=sk[UT_COCO_LKnee].x;
+                    sk[UT_COCO_LKnee].x = tmp;
+                    
+                    tmp = sk[UT_COCO_RKnee].y;
+                    sk[UT_COCO_RKnee].y=sk[UT_COCO_LKnee].y;
+                    sk[UT_COCO_LKnee].y = tmp;
+                    result=1;
+                }  
+                
+            if  
+                  (
+                    ( (!ankleOrder) && (kneeOrder)  && (hipOrder) )
+                //     || ( ( leftAnkleDoesNotExist ) && (!rightAnkleDoesNotExist) && (  sk[UT_COCO_RKnee].x  < sk[UT_COCO_LAnkle].x) ) ||
+                //        ( (!leftAnkleDoesNotExist ) && (rightAnkleDoesNotExist) && (  sk[UT_COCO_RKnee].x  > sk[UT_COCO_LAnkle].x) ) 
+                   )
+                {
+                    //Need to swap ankles
+                    fprintf(stderr,YELLOW "Swapped ankles..\n" NORMAL);
+                    tmp = sk[UT_COCO_RAnkle].x;
+                    sk[UT_COCO_RAnkle].x=sk[UT_COCO_LAnkle].x;
+                    sk[UT_COCO_LAnkle].x = tmp;
+                    
+                    tmp = sk[UT_COCO_RAnkle].y;
+                    sk[UT_COCO_RAnkle].y=sk[UT_COCO_LAnkle].y;
+                    sk[UT_COCO_LAnkle].y = tmp;
+                    result=1;
+                }
+                 
+          } else
+          {
+              fprintf(stderr,"Feet heuristics deactivated on back view..\n");
+          }
+        }
+    return result;
+}
+
+
 std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
     cv::Mat colorImageOriginal ,
     cv::Mat colorImageSmall,
@@ -219,7 +301,8 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
     int visualize,
     int saveVisualization,
     unsigned int handleMessages,
-    unsigned int areWeUsingTheBestNetworkAvailable
+    unsigned int areWeUsingTheBestNetworkAvailable,
+    int doFeetHeuristics
 )
 {
     std::vector<cv::Point_<float> > outPoints;
@@ -261,6 +344,16 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
 
     std::vector<cv::Point_<float> > skeletons;
     dj_extractSkeletonsFromPeaks(outLabels,outPoints,skeletons);
+
+
+            if (doFeetHeuristics)
+                {
+                    if (feetHeuristics(skeletons))
+                        {
+                            fprintf(stderr,"Feet heuristics changed something.. \n");
+                            doFeetHeuristics=2;
+                        }
+                }
 
 
     if (visualize)

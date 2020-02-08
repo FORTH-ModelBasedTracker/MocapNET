@@ -80,7 +80,8 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
     unsigned int heatmapWidth2DJointDetector,
     unsigned int heatmapHeight2DJointDetector,
     unsigned int numberOfHeatmaps,
-    unsigned int numberOfOutputTensors
+    unsigned int numberOfOutputTensors,
+    int doFeetHeuristics
 )
 {
     // preprocess image. Actually resize
@@ -169,49 +170,10 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
         areWeUsingTheBestNetworkAvailable=1;
     }
   
-    return dj_getNeuralNetworkDetectionsForColorImage(bgr,smallBGR,heatmaps,minThreshold,frameNumber,visualize,saveVisualization,0,areWeUsingTheBestNetworkAvailable);
+    return dj_getNeuralNetworkDetectionsForColorImage(bgr,smallBGR,heatmaps,minThreshold,frameNumber,visualize,saveVisualization,0,areWeUsingTheBestNetworkAvailable,doFeetHeuristics);
 }
 
 
-
-
-
-int feetHeuristics(struct skeletonCOCO * sk)
-{
-    //There are various problems with the 2D detections when it comes to feet
-    //one pretty regular problem is that knees get somehow mixed up
-    if (sk!=0)
-        {
-          if (sk->body.joint2D[BODY25_LShoulder].x >sk->body.joint2D[BODY25_RShoulder].x)  
-          {
-            
-            if (
-                ( sk->body.joint2D[BODY25_RAnkle] .x < sk->body.joint2D[BODY25_LAnkle].x ) &&
-                ( sk->body.joint2D[BODY25_RKnee].x   > sk->body.joint2D[BODY25_LKnee].x )  &&
-                ( sk->body.joint2D[BODY25_RHip].x      < sk->body.joint2D[BODY25_LHip].x )
-               )
-                {
-                    struct point2D tmp = sk->body.joint2D[BODY25_RKnee];
-                    sk->body.joint2D[BODY25_RKnee]=sk->body.joint2D[BODY25_LKnee];
-                    sk->body.joint2D[BODY25_LKnee] = tmp;
-                    return 1;
-                } else 
-            if (
-                 ( sk->body.joint2D[BODY25_RAnkle] .x > sk->body.joint2D[BODY25_LAnkle].x ) &&
-                 ( sk->body.joint2D[BODY25_RKnee].x  < sk->body.joint2D[BODY25_LKnee].x )  &&
-                 ( sk->body.joint2D[BODY25_RHip].x < sk->body.joint2D[BODY25_LHip].x )
-               )
-                {
-                    struct point2D tmp = sk->body.joint2D[BODY25_RAnkle];
-                    sk->body.joint2D[BODY25_RAnkle]=sk->body.joint2D[BODY25_LAnkle];
-                    sk->body.joint2D[BODY25_LAnkle] = tmp;
-                    return 1;
-                }
-                
-          }
-        }
-    return 0;
-}
 
 
 /**
@@ -259,7 +221,8 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
                 heatmapWidth2DJointDetector,
                 heatmapHeight2DJointDetector,
                 numberOfHeatmaps,
-                numberOfOutputTensors
+                numberOfOutputTensors,
+                doFeetHeuristics
             );
     unsigned long endTime = GetTickCountMicroseconds();
     *fps = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
@@ -293,13 +256,6 @@ std::vector<float> returnMocapNETInputFrom2DDetectorOutput(
 
             convertUtilitiesSkeletonFormatToBODY25(&sk,pointsOf2DSkeleton);
 
-            if (doFeetHeuristics)
-                {
-                    if (feetHeuristics(&sk))
-                        {
-                            fprintf(stderr,"Feet heuristics changed something.. \n");
-                        }
-                }
 
             //----------------------------------------------------------------------------------
             //             Recover points to parent function
@@ -504,7 +460,7 @@ int main(int argc, char *argv[])
                 {
                     networkPath=(char*) networkPathFORTHStatic;
                     networkOutputLayer[8]='0';
-                    joint2DSensitivityPercent=30;
+                    joint2DSensitivityPercent=35;
                     numberOfOutputTensors = 3;
                     doFeetHeuristics=1;
                 }
