@@ -232,7 +232,7 @@ int feetHeuristics(std::vector<cv::Point_<float> > &sk)
             int leftAnkleDoesNotExist= ( ( sk[UT_COCO_LAnkle].x==0 ) && ( sk[UT_COCO_LAnkle].y==0  ) );
             int rightAnkleDoesNotExist= ( ( sk[UT_COCO_RAnkle].x==0 ) && ( sk[UT_COCO_RAnkle].y==0  ) );
             
-           fprintf(stderr,YELLOW "AnkleOrder(%u) KneeOrder(%u) HipOrder(%u) ..\n" NORMAL,ankleOrder,kneeOrder,hipOrder);
+           fprintf(stderr,YELLOW "AnkleOrder(%u) KneeOrder(%u) HipOrder(%u) LeftAnkleDoesntExist(%u) RightAnkleDoesntExist(%u) ..\n" NORMAL,ankleOrder,kneeOrder,hipOrder,leftAnkleDoesNotExist,rightAnkleDoesNotExist);
             
             float tmp;
             
