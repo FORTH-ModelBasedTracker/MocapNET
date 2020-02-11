@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories(${TENSORFLOW_INCLUDE_ROOT})
 
 
-add_library(JointEstimator2D SHARED jointEstimator2D.cpp  ../Tensorflow/tensorflow.cpp ../Tensorflow/tf_utils.cpp)   
+add_library(JointEstimator2D SHARED jointEstimator2D.cpp cameraControl.cpp visualization.cpp ../Tensorflow/tensorflow.cpp ../Tensorflow/tf_utils.cpp)   
 
 
 target_link_libraries(JointEstimator2D rt dl m Tensorflow  TensorflowFramework )
