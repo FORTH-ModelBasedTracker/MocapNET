@@ -206,8 +206,9 @@ You can convert them to a BVH file by issuing :
 
 A utility has been included that can convert the JSON files to a single CSV file issuing :
 ```
- ./convertBody25JSONToCSV --from /path/to/outputJSONDirectory/ --label yourVideoFile -o .
+ ./convertBody25JSONToCSV --from /path/to/outputJSONDirectory/ --label yourVideoFile --seriallength 12 --size 1920 1080 -o .
 ```
+For more information on how to use the conversion utility please [see the documentation inside the utility](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/Converters/convertBody25JsonToCSV.cpp#L2)
 
 A CSV file has been included that can be run by issuing : 
 ```
