@@ -21,21 +21,39 @@ chmod +x mocapnet.desktop
 
 # sudo apt-get install build-essential cmake libopencv-dev libjpeg-dev libpng-dev
 
-if [ ! -f dataset/MotionCapture/READMEFIRST.txt ]; then
-cd "$DIR/dataset"
-echo "Could not find MotionCapture"
-#wget http://ammar.gr/datasets/CMUPlusHeadMotionCapture.zip
-#unzip CMUPlusHeadMotionCapture.zip
-#mv CMUPlusHeadMotionCapture.zip MotionCapture
-
-wget http://ammar.gr/datasets/CMUMotionCaptureDatasets.zip
-unzip CMUMotionCaptureDatasets.zip
-mv CMUMotionCaptureDatasets.zip MotionCapture
-fi
 
 cd "$DIR"
+if [ -f dataset/MotionCapture/READMEFIRST.txt ]
+then
+echo "CMU BVH datasets appear to have been downloaded.."
+else
+  echo "         Do you want to download the CMU BVH datasets ? " 
+  echo "The download is approximately 1GB and will take 4GB of disk space " 
+  echo "(You probably don't need this if you dont want to use the GenerateGroundTruth utiliy)" 
+  echo
+  echo -n " (Y/N)?"
+  read answer
+  if test "$answer" != "N" -a "$answer" != "n";
+  then 
+     cd "$DIR/dataset"
+     echo "Could not find MotionCapture"
+     
+     #Want a more complicated armature ? 
+     #wget http://ammar.gr/datasets/CMUPlusHeadMotionCapture.zip
+     #unzip CMUPlusHeadMotionCapture.zip
+     #mv CMUPlusHeadMotionCapture.zip MotionCapture
 
-#also force download a Video sample
+     wget http://ammar.gr/datasets/CMUMotionCaptureDatasets.zip
+     unzip CMUMotionCaptureDatasets.zip
+     mv CMUMotionCaptureDatasets.zip MotionCapture
+     cd "$DIR"
+  fi
+fi
+
+
+
+cd "$DIR"
+#Force download of a Video sample
 if [ ! -f shuffle.webm ]; then
   wget http://ammar.gr/mocapnet/shuffle.webm
 fi
