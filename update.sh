@@ -5,6 +5,7 @@ cd "$DIR"
 
 
 if [ -f dependencies/RGBDAcquisition/README.md ]; then
+cd dependencies/RGBDAcquisition 
  git pull origin master
 cd "$DIR"
 else

@@ -88,14 +88,12 @@ In order to update all the relevant parts of the code you can use the [update.sh
 
 ```
 ./update.sh
-
 ```
 
 If you made changes to the source code that you want to discard and want to revert to the master you can also use the [revert.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/revert.sh) script provided
 
 ```
 ./revert.sh
-
 ```
 
 
