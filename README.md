@@ -78,6 +78,29 @@ cd ..
 ```
 
 
+
+## Updating the library
+------------------------------------------------------------------ 
+
+The MocapNET library is under active development, the same thing is true for its dependencies.
+
+In order to update all the relevant parts of the code you can use the [update.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/update.sh) script provided. 
+
+```
+./update.sh
+
+```
+
+If you made changes to the source code that you want to discard and want to revert to the master you can also use the [revert.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/revert.sh) script provided
+
+```
+./revert.sh
+
+```
+
+
+
+
 ## Testing the library and performing benchmarks 
 ------------------------------------------------------------------ 
 
