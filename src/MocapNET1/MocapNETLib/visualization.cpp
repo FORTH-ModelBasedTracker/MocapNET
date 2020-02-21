@@ -79,14 +79,34 @@ int visualizeNSDM(
                                 0
                             );
                             
-                            //Visualize error
-                            if (  (NSDM[item]>1.0) || (NSDM[item+1]>1.0)  )
+                            //Visualize NSDM Magnitude being more than 1.0
+                            if (  (NSDM[item]>2.0) || (NSDM[item+1]>2.0)  )
                                { 
                                  cv::Point topRight(x+xI*boxX+boxX,y+yI*boxY);
                                  cv::Point bottomLeft(x+xI*boxX,y+yI*boxY+boxY);
+                                 cv::Point topMiddle(x+xI*boxX+boxX/2,y+yI*boxY);
+                                 cv::Point bottomMiddle(x+xI*boxX+boxX/2,y+yI*boxY+boxY); 
                                  cv::line(img,topLeft,bottomRight, cv::Scalar(0,0,255), 1.0);
                                  cv::line(img,topRight,bottomLeft, cv::Scalar(0,0,255), 1.0);
-                               }
+                                 cv::line(img,topMiddle,bottomMiddle, cv::Scalar(0,0,255), 1.0);
+                               } else
+                            if (  (NSDM[item]>1.5) || (NSDM[item+1]>1.5)  )
+                               { 
+                                 cv::Point topRight(x+xI*boxX+boxX,y+yI*boxY);
+                                 cv::Point bottomLeft(x+xI*boxX,y+yI*boxY+boxY);
+                                 cv::Point topMiddle(x+xI*boxX+boxX/2,y+yI*boxY);
+                                 cv::Point bottomMiddle(x+xI*boxX+boxX/2,y+yI*boxY+boxY); 
+                                 cv::line(img,topLeft,bottomRight, cv::Scalar(0,0,255), 1.0);
+                                 cv::line(img,topRight,bottomLeft, cv::Scalar(0,0,255), 1.0);
+                               } else
+                           if (  (NSDM[item]>1.0) || (NSDM[item+1]>1.0)  )
+                               { 
+                                 cv::Point topRight(x+xI*boxX+boxX,y+yI*boxY);
+                                 cv::Point bottomLeft(x+xI*boxX,y+yI*boxY+boxY);
+                                 cv::Point topMiddle(x+xI*boxX+boxX/2,y+yI*boxY);
+                                 cv::Point bottomMiddle(x+xI*boxX+boxX/2,y+yI*boxY+boxY); 
+                                 cv::line(img,topLeft,bottomRight, cv::Scalar(0,0,255), 1.0); 
+                               }   
   
                             
                             item+=2;
