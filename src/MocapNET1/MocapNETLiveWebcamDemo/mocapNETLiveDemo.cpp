@@ -370,6 +370,11 @@ int adjustInputSamplingToMatchFramerateTarget(
 }
 
 
+void incorrectArguments(int argc, char *argv[])
+{
+    fprintf(stderr,"Incorrect arguments received ( %s ) .. \n",argv[argc]);
+    exit(1);
+}
 
 int main(int argc, char *argv[])
 {
@@ -476,7 +481,11 @@ int main(int argc, char *argv[])
                 // Various other switches -------------------------------------------------------------------
                 if (strcmp(argv[i],"--dir")==0)
                     {
-                        chdir(argv[i+1]);
+                        if (argc>i+1)
+                            {
+                                  chdir(argv[i+1]);
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--gestures")==0)
                     {
@@ -484,11 +493,19 @@ int main(int argc, char *argv[])
                     }
                 else if (strcmp(argv[i],"--quality")==0)
                     {
-                        quality=atof(argv[i+1]);
+                        if (argc>i+1)
+                            { 
+                               quality=atof(argv[i+1]);
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--maxbadframes")==0)
                     {
-                        quitAfterNBadFrames=atoi(argv[i+1]);
+                        if (argc>i+1)
+                            { 
+                                 quitAfterNBadFrames=atoi(argv[i+1]);
+                            }else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if  ( (strcmp(argv[i],"--save2D")==0) || (strcmp(argv[i],"--save2d")==0) )
                     {
@@ -504,12 +521,21 @@ int main(int argc, char *argv[])
                     }
                 else if (strcmp(argv[i],"--targetframerate")==0)
                     {
-                        targetSpecificFramerate=1;
-                        fpsTarget=atoi(argv[i+1]);
+                        
+                        if (argc>i+1)
+                            {
+                               targetSpecificFramerate=1;
+                               fpsTarget=atoi(argv[i+1]);
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--frameskip")==0)
                     {
-                        frameSkip=atoi(argv[i+1]);
+                        if (argc>i+1)
+                            {
+                                 frameSkip=atoi(argv[i+1]);
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--nofilter")==0)
                     {
@@ -521,53 +547,95 @@ int main(int argc, char *argv[])
                     }
                 else if (strcmp(argv[i],"--horizontalpadding")==0)
                     {
-                        borderLeft=atoi(argv[i+1])/2;
-                        borderRight=atoi(argv[i+1])/2;
+                        if (argc>i+1)
+                            { 
+                              borderLeft=atoi(argv[i+1])/2;
+                              borderRight=atoi(argv[i+1])/2;
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--verticalpadding")==0)
                     {
-                        borderTop=atoi(argv[i+1])/2;
-                        borderBottom=atoi(argv[i+1])/2;
+                        if (argc>i+1)
+                            { 
+                               borderTop=atoi(argv[i+1])/2;
+                               borderBottom=atoi(argv[i+1])/2;
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--rectangle")==0)
                     {
-                        coveringRectangle=1;
-                        coveringRectangleX=atoi(argv[i+1]);
-                        coveringRectangleY=atoi(argv[i+2]);
-                        coveringRectangleWidth=atoi(argv[i+3]);
-                        coveringRectangleHeight=atoi(argv[i+4]);
+                        if (argc>i+4)
+                            { 
+                               coveringRectangle=1;
+                               coveringRectangleX=atoi(argv[i+1]);
+                               coveringRectangleY=atoi(argv[i+2]);
+                               coveringRectangleWidth=atoi(argv[i+3]);
+                               coveringRectangleHeight=atoi(argv[i+4]);
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--2dmodel")==0)
                     {
-                        networkPath=argv[i+1];
+                        if (argc>i+1)
+                            { 
+                                networkPath=argv[i+1];
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--stereo")==0)
                     {
                         stereoCamera=1;
-                        stereoShift=atoi(argv[i+1]);
+                        //If you have stereo file and you want to keep only one of the feeds consider..
+                        //ffmpeg -i in.mp4 -filter:v "crop=out_w:out_h:x:y" out.mp4
+                        if (argc>i+1)
+                            {
+                               stereoShift=atoi(argv[i+1]);
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if  (  (strcmp(argv[i],"-o")==0) || (strcmp(argv[i],"--output")==0) )
                     {
-                        outputPath=argv[i+1];
+                        if (argc>i+1)
+                            { 
+                                outputPath=argv[i+1];
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--delay")==0)
                     {
                         //If you want to take some time to check the results that
                         //might otherwise pass by very fast
-                        delay=atoi(argv[i+1]);
+                        if (argc>i+1)
+                            { 
+                               delay=atoi(argv[i+1]);
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--frames")==0)
                     {
-                        frameLimit=atoi(argv[i+1]);
-                        frameLimitSet=1;
+                        if (argc>i+1)
+                            { 
+                              frameLimit=atoi(argv[i+1]);
+                              frameLimitSet=1;
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--scale")==0)
                     {
-                        scale=atof(argv[i+1]);
+                        if (argc>i+1)
+                            { 
+                              scale=atof(argv[i+1]);
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--show")==0)
-                    {
-                        visualizationType=atof(argv[i+1]);
+                    { 
+                        if (argc>i+1)
+                            { 
+                               visualizationType=atof(argv[i+1]);
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--remember")==0)
                     {
@@ -575,7 +643,11 @@ int main(int argc, char *argv[])
                     }
                 else if (strcmp(argv[i],"--rotate")==0)
                     {
-                        rotate=atoi(argv[i+1]);
+                        if (argc>i+1)
+                            {
+                               rotate=atoi(argv[i+1]);
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--tpose")==0)
                     {
@@ -614,7 +686,8 @@ int main(int argc, char *argv[])
                         if (argc>i+1)
                             {
                                 webcam = argv[i+1];
-                            }
+                            } else
+                            { incorrectArguments(i,argv);  }
                     }
         }
 
