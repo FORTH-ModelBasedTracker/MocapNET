@@ -128,7 +128,7 @@ int visualizeNSDMAsBar(
 {
     float thickness=2.5;
     cv::Point topLeft(x,y);
-    cv::Point bottomRight(x+width,y+height);
+    cv::Point bottomRight(x+width-1,y+height-1);
     //cv::line(img,topLeft,bottomRight, cv::Scalar(0,255,0),thickness);
     //cv::rectangle(img, topLeft,bottomRight, cv::Scalar(0,255,0),thickness, 8, 0);
 
@@ -1216,7 +1216,7 @@ int visualizeInput(
           char filename[1024];
           snprintf(filename,1024,"vis%05u.jpg",frameNumber);
           
-          roi = cv::Rect( cv::Point(offsetX,0 ), cv::Size( image.size().width, image.size().height ));
+          roi = cv::Rect( cv::Point(offsetX+1,0 ), cv::Size( image.size().width-1, image.size().height ));
           //Uncomment following line to only store 2D overlay..
           //visualization = visualization( roi );
           imwrite(filename,visualization);
