@@ -1186,8 +1186,9 @@ int visualizeInput(
                 200,
                 200
             );*/
-      
-      if (numberOfMissingJoints>40)
+    
+  
+      if (numberOfMissingJoints>100)
       {
            txtPosition.x=60;
            txtPosition.y=350;
@@ -1214,7 +1215,11 @@ int visualizeInput(
      {
           char filename[1024];
           snprintf(filename,1024,"vis%05u.jpg",frameNumber);
-         imwrite(filename,visualization);
+          
+          roi = cv::Rect( cv::Point(offsetX,0 ), cv::Size( image.size().width, image.size().height ));
+          //Uncomment following line to only store 2D overlay..
+          //visualization = visualization( roi );
+          imwrite(filename,visualization);
      }
 
     //Did not find a file to show ..
