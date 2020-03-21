@@ -156,6 +156,9 @@ int freeBVHFile(void * bvhMemoryHandler)
 int initializeBVHConverter()
 {
 #if USE_BVH
+
+    fprintf(stderr,"Using BVH codebase version %s\n",BVH_LOADER_VERSION_STRING);   
+
     //if ( bvh_loadBVH("dataset/headerAndOneMotion.bvh",&bvhMotion,1.0) ) //This is the old armature that only has the eyes
      if ( bvh_loadBVH("dataset/headerWithHeadAndOneMotion.bvh",&bvhMotion,1.0) ) // This is the new armature that includes the head
            {
