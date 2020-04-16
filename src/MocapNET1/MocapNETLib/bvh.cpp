@@ -36,32 +36,32 @@ int writeBVHFile(
                 }
             fprintf(fp,"%s",header);
             fprintf(fp,"\nMOTION\n");
-            
+
             unsigned long numberOfFramesToWrite =  bvhFrames.size();
             if (prependTPose)
             {
                 numberOfFramesToWrite+=1;
-            }   
-            
-            
-            
+            }
+
+
+
             fprintf(fp,"Frames: %lu \n",numberOfFramesToWrite);
             fprintf(fp,"Frame Time: 0.04\n");
 
             unsigned int i=0,j=0;
-            
+
             if (prependTPose)
             {
                if (bvhFrames.size()>1)
-               { 
+               {
                 for (j=0; j< bvhFrames[0].size(); j++)
                         {
                             fprintf(fp,"0 ");
                         }
                     fprintf(fp,"\n");
-               } 
+               }
             }
-                    
+
             for (i=0; i< bvhFrames.size(); i++)
                 {
                     std::vector<float> frame = bvhFrames[i];
@@ -74,7 +74,7 @@ int writeBVHFile(
                         {
                             fprintf(fp,"%0.4f ",frame[j]);
                         }
-                     fprintf(fp,"\n"); 
+                     fprintf(fp,"\n");
                     }
                 }
             fclose(fp);
@@ -90,10 +90,10 @@ int writeBVHFile(
 void * loadBVHFile(const char * filename)
 {
 #if USE_BVH
-    //struct BVH_MotionCapture tmp={0}; 
+    //struct BVH_MotionCapture tmp={0};
     struct BVH_MotionCapture * newBVHLoadedFile = (struct BVH_MotionCapture *) malloc(sizeof(struct BVH_MotionCapture));
     memset(newBVHLoadedFile,0,sizeof(struct BVH_MotionCapture));
-    
+
     if (newBVHLoadedFile!=0)
     {
      if ( bvh_loadBVH(filename,newBVHLoadedFile,1.0) )
@@ -112,8 +112,8 @@ std::vector<std::vector<float> > loadBVHFileMotionFrames(const char * filename)
 {
     std::vector<std::vector<float> > result;
 #if USE_BVH
-    struct BVH_MotionCapture bvh={0}; 
-    
+    struct BVH_MotionCapture bvh={0};
+
      if ( bvh_loadBVH(filename,&bvh,1.0) )
         {
             unsigned int frameID=0, jointID=0, c=0;
@@ -143,10 +143,10 @@ int freeBVHFile(void * bvhMemoryHandler)
 #if USE_BVH
     struct BVH_MotionCapture * BVHLoadedFile = (struct BVH_MotionCapture *) bvhMemoryHandler;
     if (  bvh_free(BVHLoadedFile) )
-        { 
+        {
             free(BVHLoadedFile);
             return 1;
-        } 
+        }
 #endif // USE_BVH
     return 0;
 }
@@ -157,7 +157,7 @@ int initializeBVHConverter()
 {
 #if USE_BVH
 
-    fprintf(stderr,"Using BVH codebase version %s\n",BVH_LOADER_VERSION_STRING);   
+    fprintf(stderr,"Using BVH codebase version %s\n",BVH_LOADER_VERSION_STRING);
 
     //if ( bvh_loadBVH("dataset/headerAndOneMotion.bvh",&bvhMotion,1.0) ) //This is the old armature that only has the eyes
      if ( bvh_loadBVH("dataset/headerWithHeadAndOneMotion.bvh",&bvhMotion,1.0) ) // This is the new armature that includes the head
@@ -321,7 +321,7 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
 
 
 std::vector<float>  convertBVHFrameToFlat3DPoints(std::vector<float> bvhFrame,unsigned int width, unsigned int height)
-{ 
+{
 std::vector<float>  result;
 #if USE_BVH
     struct simpleRenderer renderer= {0};
@@ -369,7 +369,7 @@ std::vector<float>  result;
                                         {
                                             result.push_back((float) bvhTransform.joint[jID].pos3D[0]);
                                             result.push_back((float) bvhTransform.joint[jID].pos3D[1]);
-                                            result.push_back((float) bvhTransform.joint[jID].pos3D[2]); 
+                                            result.push_back((float) bvhTransform.joint[jID].pos3D[2]);
                                         }
                                 } //-----------------
                         } //-----------------
@@ -454,9 +454,6 @@ std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,
                                 center,
                                 rotation,
                                 ROTATION_ORDER_RPY,
-                                &center[0],
-                                &center[1],
-                                &center[2],
                                 &position2DX,
                                 &position2DY,
                                 &position2DW
