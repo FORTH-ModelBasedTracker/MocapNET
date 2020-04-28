@@ -268,7 +268,8 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(std::vector<float> bv
                            bvh_loadTransformForMotionBuffer(
                                                             &bvhMotion,
                                                             motionBuffer,
-                                                            &bvhTransform
+                                                            &bvhTransform,
+                                                            0 // DOnt need extra info..
                                                            )
                         )
                         {
@@ -349,7 +350,8 @@ std::vector<float>  result;
                            bvh_loadTransformForMotionBuffer(
                                                             &bvhMotion,
                                                             motionBuffer,
-                                                            &bvhTransform
+                                                            &bvhTransform,
+                                                            0//Dont need extra info..
                                                            )
                         )
                         {
