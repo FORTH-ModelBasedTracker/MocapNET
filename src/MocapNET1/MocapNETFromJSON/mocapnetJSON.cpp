@@ -81,6 +81,7 @@ int main(int argc, char *argv[])
     
     int doGestureDetection=0,doOutputFiltering=1,prependTPose=0;
    
+    int bvhCenter=0;
     unsigned int numberOfMissingJoints=0;
     unsigned int isJSONFile=1;
     unsigned int isCSVFile=0;
@@ -112,7 +113,12 @@ int main(int argc, char *argv[])
             if (strcmp(argv[i],"--unconstrained")==0)
                 {
                     constrainPositionRotation=0;
-                }
+                }else
+            if (strcmp(argv[i],"--bvhcenter")==0)
+                {
+                    bvhCenter=1;
+                }                
+            
             else if (strcmp(argv[i],"-v")==0)
                 {
                     visualize=1;
@@ -447,6 +453,18 @@ int main(int argc, char *argv[])
 
             if (totalSamples>0)
                 {
+
+
+                    if (bvhCenter)
+                            {
+                               for (unsigned int i=0; i<bvhFrames.size(); i++)
+                               { 
+                                bvhFrames[i][0]=0; 
+                                bvhFrames[i][1]=0; 
+                                bvhFrames[i][2]=0;  
+                               } 
+                            }
+
                     char * bvhHeaderToWrite=0;
                     if ( writeBVHFile(outputPath,bvhHeaderToWrite,prependTPose,bvhFrames) )
                         {
