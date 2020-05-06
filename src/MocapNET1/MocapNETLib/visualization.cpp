@@ -113,6 +113,7 @@ int visualizeNSDM(
                         }
                 }
         }
+  return 1;
 }
 
 
@@ -178,7 +179,9 @@ int visualizeNSDMAsBar(
                 
                 cv::Point txtPosition(x,y-15);
                  cv::putText(img,"Quality : ",txtPosition,fontUsed,0.8,color,thickness,8);
+               return 1;  
         }
+ return 0;
 }
 
 
@@ -243,6 +246,7 @@ int drawFloorFromPrimitives(
                 
             parentPoint = jointPoint;
         }
+  return 1;
 }
 
 
@@ -583,6 +587,7 @@ int visualizeCameraFeatures(const char* windowName,cv::Mat &img)
     float fontSize = 0.5;
     cv::putText(imgCopy,"Features", jointPoint, cv::FONT_HERSHEY_DUPLEX,fontSize, cv::Scalar(255,255,255), 0.2, cv::LINE_8);
     cv::imshow(windowName,imgCopy);
+    return 1;
 }
 
 
@@ -1091,7 +1096,7 @@ int visualizeInput2DSkeletonFromCOCOStruct(
     } 
     
        cv::addWeighted(base,0.8, overlay, 0.3, 0.0, outputMat);
-     
+     return 1;
 }
 
 
