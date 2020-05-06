@@ -551,7 +551,7 @@ int visualizeCameraChannels(const char* windowName,cv::Mat &img,int channelNumbe
 int visualizeCameraEdges(const char* windowName,cv::Mat &img)
 {
     cv::Mat edges;
-    cv::cvtColor(img, edges, CV_BGR2GRAY);
+    cv::cvtColor(img,edges,cv::COLOR_BGR2GRAY); // If you get an error consider switching to CV_BGR2GRAY
 
     cv::Canny(edges, edges, 30, 60);
 
@@ -1128,8 +1128,9 @@ int visualizeInput(
     cv::Mat destinationROI;
     
     if (fileExists(finalFilename))
-    {
-     image = imread(finalFilename, CV_LOAD_IMAGE_COLOR);   // Read the file
+    { 
+
+     image = imread(finalFilename,cv::IMREAD_COLOR);  // If you get a compilation error here consider switching to CV_LOAD_IMAGE_COLOR
      
      if(image.data!=0)
       { 
