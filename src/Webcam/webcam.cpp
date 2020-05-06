@@ -27,8 +27,8 @@ int main(int argc, char *argv[])
     if (webcam==0)
         {
             std::cerr<<"Trying to open webcam\n";
-            cap.set(CV_CAP_PROP_FRAME_WIDTH,640);
-            cap.set(CV_CAP_PROP_FRAME_HEIGHT,480);
+            cap.set(cv::CAP_PROP_FRAME_WIDTH,640); // In case of errors try CV_CAP_PROP_FRAME_WIDTH
+            cap.set(cv::CAP_PROP_FRAME_HEIGHT,480); // In case of errors try CV_CAP_PROP_FRAME_HEIGHT
         }
     else
         {

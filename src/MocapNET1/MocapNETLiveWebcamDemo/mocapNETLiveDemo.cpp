@@ -51,7 +51,7 @@ void newGestureEventDetected(struct MocapNET * mnet,unsigned int gestureID)
 {
     fprintf(stderr,"MocapNET Live Demo Callback received a gesture event at frame %u..\n",mnet->framesReceived);
     fprintf(stderr,"Gesture Name : %s \n",mnet->recognizedGestures.gesture[gestureID].label);
-    
+
     //-----------------------------------------------------------------------------------------
     //A client application could want to do something here..!
     //-----------------------------------------------------------------------------------------
@@ -163,13 +163,13 @@ std::vector<cv::Point_<float> > predictAndReturnSingleSkeletonOf2DCOCOJoints(
                 }
         }
 #endif // DISPLAY_ALL_HEATMAPS
-  
+
     unsigned int areWeUsingTheBestNetworkAvailable=0;
     if (strcmp(net->modelPath,networkPathOpenPoseMiniStatic)==0)
     {
         areWeUsingTheBestNetworkAvailable=1;
     }
-  
+
     return dj_getNeuralNetworkDetectionsForColorImage(bgr,smallBGR,heatmaps,minThreshold,frameNumber,visualize,saveVisualization,0,areWeUsingTheBestNetworkAvailable,doFeetHeuristics);
 }
 
@@ -302,11 +302,11 @@ int populateDemoFigures(cv::Mat * figures)
 {
     fprintf(stderr,"Populating Demo Figures.. You probably don't need that, but I did in Researcher's night 2019..\n");
     float reduction=0.5;
-    figures[0] = cv::imread("doc/figureA.png", CV_LOAD_IMAGE_COLOR);   // Read the file
+    figures[0] = cv::imread("doc/figureA.png",cv::IMREAD_COLOR);   // Read the file  CV_LOAD_IMAGE_COLOR if you get compilation errors
     cv::resize(figures[0],figures[0], cv::Size(), reduction,reduction);
-    figures[1] = cv::imread("doc/figureB.png", CV_LOAD_IMAGE_COLOR);   // Read the file
+    figures[1] = cv::imread("doc/figureB.png",cv::IMREAD_COLOR);   // Read the file  CV_LOAD_IMAGE_COLOR if you get compilation errors
     cv::resize(figures[1],figures[1], cv::Size(), reduction, reduction);
-    // figures[2] = cv::imread("doc/figureC.png", CV_LOAD_IMAGE_COLOR);   // Read the file
+    // figures[2] = cv::imread("doc/figureC.png", cv::IMREAD_COLOR);   // Read the file
     // cv::resize(figures[2],figures[2], cv::Size(), reduction, reduction);
     return 1;
 }
@@ -397,7 +397,7 @@ int main(int argc, char *argv[])
     int targetSpecificFramerate=0;
     float fpsTotal=1.0,fpsTarget=30.0,fpsAcquisition=1.0,fps2DJointDetector=1.0,fpsMocapNET=1.0;
 
-    int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0,autoDirection=0,autoCount=0; 
+    int distance = 0,rollValue = 0,pitchValue = 0, yawValue = 0,autoDirection=0,autoCount=0;
     int rememberPrevious2DPositions=0 , prependTPose=0;
 
     int borderTop=0, borderBottom=0, borderLeft=0, borderRight=0;
@@ -475,7 +475,7 @@ int main(int argc, char *argv[])
                     networkOutputLayer[8]='1';
                     joint2DSensitivityPercent=20;
                     numberOfOutputTensors = 4;
-                    doFeetHeuristics=0; 
+                    doFeetHeuristics=0;
                 }
             else
                 // Various other switches -------------------------------------------------------------------
@@ -494,7 +494,7 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"--quality")==0)
                     {
                         if (argc>i+1)
-                            { 
+                            {
                                quality=atof(argv[i+1]);
                             } else
                             { incorrectArguments(i,argv);  }
@@ -502,7 +502,7 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"--maxbadframes")==0)
                     {
                         if (argc>i+1)
-                            { 
+                            {
                                  quitAfterNBadFrames=atoi(argv[i+1]);
                             }else
                             { incorrectArguments(i,argv);  }
@@ -521,7 +521,7 @@ int main(int argc, char *argv[])
                     }
                 else if (strcmp(argv[i],"--targetframerate")==0)
                     {
-                        
+
                         if (argc>i+1)
                             {
                                targetSpecificFramerate=1;
@@ -548,7 +548,7 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"--horizontalpadding")==0)
                     {
                         if (argc>i+1)
-                            { 
+                            {
                               borderLeft=atoi(argv[i+1])/2;
                               borderRight=atoi(argv[i+1])/2;
                             } else
@@ -557,7 +557,7 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"--verticalpadding")==0)
                     {
                         if (argc>i+1)
-                            { 
+                            {
                                borderTop=atoi(argv[i+1])/2;
                                borderBottom=atoi(argv[i+1])/2;
                             } else
@@ -566,7 +566,7 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"--rectangle")==0)
                     {
                         if (argc>i+4)
-                            { 
+                            {
                                coveringRectangle=1;
                                coveringRectangleX=atoi(argv[i+1]);
                                coveringRectangleY=atoi(argv[i+2]);
@@ -578,7 +578,7 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"--2dmodel")==0)
                     {
                         if (argc>i+1)
-                            { 
+                            {
                                 networkPath=argv[i+1];
                             } else
                             { incorrectArguments(i,argv);  }
@@ -597,7 +597,7 @@ int main(int argc, char *argv[])
                 else if  (  (strcmp(argv[i],"-o")==0) || (strcmp(argv[i],"--output")==0) )
                     {
                         if (argc>i+1)
-                            { 
+                            {
                                 outputPath=argv[i+1];
                             } else
                             { incorrectArguments(i,argv);  }
@@ -607,7 +607,7 @@ int main(int argc, char *argv[])
                         //If you want to take some time to check the results that
                         //might otherwise pass by very fast
                         if (argc>i+1)
-                            { 
+                            {
                                delay=atoi(argv[i+1]);
                             } else
                             { incorrectArguments(i,argv);  }
@@ -615,7 +615,7 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"--frames")==0)
                     {
                         if (argc>i+1)
-                            { 
+                            {
                               frameLimit=atoi(argv[i+1]);
                               frameLimitSet=1;
                             } else
@@ -624,15 +624,15 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"--scale")==0)
                     {
                         if (argc>i+1)
-                            { 
+                            {
                               scale=atof(argv[i+1]);
                             } else
                             { incorrectArguments(i,argv);  }
                     }
                 else if (strcmp(argv[i],"--show")==0)
-                    { 
+                    {
                         if (argc>i+1)
-                            { 
+                            {
                                visualizationType=atof(argv[i+1]);
                             } else
                             { incorrectArguments(i,argv);  }
@@ -652,7 +652,7 @@ int main(int argc, char *argv[])
                 else if (strcmp(argv[i],"--tpose")==0)
                     {
                       prependTPose=1;
-                    }   
+                    }
                 else if (strcmp(argv[i],"--cpu")==0)
                     {
                         //setenv("CUDA_VISIBLE_DEVICES", "", 1);   //Alternate way to force CPU everywhere
@@ -706,8 +706,8 @@ int main(int argc, char *argv[])
     if (webcam==0)
         {
             fprintf(stderr,"Trying to open webcam\n");
-            cap.set(CV_CAP_PROP_FRAME_WIDTH,640);
-            cap.set(CV_CAP_PROP_FRAME_HEIGHT,480);
+            cap.set(cv::CAP_PROP_FRAME_WIDTH,640); // In case of errors try CV_CAP_PROP_FRAME_WIDTH
+            cap.set(cv::CAP_PROP_FRAME_HEIGHT,480); // In case of errors try CV_CAP_PROP_FRAME_HEIGHT
         }
     else
         {
@@ -720,7 +720,7 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-    signed int totalNumberOfFrames = cap.get(CV_CAP_PROP_FRAME_COUNT);
+    signed int totalNumberOfFrames = cap.get(cv::CAP_PROP_FRAME_COUNT); // In case of errors try CV_CAP_PROP_FRAME_COUNT
     fprintf(stderr,"totalNumberOfFrames by quering capture device %s is %u \n",webcam,totalNumberOfFrames);
     if (frameLimitSet)
         {
@@ -755,9 +755,9 @@ int main(int argc, char *argv[])
 
     if ( loadMocapNET(&mnet,"test",quality,mocapNETMode,forceCPUMocapNET) )
         {
-            
+
             registerGestureEventCallbackWithMocapNET(&mnet,(void *) & newGestureEventDetected);
-            
+
             if (
                 loadTensorflowInstance(
                                        &net,
@@ -1411,8 +1411,8 @@ int main(int argc, char *argv[])
                              {
                                  fprintf(stderr,RED "Failed to write %lu frames to bvh file.. \n" NORMAL,inputFrames.size());
                              }
-                             
-                      
+
+
 
                             fprintf(stderr,"Will now write 3D output to in.csv.. \n");
                             fprintf(stderr,"The CSV header will be wrong ..!\n");
@@ -1425,10 +1425,10 @@ int main(int argc, char *argv[])
                              {
                                  fprintf(stderr,RED "Failed to write %lu frames to bvh file.. \n" NORMAL,output3DPositions.size());
                              }
-                                    
-                             
-                             
-                             
+
+
+
+
                         }
                     else
                         {
