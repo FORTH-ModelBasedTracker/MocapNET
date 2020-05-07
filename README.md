@@ -42,7 +42,7 @@ Please cite the [following paper](http://users.ics.forth.gr/~argyros/mypapers/20
 ## Overview, System Requirements and Dependencies
 ------------------------------------------------------------------ 
 MocapNET is a high performance 2D to 3D single person pose estimator.
-This code base targets recent Linux (Ubuntu) machines, and relies on the Tensorflow C-API and OpenCV. 
+This code base targets recent Linux (Ubuntu  18.04 - 20.04 +) machines, and relies on the Tensorflow C-API and OpenCV. Windows 10 users can try the [linux subsystem](https://www.microsoft.com/en-us/p/ubuntu-1804-lts/9n9tngvndl3q?rtc=1&activetab=pivot:overviewtab) that has been also [reported](https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/10) to work.
 
 Tensorflow is used as the Neural Network framework for our work and OpenCV is used to enable the acquisition of images from webcams or video files as well as to provide an easy visualization method.
 
