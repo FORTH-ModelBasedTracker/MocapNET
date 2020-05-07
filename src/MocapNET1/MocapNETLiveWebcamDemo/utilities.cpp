@@ -214,61 +214,61 @@ void dj_drawExtractedSkeletons(
 int feetHeuristics(std::vector<cv::Point_<float> > &sk)
 {
     //UT_COCOBodyNames[i]
-    
+
     int result=0;
     //There are various problems with the 2D detections when it comes to feet particularly
     //with the FORTH neural network and sice it lacks PAFs  this code solves the common issue of mixed left/right ankles and knees
     //one pretty regular problem is that knees get somehow mixed up
     if (sk.size()!=0)
         {
-            
-          if (sk[UT_COCO_RShoulder].x< sk[UT_COCO_LShoulder].x )  
+
+          if (sk[UT_COCO_RShoulder].x< sk[UT_COCO_LShoulder].x )
           { //Assuming front orientation
            fprintf(stderr,YELLOW "FRONT orientation ..\n" NORMAL);
-            
+
             int ankleOrder=( sk[UT_COCO_RAnkle].x < sk[UT_COCO_LAnkle].x);
             int kneeOrder=( sk[UT_COCO_RKnee] .x < sk[UT_COCO_LKnee].x);
             int hipOrder=( sk[UT_COCO_RHip].x< sk[UT_COCO_LHip].x );
             int leftAnkleDoesNotExist= ( ( sk[UT_COCO_LAnkle].x==0 ) && ( sk[UT_COCO_LAnkle].y==0  ) );
             int rightAnkleDoesNotExist= ( ( sk[UT_COCO_RAnkle].x==0 ) && ( sk[UT_COCO_RAnkle].y==0  ) );
-            
+
            fprintf(stderr,YELLOW "AnkleOrder(%u) KneeOrder(%u) HipOrder(%u) LeftAnkleDoesntExist(%u) RightAnkleDoesntExist(%u) ..\n" NORMAL,ankleOrder,kneeOrder,hipOrder,leftAnkleDoesNotExist,rightAnkleDoesNotExist);
-            
+
             float tmp;
-            
+
             if (!hipOrder)
             {
                 fprintf(stderr,YELLOW "Swapped hips..\n" NORMAL);
                 tmp = sk[UT_COCO_RHip].x;
                 sk[UT_COCO_RHip].x=sk[UT_COCO_LHip].x;
                 sk[UT_COCO_LHip].x = tmp;
-                
+
                 tmp = sk[UT_COCO_RHip].y;
                 sk[UT_COCO_RHip].y=sk[UT_COCO_LHip].y;
                 sk[UT_COCO_LHip].y = tmp;
-                
+
                 hipOrder=( sk[UT_COCO_RHip].x< sk[UT_COCO_LHip].x );
                 result=1;
             }
-            
+
             if (  (!kneeOrder)  && (hipOrder) )
                 {//Need to swap knees
                     fprintf(stderr,YELLOW "Swapped knees..\n" NORMAL);
                     tmp = sk[UT_COCO_RKnee].x;
                     sk[UT_COCO_RKnee].x=sk[UT_COCO_LKnee].x;
                     sk[UT_COCO_LKnee].x = tmp;
-                    
+
                     tmp = sk[UT_COCO_RKnee].y;
                     sk[UT_COCO_RKnee].y=sk[UT_COCO_LKnee].y;
                     sk[UT_COCO_LKnee].y = tmp;
                     result=1;
-                }  
-                
-            if  
+                }
+
+            if
                   (
                     ( (!ankleOrder) && (kneeOrder)  && (hipOrder) )
                 //     || ( ( leftAnkleDoesNotExist ) && (!rightAnkleDoesNotExist) && (  sk[UT_COCO_RKnee].x  < sk[UT_COCO_LAnkle].x) ) ||
-                //        ( (!leftAnkleDoesNotExist ) && (rightAnkleDoesNotExist) && (  sk[UT_COCO_RKnee].x  > sk[UT_COCO_LAnkle].x) ) 
+                //        ( (!leftAnkleDoesNotExist ) && (rightAnkleDoesNotExist) && (  sk[UT_COCO_RKnee].x  > sk[UT_COCO_LAnkle].x) )
                    )
                 {
                     //Need to swap ankles
@@ -276,13 +276,13 @@ int feetHeuristics(std::vector<cv::Point_<float> > &sk)
                     tmp = sk[UT_COCO_RAnkle].x;
                     sk[UT_COCO_RAnkle].x=sk[UT_COCO_LAnkle].x;
                     sk[UT_COCO_LAnkle].x = tmp;
-                    
+
                     tmp = sk[UT_COCO_RAnkle].y;
                     sk[UT_COCO_RAnkle].y=sk[UT_COCO_LAnkle].y;
                     sk[UT_COCO_LAnkle].y = tmp;
                     result=1;
                 }
-                 
+
           } else
           {
               fprintf(stderr,"Feet heuristics deactivated on back view..\n");
@@ -335,7 +335,7 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
     cv::Mat bgNorm, bgRes;
 
     //std::cerr<<"Got bg "<<heatmaps.size()<<" heatmaps. Size "<<bg.cols<<", "<<bg.rows <<std::endl;
-    cv::normalize(bg,bgNorm,0,255, CV_MINMAX, CV_8UC1);
+    cv::normalize(bg,bgNorm,0,255,cv::NORM_MINMAX, CV_8UC1); // if you are using an older OpenCV consider CV_MINMAX
     //std::cerr<<" bgNorm Size "<<bgNorm.cols<<", "<<bgNorm.rows <<std::endl;
     cv::resize(bgNorm,bgRes,cv::Size(0,0),8,8);
     //std::cerr<<" bgRes Size "<<bgRes.cols<<", "<<bgRes.rows <<std::endl;
@@ -385,7 +385,7 @@ std::vector<cv::Point_<float> > dj_getNeuralNetworkDetectionsForColorImage(
                 snprintf(filename,512,"MocapNET2D_%05u.png",frameNumber) ;
                 cv::imwrite(filename,visualizationImage2DSkeleton);
             }
-            
+
             if (!areWeUsingTheBestNetworkAvailable)
             {
                float thickness=2;
