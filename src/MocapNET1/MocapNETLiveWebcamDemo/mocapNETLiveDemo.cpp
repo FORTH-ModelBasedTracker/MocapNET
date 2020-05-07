@@ -1414,7 +1414,7 @@ int main(int argc, char *argv[])
 
 
 
-                            fprintf(stderr,"Will now write 3D output to in.csv.. \n");
+                            fprintf(stderr,"Will now write 3D output to out3DP.csv.. \n");
                             fprintf(stderr,"The CSV header will be wrong ..!\n");
                             //----------------------------------------------------------------------------------------------------------------------------------
                             if ( writeCSVHeaderFromLabelsAndVectorOfVectors("out3DP.csv",MocapNETOutputArrayNames,MOCAPNET_OUTPUT_NUMBER,output3DPositions) )
