@@ -10,7 +10,7 @@ add_executable(
                ${BVH_SOURCE} 
               )
  
-target_link_libraries(GroundTruthDumper rt m  ) 
+target_link_libraries(GroundTruthDumper rt m pthread ) 
 #add_dependencies(GroundTruthDumper OGLRendererSandbox)  
        
  

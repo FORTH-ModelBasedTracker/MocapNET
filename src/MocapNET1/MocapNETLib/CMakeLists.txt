@@ -13,7 +13,7 @@ include_directories(${TENSORFLOW_INCLUDE_ROOT})
 add_library(MocapNETLib SHARED mocapnet.cpp ../../Tensorflow/tf_utils.cpp)   
 
 
-target_link_libraries(MocapNETLib rt dl m Tensorflow  TensorflowFramework )
+target_link_libraries(MocapNETLib rt dl m pthread Tensorflow  TensorflowFramework )
 set_target_properties(MocapNETLib PROPERTIES DEBUG_POSTFIX "D") 
        
 
