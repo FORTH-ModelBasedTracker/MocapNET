@@ -1414,10 +1414,9 @@ int main(int argc, char *argv[])
 
 
 
-                            fprintf(stderr,"Will now write 3D output to out3DP.csv.. \n");
-                            fprintf(stderr,"The CSV header will be wrong ..!\n");
-                            //----------------------------------------------------------------------------------------------------------------------------------
-                            if ( writeCSVHeaderFromLabelsAndVectorOfVectors("out3DP.csv",MocapNETOutputArrayNames,MOCAPNET_OUTPUT_NUMBER,output3DPositions) )
+                            fprintf(stderr,"Will now write 3D output to out3DP.csv.. \n"); 
+                            //---------------------------------------------------------------------------------------------------------------------------------- 
+                            if ( writeCSVHeaderFromLabelsAndVectorOfVectors("out3DP.csv",MocapNET3DPositionalOutputArrayNames,MOCAPNET_3DPOINT_NUMBER,output3DPositions) ) 
                              {
                                  fprintf(stderr,GREEN "Successfully wrote %lu frames to csv file.. \n" NORMAL,output3DPositions.size());
                              }
