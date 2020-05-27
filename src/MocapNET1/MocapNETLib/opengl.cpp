@@ -396,7 +396,7 @@ int updateOpenGLView(std::vector<float> bvhFrame)
       float xAddition=0.0;
       float yAddition=0.0;
       float zAddition=0.0;
-      unsigned int rotationOrder = OPENGL_ACQUISITION_JOINT_ROTATION_TEST;//Until i fix this..
+      unsigned int rotationOrder = OPENGL_ACQUISITION_JOINT_ROTATION_NEGATIVE_XYZ; 
   
   /* 
    *  TODO:  update OpenCOLLADANames to match the bvh joints found here..
@@ -415,16 +415,28 @@ int updateOpenGLView(std::vector<float> bvhFrame)
         } 
     }*/
   
-      //-------------------------------------------------------------
+      //---------------------------------------------------------------------------------------
+      // If you want Position/Rotation on your OpenGL virtual human uncomment next two lines..! 
+      //---------------------------------------------------------------------------------------
       /*
-    controlOpenGLScene(
+       controlOpenGLScene(
+                           "human",
+                           "position",
+                           OPENGL_ACQUISITION_POSITION_XYZ,
+                           0.1*bvhFrame[MOCAPNET_OUTPUT_HIP_XPOSITION],
+                           -0.1*bvhFrame[MOCAPNET_OUTPUT_HIP_YPOSITION]-3.4, // I don't like this minus here..
+                           -0.1*bvhFrame[MOCAPNET_OUTPUT_HIP_ZPOSITION]
+                          );
+  
+       controlOpenGLScene(
                        "human",
                        "Hips",
-                       OPENGL_ACQUISITION_JOINT_ROTATION_XYZ,
-                       yDirection*bvhFrame[MOCAPNET_OUTPUT_HIP_XROTATION]+xAddition,
-                       yDirection*bvhFrame[MOCAPNET_OUTPUT_HIP_YROTATION]+yAddition,
-                       yDirection*bvhFrame[MOCAPNET_OUTPUT_HIP_ZROTATION]+zAddition
-                      ); */
+                       OPENGL_ACQUISITION_JOINT_ROTATION_ZYX, //OPENGL_ACQUISITION_JOINT_ROTATION_XYZ <- this uses a different rotation scheme..
+                       -1.0*bvhFrame[MOCAPNET_OUTPUT_HIP_XROTATION],
+                       -1.0*bvhFrame[MOCAPNET_OUTPUT_HIP_YROTATION],
+                       -1.0*bvhFrame[MOCAPNET_OUTPUT_HIP_ZROTATION]
+                      );                            
+       */
     //-------------------------------------------------------------
     controlOpenGLScene(
                        "human", "Spine", rotationOrder,
