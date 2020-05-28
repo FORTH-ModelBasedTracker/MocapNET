@@ -5,6 +5,7 @@ cd "$DIR"
 
 ORIG_DIR=`pwd`
  
+#We generate a Linux desktop shortcut to easily start the live demo
 echo "Generating shortcut"
 echo "[Desktop Entry]" > mocapnet.desktop
 echo "Type=Application" >> mocapnet.desktop
@@ -38,14 +39,15 @@ else
      cd "$DIR/dataset"
      echo "Could not find MotionCapture"
      
-     #Want a more complicated armature ? 
-     #wget http://ammar.gr/datasets/CMUPlusHeadMotionCapture.zip
-     #unzip CMUPlusHeadMotionCapture.zip
-     #mv CMUPlusHeadMotionCapture.zip MotionCapture
-
-     wget http://ammar.gr/datasets/CMUMotionCaptureDatasets.zip
-     unzip CMUMotionCaptureDatasets.zip
-     mv CMUMotionCaptureDatasets.zip MotionCapture
+     #This is a richer armature that also contains provisons for head and feet animation 
+     wget http://ammar.gr/datasets/CMUPlusHeadMotionCapture.zip
+     unzip CMUPlusHeadMotionCapture.zip
+     mv CMUPlusHeadMotionCapture.zip MotionCapture
+      
+     #This is the BMVC 2019 dataset used, left here for reference
+     #wget http://ammar.gr/datasets/CMUMotionCaptureDatasets.zip
+     #unzip CMUMotionCaptureDatasets.zip
+     #mv CMUMotionCaptureDatasets.zip MotionCapture
      cd "$DIR"
   fi
 fi
@@ -61,7 +63,16 @@ fi
 
 if [ ! -f dataset/makehuman.tri ]; then
   cd "$DIR/dataset"
+  #TRI is the internal 3D format used by my 3D renderer to handle 3D meshes
+  #https://github.com/AmmarkoV/RGBDAcquisition/blob/master/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_loader_tri.h
   wget http://ammar.gr/mocapnet/makehuman.tri
+  
+  #Also provide the OpenCollada file in case someone wants to create their own .tri by `sudo apt-get install libassimp-dev` and then compiling and using the project 
+  # https://github.com/AmmarkoV/RGBDAcquisition/tree/master/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/submodules/Assimp
+  #that you will find in $ROOT_DIR/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/submodules/Assimp/
+  #./assimpTester --convert $ROOT_DIR/dataset/makehuman.dae $ROOT_DIR/dataset/makehuman.tri --paint 123 123 123   
+  #This dae file has been created usign makehuman(http://www.makehumancommunity.org/) and the CMU+Face Rig (http://www.makehumancommunity.org/content/cmu_plus_face.html)
+  wget http://ammar.gr/mocapnet/makehuman.dae
 fi
 
 cd "$DIR"
@@ -75,6 +86,10 @@ cd combinedModel
 mkdir mode3
 mkdir mode5
 
+
+#The original paper for BMVC 2019 had 3 quality settings λ=1.0, λ=1.5, λ=2.0 
+#to download the pre-trained models you just need to include them in this list
+#and then use the --quality x commandline argument..
 LIST_OF_QUALITY="1.0 2.0" # 1.5 2.0
 
 for QUALITY in $LIST_OF_QUALITY; do
@@ -100,7 +115,8 @@ cd ..
 done
 #--------------------------------------------------------------------
 
-#Rest of combined models..
+#We also downloar pre-trained models for the 2D joint estimation
+#We have 3D flavours available, openpose, vnect and our own 2D detector
 echo "Downloading 2D Joint Estimator models"
 cd "$DIR/dataset/combinedModel"
 
