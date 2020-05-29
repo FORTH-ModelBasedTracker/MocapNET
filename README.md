@@ -30,7 +30,7 @@ Please cite the [following paper](http://users.ics.forth.gr/~argyros/mypapers/20
   year = {2019},
   month = {September},
   address = {Cardiff, UK},
-  url = {http://users.ics.forth.gr/ argyros/res_mocapnet.html},
+  url = {http://users.ics.forth.gr/argyros/res_mocapnet.html},
   projects =  {CO4ROBOTS,MINGEI},
   pdflink = {http://users.ics.forth.gr/ argyros/mypapers/2019_09_BMVC_mocapnet.pdf},
   videolink = {https://youtu.be/fH5e-KMBvM0}
