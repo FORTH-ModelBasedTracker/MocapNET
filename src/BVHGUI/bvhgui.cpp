@@ -40,6 +40,7 @@ int controls(cv::Mat & controlMat,struct applicationState * state)
   cv::createTrackbar("Save", "3D Control", &state->save, 1);
   cv::createTrackbar("Selected Joint", "3D Control", &state->selectedJoint,MOCAPNET_OUTPUT_NUMBER);
   cv::createTrackbar("Value            ", "3D Control", &state->rotation,  360); 
+  return 1;
 }
 
 

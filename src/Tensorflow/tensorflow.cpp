@@ -191,6 +191,7 @@ int unloadTensorflow(struct TensorflowInstance * net)
     //------------------------------------
 
     TF_DeleteStatus(net->status);
+    return 1;
 }
 
 
