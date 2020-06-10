@@ -4,6 +4,9 @@
  *  @author Ammar Qammaz (AmmarkoV)
  */
 
+
+char directoryExists(const char * folder);
+
 /**
  * @brief Execute a shell command
  * @ingroup tools

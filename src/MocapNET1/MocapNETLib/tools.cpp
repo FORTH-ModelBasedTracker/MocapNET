@@ -1,5 +1,6 @@
 #include "tools.h"
 
+#include <sys/stat.h>
 #include <sys/time.h>
 #include <unistd.h>
 #include <time.h>
@@ -9,7 +10,13 @@
 
 unsigned long tickBaseMN = 0;
 
- 
+
+char directoryExists(const char * folder)
+{
+ struct stat sb;
+ if (stat(folder, &sb) == 0 && S_ISDIR(sb.st_mode)) { return 1; } 
+ return 0;
+}
 
 
 int executeCommandLineNum(const char *  command , char * what2GetBack , unsigned int what2GetBackMaxSize,unsigned int lineNumber)
