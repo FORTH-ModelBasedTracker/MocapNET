@@ -20,7 +20,8 @@ echo "Categories=Application;Graphics;3DGraphics;2DGraphics;" >> mocapnet.deskto
 chmod +x mocapnet.desktop
 
 
-# sudo apt-get install build-essential cmake libopencv-dev libjpeg-dev libpng-dev
+# sudo apt-get install build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev libpthread-stubs0-dev
+
 
 
 cd "$DIR"
@@ -245,6 +246,16 @@ fi
 #Now that we have everything lets build..
 echo "Now to try and build MocapNET.."
 cd "$DIR"
+
+#if there is an already existing build directory and you called initialize.sh
+#it will get initialized as well.. (https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/19)
+if [ -d "build" ]; then
+  echo "Build directory already exists, but since the initialize.sh script was called "    
+  echo "this means the user wants to also initialize the build directory, so doing this"    
+  echo "to prevent problems like https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/19"   
+  rm -rf build/
+fi
+
 mkdir build
 cd build
 cmake ..
