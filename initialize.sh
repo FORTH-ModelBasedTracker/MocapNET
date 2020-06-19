@@ -5,6 +5,33 @@ cd "$DIR"
 
 ORIG_DIR=`pwd`
  
+
+
+#Simple dependency checker that will apt-get stuff if something is missing
+# sudo apt-get install build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev libpthread-stubs0-dev
+SYSTEM_DEPENDENCIES="build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev libpthread-stubs0-dev"
+
+for REQUIRED_PKG in $SYSTEM_DEPENDENCIES
+do
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+echo "Checking for $REQUIRED_PKG: $PKG_OK"
+if [ "" = "$PKG_OK" ]; then
+
+  echo "No $REQUIRED_PKG. Setting up $REQUIRED_PKG."
+
+  #If this is uncommented then only packages that are missing will get prompted..
+  #sudo apt-get --yes install $REQUIRED_PKG
+
+  #if this is uncommented then if one package is missing then all missing packages are immediately installed..
+  sudo apt-get install $SYSTEM_DEPENDENCIES  
+  break
+fi
+done
+#------------------------------------------------------------------------------
+
+
+
+
 #We generate a Linux desktop shortcut to easily start the live demo
 echo "Generating shortcut"
 echo "[Desktop Entry]" > mocapnet.desktop
@@ -20,7 +47,6 @@ echo "Categories=Application;Graphics;3DGraphics;2DGraphics;" >> mocapnet.deskto
 chmod +x mocapnet.desktop
 
 
-# sudo apt-get install build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev libpthread-stubs0-dev
 
 
 
