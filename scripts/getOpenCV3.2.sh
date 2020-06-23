@@ -2,8 +2,10 @@
  
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd "$DIR/dependencies"
+cd "$DIR/../dependencies"
  
+DEPENDENCIES_PATH=`pwd`
+
 sudo apt-get install build-essential cmake git libgtk2.0-dev pkg-config ffmpeg libavcodec-dev libavformat-dev libavcodec-dev libavformat-dev libswscale-dev libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff5-dev  libdc1394-22-dev libeigen3-dev libtheora-dev libvorbis-dev libxvidcore-dev libx264-dev sphinx-common libtbb-dev yasm libfaac-dev libopencore-amrnb-dev libopencore-amrwb-dev libopenexr-dev libgstreamer-plugins-base1.0-dev libavutil-dev libavfilter-dev libavresample-dev libpython3-all-dev python3-numpy python3-dev 
 
 #cd "$1"
@@ -24,7 +26,7 @@ echo "Building"
 cd opencv-3.2.0
 mkdir build
 cd build
-cmake -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=$DIR/dependencies/opencv_contrib-3.2.0/modules ..
+cmake -DOPENCV_ENABLE_NONFREE=ON -DOPENCV_EXTRA_MODULES_PATH=$DEPENDENCIES_PATH/opencv_contrib-3.2.0/modules ..
 make -j5
 
 echo "Do you want to install OpenCV to your system ? " 
