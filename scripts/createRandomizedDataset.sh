@@ -1,5 +1,10 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$DIR"
+
+ORIG_DIR=`pwd`
+cd ..
 
 function getStatistics 
 { 
