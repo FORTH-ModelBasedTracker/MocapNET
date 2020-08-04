@@ -45,7 +45,7 @@ PROJECT_BRIEF          = "Ensemble of SNN Encoders for 3D Human Pose Estimation 
 # exceed 55 pixels and the maximum width should not exceed 200 pixels. 
 # Doxygen will copy the logo to the output directory.
 
-PROJECT_LOGO           = icon.png
+PROJECT_LOGO           = ../icon.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
@@ -740,7 +740,49 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories 
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       =  
+#A lot of things to exclude ;P 
+EXCLUDE_PATTERNS       =   */3dparty/* \
+                           */RGBDAcquisition/doc/* \
+                           */RGBDAcquisition/processors/* \
+                           */RGBDAcquisition/network_acquisition_shared_library/* \
+                           */RGBDAcquisition/depthsense_acquisition_shared_library/* \
+                           */RGBDAcquisition/acquisition/* \
+                           */RGBDAcquisition/acquisitionSegment/* \
+                           */RGBDAcquisition/acquisition_mux/* \
+                           */RGBDAcquisition/grabber/* \
+                           */RGBDAcquisition/grabber_mux/* \
+                           */RGBDAcquisition/grabber_segment/* \
+                           */RGBDAcquisition/depthsense_acquisition_shared_library/* \
+                           */RGBDAcquisition/librealsense_acquisition_shared_library/* \
+                           */RGBDAcquisition/editor/* \
+                           */RGBDAcquisition/desktop_acquisition_shared_library/* \
+                           */RGBDAcquisition/openni1_acquisition_shared_library/* \
+                           */RGBDAcquisition/openni2_acquisition_shared_library/* \
+                           */RGBDAcquisition/libfreenect2_acquisition_shared_library/* \
+                           */RGBDAcquisition/network_acquisition_shared_library/* \
+                           */RGBDAcquisition/rgbdserver/* \
+                           */RGBDAcquisition/sharedmemory_acquisition_shared_library/* \
+                           */RGBDAcquisition/v4l2_acquisition_shared_library/* \
+                           */RGBDAcquisition/tools/Codecs/* \
+                           */RGBDAcquisition/tools/Calibration/* \
+                           */RGBDAcquisition/tools/Descriptors/* \
+                           */RGBDAcquisition/tools/LocationServices/* \
+                           */RGBDAcquisition/tools/ExtrinsicCalibration/* \
+                           */RGBDAcquisition/tools/Primitives/* \
+                           */RGBDAcquisition/tools/Patterns/* \
+                           */RGBDAcquisition/tools/Drawing/* \
+                           */RGBDAcquisition/tools/Timers/* \
+                           */RGBDAcquisition/tools/OperatingSystem/* \
+                           */RGBDAcquisition/tools/Points/* \
+                           */RGBDAcquisition/tools/Quasirandomness/* \
+                           */RGBDAcquisition/tools/DepthImagesConverter/* \
+                           */RGBDAcquisition/tools/ImageOperations/* \
+                           */frames/*  \
+                           */grabbed_frames/*  \
+                           */AmmarServer/* \
+                           */synergiesAdapter/* \
+                           */bindings/* \
+                           */redist/
   
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names 

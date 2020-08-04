@@ -4,8 +4,13 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
  
+
 export MOCAPNET_DOXYGEN_INPUT="$DIR/.."
 export MOCAPNET_DOXYGEN_OUTPUT="$DIR/../doc"
+
+echo "Doxygen Input file will be $MOCAPNET_DOXYGEN_INPUT"
+echo "Doxygen Output file will be $MOCAPNET_DOXYGEN_OUTPUT"
+
 
 cd ..
 doxygen doc/doxyfile
