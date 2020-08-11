@@ -8,10 +8,11 @@ INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 set(CMAKE_CXX_STANDARD 11)  
 include_directories(${TENSORFLOW_INCLUDE_ROOT})
 
+#../Tensorflow/tf_utils.cpp  ../Tensorflow/tensorflow.cpp 
+add_executable(BVHGUI ${BVH_SOURCE} ${OPENGL_SOURCE} bvhgui.cpp ../MocapNET1/MocapNETLib/opengl.cpp ../MocapNET1/MocapNETLib/bvh.cpp ../MocapNET1/MocapNETLib/csv.cpp ../MocapNET1/MocapNETLib/visualization.cpp ../MocapNET1/MocapNETLib/remoteExecution.cpp ../MocapNET1/MocapNETLib/tools.cpp ../MocapNET1/MocapNETLib/jsonCocoSkeleton.cpp  ../MocapNET1/MocapNETLib/jsonMocapNETHelpers.cpp ../../dependencies/InputParser/InputParser_C.cpp ../MocapNET1/MocapNETLib/gestureRecognition.cpp ../MocapNET1/MocapNETLib/outputFiltering.cpp  )
 
-add_executable(BVHGUI ${BVH_SOURCE} ${OPENGL_SOURCE} bvhgui.cpp ../MocapNET1/MocapNETLib/opengl.cpp ../MocapNET1/MocapNETLib/bvh.cpp ../MocapNET1/MocapNETLib/csv.cpp ../MocapNET1/MocapNETLib/visualization.cpp ../MocapNET1/MocapNETLib/remoteExecution.cpp ../MocapNET1/MocapNETLib/tools.cpp ../MocapNET1/MocapNETLib/jsonCocoSkeleton.cpp  ../MocapNET1/MocapNETLib/jsonMocapNETHelpers.cpp ../../dependencies/InputParser/InputParser_C.cpp ../MocapNET1/MocapNETLib/gestureRecognition.cpp ../MocapNET1/MocapNETLib/outputFiltering.cpp ../Tensorflow/tensorflow.cpp ../Tensorflow/tf_utils.cpp  )
-
-target_link_libraries(BVHGUI rt dl m pthread ${OpenCV_LIBRARIES} ${OPENGL_LIBS} Tensorflow  TensorflowFramework MocapNETLib ${NETWORK_CLIENT_LIBRARIES} ${PNG_Libs} ${JPG_Libs} )
+#Tensorflow  TensorflowFramework MocapNETLib
+target_link_libraries(BVHGUI rt dl m pthread ${OpenCV_LIBRARIES} ${OPENGL_LIBS}  ${NETWORK_CLIENT_LIBRARIES} ${PNG_Libs} ${JPG_Libs} )
 set_target_properties(BVHGUI PROPERTIES DEBUG_POSTFIX "D") 
 
 
