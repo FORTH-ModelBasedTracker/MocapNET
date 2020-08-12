@@ -4,8 +4,6 @@ cmake_minimum_required( VERSION 2.8.7 )
 find_package(OpenCV REQUIRED)
 INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 
-#set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-set(CMAKE_CXX_STANDARD 11)  
 include_directories(${TENSORFLOW_INCLUDE_ROOT})
 
 
