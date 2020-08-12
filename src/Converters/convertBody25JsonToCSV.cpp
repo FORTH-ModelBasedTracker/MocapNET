@@ -174,8 +174,8 @@ int main(int argc, char *argv[])
         {
             fprintf(stderr,"Assuming default image dimensions %ux%u , you can change this using --size x y\n",width,height);
             fprintf(stderr,YELLOW "Please note that if the resolution of the original dataset is not %ux%u, 3D pose estimation \n" NORMAL,width,height);
-            fprintf(stderr,YELLOW "will be very negatively affected when you will use the output CSV file since its values \n" NORMAL,width,height);
-            fprintf(stderr,YELLOW "are assumed to be correctly normalized..\n" NORMAL,width,height);
+            fprintf(stderr,YELLOW "will be very negatively affected when you will use the output CSV file since its values \n" NORMAL);
+            fprintf(stderr,YELLOW "are assumed to be correctly normalized..\n" NORMAL);
         }
 
     //Now we format the format string to correctly address JSON files.. 
