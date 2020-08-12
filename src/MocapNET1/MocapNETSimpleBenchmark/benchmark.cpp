@@ -179,6 +179,8 @@ void printCPUName()
 
 int main(int argc, char *argv[])
 {
+  fprintf(stderr,"MocapNET Benchmark\n");
+  fprintf(stderr,"____________________________________\n");
 //-------------------------------------------------------------------------------------------------
 //     Parse command-line options, switch CPU/GPU execution and pick which benchmark to run
 //-------------------------------------------------------------------------------------------------
@@ -189,15 +191,16 @@ int main(int argc, char *argv[])
   
   for (int i=0; i<argc; i++)
   {
-    //if (strcmp(argv[i],"--cpu")==0)      { setenv("CUDA_VISIBLE_DEVICES", "", 1);  } else
-    if (strcmp(argv[i],"--gpu")==0)       { useCPUOnly=0;  } else
-   if (strcmp(argv[i],"--quality")==0) { quality=atof(argv[i+1]); }  else
+    if (strcmp(argv[i],"--cpu")==0)      { setenv("CUDA_VISIBLE_DEVICES", "", 1);  } else
+    if (strcmp(argv[i],"--gpu")==0)      { useCPUOnly=0;  } else
+    if (strcmp(argv[i],"--quality")==0)  { quality=atof(argv[i+1]); }  else
     if (strcmp(argv[i],"--test")==0)     { testMocapNETCompression(); exit(0);     } else
     if (strcmp(argv[i],"--testJSON")==0) { testMocapNETJSONCompression(); exit(0); }
   }
 //-------------------------------------------------------------------------------------------------
 
 
+  fprintf(stderr,"Now Loading MocapNET library\n");
   struct MocapNET mnet={0};
   if ( loadMocapNET(&mnet,"test",quality,mocapNETMode,useCPUOnly) )
   {
