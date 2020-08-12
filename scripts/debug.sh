@@ -5,7 +5,8 @@ cd "$DIR"
 cd ..  
 
 
-
+#Valgrind can also be downloaded..
+#https://www.valgrind.org/downloads/current.html
 
 #Simple dependency checker that will apt-get stuff if something is missing 
 SYSTEM_DEPENDENCIES="valgrind"
