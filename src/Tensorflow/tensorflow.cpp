@@ -93,6 +93,15 @@ void listNodes(const char * label , TF_Graph* graph)
 }
 
 
+
+char tfGraphExists(const char * filename)
+{
+ FILE *fp = fopen(filename,"r");
+ if( fp ) { /* exists */ fclose(fp); return 1; }
+ return 0;
+}
+
+
 int loadTensorflowInstance(
     struct TensorflowInstance * net,
     const char * filename,
@@ -101,6 +110,17 @@ int loadTensorflowInstance(
     unsigned int forceCPU
 )
 {
+    if (!tfGraphExists(filename))
+       {
+            std::cout << "Graph "<<filename<<" could not be found "<< std::endl;
+            return 0;
+       }
+    if (net==0)
+       {
+            std::cout << "TensorflowInstance structure not allocated "<< std::endl;
+            return 0;
+       }
+
     net->outputTensor=nullptr;
 
     //--------------------------------------------------------------------------------------------------------------
