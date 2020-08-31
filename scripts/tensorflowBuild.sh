@@ -79,7 +79,7 @@ bazel build --config=opt --config=cuda --config=mkl --config=monolithic $BazelPl
 
 
 bazel build --config opt --config=cuda --config=monolithic  //tensorflow/tools/lib_package:libtensorflow
-mv bazel-bin/tensorflow/tools/lib_package/libtensorflow.tar.gz ~/Documents/3dParty/libtensorflow-r1.15.tar.gz
+cp bazel-bin/tensorflow/tools/lib_package/libtensorflow.tar.gz ~/Documents/3dParty/libtensorflow-r1.15.tar.gz
 
 echo "Please visit ~/Documents/3dParty/ to collect your tensorflow python3 wheel, and C Library.."
 
