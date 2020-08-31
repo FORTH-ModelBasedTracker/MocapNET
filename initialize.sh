@@ -177,10 +177,10 @@ ARCHITECTURE="gpu" #can be gpu or cpu
 #however it is based on TF2.0 which is not yet tested ..!
 
 #I have a special version of tensorflow 1.11.0 tailored for Intel Core 2 and NVIDIA 7XX cards ( compute capabilities ) that you can find here
-#wget https://ammar.gr/mocapnet/libtensorflow-oldgpu-linux-x86_64-1.11.0.tar.gz
+#wget http://ammar.gr/mocapnet/libtensorflow-oldgpu-linux-x86_64-1.11.0.tar.gz
 
 #I have a special version of tensorflow 1.15.2 built for i7 950 CPUs without later AVX instrucitons but CUDA 10.0 compute capability 3.5 + GPUs
-#wget https://ammar.gr/mocapnet/libtensorflow-1-15.2_CPUi7_970_CUDA10.tar.gz
+#wget http://ammar.gr/mocapnet/libtensorflow-1-15.2_CPUi7_970_CUDA10.tar.gz
 
 cd "$DIR"
 if [ -f /usr/local/lib/libtensorflow.so ]; then
@@ -194,7 +194,7 @@ else
    cd "$DIR/dependencies"
    wget https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
    #Is the Google link down ? we have a mirror :)
-   #wget https://ammar.gr/mocapnet/libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
+   #wget http://ammar.gr/mocapnet/libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
  else
    echo "The tensorflow tarball was already downloaded.."
  fi
