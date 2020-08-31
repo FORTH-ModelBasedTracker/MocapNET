@@ -81,6 +81,7 @@ fi
 
 
 
+
 cd "$DIR"
 #Force download of a Video sample
 if [ ! -f shuffle.webm ]; then
@@ -103,7 +104,7 @@ if [ ! -f dataset/makehuman.tri ]; then
 fi
 
 cd "$DIR"
-  
+
 
 
 
@@ -178,6 +179,8 @@ ARCHITECTURE="gpu" #can be gpu or cpu
 #I have a special version of tensorflow 1.11.0 tailored for Intel Core 2 and NVIDIA 7XX cards ( compute capabilities ) that you can find here
 #wget https://ammar.gr/mocapnet/libtensorflow-oldgpu-linux-x86_64-1.11.0.tar.gz
 
+#I have a special version of tensorflow 1.15.2 built for i7 950 CPUs without later AVX instrucitons but CUDA 10.0 compute capability 3.5 + GPUs
+#wget https://ammar.gr/mocapnet/libtensorflow-1-15.2_CPUi7_970_CUDA10.tar.gz
 
 cd "$DIR"
 if [ -f /usr/local/lib/libtensorflow.so ]; then
