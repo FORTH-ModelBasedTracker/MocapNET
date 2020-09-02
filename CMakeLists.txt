@@ -76,7 +76,7 @@ set(BVH_SOURCE
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/edit/bvh_remapangles.c 
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/ik/bvh_inverseKinematics.c 
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/ik/hardcodedProblems_inverseKinematics.c
-              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/ik/levmar.c 
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/metrics/bvh_measure.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/tests/test.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/matrix4x4Tools.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/matrixOpenGL.c
