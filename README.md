@@ -1,4 +1,23 @@
 # MocapNET Project
+
+## Important News
+A [new version of MocapNET](https://github.com/FORTH-ModelBasedTracker/MocapNET/milestone/1) is right around the corner! It contains a very big list of improvements that have been carried out during 2020 over the original work that allows higher accuracy, smoother BVH output and better occlusion robustness at realtime perfomance. MocapNET2 is currently under peer-review and we will hopefully be able to release it towards the end of September.
+
+With MocapNET2 a [youtube video like this](https://www.youtube.com/watch?v=GtJct8nKjcc) can be converted to a [.BVH file like this](http://ammar.gr/mocapnet/mnet2/sept2020version.bvh) that can be imported in your favourite 3D editor or engine like [Blender](http://ammar.gr/mocapnet/mnet2/sept2020versionBlender.ogv). 
+
+You can [take a sneak peak of the internal visualization](http://ammar.gr/mocapnet/mnet2/sept2020version.mp4). 
+
+The BVH output of MocapNET 2 is 100% compatible with the BVH output of MocapNET 1..!
+The initial MocapNET 2 release will still rely on Tensorflow 1.X, since up until recently there where no [Tensorflow 2.x C-API releases](https://www.tensorflow.org/install/lang_c) .   
+
+The codebase of MocapNET 2 has been simplified and has some differences compared to the previous version, however the old version will be kept as the final 1.x release on its own branch so that any persons using it and having code dependencies on it will not be impacted by switching to the appropriate branch.
+
+
+
+
+
+
+
 ## Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images
 
 We present MocapNET, an ensemble of SNN encoders that estimates the 3D human body pose based on 2D joint estimations extracted from monocular RGB images. MocapNET provides an efficient divide and conquer strategy for supervised learning. It outputs skeletal information directly into the BVH format which can be rendered in real-time or imported without any additional processing in most popular 3D animation software. The proposed architecture achieves 3D human pose estimations at state of the art rates of 400Hz in high-end systems using only CPU processing.
