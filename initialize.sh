@@ -244,30 +244,30 @@ fi
 
 
 
-
-cd "$DIR"
-if [ -f dependencies/AmmarServer/README.md ]
-then
-echo "AmmarServer appears to already exist .."
-else
-  echo "Do you want to download AmmarServer and enable MocapNETServer build ? " 
-  echo "(You probably don't need this)" 
-  echo
-  echo -n " (Y/N)?"
-  read answer
-  if test "$answer" != "N" -a "$answer" != "n";
-  then 
-      cd "$DIR/dependencies"
-      git clone https://github.com/AmmarkoV/AmmarServer
-      AmmarServer/scripts/get_dependencies.sh
-      cd AmmarServer
-      mkdir build
-      cd build
-      cmake ..
-     make 
-     cd "$DIR"
-  fi
-fi
+#This webserver stuff is really not needed, and just adds complexity to everything so it is disabled
+#cd "$DIR"
+#if [ -f dependencies/AmmarServer/README.md ]
+#then
+#echo "AmmarServer appears to already exist .."
+#else
+#  echo "Do you want to download AmmarServer and enable MocapNETServer build ? " 
+#  echo "(You probably don't need this)" 
+#  echo
+#  echo -n " (Y/N)?"
+#  read answer
+#  if test "$answer" != "N" -a "$answer" != "n";
+#  then 
+#      cd "$DIR/dependencies"
+#      git clone https://github.com/AmmarkoV/AmmarServer
+#      AmmarServer/scripts/get_dependencies.sh
+#      cd AmmarServer
+#      mkdir build
+#      cd build
+#      cmake ..
+#     make 
+#     cd "$DIR"
+#  fi
+#fi
 
  
  

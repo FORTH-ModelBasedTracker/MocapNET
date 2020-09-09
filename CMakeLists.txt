@@ -270,7 +270,8 @@ add_subdirectory (src/Converters/)
 
 
 IF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/AmmarServer/src/AmmServerlib")
- add_subdirectory (src/MocapNETServerHTTP/)
+# add_subdirectory (src/MocapNET1/MocapNETServerHTTP/)
+ MESSAGE("HTTP server has been removed..")
 ENDIF()
 
 if (OpenCV_FOUND)
