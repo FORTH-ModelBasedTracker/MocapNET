@@ -26,7 +26,7 @@ The build system and compiling the source code will be exactly the same so if Mo
 
 We present MocapNET, an ensemble of SNN encoders that estimates the 3D human body pose based on 2D joint estimations extracted from monocular RGB images. MocapNET provides an efficient divide and conquer strategy for supervised learning. It outputs skeletal information directly into the BVH format which can be rendered in real-time or imported without any additional processing in most popular 3D animation software. The proposed architecture achieves 3D human pose estimations at state of the art rates of 400Hz in high-end systems using only CPU processing.
 
-![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/leedsDataset.jpg)
+![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/mnet2/doc/leedsDataset.jpg)
 
 ## Youtube Videos
 ------------------------------------------------------------------ 
@@ -42,7 +42,7 @@ We present MocapNET, an ensemble of SNN encoders that estimates the 3D human bod
 ## Citation
 ------------------------------------------------------------------ 
 
-Please cite the [following papers](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf) if this work helps your research :
+Please cite the following papers [1](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf),[2](http://todo) if this work helps your research :
 
 ```
 @inproceedings{Qammaz2019,
@@ -137,30 +137,7 @@ If you made changes to the source code that you want to discard and want to reve
 ## Testing the library and performing benchmarks 
 ------------------------------------------------------------------ 
 
-To test the library performance on the CPU of your computer issue :
-
-```
-./MocapNETBenchmark --cpu
-```
-
-The output should provide you with a model name of your CPU as well as the average framerate for 1000 samples evaluated, as seen in the following screenshots.
-
-![MocapNETBenchmark High-Range](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/benchmarknew.png)
-
-The high-range CPU achieves 385.08 fps when executing the proposed method to convert 2D points to a 3D pose.
-
-![MocapNETBenchmark Medium-Range](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/benchmarkview.png)
-
-The same benchmark when run on a medium-range CPU (considered medium-range due to being relatively old, 2014) achieves a lower 194.823 fps. 
-
-![MocapNETBenchmark Low-Range](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/benchmarkold.png)
-
-The very old CPU tested (2006) achieves 54.22 fps for the same task. However even this configuration can perform better using a different quality setting so by giving --quality 2.0 it performs @ 100hz although the mean average error is higher due to the less powerful ensemble.
-
-
------------------------------------------------------------------- 
-
-After testing the tensorflow installation using MocapNETBenchmark, to test your OpenCV installation as well as support of your webcam issue :
+To test your OpenCV installation as well as support of your webcam issue :
 ```
 ./OpenCVTest --from /dev/video0 
 ```
@@ -179,43 +156,34 @@ In case of problems playing back video files or your webcam you might want to co
 Assuming that the OpenCVTest executable described previously is working correctly with your input source, to do a live test of the MocapNET library using a webcam issue :
 
 ```
-./MocapNETLiveWebcamDemo --from /dev/video0 --live
+./MocapNET2LiveWebcamDemo --from /dev/video0 --live
 ```
 
 To dump 5000 frames from the webcam to out.bvh instead of the live directive issue :
 
 ```
-./MocapNETLiveWebcamDemo --from /dev/video0 --frames 5000
+./MocapNET2LiveWebcamDemo --from /dev/video0 --frames 5000
 ```
 
 
 Testing the library using a pre-recorded video file (i.e. not live input) means you can use a slower but more precise 2D Joint estimation algorithm like the included OpenPose implementation. You should keep in mind that [this OpenPose implementation](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET1/MocapNETLiveWebcamDemo/utilities.cpp#L213) does not use PAFs and so it is still not as precise as  the official OpenPose implementation. To run the demo with a prerecorded file issue :
 
 ```
-./MocapNETLiveWebcamDemo --from /path/to/yourfile.mp4 --openpose
+./MocapNET2LiveWebcamDemo --from /path/to/yourfile.mp4 --openpose
 ```
 
 We have included a [video file](http://ammar.gr/mocapnet/shuffle.webm) that should be automatically downloaded by the initialize.sh script. Issuing the following command should run it and produce an out.bvh file even if you don't have any webcam or other video files available!  :
 
 ```
-./MocapNETLiveWebcamDemo --from shuffle.webm --openpose --frames 375
+./MocapNET2LiveWebcamDemo --from shuffle.webm --openpose --frames 375
 ```
 
 
 Since high-framerate output is hard to examine, if you need some more time to elaborate on the output you can use the delay flag to add programmable delays between frames. Issuing the following will add 1 second of delay after each processed frame  :
 
 ```
-./MocapNETLiveWebcamDemo --from shuffle.webm --openpose --frames 375 --delay 1000
+./MocapNET2LiveWebcamDemo --from shuffle.webm --openpose --frames 375 --delay 1000
 ```
-
-
-Finally, as stated in the [paper](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf), MocapNET has a configurable quality/speed setting we call its λ variable. You can switch between different λ configurations using the --quality flag with possible values beeing 1.0(maximum quality), 1.5 and 2.0 (maximum framerate). By default a λ=1.0 is used. If you wish to override this issuing the following command will run the  maximum framerate ensemble :
-
-```
-./MocapNETLiveWebcamDemo --from shuffle.webm --frames 375 --quality 2.0
-```
-
-The output window of MocapNETLiveWebcamDemo contains a heatmap depicting the 2D Joint estimations, an RGB image cropped and centered on the observed person, a 2D overlay of the 2D Skeleton as well as a window that has the 3D output retrieved by our method as seen in the following image. It should be noted that this demo is performance oriented and to that end it uses the fast [VNect](http://gvv.mpi-inf.mpg.de/projects/VNect/) artificial neural network as its 2D joint estimator. On recent systems the framerate achieved by the application should match the input framerate of your camera which is typically 30 or 60 fps. That being said the visualization provided will provide detailed framerate information for every part of the demo and the bottleneck is the 2D joint estimator. 
 
 If your target is a headless environment then you might consider deactivating the visualization by passing the runtime argument --novisualization. This will prevent any windows from opening and thus not cause issues even on a headless environment.
 
@@ -231,14 +199,14 @@ By using the "Visualization Demo" slider bar you can alternate between different
 ![MocapNETLiveWebcamDemo OpenGL visualization](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demoogl.png)
 
 ```
-./MocapNETLiveWebcamDemo --from shuffle.webm --openpose --opengl --frames 375
+./MocapNET2LiveWebcamDemo --from shuffle.webm --openpose --opengl --frames 375
 ```
 By enabling the ENABLE_OPENGL CMake configuration flag during compilation and using the --opengl flag when running the MocapNETLiveWebcamDemo you can also see the experimental OpenGL visualization illustrated above, rendering a skinned mesh that was generated using [makehuman](http://www.makehumancommunity.org/). The BVH file armature used corresponds to the [CMU+Face](http://www.makehumancommunity.org/content/cmu_plus_face.html) armature of makehuman.
 
 ![MocapNETLiveWebcamDemo gesture experiments](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demogesture.png)
 
 ```
-./MocapNETLiveWebcamDemo --from shuffle.webm --openpose --gestures --frames 375
+./MocapNET2LiveWebcamDemo --from shuffle.webm --openpose --gestures --frames 375
 ```
 By starting the live demo using the --gestures argument or using the "Gesture Detection" slider bar you can enable a simple form of gesture detection as seen in the illustration above. Gestures are stored as [BVH files](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/master/dataset/gestures) and controlled through the [gestureRecognition.hpp](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET1/MocapNETLib/gestureRecognition.hpp#L18) file. A client application can register a callback as seen in the [demo](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET1/MocapNETLiveWebcamDemo/mocapNETLiveDemo.cpp#L50). The gesture detection code is experimental and has been included as a proof of concept, since due to our high-level output you can easily facilitate gesture detections by comparing subsequent BVH frames as [seen in the code](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET1/MocapNETLib/gestureRecognition.cpp#L148). That being said gestures where not a part of the original [MocapNET paper](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf).
 
@@ -255,20 +223,16 @@ build/examples/openpose/openpose.bin -number_people_max 1 --hand --write_json /p
 
 This will create files in the following fashion /path/to/outputJSONDirectory/yourVideoFile_XXXXXXXXXXXX_keypoints.json Notice that the filenames generated encode the serial number by padding it up to 12 characters (marked as X). You provide this information to our executable using the --seriallength commandline option.
 
-You can convert them to a BVH file by issuing :
-```
-./MocapNETJSON --from /path/to/outputJSONDirectory/ --label yourVideoFile --seriallength 12 --size 1920 1080
-```
 
 A utility has been included that can convert the JSON files to a single CSV file issuing :
 ```
- ./convertBody25JSONToCSV --from /path/to/outputJSONDirectory/ --label yourVideoFile --seriallength 12 --size 1920 1080 -o .
+ ./convertOpenPoseJSONToCSV --from /path/to/outputJSONDirectory/ --label yourVideoFile --seriallength 12 --size 1920 1080 -o .
 ```
 For more information on how to use the conversion utility please [see the documentation inside the utility](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/Converters/convertBody25JsonToCSV.cpp#L2)
 
 A CSV file has been included that can be run by issuing : 
 ```
- ./MocapNETJSON --from sample.csv --visualize --delay 30
+ ./MocapNET2CSV --from sample.csv --visualize --delay 30
 ```
 The delay is added in every frame so that there is enough time for the user to see the results, of course the visualization only contains the armature since the CSV file does not have the input images.
 
