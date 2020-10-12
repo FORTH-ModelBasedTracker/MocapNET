@@ -219,7 +219,7 @@ By using the --show variable you can alternate between different visualizations.
 ```
 By enabling the ENABLE_OPENGL CMake configuration flag during compilation and using the --opengl flag when running the MocapNETLiveWebcamDemo you can also see the experimental OpenGL visualization illustrated above, rendering a skinned mesh that was generated using [makehuman](http://www.makehumancommunity.org/). The BVH file armature used corresponds to the [CMU+Face](http://www.makehumancommunity.org/content/cmu_plus_face.html) armature of makehuman.
 
-![MocapNETLiveWebcamDemo gesture experiments](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demogesture.png)
+
 
 ```
 ./MocapNET2LiveWebcamDemo --from shuffle.webm --openpose --gestures --frames 375
