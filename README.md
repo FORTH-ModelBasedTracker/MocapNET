@@ -1,6 +1,6 @@
 # MocapNET Project
 
-A [new version of MocapNET](https://github.com/FORTH-ModelBasedTracker/MocapNET/milestone/1) is right around the corner! It contains a very big list of improvements that have been carried out during 2020 over the original work that allows higher accuracy, smoother BVH output and better occlusion robustness while maintaining realtime perfomance. MocapNET2 will appear in [the 25th International Conference on Pattern Recognition](https://www.icpr2020.it/)
+A [new version of MocapNET](https://github.com/FORTH-ModelBasedTracker/MocapNET/milestone/1) has landed! It contains a very big list of improvements that have been carried out during 2020 over the original work that allows higher accuracy, smoother BVH output and better occlusion robustness while maintaining realtime perfomance. MocapNET2 will appear in [the 25th International Conference on Pattern Recognition](https://www.icpr2020.it/)
 
 If you are interested in the older MocapNET v1 release you can find it in the [mnet1 branch](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet1), 
 
@@ -16,10 +16,9 @@ The codebase of MocapNET 2 has been simplified and has some differences compared
 
 The build system and compiling the source code will be exactly the same so if MocapNET1 worked for you MocapNET 2 will only need the new pretrained neural network files..! 
 
+## Upgrading from earlier versions
 
-
-
-
+Please consider cloning a fresh version of the repository and rerunning the initialize.sh script to make sure you keep your old-working version intact and also upgrade to the new and much improved version..!  
 
 
 ## Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images
@@ -28,7 +27,7 @@ We present MocapNET, an ensemble of SNN encoders that estimates the 3D human bod
 
 ![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/mnet2/doc/leedsDataset.jpg)
 
-## Youtube Videos
+## Youtube Videos - More to come soon..!
 ------------------------------------------------------------------ 
 
 | BMVC 2019 Supplementary Video  | Demonstration of code in this repository |
