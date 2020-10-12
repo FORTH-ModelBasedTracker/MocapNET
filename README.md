@@ -26,7 +26,7 @@ The build system and compiling the source code will be exactly the same so if Mo
 
 We present MocapNET, an ensemble of SNN encoders that estimates the 3D human body pose based on 2D joint estimations extracted from monocular RGB images. MocapNET provides an efficient divide and conquer strategy for supervised learning. It outputs skeletal information directly into the BVH format which can be rendered in real-time or imported without any additional processing in most popular 3D animation software. The proposed architecture achieves 3D human pose estimations at state of the art rates of 400Hz in high-end systems using only CPU processing.
 
-![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/mocapnetBannerImages.png)
+![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/leedsDataset.jpg)
 
 ## Youtube Videos
 ------------------------------------------------------------------ 
@@ -42,7 +42,7 @@ We present MocapNET, an ensemble of SNN encoders that estimates the 3D human bod
 ## Citation
 ------------------------------------------------------------------ 
 
-Please cite the [following paper](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf) if this work helps your research :
+Please cite the [following papers](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf) if this work helps your research :
 
 ```
 @inproceedings{Qammaz2019,
@@ -61,6 +61,18 @@ Please cite the [following paper](http://users.ics.forth.gr/~argyros/mypapers/20
 
 ```
 
+
+```
+@inproceedings{Qammaz2020,
+  author = {Qammaz, Ammar and Argyros, Antonis A},
+  title = {Occlusion-tolerant and personalized 3D human pose estimation in RGB image},
+  booktitle = {Proceedings of the 25th International Conference on Pattern Recognition (ICPR 2020)},
+  publisher = {IEEE},
+  year = {2020},
+  projects =  {SUSTAGE,MINGEI}
+}
+
+```
 
 ## Overview, System Requirements and Dependencies
 ------------------------------------------------------------------ 
