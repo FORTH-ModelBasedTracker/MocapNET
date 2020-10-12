@@ -252,8 +252,6 @@ A CSV file has been included that can be run by issuing :
 ```
 The delay is added in every frame so that there is enough time for the user to see the results, of course the visualization only contains the armature since the CSV file does not have the input images.
 
-![MocapNETJSON](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/demojson.png)
-
 
 ## License
 ------------------------------------------------------------------ 
