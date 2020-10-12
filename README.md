@@ -1,6 +1,4 @@
-# MocapNET Project
-
-## This is a snapshot of the deprecated MocapNET 1/BMVC 2019 release 
+# MocapNET1 / BMVC 2019 release
 ------------------------------------------------------------------ 
 
 MocapNET has evolved, 
