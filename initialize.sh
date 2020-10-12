@@ -40,7 +40,7 @@ echo "Name=MocapNET Demo" >> mocapnet.desktop
 echo "Version=1.0" >> mocapnet.desktop
 echo "GenericName=MocapNET" >> mocapnet.desktop
 echo "Icon=$ORIG_DIR/doc/icon.png" >> mocapnet.desktop
-echo "Exec=$ORIG_DIR/MocapNETLiveWebcamDemo --from /dev/video0 --live --dir \"$ORIG_DIR\"" >> mocapnet.desktop
+echo "Exec=$ORIG_DIR/MocapNET2LiveWebcamDemo --from /dev/video0 --live --dir \"$ORIG_DIR\"" >> mocapnet.desktop
 echo "Terminal=false" >> mocapnet.desktop
 echo "StartupNotify=false" >> mocapnet.desktop
 echo "Categories=Application;Graphics;3DGraphics;2DGraphics;" >> mocapnet.desktop
@@ -69,12 +69,8 @@ else
      #This is a richer armature that also contains provisons for head and feet animation 
      wget http://ammar.gr/datasets/CMUPlusHeadMotionCapture.zip
      unzip CMUPlusHeadMotionCapture.zip
-     mv CMUPlusHeadMotionCapture.zip MotionCapture
-      
-     #This is the BMVC 2019 dataset used, left here for reference
-     #wget http://ammar.gr/datasets/CMUMotionCaptureDatasets.zip
-     #unzip CMUMotionCaptureDatasets.zip
-     #mv CMUMotionCaptureDatasets.zip MotionCapture
+     mv CMUPlusHeadMotionCapture.zip MotionCapture 
+
      cd "$DIR"
   fi
 fi
@@ -109,38 +105,25 @@ cd "$DIR"
 
 
 cd "$DIR/dataset"
-mkdir combinedModel
-cd combinedModel
-mkdir mode3
-mkdir mode5
+mkdir -p combinedModel/mocapnet2/mode5/1.0/ 
+cd "$DIR/combinedModel/mocapnet2/mode5/1.0/"
 
 
-#The original paper for BMVC 2019 had 3 quality settings λ=1.0, λ=1.5, λ=2.0 
-#to download the pre-trained models you just need to include them in this list
-#and then use the --quality x commandline argument..
-LIST_OF_QUALITY="1.0 2.0" # 1.5 2.0
+#New ICPR pretrained networks 
 
-for QUALITY in $LIST_OF_QUALITY; do
-#--------------------------------------------------------------------
-echo "Downloading Models for mode 3/quality setting $QUALITY"
-cd "$DIR/dataset/combinedModel/mode3"
-mkdir $QUALITY
-cd $QUALITY 
+LIST_OF_NETWORKS="categorize_lowerbody_all.pb lowerbody_left.pb upperbody_left.pb categorize_upperbody_all.pb lowerbody_right.pb upperbody_right.pb lowerbody_back.pb upperbody_back.pb lowerbody_front.pb upperbody_front.pb"
 
-if [ ! -f all.pb ]; then
-  wget http://ammar.gr/datasets/combinedModel/mode3/$QUALITY/all.pb
+for NETWORK in $LIST_OF_NETWORKS; do
+if [ ! -f $NETWORK  ]; then
+  wget http://ammar.gr/datasets/icpr2020/$NETWORK 
 fi
-
-if [ ! -f back.pb ]; then
-  wget http://ammar.gr/datasets/combinedModel/mode3/$QUALITY/back.pb
-fi
-
-if [ ! -f front.pb ]; then
-  wget http://ammar.gr/datasets/combinedModel/mode3/$QUALITY/front.pb
-fi
-
-cd ..
 done
+
+
+
+
+#--------------------------------------------------------------------
+cd "$DIR/combinedModel"
 #--------------------------------------------------------------------
 
 #We also downloar pre-trained models for the 2D joint estimation
