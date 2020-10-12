@@ -202,10 +202,11 @@ else
 
 cd "$DIR"
 if [ -f dependencies/libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz ]; then
- #Doing a local installation that requires no SUDO 
+ #The next three lines do a local installation that requires no SUDO and does not interfere in any way with the rest of your system 
  cd "$DIR/dependencies"
  mkdir libtensorflow
  tar -C libtensorflow -xzf libtensorflow-$ARCHITECTURE-linux-x86_64-$TENSORFLOW_VERSION.tar.gz  
+ #You could instead uncomment these two next lines and perform a system wide installation 
  #echo "Please give me sudo permissions to install Tensorflow $TENSORFLOW_VERSION C Bindings.."
  #sudo tar -C /usr/local -xzf libtensorflow-gpu-linux-x86_64-$TENSORFLOW_VERSION.tar.gz
  else
