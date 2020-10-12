@@ -1,10 +1,15 @@
 # MocapNET Project
 
-## Important News
+## Important News - ICPR 2020
 
 ![Breaking News](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/breakingnews.jpeg) 
 
-A [new version of MocapNET](https://github.com/FORTH-ModelBasedTracker/MocapNET/milestone/1) is right around the corner! It contains a very big list of improvements that have been carried out during 2020 over the original work that allows higher accuracy, smoother BVH output and better occlusion robustness while maintaining realtime perfomance. MocapNET2 is currently under peer-review and we will hopefully be able to release it ~~towards the end of September~~ @ 10/October/2020. Due to [a delay in the review process ICPR 2020 results are postponed for October 10](https://www.micc.unifi.it/icpr2020/index.php/reviewer-and-area-chair-instructions/)
+A [new version of MocapNET](https://github.com/FORTH-ModelBasedTracker/MocapNET/milestone/1) is right around the corner! It contains a very big list of improvements that have been carried out during 2020 over the original work that allows higher accuracy, smoother BVH output and better occlusion robustness while maintaining realtime perfomance. MocapNET2 will appear in [the 25th International Conference on Pattern Recognition](https://www.icpr2020.it/)
+
+I am working on updating the repository to the current version :
+ The MocapNET v1 release will continue living in the [mnet1 branch](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet1), I will do my best to keep it alive and working with main focus shifting on the MocapNET v2 release
+ The MocapNET v2 release will initally be commited in the [mnet2 branch](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet2) until it is properly ported here. At that time the master branch will point to the latest stable Mnet2 version..! 
+ 
 
 With MocapNET2 a [youtube video like this](https://www.youtube.com/watch?v=GtJct8nKjcc) can be converted to a [.BVH file like this](http://ammar.gr/mocapnet/mnet2/sept2020version.bvh) that can be imported in your favourite 3D editor or engine like [Blender](http://ammar.gr/mocapnet/mnet2/sept2020versionBlender.ogv). 
 
