@@ -15,7 +15,10 @@ using namespace cv;
 
 int main(int argc, char *argv[])
 {
+    unsigned int width = 640;
+    unsigned int height = 480;
     const char * webcam = 0;
+    int heatmapDebugVisualizations=0;
 
     //------------------------------------------------------
     //                Parse arguments
@@ -27,31 +30,39 @@ int main(int argc, char *argv[])
                     if (argc>i+1)
                         {
                             webcam = argv[i+1];
+                        }  
+                } else
+            if (strcmp(argv[i],"--debug")==0)
+                {
+                    heatmapDebugVisualizations = 1;
+                }   else 
+             if (strcmp(argv[i],"--size")==0)
+                    {
+                      if (argc>i+2)
+                        {
+                        width = atoi(argv[i+1]);
+                        height = atoi(argv[i+2]);
                         }
-                }
+                    }
+                    
         }
     //------------------------------------------------------
 
 
     VideoCapture cap(webcam); // open the default camera
-    if (webcam==0)
-        {
-            std::cerr<<"Trying to open webcam\n";
-            cap.set(CV_CAP_PROP_FRAME_WIDTH,640);
-            cap.set(CV_CAP_PROP_FRAME_HEIGHT,480);
-        }
-    else
-        {
-            std::cerr<<"Trying to open "<<webcam<<"\n";
-        }
-
+     
+     std::cerr<<"Trying to open webcam ("<<webcam<<" @ "<<width<<","<<height<<") \n";
     if (!cap.isOpened())  // check if succeeded to connect to the camera
         {
             std::cerr<<"Openning camera failed\n";
             return 1;
         }
-
-
+        
+     if (strstr(webcam,"/dev/video")!=0)
+     {
+     cap.set(cv::CAP_PROP_FRAME_WIDTH,width);
+     cap.set(cv::CAP_PROP_FRAME_HEIGHT,height);
+     }
 
     struct JointEstimator2D jointEstimator;
     if (loadJointEstimator2D(&jointEstimator,JOINT_2D_ESTIMATOR_FORTH,1,0))
@@ -65,7 +76,9 @@ int main(int argc, char *argv[])
             cv::moveWindow("Skeletons",0,0);
             
             unsigned int frameNumber=0;
-
+            unsigned long elapsedTime=0;
+            unsigned int brokenFrames = 0;
+            
             for(;;)
                 {
                     Mat frame;
@@ -90,18 +103,27 @@ int main(int argc, char *argv[])
                             
                             //This needs to be done to get tensorflow output..
                             frame.convertTo(frame,CV_32FC3); 
+                            
+                            //Keep time 
+                            unsigned long startTime = GetTickCountMicrosecondsJointEstimator();
+                            
                             std::vector<std::vector<float> >  heatmaps = getHeatmaps(
-                                                                                      &jointEstimator,
-                                                                                      frame.data,
-                                                                                      jointEstimator.inputWidth2DJointDetector,
-                                                                                      jointEstimator.inputHeight2DJointDetector
-                                                                                    );
+                                                                                                                                                   &jointEstimator,
+                                                                                                                                                   frame.data,
+                                                                                                                                                   jointEstimator.inputWidth2DJointDetector,
+                                                                                                                                                   jointEstimator.inputHeight2DJointDetector
+                                                                                                                                                 );
                             if (heatmaps.size()>0)
                                 {
-                                    //visualizeHeatmaps(&jointEstimator,heatmaps,frameNumber);
+                                    if (heatmapDebugVisualizations) 
+                                         { visualizeHeatmaps(&jointEstimator,heatmaps,frameNumber); }
 
                                     estimate2DSkeletonsFromHeatmaps(&jointEstimator,&result,heatmaps);
 
+                                   //Keep time 
+                                   unsigned long endTime = GetTickCountMicrosecondsJointEstimator();
+                                   elapsedTime += endTime - startTime;
+ 
                                     dj_drawExtractedSkeletons(
                                         viewMat,
                                         &result,
@@ -113,14 +135,22 @@ int main(int argc, char *argv[])
 
                                 } 
 
+                           ++frameNumber;
                         }
                     else
                         {
                             std::cerr<<"Broken frame.. \n"; 
+                            ++brokenFrames; 
                         }
                     waitKey(1);
-                    ++frameNumber;
+                    if (brokenFrames>10) { break; }
                 }
+                
+                if (frameNumber>0)
+                {
+                    fprintf(stderr,"Elapsed time is %lu microsconds for %u frames\n",elapsedTime,frameNumber);
+                    fprintf(stderr,"Framerate : %0.2f fps\n",(float) elapsedTime/(1000* frameNumber));
+                } 
         }
     // the camera will be deinitialized automatically in VideoCapture destructor
     return 0;

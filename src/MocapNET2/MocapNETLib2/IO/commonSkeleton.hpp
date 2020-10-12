@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdio.h>
+
 /**
  * @brief A C struct to hold a 2D coordinate
  */
@@ -169,7 +171,7 @@ static const char * Body25BodyNames[] =
     "rhand",           //4
     "lshoulder",       //5
     "lelbow",          //6
-    "lwrist",          //7
+    "lhand",           //7
     "hip",             //8
     "rhip",            //9
     "rknee",           //10
@@ -179,15 +181,15 @@ static const char * Body25BodyNames[] =
     "lfoot",           //14
     "endsite_eye.r",   //15
     "endsite_eye.l",   //16
-    "REar",            //17 ========= No correspondance
-    "LEar",            //18 ========= No correspondance
+    "rear",            //17 ========= No correspondance
+    "lear",            //18 ========= No correspondance
     "endsite_toe1-2.l",//19
     "endsite_toe5-3.l",//20
-    "LHeel",           //21 ========= No correspondance
+    "lheel",           //21 ========= No correspondance
     "endsite_toe1-2.r",//22
     "endsite_toe5-3.r",//23
-    "RHeel",           //24 ========= No correspondance
-    "Bkg",             //25 ========= No correspondance
+    "rheel",           //24 ========= No correspondance
+    "bkg",             //25 ========= No correspondance
     //==================
     "End of Joint Names"
 };
@@ -229,7 +231,6 @@ enum Body25SkeletonJoints
 
 
 
-
 /**
  * @brief An array of indexes to the parents of BODY25 skeleton joints
  */
@@ -263,6 +264,9 @@ static const int Body25SkeletonJointsParentRelationMap[] =
     BODY25_RAnkle,                      // BODY25_RHeel,
     BODY25_Bkg                          //BODY25_Bkg
 };
+
+
+
 
 
 /**
@@ -638,15 +642,14 @@ struct skeletonStructure
 {
     unsigned int observationNumber , observationTotal;
     unsigned int userID;
-    unsigned int totalUsersPresent;
- 
+    unsigned int totalUsersPresent; 
+    //------------------------
     struct body25OP body;
     struct handCOCO leftHand;
     struct handCOCO rightHand;
     struct headOP head;
-    
-    
-    struct boundingBox  bbox2D={0};
+    //------------------------
+    struct boundingBox  bbox2D;
 };
 
 
@@ -670,4 +673,42 @@ struct skeletonSerialized
 
     unsigned int skeletonBodyElements;
     struct bodyField skeletonBody[512]; 
+    
+    float width;
+    float height;
 };
+
+
+static void printSkeletonSerialized(const char * msg, struct skeletonSerialized * sk )
+{
+    if (msg!=0)
+    {
+        fprintf(stderr,"printSkeletonSerialized (%s)\n",msg);
+    }
+    
+    if (sk==0) 
+    {
+        fprintf(stderr,"struct skeletonSerialized that was given as input is not allocated\n");
+        return; 
+    }
+    
+    if (sk->skeletonHeaderElements != sk->skeletonBodyElements)
+    {
+        fprintf(stderr,"struct skeletonSerialized is corrupted since it has a different number of head and body records..\n");
+        return; 
+    }
+    
+     fprintf(stderr,"Serialization has %u elements\n",sk->skeletonHeaderElements);
+    for (unsigned int skID = 0; skID<sk->skeletonHeaderElements; skID++) 
+    {
+        if (sk->skeletonHeader[skID].str==0)
+        {
+         fprintf(stderr," Serial #%u has an empty label => % 0.2f \n" ,skID , sk->skeletonBody[skID].value);     
+        } else
+        {
+         fprintf(stderr," %s => % 0.2f \n" ,sk->skeletonHeader[skID].str , sk->skeletonBody[skID].value);
+        }
+    }
+    
+    
+}

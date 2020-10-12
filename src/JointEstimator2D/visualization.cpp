@@ -53,18 +53,18 @@ int visualize=1;
         }
 #endif
         
-        
+  return 1;
 }
 
 
  
 //Basic Skeleton Visualization with big fonts to be legible on cluttered skeletons
 void dj_drawExtractedSkeletons(
-                                                                        cv::Mat img,
-                                                                       struct Skeletons2DDetected * sk,
-                                                                       float factorX,
-                                                                       float factorY
-                                                                     )
+                               cv::Mat img,
+                               struct Skeletons2DDetected * sk,
+                               float factorX,
+                               float factorY
+                              )
 {
   cv::Scalar red = cv::Scalar(0,0,255);
   cv::Scalar green = cv::Scalar(0,255,0);
@@ -76,10 +76,10 @@ void dj_drawExtractedSkeletons(
         {    
            for (int i=0; i<UT_COCO_PARTS; i++)
           { 
-            unsigned int jointID = i%18;
+            unsigned int jointID = heatmapCorrespondenceToBODY25[i%18];
             struct point2D * jointPoint = & sk->skeletons[skID].body.joint2D[jointID];
 
-            unsigned int parentID = UT_COCOSkeletonJointsParentRelationMap[jointID];
+            unsigned int parentID = heatmapCorrespondenceToBODY25[UT_COCOSkeletonJointsParentRelationMap[i%18]];
             if (parentID!=jointID)
                 {
                     struct point2D * parentPoint = & sk->skeletons[skID].body.joint2D[parentID]; 
@@ -98,7 +98,7 @@ void dj_drawExtractedSkeletons(
                             parentPointCV.x = parentPoint->x   * factorX;
                             parentPointCV.y = parentPoint->y   * factorY;
                             
-                            switch (UT_COCOSkeletonJointsPartLabel[jointID])
+                            switch (UT_COCOSkeletonJointsPartLabel[i%18])
                             {
                                 case JOINT_2D_ESTIMATOR_PART_OF_TORSO:
                                 case JOINT_2D_ESTIMATOR_PART_OF_HEAD: 
@@ -125,7 +125,7 @@ void dj_drawExtractedSkeletons(
         {
          for (int i=0; i<UT_COCO_PARTS; i++)
           {
-            unsigned int jointID = i%18;
+            unsigned int jointID = heatmapCorrespondenceToBODY25[i%18];
             struct point2D * jointPoint = & sk->skeletons[skID].body.joint2D[jointID];
             
             cv::Point_<float> jointPointCV;

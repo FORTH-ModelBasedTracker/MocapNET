@@ -443,20 +443,25 @@ int estimate2DSkeletonsFromHeatmaps(struct JointEstimator2D * jnet,struct Skelet
     unsigned long startTime  = GetTickCountMicrosecondsJointEstimator();
     int blobsProceesed=0;
     for (int heatmapID=0; heatmapID<heatmaps.size(); heatmapID++)
-        {
+        { 
+            unsigned int body25ID = heatmapCorrespondenceToBODY25[heatmapID];
+            
             if (heatmapID!=UT_COCO_Bkg)
                 {
-                    result->skeletons[0].body.joint2D[heatmapID].x = 0;
-                    result->skeletons[0].body.joint2D[heatmapID].y = 0;
+                    result->skeletons[0].body.joint2D[body25ID].x = 0;
+                    result->skeletons[0].body.joint2D[body25ID].y = 0;
+                    result->skeletons[0].body.active[body25ID]=0.0;
                     //--------------------------------------------------------
                     std::vector<struct HeatmapBlob>  blobs = getBlobsFromHeatmap(jnet,heatmapID,heatmaps[heatmapID]);
                     if (blobs.size()>0)
                         {
+                            result->skeletons[0].body.isPopulated=1;
                             float x=(float) blobs[0].subpixelPeakX/ jnet->heatmapWidth2DJointDetector;
                             float y=(float) blobs[0].subpixelPeakY/ jnet->heatmapHeight2DJointDetector;
 
-                            result->skeletons[0].body.joint2D[heatmapID].x = x;
-                            result->skeletons[0].body.joint2D[heatmapID].y = y;
+                            result->skeletons[0].body.joint2D[body25ID].x = x;
+                            result->skeletons[0].body.joint2D[body25ID].y = y;
+                            if ( (x!=0) && (y!=0) ) { result->skeletons[0].body.active[body25ID]=1.0; }
 
                             if (blobsProceesed==0)
                                 {
@@ -499,6 +504,40 @@ int estimate2DSkeletonsFromHeatmaps(struct JointEstimator2D * jnet,struct Skelet
                     //--------------------------------------------------------
                 }
         }
+        
+    
+    /*
+     The following joints  are not covered by the current networks
+     BODY25_MidHip,
+     BODY25_LBigToe,
+     BODY25_LSmallToe,
+     BODY25_LHeel,
+     BODY25_RBigToe,
+     BODY25_RSmallToe,
+     BODY25_RHeel,
+    */
+    
+    //Mid hip can be approximated by LHip and RHip
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    if (
+          (result->skeletons[0].body.joint2D[BODY25_RHip].x!=0) && (result->skeletons[0].body.joint2D[BODY25_LHip].x!=0) &&
+          (result->skeletons[0].body.joint2D[BODY25_RHip].y!=0) && (result->skeletons[0].body.joint2D[BODY25_LHip].y!=0)
+        )
+        {
+            result->skeletons[0].body.joint2D[BODY25_MidHip].x = (float) (result->skeletons[0].body.joint2D[BODY25_RHip].x+result->skeletons[0].body.joint2D[BODY25_LHip].x)/2;
+            result->skeletons[0].body.joint2D[BODY25_MidHip].y = (float) (result->skeletons[0].body.joint2D[BODY25_RHip].y+result->skeletons[0].body.joint2D[BODY25_LHip].y)/2;
+            result->skeletons[0].body.jointAccuracy[BODY25_MidHip] = (result->skeletons[0].body.jointAccuracy[BODY25_RHip]+result->skeletons[0].body.jointAccuracy[BODY25_LHip])/2;
+            result->skeletons[0].body.active[BODY25_MidHip] = 1.0;
+            //fprintf(stderr,"Mid hip populated and resides @  (%0.2f,%0.2f)\n",result->skeletons[0].body.joint2D[BODY25_MidHip].x,result->skeletons[0].body.joint2D[BODY25_MidHip].y);
+        } else
+        {
+            result->skeletons[0].body.joint2D[BODY25_MidHip].x = 0;
+            result->skeletons[0].body.joint2D[BODY25_MidHip].y = 0; 
+            result->skeletons[0].body.jointAccuracy[BODY25_MidHip] = 0;
+            result->skeletons[0].body.active[BODY25_MidHip] = 0.0;
+            //fprintf(stderr,"Cannot populate Mid  hip, this will degrade output!\n");
+        }
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     result->numberOfSkeletonsDetected=1;
 
@@ -519,6 +558,13 @@ int convertNormalized2DJointsToOriginalImageCoordinates(
     int correctOffset
 )
 {
+    //It is very common for points to be empty, they cannot be normalized so its best if we have 
+    //a quick path for them..
+    if  ( (*x==0.0) && (*y==0.0) ) {  return 1; }
+    
+    if (*x>1.0) { *x=1.0; }
+    if (*y>1.0) { *y=1.0; }
+    
     float normalizedX = *x;
     float normalizedY = *y;
 
@@ -594,8 +640,6 @@ int  estimate2DSkeletonsFromImage(struct JointEstimator2D * jnet,struct Skeleton
 
 
     // pass the frame to the Estimator
-
-
     std::vector<std::vector<float> > joint2DOutput = predictTensorflowOnArrayOfHeatmaps(
                 &jnet->network,
                 (unsigned int) width,
@@ -608,4 +652,65 @@ int  estimate2DSkeletonsFromImage(struct JointEstimator2D * jnet,struct Skeleton
 
 
     return 0;
+}
+
+
+int restore2DJointsToInputFrameCoordinates(struct JointEstimator2D * jnet,struct Skeletons2DDetected * input)
+{
+  for (unsigned int skID=0; skID<input->numberOfSkeletonsDetected; skID++)
+  {
+      for (int i=0; i<BODY25_PARTS; i++)
+                {
+                    //fprintf(stderr,"normalized(%0.2f,%0.2f) ",input->skeletons[skID].body.joint2D[i].x,input->skeletons[skID].body.joint2D[i].y);
+                    convertNormalized2DJointsToOriginalImageCoordinates(jnet,&input->skeletons[skID].body.joint2D[i].x,&input->skeletons[skID].body.joint2D[i].y,1);
+                    //fprintf(stderr,"regular(%0.2f,%0.2f) ",input->skeletons[skID].body.joint2D[i].x,input->skeletons[skID].body.joint2D[i].y);
+                } 
+                
+                /* Currently dont have hand and head networks..!
+            for (int i=0; i<COCO_HAND_PARTS; i++)
+                {
+                    convertNormalized2DJointsToOriginalImageCoordinates(jnet,&input->skeletons[skID].leftHand.joint2D[i].x,&input->skeletons[skID].leftHand.joint2D[i].y,1);
+                }
+                
+                
+            for (int i=0; i<COCO_HAND_PARTS; i++)
+                {
+                    convertNormalized2DJointsToOriginalImageCoordinates(jnet,&input->skeletons[skID].rightHand.joint2D[i].x,&input->skeletons[skID].rightHand.joint2D[i].y,1); 
+                }
+                
+            for (int i=0; i<OP_HEAD_PARTS; i++)
+                {
+                    convertNormalized2DJointsToOriginalImageCoordinates(jnet,&input->skeletons[skID].head.joint2D[i].x,&input->skeletons[skID].head.joint2D[i].y,1);  
+                }            
+    */
+  }  
+      return 1;
+}
+
+
+
+float percentOf2DPointsMissing(struct Skeletons2DDetected * input)
+{
+    if (input->numberOfSkeletonsDetected==0) { return 100.0; }
+    
+    unsigned int jointsThatExist=0;
+    unsigned int jointsThatShouldExist=0;
+    if (input->skeletons[0].body.isPopulated)
+    {
+        jointsThatShouldExist=BODY25_PARTS-2;
+        for (int jID=0; jID<BODY25_PARTS; jID++)
+        {
+            if ( input->skeletons[0].body.active[jID] )
+            {
+                ++jointsThatExist;
+            }
+        }
+         
+         //fprintf(stderr,"%u/%u joints observed\n",jointsThatExist,jointsThatShouldExist);
+         float percentOf2DPointsThatExist = (float) 100 * jointsThatExist / jointsThatShouldExist;
+         return (float) 100.0 - percentOf2DPointsThatExist;
+    }
+    
+    //fprintf(stderr,"Body is not populated\n");
+    return 100.0;
 }

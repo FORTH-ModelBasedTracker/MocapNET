@@ -490,6 +490,16 @@ void PrintOp(TF_Graph* graph)
         }
 }
 
-
+int listNodesMN(const char * label , TF_Graph* graph)
+{
+    size_t pos = 0;
+    TF_Operation* oper;
+    fprintf(stdout, "Nodes list : \n");
+    while ((oper = TF_GraphNextOperation(graph, &pos)) != nullptr)
+        {
+            fprintf(stderr," %s - %s \n",label,TF_OperationName(oper));
+        }
+    return 1;
+}
 
 } // namespace tf_utils

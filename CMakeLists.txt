@@ -1,23 +1,33 @@
 project( MocapNETProject ) 
 cmake_minimum_required( VERSION 2.8.7 )
 
-set(CMAKE_CXX_FLAGS "-fPIC ")
-set(CMAKE_C_FLAGS "-fPIC") 
+#Make fast, lean and platform independent binaries..
+set(CMAKE_CXX_FLAGS "-s -O3 -fPIC -march=native -mtune=native")
+set(CMAKE_C_FLAGS "-s -O3 -fPIC -march=native -mtune=native") 
 
-OPTION (ENABLE_OPENGL OFF) 
-OPTION (ENABLE_NEW_JOINT_ESTIMATOR OFF) 
+OPTION(ENABLE_OPENGL OFF)
 OPTION(INTEL_OPTIMIZATIONS OFF)
+
+
+SET (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+INCLUDE(FindSSE)
+FindSSE ()
+IF(SSE2_FOUND)
+            SET(INTEL_OPTIMIZATIONS ON)
+            MESSAGE("SSE2 detected and will be used..")
+ENDIF(SSE2_FOUND)
 
 if (INTEL_OPTIMIZATIONS)
 add_definitions(-DINTEL_OPTIMIZATIONS)
 endif(INTEL_OPTIMIZATIONS)
 
-set_property(GLOBAL PROPERTY USE_FOLDERS ON) 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 
 #JPEG/PNG libraries..
-set(JPG_Libs jpeg )
-set(PNG_Libs png ) 
+set(JPG_Libs jpeg)
+set(PNG_Libs png) 
 
 
 
@@ -55,7 +65,10 @@ set(BVH_SOURCE "")
 IF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader")
 add_definitions(-DUSE_BVH)
 set(BVH_SOURCE 
-              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_loader.c
+               #--------------------------------------------------------------------------------
+               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/PThreadWorkerPool/pthreadWorkerPool.h
+               #--------------------------------------------------------------------------------
+               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_loader.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/calculate/bvh_to_tri_pose.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/calculate/bvh_transform.c 
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/calculate/bvh_project.c 
@@ -76,13 +89,27 @@ set(BVH_SOURCE
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/edit/bvh_remapangles.c 
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/ik/bvh_inverseKinematics.c 
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/ik/hardcodedProblems_inverseKinematics.c
+              #${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/ik/levmar.c 
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/metrics/bvh_measure.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/tests/test.c
+              #--------------------------------------------------------------------------------
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/Calibration/calibration.h 
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/Calibration/calibration.c 
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/Calibration/transform.c 
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/Calibration/transform.h 
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/Calibration/undistort.c 
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/Calibration/undistort.h 
+              #--------------------------------------------------------------------------------
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/matrixTools.h
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/matrix3x3Tools.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/matrix4x4Tools.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/matrixOpenGL.c
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/matrixCalculations.c
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/solveLinearSystemGJ.c
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/solveHomography.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/quaternions.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/simpleRenderer.c 
-      ) 
+      )
  MESSAGE("BVH Code found and will be used..")
  add_subdirectory (src/GroundTruthGenerator/) #Ground Truth generator can only be compiled with BVH code..
  #MESSAGE("${BVH_SOURCE}")
@@ -262,30 +289,28 @@ ENDIF()
 #pip3 show protobuf
 #add_subdirectory (MocapNETStandalone/)
 
-add_subdirectory (src/MocapNET1/MocapNETLib/)
-add_subdirectory (src/MocapNET1/MocapNETFromJSON/)
-add_subdirectory (src/MocapNET1/MocapNETSimpleBenchmark/)
-
-add_subdirectory (src/Converters/)
-
 
 IF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/AmmarServer/src/AmmServerlib")
  #add_subdirectory (src/MocapNET1/MocapNETServerHTTP/)
- MESSAGE("HTTP server has been removed..")
 ENDIF()
 
 if (OpenCV_FOUND)
 add_subdirectory (src/Webcam/)
-add_subdirectory (src/BVHGUI/)
-add_subdirectory (src/MocapNET1/MocapNETLiveWebcamDemo/)
+#Deactivated to keep build targets  sane
+add_subdirectory(src/MocapNET2/BVHGUI2)
+add_subdirectory(src/MocapNET2/MocapNET2LiveWebcamDemo)
 ENDIF(OpenCV_FOUND)
 
-
-
-if (ENABLE_NEW_JOINT_ESTIMATOR)
-MESSAGE("Including New Joint Estimator")
+add_subdirectory(src/MocapNET2/MocapNETLib2/)
+add_subdirectory(src/MocapNET2/MocapNETFromCSV/)
+add_subdirectory(src/MocapNET2/Converters/Openpose)
+add_subdirectory(src/MocapNET2/Converters/H36M)
+add_subdirectory(src/MocapNET2/testCSV/)
+add_subdirectory(src/MocapNET2/drawCSV/)
+add_subdirectory(src/MocapNET2/CSVClusterPlot)
+add_subdirectory(src/MocapNET2/reshapeCSVFileToMakeClassification/)
+#------------------------------------------------------------------
 add_subdirectory(src/JointEstimator2D)
-ENDIF(ENABLE_NEW_JOINT_ESTIMATOR)
 
 
 # TODO FIX INSTALLATION DIRECTORIES 

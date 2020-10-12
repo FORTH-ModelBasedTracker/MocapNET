@@ -101,7 +101,6 @@ char tfGraphExists(const char * filename)
  return 0;
 }
 
-
 int loadTensorflowInstance(
     struct TensorflowInstance * net,
     const char * filename,
@@ -127,7 +126,7 @@ int loadTensorflowInstance(
     net->graph   = tf_utils::LoadGraph(filename);
     if (net->graph == nullptr)
         {
-            std::cout << "Can't load graph "<<filename<<" "<< std::endl;
+            fprintf(stderr,RED "Can't load graph %s \n" NORMAL,filename); 
             return 0;
         }
     //tf_utils::PrintOp(net->graph);
@@ -136,7 +135,7 @@ int loadTensorflowInstance(
     if (net->input_operation.oper == nullptr)
         {
             listNodes(filename,net->graph);
-            fprintf(stderr,"Can't init input for %s \n",filename);
+            fprintf(stderr,RED "Can't init input for %s \n" NORMAL,filename);
             return 0;
         }
     std::cout << " Input Tensor for " <<filename << std::endl;
@@ -146,7 +145,7 @@ int loadTensorflowInstance(
     if (net->output_operation.oper == nullptr)
         {
             listNodes(filename,net->graph);
-            fprintf(stderr,"Can't init output for %s \n",filename);
+            fprintf(stderr,RED "Can't init output for %s \n" NORMAL,filename);
             return 0;
         }
     std::cout << " Output Tensor for " <<filename << std::endl;
@@ -163,15 +162,15 @@ int loadTensorflowInstance(
     if (forceCPU)
         {
             //How do you end up with this byte array you might ask ?
-            //You use the python code and extract the configuration bytes and copy paste them here..
+            uint8_t config[] = { 0xa,0x7,0xa,0x3,0x43,0x50,0x55,0x10,0x1,0xa,0x7,0xa,0x3,0x47,0x50,0x55,0x10,0x0,0x38,0x1};
+            //Good Question, you use the python code and extract the configuration bytes and copy paste them here..
             // https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/Tensorflow/createTensorflowConfigurationForC.py
             /*net->session = tf.ConfigProto(
-                                                                                  device_count={'CPU' : 1, 'GPU' : 0},
-                                                                                  allow_soft_placement=True,
-                                                                                  log_device_placement=False
-                                         );*/
+                                             device_count={'CPU' : 1, 'GPU' : 0},
+                                             allow_soft_placement=True,
+                                             log_device_placement=False
+                                           );*/
 
-            uint8_t config[] = { 0xa,0x7,0xa,0x3,0x43,0x50,0x55,0x10,0x1,0xa,0x7,0xa,0x3,0x47,0x50,0x55,0x10,0x0,0x38,0x1};
             TF_SetConfig(net->options, (void*)config,  20 , net->status);
         }
 
@@ -261,8 +260,9 @@ std::vector<float> predictTensorflow(struct TensorflowInstance * net,std::vector
                    net->status // Output status.
                  );
 
-    if (!checkAndDeallocate(net->status,"running session"))
-        {
+    if (!checkAndDeallocate(net->status,"at predictTensorflow while running session"))
+        { 
+            fprintf(stderr,RED "Possibly a wrong number of arguments given ( %lu )\n" NORMAL,input.size());
             return result;
         }
 
@@ -352,7 +352,7 @@ std::vector<std::vector<float> > predictTensorflowOnArrayOfHeatmaps(
 
     if (TF_GetCode(net->status) != TF_OK)
         {
-            fprintf(stderr,RED "Error running session %u ( %s ) \n"  NORMAL, TF_GetCode(net->status),TF_Message(net->status));
+            fprintf(stderr,RED "predictTensorflowOnArrayOfHeatmaps: Error running session %u ( %s ) \n"  NORMAL, TF_GetCode(net->status),TF_Message(net->status));
             TF_DeleteStatus(net->status);
             tf_utils::DeleteTensor(input_tensor);
             return matrix;

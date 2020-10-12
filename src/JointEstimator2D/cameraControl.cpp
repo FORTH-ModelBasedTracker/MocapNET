@@ -251,7 +251,7 @@ int getBestCropWindow(
 {
     //fprintf(stderr,"getBestCropWindow(%u,%u,%u,%u)\n",*x,*y,*width,*height);
     //fprintf(stderr,"input image size is %u,%u\n",fullFrameWidth,fullFrameHeight);
-
+   if (bbox==0) { return 0; }
 
     if (maximumCrop)
         {

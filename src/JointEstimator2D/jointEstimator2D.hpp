@@ -228,6 +228,34 @@ static const int UT_COCOSkeletonJointsParentRelationMap[] =
 };
 
 
+/**
+ * @brief An array of indexes to the parents of BODY25 skeleton joints
+ */
+static const int heatmapCorrespondenceToBODY25[] =
+{
+  BODY25_Nose, // UT_COCO_Nose=0,
+  BODY25_Neck, // UT_COCO_Neck,
+  BODY25_RShoulder, //UT_COCO_RShoulder,
+  BODY25_RElbow,// UT_COCO_RElbow,
+  BODY25_RWrist,// UT_COCO_RWrist,
+  BODY25_LShoulder,//UT_COCO_LShoulder,
+  BODY25_LElbow,//UT_COCO_LElbow,
+  BODY25_LWrist,//UT_COCO_LWrist,
+  BODY25_RHip,//UT_COCO_RHip,
+  BODY25_RKnee,//UT_COCO_RKnee,
+  BODY25_RAnkle,//UT_COCO_RAnkle,
+  BODY25_LHip,//UT_COCO_LHip,
+  BODY25_LKnee,//UT_COCO_LKnee,
+  BODY25_LAnkle,//UT_COCO_LAnkle,
+  BODY25_REye,//UT_COCO_REye,
+  BODY25_LEye,//UT_COCO_LEye,
+  BODY25_REar,//UT_COCO_REar,
+  BODY25_LEar,//UT_COCO_LEar,
+  BODY25_Bkg,//UT_COCO_Bkg,
+};
+
+
+unsigned long GetTickCountMicrosecondsJointEstimator();
 
 
 
@@ -254,6 +282,13 @@ int convertNormalized2DJointsToOriginalImageCoordinates(
 
 int  estimate2DSkeletonsFromImage(struct JointEstimator2D * jnet,struct Skeletons2DDetected * result,unsigned char * rgbData,unsigned int width,unsigned int height);
 
+
+
+
+int restore2DJointsToInputFrameCoordinates(struct JointEstimator2D * jnet,struct Skeletons2DDetected * input);
+
+
+float percentOf2DPointsMissing(struct Skeletons2DDetected * input);
 
 int estimate2DSkeletonsFromHeatmaps(struct JointEstimator2D * jnet,struct Skeletons2DDetected * result,std::vector<std::vector<float> > heatmaps);
 

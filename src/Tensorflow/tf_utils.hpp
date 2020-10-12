@@ -77,6 +77,8 @@ void PrintTensorInfo(TF_Graph* graph, const char* layer_name,int printInputs,int
 
 void PrintOp(TF_Graph* graph);
 
+int listNodesMN(const char * label , TF_Graph* graph);
+
 template <typename T>
 void SetTensorsData(TF_Tensor* tensor, const std::vector<T>& data) {
   SetTensorsData(tensor, data.data(), data.size() * sizeof(T));
