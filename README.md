@@ -254,6 +254,23 @@ A CSV file has been included that can be run by issuing :
 The delay is added in every frame so that there is enough time for the user to see the results, of course the visualization only contains the armature since the CSV file does not have the input images.
 
 
+
+## Experimental utilities
+------------------------------------------------------------------ 
+
+The repository contains experimental utilities used for the development of the papers.
+
+
+The CSV cluster plot utility if you choose to download the CMU-BVH dataset using the ./initialize.sh script will allow you to perform the clustering experiments described.
+
+![CSV cluster plot utility](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/mnet2/doc/CSVClusterPlot.jpg)
+
+```
+./CSVClusterPlot
+```
+
+
+
 ## License
 ------------------------------------------------------------------ 
 This library is provided under the [FORTH license](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/license.txt)
