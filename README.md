@@ -63,13 +63,14 @@ Please cite the following papers [1](http://users.ics.forth.gr/~argyros/mypapers
 
 ```
 @inproceedings{Qammaz2020,
-  author = {Qammaz, Ammar and Argyros, Antonis A},
-  title = {Occlusion-tolerant and personalized 3D human pose estimation in RGB image},
-  booktitle = {Proceedings of the 25th International Conference on Pattern Recognition (ICPR 2020)},
-  publisher = {IEEE},
+  author = {Ammar Qammaz and Antonis A. Argyros},
+  title = {Occlusion-tolerant and personalized 3D human pose estimation in RGB images},
+  booktitle = {IEEE International Conference on Pattern Recognition (ICPR 2020), (to appear)},
   year = {2020},
-  projects =  {SUSTAGE,MINGEI}
+  month = {December},
+  projects =  {Co4Robots}
 }
+
 
 ```
 
