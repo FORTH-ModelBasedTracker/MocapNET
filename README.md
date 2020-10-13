@@ -270,6 +270,15 @@ The CSV cluster plot utility if you choose to download the CMU-BVH dataset using
 ```
 
 
+The BVHGUI2 is a very minimal utility you can use to become more familiar with the BVH armature used by the project. Using easy to use sliders you can animate the armature and it is [has a minimal source code](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET2/BVHGUI2/bvhGUI2.cpp).
+
+![BVH GUI utility](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/BVHGUI2.jpg)
+
+```
+./BVHGUI2 --opengl
+```
+
+
 
 ## License
 ------------------------------------------------------------------ 
