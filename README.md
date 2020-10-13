@@ -263,7 +263,7 @@ The repository contains experimental utilities used for the development of the p
 
 The CSV cluster plot utility if you choose to download the CMU-BVH dataset using the ./initialize.sh script will allow you to perform the clustering experiments described.
 
-![CSV cluster plot utility](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/mnet2/doc/CSVClusterPlot.jpg)
+![CSV cluster plot utility](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/CSVClusterPlot.jpg)
 
 ```
 ./CSVClusterPlot
