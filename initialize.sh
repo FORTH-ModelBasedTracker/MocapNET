@@ -48,7 +48,7 @@ chmod +x mocapnet.desktop
 
 
 
-
+clear
 
 cd "$DIR"
 if [ -f dataset/MotionCapture/READMEFIRST.txt ]
@@ -56,7 +56,7 @@ then
 echo "CMU BVH datasets appear to have been downloaded.."
 else
   echo "         Do you want to download the CMU BVH datasets ? " 
-  echo "The download is approximately 1GB and will take 4GB of disk space " 
+  echo "The download is approximately 1GB and uncompressed will take 4GB of disk space " 
   echo "(You probably don't need this if you dont want to use the GenerateGroundTruth/CSVClusterPlot utility)" 
   echo
   echo -n " (Y/N)?"
