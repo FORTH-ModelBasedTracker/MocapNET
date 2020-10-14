@@ -41,7 +41,20 @@ We present MocapNET, an ensemble of SNN encoders that estimates the 3D human bod
 ## Citation
 ------------------------------------------------------------------ 
 
-Please cite the following papers [1](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf),[2](http://todo) if this work helps your research :
+Please cite the following papers [1](http://todo),[2](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf) if this work helps your research :
+
+
+```
+@inproceedings{Qammaz2020,
+  author = {Ammar Qammaz and Antonis A. Argyros},
+  title = {Occlusion-tolerant and personalized 3D human pose estimation in RGB images},
+  booktitle = {IEEE International Conference on Pattern Recognition (ICPR 2020), (to appear)},
+  year = {2020},
+  month = {December},
+  projects =  {Co4Robots}
+}
+```
+
 
 ```
 @inproceedings{Qammaz2019,
@@ -57,22 +70,9 @@ Please cite the following papers [1](http://users.ics.forth.gr/~argyros/mypapers
   pdflink = {http://users.ics.forth.gr/ argyros/mypapers/2019_09_BMVC_mocapnet.pdf},
   videolink = {https://youtu.be/fH5e-KMBvM0}
 }
-
 ```
 
 
-```
-@inproceedings{Qammaz2020,
-  author = {Ammar Qammaz and Antonis A. Argyros},
-  title = {Occlusion-tolerant and personalized 3D human pose estimation in RGB images},
-  booktitle = {IEEE International Conference on Pattern Recognition (ICPR 2020), (to appear)},
-  year = {2020},
-  month = {December},
-  projects =  {Co4Robots}
-}
-
-
-```
 
 ## Overview, System Requirements and Dependencies
 ------------------------------------------------------------------ 
