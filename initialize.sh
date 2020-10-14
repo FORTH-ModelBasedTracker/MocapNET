@@ -106,7 +106,7 @@ cd "$DIR"
 
 cd "$DIR/dataset"
 mkdir -p combinedModel/mocapnet2/mode5/1.0/ 
-cd "$DIR/combinedModel/mocapnet2/mode5/1.0/"
+cd "$DIR/dataset/combinedModel/mocapnet2/mode5/1.0/"
 
 
 #New ICPR pretrained networks 
