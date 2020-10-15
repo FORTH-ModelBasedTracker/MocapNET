@@ -202,6 +202,10 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                 {
                     options->saveCSV3DFile=1;
                 }
+            else if (strcmp(argv[i],"--noik")==0)
+                {
+                    options->useInverseKinematics=0;
+                }
             else if (strcmp(argv[i],"--ik")==0)
                 {
                     if (argc>i+4)
@@ -215,7 +219,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                           else
                         { argumentError(i,4,argc,argv); }
                 } 
-            else if (strcmp(argv[i],"-nv")==0)
+            else if (strcmp(argv[i],"--nv")==0)
                 {
                     fprintf(stderr,"Visualization disabled\n");
                     options->visualize=0;
