@@ -241,10 +241,18 @@ If you want a very high accuracy run and don't care about framerate as much cons
 ./MocapNET2LiveWebcamDemo --from shuffle.webm --ik 0.01 15 40
 ``` 
 
+The IK module supports tailoring the model used for posed estimation to your liking using the "--changeJointDimensions neckLength torsoLength chestWidth shoulderToElbowLength elbowToHandLength waistWidth hipToKneeLength kneeToFootLength shoeLength as well as the focal length of your specific camera using "--focalLength fx fy" The following example will try to track the shuffle.webm sample assuming a body with feet 150% the normal size and a focal length of 600 on x and y
+
+```
+./MocapNET2LiveWebcamDemo --from shuffle.webm --ik 0.01 25 40 --changeJointDimensions 1.0 1.0 1.0 1.0 1.0 1.5 1.5 1.5 1.0 --focalLength 600 600
+``` 
+
 If you don't care about fine results and just want a rough pose estimation extracted really fast you can completely switch the IK module off using  
 ```
 ./MocapNET2LiveWebcamDemo --from shuffle.webm --noik
 ``` 
+
+
 
 
 ## Headless deployment
