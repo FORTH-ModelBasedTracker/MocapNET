@@ -227,6 +227,16 @@ By enabling the ENABLE_OPENGL CMake configuration flag during compilation and us
 By starting the live demo using the --gestures argument you can enable an experimental simple form of gesture detection as seen in the illustration above. Gestures are stored as [BVH files](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/master/dataset/gestures) and controlled through the [gestureRecognition.hpp](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET1/MocapNETLib/gestureRecognition.hpp#L18) file. A client application can register a callback as seen in the [demo](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET1/MocapNETLiveWebcamDemo/mocapNETLiveDemo.cpp#L50). The gesture detection code is experimental and has been included as a proof of concept, since due to our high-level output you can easily facilitate gesture detections by comparing subsequent BVH frames as [seen in the code](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET1/MocapNETLib/gestureRecognition.cpp#L148). That being said gestures where not a part of the original MocapNET papers.
 
 
+## Headless deployment
+------------------------------------------------------------------ 
+
+When deploying the code on headless environments like [Google Colab](https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/33) where there is no display available you might experience errors like
+```
+(3D Points Output:xxxx): Gtk-WARNING **:  cannot open display: 
+```
+
+To overcome these errors just use the --novisualization switch to disable visualization windows
+
 
 ## Higher accuracy using OpenPose JSON files
 ------------------------------------------------------------------ 
