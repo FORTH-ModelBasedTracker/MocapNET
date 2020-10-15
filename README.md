@@ -227,22 +227,22 @@ By starting the live demo using the --gestures argument you can enable an experi
 
 
 
-## Tuning Hierarchical Descent for accuracy/performance gains
+## Tuning Hierarchical Coordinate Descent for accuracy/performance gains
 ------------------------------------------------------------------ 
 
 As described in the paper, the Hierarchical Coordinate Descent Inverse Kinematics algorithm has various hyper-parameters that have been set to default values after experiments. Depending on your deployment scenarios you might to sacrifice some performance for better accuracy. You can do this by altering the IK tuning parameters by using the --ik switch
 
-A default run without the --ik switch is equivalent to a run using a learning rate of 0.01, 5 iterations, 30 epochs. The iterations variable has the biggest impact in performance
+A default run without the --ik switch is equivalent to a run using a learning rate of 0.01, 5 iterations, 30 epochs. The iterations variable has the biggest impact in performance.
 
 A normal run without the --ik flag is equivalent to 
 
 ```
-./MocapNET2LiveWebcamDemo --from shuffle.webm --ik 0.01 5 30 0
+./MocapNET2LiveWebcamDemo --from shuffle.webm --ik 0.01 5 30
 ``` 
 
 If you want a very high accuracy run and don't care about framerate as much consider 
 ```
-./MocapNET2LiveWebcamDemo --from shuffle.webm --ik 0.01 15 40 0
+./MocapNET2LiveWebcamDemo --from shuffle.webm --ik 0.01 15 40
 ``` 
 
 If you don't care about fine results and just want a rough pose estimation extracted really fast you can completely switch the IK module off using  
