@@ -12,7 +12,7 @@ With MocapNET2 a [youtube video like this](https://www.youtube.com/watch?v=GtJct
 Example :
 | Youtube Video | MocapNET Output | Editing on Blender | 
 | ------------- | ------------- | ------------- |
-| [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtube.png)](https://www.youtube.com/watch?v=GtJct8nKjcc) → | [![BVH File](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/bvh.png)](http://ammar.gr/mocapnet/mnet2/sept2020version.bvh) → | [![Blender Video](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/blender.png)](http://ammar.gr/mocapnet/mnet2/sept2020versionBlender.ogv) |
+| [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtube.png)](https://www.youtube.com/watch?v=GtJct8nKjcc) | [![BVH File](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/bvh.png)](http://ammar.gr/mocapnet/mnet2/sept2020version.bvh) | [![Blender Video](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/blender.png)](http://ammar.gr/mocapnet/mnet2/sept2020versionBlender.ogv) |
 
 ## Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images
 
