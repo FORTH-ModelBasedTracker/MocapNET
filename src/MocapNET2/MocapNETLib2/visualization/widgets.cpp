@@ -262,17 +262,19 @@ int visualizeOrientation(
     //Draw an arrow in our orientation..
     unsigned int rad = height/2;
 
+    int lineStyle = 0; // https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/30 has problems with CV_AA
+    
     cv::Point arrowPointing;
     arrowPointing.x =  (int)(startPoint.x + (rad+10) * cos((90.0+orientationDegrees) * CV_PI / 180.0));
     arrowPointing.y =  (int)(startPoint.y + (rad+10) * sin((90.0+orientationDegrees) * CV_PI / 180.0));
-    cv::line(img,startPoint,arrowPointing,cv::Scalar(0,255,255),4,CV_AA,0);
+    cv::line(img,startPoint,arrowPointing,cv::Scalar(0,255,255),4,lineStyle,0);
     cv::Point arrowSide;
     arrowSide.x =  (int)(startPoint.x + (rad) * cos((90.0+orientationDegrees-5) * CV_PI / 180.0));
     arrowSide.y =  (int)(startPoint.y + (rad) * sin((90.0+orientationDegrees-5) * CV_PI / 180.0));
-    cv::line(img,arrowSide,arrowPointing,cv::Scalar(0,255,255),4,CV_AA,0);
+    cv::line(img,arrowSide,arrowPointing,cv::Scalar(0,255,255),4,lineStyle,0);
     arrowSide.x =  (int)(startPoint.x + (rad) * cos((90.0+orientationDegrees+5) * CV_PI / 180.0));
     arrowSide.y =  (int)(startPoint.y + (rad) * sin((90.0+orientationDegrees+5) * CV_PI / 180.0));
-    cv::line(img,arrowSide,arrowPointing,cv::Scalar(0,255,255),4,CV_AA,0);
+    cv::line(img,arrowSide,arrowPointing,cv::Scalar(0,255,255),4,lineStyle,0);
 
     thickness=2;
     startPoint.x-= width / 7;
