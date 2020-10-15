@@ -272,7 +272,7 @@ For more information on how to use the conversion utility please [see the docume
 
 A CSV file has been included that can be run by issuing : 
 ```
- ./MocapNET2CSV --from sample.csv --visualize --delay 30
+ ./MocapNET2CSV --from dataset/sample.csv --visualize --delay 30
 ```
 The delay is added in every frame so that there is enough time for the user to see the results, of course the visualization only contains the armature since the CSV file does not have the input images.
 
