@@ -215,6 +215,16 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                           else
                         { argumentError(i,4,argc,argv); }
                 } 
+            else if (strcmp(argv[i],"-nv")==0)
+                {
+                    fprintf(stderr,"Visualization disabled\n");
+                    options->visualize=0;
+                }
+            else if (strcmp(argv[i],"--novisualization")==0)
+                {
+                    fprintf(stderr,"Visualization disabled\n");
+                    options->visualize=0;
+                }
             else if (strcmp(argv[i],"-v")==0)
                 {
                     fprintf(stderr,"Visualization enabled\n");
