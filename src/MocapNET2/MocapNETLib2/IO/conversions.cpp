@@ -346,10 +346,12 @@ int convertSkeletons2DDetectedToSkeletonsSerialized(
                     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                 }
         output->skeletonHeaderElements = elementsPopulated;
-    } else
-    {
-        fprintf(stderr,"SkeletonSerialized appears to be already populated, skipping re allocating everything..\n");
     }
+    // Reduce spam
+    // else
+    //{
+    //    fprintf(stderr,"SkeletonSerialized appears to be already populated, skipping re allocating everything..\n");
+    //}
     
     
     //=================================================================================
