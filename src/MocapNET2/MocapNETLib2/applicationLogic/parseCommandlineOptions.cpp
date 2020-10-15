@@ -208,16 +208,16 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                 }
             else if (strcmp(argv[i],"--ik")==0)
                 {
-                    if (argc>i+4)
+                    if (argc>i+3)
                         {
                             options->useInverseKinematics=1;
                             options->learningRate=atof(argv[i+1]);
                             options->iterations=atoi(argv[i+2]);
                             options->epochs=atoi(argv[i+3]);
-                            options->spring=atof(argv[i+4]);
+                            //options->spring=atof(argv[i+4]);
                         }
                           else
-                        { argumentError(i,4,argc,argv); }
+                        { argumentError(i,3,argc,argv); }
                 } 
             else if (strcmp(argv[i],"--nv")==0)
                 {

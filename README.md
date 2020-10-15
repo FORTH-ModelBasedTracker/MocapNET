@@ -226,6 +226,31 @@ By enabling the ENABLE_OPENGL CMake configuration flag during compilation and us
 By starting the live demo using the --gestures argument you can enable an experimental simple form of gesture detection as seen in the illustration above. Gestures are stored as [BVH files](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/master/dataset/gestures) and controlled through the [gestureRecognition.hpp](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET1/MocapNETLib/gestureRecognition.hpp#L18) file. A client application can register a callback as seen in the [demo](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET1/MocapNETLiveWebcamDemo/mocapNETLiveDemo.cpp#L50). The gesture detection code is experimental and has been included as a proof of concept, since due to our high-level output you can easily facilitate gesture detections by comparing subsequent BVH frames as [seen in the code](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET1/MocapNETLib/gestureRecognition.cpp#L148). That being said gestures where not a part of the original MocapNET papers.
 
 
+
+## Tuning Hierarchical Descent for accuracy/performance gains
+------------------------------------------------------------------ 
+
+As described in the paper, the Hierarchical Coordinate Descent Inverse Kinematics algorithm has various hyper-parameters that have been set to default values after experiments. Depending on your deployment scenarios you might to sacrifice some performance for better accuracy. You can do this by altering the IK tuning parameters by using the --ik switch
+
+A default run without the --ik switch is equivalent to a run using a learning rate of 0.01, 5 iterations, 30 epochs. The iterations variable has the biggest impact in performance
+
+A normal run without the --ik flag is equivalent to 
+
+```
+./MocapNET2LiveWebcamDemo --from shuffle.webm --ik 0.01 5 30 0
+``` 
+
+If you want a very high accuracy run and don't care about framerate as much consider 
+```
+./MocapNET2LiveWebcamDemo --from shuffle.webm --ik 0.01 15 40 0
+``` 
+
+If you don't care about fine results and just want a rough pose estimation extracted really fast you can completely switch the IK module off using  
+```
+./MocapNET2LiveWebcamDemo --from shuffle.webm --noik
+``` 
+
+
 ## Headless deployment
 ------------------------------------------------------------------ 
 
