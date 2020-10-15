@@ -6,6 +6,11 @@ If you are interested in the older MocapNET v1 release you can find it in the [m
 
 With MocapNET2 a [youtube video like this](https://www.youtube.com/watch?v=GtJct8nKjcc) can be converted to a [.BVH file like this](http://ammar.gr/mocapnet/mnet2/sept2020version.bvh) that can be imported in your favourite 3D editor or engine like [Blender](http://ammar.gr/mocapnet/mnet2/sept2020versionBlender.ogv). 
 
+Example 
+| Youtube Video | Output Of MocapNET | Loading on Blender | 
+| ------------- | ------------- | ------------- |
+| [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtube.png)](https://www.youtube.com/watch?v=GtJct8nKjcc) | [![BVH File](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/bvh.png)](http://ammar.gr/mocapnet/mnet2/sept2020version.bvh)  | [![Blender Video](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/blender.png)](http://ammar.gr/mocapnet/mnet2/sept2020versionBlender.ogv)  |
+
 ## Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images
 
 We present MocapNET v2, a real-time method that estimates the 3D human pose directly in the popular [Bio Vision Hierarchy (BVH)](https://en.wikipedia.org/wiki/Biovision_Hierarchy) format, given estimations of the 2D body joints originating from monocular color images. Our contributions include: (a) A novel and compact 2D pose NSRM representation. (b) A human body orientation classifier and an ensemble of orientation-tuned neural networks that regress the 3D human pose by also allowing for the decomposition of the body to an upper and lower kinematic hierarchy. This permits the recovery of the human pose even in the case of significant occlusions. (c) An efficient Inverse Kinematics solver that refines the neural-network-based solution providing 3D human pose estimations that are consistent with the limb sizes of a target person (if known). All the above yield a 33\% accuracy improvement on the [Human 3.6 Million (H3.6M)](http://vision.imar.ro/human3.6m/description.php) dataset compared to the baseline method ([MocapNET v1](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet1)) while maintaining real-time performance (70 fps in CPU-only execution).
