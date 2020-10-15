@@ -159,8 +159,32 @@ ARCHITECTURE="gpu" #can be gpu or cpu
 #you can download it from https://storage.googleapis.com/tensorflow-nightly/github/tensorflow/lib_package/libtensorflow-gpu-linux-x86_64.tar.gz
 #however it is based on TF2.0 which is not yet tested ..!
 
-#Tensorflow 2.3.1
+  echo "         Do you want to use your GPU in Tensorflow ? " 
+  echo "If you select Y a GPU-enabled version will be downloaded " 
+  echo "If you don't have a CUDA-enabled GPU its best to select N" 
+  echo
+  echo -n " (Y/N)?"
+  read answer
+  if test "$answer" != "N" -a "$answer" != "n";
+  then  
+     ARCHITECTURE="cpu"
+  fi
+
+#Tensorflow 2.3.1 
 #wget https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-linux-x86_64-2.3.1.tar.gz
+
+  echo "         Do you want to use Tensorflow 2.x ? " 
+  echo "The project is compatible with tensorflow 2.x and if you have a new GPU it might be better for you " 
+  echo "(However if you have an older GPU it is probably better to stick with Tensorflow 1.x so answer N)" 
+  echo
+  echo -n " (Y/N)?"
+  read answer
+  if test "$answer" != "N" -a "$answer" != "n";
+  then  
+     TENSORFLOW_VERSION="2.3.1"
+  fi
+
+echo "Selected Tensorflow version $ARCHITECTURE/$TENSORFLOW_VERSION"
 
 #I have a special version of tensorflow 1.11.0 tailored for Intel Core 2 and NVIDIA 7XX cards ( compute capabilities ) that you can find here
 #wget http://ammar.gr/mocapnet/libtensorflow-oldgpu-linux-x86_64-1.11.0.tar.gz
