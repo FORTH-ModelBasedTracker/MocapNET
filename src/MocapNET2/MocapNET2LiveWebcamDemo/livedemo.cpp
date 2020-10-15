@@ -146,13 +146,17 @@ int main(int argc, char *argv[])
                     cv::Mat viewMat = Mat(Size(jointEstimator.inputWidth2DJointDetector,jointEstimator.inputHeight2DJointDetector),CV_8UC3, Scalar(0,0,0));
 
                     struct Skeletons2DDetected skeleton2DEstimations= {0};
-                    //cv::namedWindow("Video Input Feed",1);
-                    //cv::moveWindow("Video Input Feed",0,368);
-                    cv::namedWindow("3D Points Output",1);
-                    cv::moveWindow("3D Points Output",0,0);
-                    cv::namedWindow("Skeletons",1);
-                    cv::moveWindow("Skeletons",1920-jointEstimator.inputWidth2DJointDetector-50,100);
-                    
+
+                    if (options.visualize)
+                    {
+                     //cv::namedWindow("Video Input Feed",1);
+                     //cv::moveWindow("Video Input Feed",0,368);
+                     cv::namedWindow("3D Points Output",1);
+                     cv::moveWindow("3D Points Output",0,0);
+                     cv::namedWindow("Skeletons",1);
+                     cv::moveWindow("Skeletons",1920-jointEstimator.inputWidth2DJointDetector-50,100);
+                    }
+ 
                     unsigned int frameID=0;
                     unsigned int skippedFramesInARow=0;
 
@@ -227,12 +231,15 @@ int main(int argc, char *argv[])
 
                                             options.fps2DEstimator = convertStartEndTimeFromMicrosecondsToFPS(startTime2D,endTime2D);
 
-                                            dj_drawExtractedSkeletons(
+                                            if (options.visualize)
+                                             { 
+                                                dj_drawExtractedSkeletons(
                                                 viewMat,
                                                 &skeleton2DEstimations,
                                                 jointEstimator.inputWidth2DJointDetector,
                                                 jointEstimator.inputHeight2DJointDetector
-                                            );
+                                               );
+                                             }
 
                                             float percentageOf2DPointsMissing = percentOf2DPointsMissing(&skeleton2DEstimations);
                                             if (  percentageOf2DPointsMissing  < 50.0 ) //only work when less than 50% of information missing..
@@ -356,6 +363,8 @@ int main(int argc, char *argv[])
                             // These final calls add delays to frame processing so 
                             // they are not counted in loop time
                             //------------------------------------------------------ 
+                           if (options.visualize)
+                            {
                             char key = 0; 
                             if (options.delay!=0)
                                 {
@@ -371,6 +380,7 @@ int main(int argc, char *argv[])
                             {
                                 fprintf(stderr,GREEN "Received Escape key from UI, terminating the application.." NORMAL);
                                 break;
+                            }
                             }
 
                             if (options.delay!=0)
