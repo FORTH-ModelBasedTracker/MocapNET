@@ -152,6 +152,13 @@ To dump 5000 frames from the webcam to out.bvh instead of the live directive iss
 ./MocapNET2LiveWebcamDemo --from /dev/video0 --frames 5000
 ```
 
+To control the resolution of your webcam you can use the --size width height parameter, make sure that the resolution you provide is supported by your webcam model. You can use the v4l2-ctl tool by executing it and examining your supported sensor sizes and rates.
+
+```
+ v4l2-ctl --list-formats-ext
+./MocapNET2LiveWebcamDemo --from /dev/video0 --live --size 800 600
+```
+
 
 Testing the library using a pre-recorded video file (i.e. not live input) means you can use a slower but more precise 2D Joint estimation algorithm like the included OpenPose implementation. You should keep in mind that [this OpenPose implementation](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET1/MocapNETLiveWebcamDemo/utilities.cpp#L213) does not use PAFs and so it is still not as precise as  the official OpenPose implementation. To run the demo with a prerecorded file issue :
 
