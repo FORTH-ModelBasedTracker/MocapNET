@@ -209,7 +209,8 @@ int initializeMocapNET2InputAssociation(struct MocapNET2 * mnet,struct skeletonS
             //++attempts;
         }
 
-    fprintf(stderr,"TODO: do face associations..\n");
+    //This message is confusing and removed - https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/31
+    //fprintf(stderr,"TODO: do face associations..\n");
 
     //==============================================
     if (results==attempts)
