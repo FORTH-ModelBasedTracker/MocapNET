@@ -149,42 +149,44 @@ cd "$DIR"
 
 
 
-#If you have an old GPU then use older version 
-TENSORFLOW_VERSION="1.14.0" # 1.12.0 for CUDA 9.0 / 1.11.0 for CUDA9 with  older compute capabilities (5.2) .. / 1.8.0 for CUDA9 and a device with compute capability 3.0  / 1.4.1 for CUDA 8 
-ARCHITECTURE="gpu" #can be gpu or cpu
+#Default Tensorflow to be downloaded is 2.x with CPU only stuff to improve compatibility
+TENSORFLOW_VERSION="2.3.1"
+ARCHITECTURE="cpu" #can be gpu or cpu
 #https://www.tensorflow.org/install/lang_c
 #https://github.com/tensorflow/tensorflow/tree/master/tensorflow/c
 
 #if you want the latest version 
 #you can download it from https://storage.googleapis.com/tensorflow-nightly/github/tensorflow/lib_package/libtensorflow-gpu-linux-x86_64.tar.gz
 #however it is based on TF2.0 which is not yet tested ..!
-
+clear
   echo "         Do you want to use your GPU in Tensorflow ? " 
   echo "If you select Y a GPU-enabled version will be downloaded " 
   echo "If you don't have a CUDA-enabled GPU its best to select N" 
+  echo "GPU execution is mainly imporant for the RGB->2D neural networks" 
   echo
   echo -n " (Y/N)?"
   read answer
   if test "$answer" != "N" -a "$answer" != "n";
   then  
-     ARCHITECTURE="cpu"
+     ARCHITECTURE="gpu"
   fi
 
 #Tensorflow 2.3.1 
 #wget https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-linux-x86_64-2.3.1.tar.gz
-
-  echo "         Do you want to use Tensorflow 2.x ? " 
-  echo "The project is compatible with tensorflow 2.x and if you have a new GPU it might be better for you " 
-  echo "(However if you have an older GPU it is probably better to stick with Tensorflow 1.x so answer N)" 
+clear
+  echo "         Do you want to use Tensorflow 1.x instead of 2.x ? " 
+  echo "The project is compatible with both but if you have an older GPU it might be better for you " 
+  echo "to stick with Tensorflow 1.x " 
   echo
   echo -n " (Y/N)?"
   read answer
   if test "$answer" != "N" -a "$answer" != "n";
   then  
-     TENSORFLOW_VERSION="2.3.1"
+    TENSORFLOW_VERSION="1.14.0" # 1.12.0 for CUDA 9.0 / 1.11.0 for CUDA9 with  older compute capabilities (5.2) .. / 1.8.0 for CUDA9 and a device with compute capability 3.0  / 1.4.1 for CUDA 8 
   fi
 
 echo "Selected Tensorflow version $ARCHITECTURE/$TENSORFLOW_VERSION"
+exit 0
 
 #I have a special version of tensorflow 1.11.0 tailored for Intel Core 2 and NVIDIA 7XX cards ( compute capabilities ) that you can find here
 #wget http://ammar.gr/mocapnet/libtensorflow-oldgpu-linux-x86_64-1.11.0.tar.gz
