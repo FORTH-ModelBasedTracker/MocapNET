@@ -16,10 +16,6 @@ The codebase of MocapNET 2 has been simplified and has some differences compared
 
 The build system and compiling the source code will be exactly the same so if MocapNET1 worked for you MocapNET 2 will only need the new pretrained neural network files..! 
 
-## Upgrading from earlier versions
-
-Please consider cloning a fresh version of the repository and rerunning the initialize.sh script to make sure you keep your old-working version intact and also upgrade to the new and much improved version..!  
-
 
 ## Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images
 
@@ -27,7 +23,8 @@ We present MocapNET, an ensemble of SNN encoders that estimates the 3D human bod
 
 ![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/mnet2/doc/leedsDataset.jpg)
 
-## Youtube Videos - More to come soon..!
+
+## Youtube Videos
 ------------------------------------------------------------------ 
 
 | ICPR 2020 Supplementary Video | BMVC 2019 Supplementary Video |
@@ -35,6 +32,7 @@ We present MocapNET, an ensemble of SNN encoders that estimates the 3D human bod
 | [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtubevideolink2.jpg)  ](https://www.youtube.com/watch?v=Jgz1MRq-I-k) | [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtubevideolink.jpg)  ](https://www.youtube.com/watch?v=fH5e-KMBvM0)  |
 
 ------------------------------------------------------------------ 
+
 
 
 
@@ -241,7 +239,7 @@ To overcome these errors just use the --novisualization switch to disable visual
 ## Higher accuracy using OpenPose JSON files
 ------------------------------------------------------------------ 
 
-In order to get higher accuracy output compared to the live demo which is more performance oriented, you can use OpenPose and the 2D output JSON files produced by it. The MocapNETJSON application can convert them to a BVH file. After downloading [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) and building it you can use it to acquire 2D JSON body pose data by running :
+In order to get higher accuracy output compared to the live demo which is more performance oriented, you can use OpenPose and the 2D output JSON files produced by it. The convertOpenPoseJSONToCSV application can convert them to a BVH file. After downloading [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) and building it you can use it to acquire 2D JSON body pose data by running :
 
 ```
 build/examples/openpose/openpose.bin -number_people_max 1 --hand --write_json /path/to/outputJSONDirectory/ -video /path/to/yourVideoFile.mp4
@@ -249,6 +247,7 @@ build/examples/openpose/openpose.bin -number_people_max 1 --hand --write_json /p
 
 This will create files in the following fashion /path/to/outputJSONDirectory/yourVideoFile_XXXXXXXXXXXX_keypoints.json Notice that the filenames generated encode the serial number by padding it up to 12 characters (marked as X). You provide this information to our executable using the --seriallength commandline option.
 
+The [dump_and_process_video.sh script has been included](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/scripts/dump_and_process_video.sh) that can be used to fully process a video file using openpose and then process it through MocapNET, or act as a guide for this procedure.
 
 A utility has been included that can convert the JSON files to a single CSV file issuing :
 ```
