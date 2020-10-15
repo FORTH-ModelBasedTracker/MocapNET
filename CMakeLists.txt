@@ -31,28 +31,60 @@ set(PNG_Libs png)
 
 
 
-IF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/libtensorflow.so")
- MESSAGE("Using locally found libtensorflow C-API")
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#First search for Tensorflow 2.x
+#------------------------------------------------------------------------------------------------------------------------------------------------
+IF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/libtensorflow.so.2")
+ MESSAGE("Using locally found libtensorflow v2 C-API")
+ set(TENSORFLOW_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/" CACHE PATH "tensorflow root") 
+ set(TENSORFLOW_INCLUDE_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/include/" CACHE PATH "tensorflow include")  
+ set(TENSORFLOW2_FOUND true CACHE BOOL "Tensorflow 2 available")
+ELSEIF(EXISTS "/usr/local/lib/libtensorflow.so.2")
+ MESSAGE("Using system-wide found libtensorflow v2 C-API")
+ set(TENSORFLOW_ROOT "/usr/local/lib/" CACHE PATH "tensorflow root") 
+ set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")
+ set(TENSORFLOW2_FOUND true CACHE BOOL "Tensorflow 2 available")
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#If we can't find it then search for Tensorflow 1.x  
+#------------------------------------------------------------------------------------------------------------------------------------------------
+ELSEIF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/libtensorflow.so")
+ MESSAGE("Using locally found libtensorflow v1 C-API")
  set(TENSORFLOW_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/" CACHE PATH "tensorflow root") 
  set(TENSORFLOW_INCLUDE_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/include/" CACHE PATH "tensorflow include")  
 ELSEIF(EXISTS "/usr/local/lib/libtensorflow.so")
- MESSAGE("Using system-wide found libtensorflow C-API")
+ MESSAGE("Using system-wide found libtensorflow v1 C-API")
  set(TENSORFLOW_ROOT "/usr/local/lib/" CACHE PATH "tensorflow root") 
  set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")  
+#------------------------------------------------------------------------------------------------------------------------------------------------
+#If we can't find any Tensorflow just point to the /usr/lib and hope for the best.. 
+#------------------------------------------------------------------------------------------------------------------------------------------------
 ELSE()
  MESSAGE("Did not find a tensorflow version, please consider running the initialize.sh script or reading the README file")
  #Set some default tensorflow paths to give some valid error afterwards..
  set(TENSORFLOW_ROOT "/usr/local/lib/" CACHE PATH "tensorflow root") 
  set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")  
 ENDIF()
+#------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 include_directories(${TENSORFLOW_INCLUDE_ROOT})
 ADD_LIBRARY(TensorflowFramework SHARED IMPORTED) 
-SET_TARGET_PROPERTIES(TensorflowFramework PROPERTIES IMPORTED_LOCATION ${TENSORFLOW_ROOT}/libtensorflow_framework.so) 
+
+IF (TENSORFLOW2_FOUND)
+  SET_TARGET_PROPERTIES(TensorflowFramework PROPERTIES IMPORTED_LOCATION ${TENSORFLOW_ROOT}/libtensorflow_framework.so.2) 
+ELSE(TENSORFLOW2_FOUND)
+  SET_TARGET_PROPERTIES(TensorflowFramework PROPERTIES IMPORTED_LOCATION ${TENSORFLOW_ROOT}/libtensorflow_framework.so) 
+ENDIF (TENSORFLOW2_FOUND)
 
 ADD_LIBRARY(Tensorflow SHARED IMPORTED)
-SET_TARGET_PROPERTIES(Tensorflow PROPERTIES IMPORTED_LOCATION ${TENSORFLOW_ROOT}/libtensorflow.so)  
+
+IF (TENSORFLOW2_FOUND)
+ SET_TARGET_PROPERTIES(Tensorflow PROPERTIES IMPORTED_LOCATION ${TENSORFLOW_ROOT}/libtensorflow.so.2)  
+ELSE(TENSORFLOW2_FOUND)
+ SET_TARGET_PROPERTIES(Tensorflow PROPERTIES IMPORTED_LOCATION ${TENSORFLOW_ROOT}/libtensorflow.so)  
+ENDIF (TENSORFLOW2_FOUND)
+
 
 
 

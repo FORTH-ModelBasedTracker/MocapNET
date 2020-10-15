@@ -11,7 +11,7 @@ include_directories(${TENSORFLOW_INCLUDE_ROOT})
 
 add_executable(MocapNET2LiveWebcamDemo livedemo.cpp  )
 
-target_link_libraries(MocapNET2LiveWebcamDemo rt dl m ${OpenCV_LIBRARIES} ${OPENGL_LIBS} JointEstimator2D Tensorflow  TensorflowFramework MocapNETLib2 ${NETWORK_CLIENT_LIBRARIES} ${PNG_Libs} ${JPG_Libs} )
+target_link_libraries(MocapNET2LiveWebcamDemo rt dl m ${OpenCV_LIBRARIES} ${OPENGL_LIBS} JointEstimator2D Tensorflow TensorflowFramework MocapNETLib2 ${NETWORK_CLIENT_LIBRARIES} ${PNG_Libs} ${JPG_Libs} )
 set_target_properties(MocapNET2LiveWebcamDemo PROPERTIES DEBUG_POSTFIX "D") 
 
 
