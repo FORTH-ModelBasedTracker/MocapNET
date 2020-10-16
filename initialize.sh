@@ -155,9 +155,16 @@ ARCHITECTURE="cpu" #can be gpu or cpu
 #https://www.tensorflow.org/install/lang_c
 #https://github.com/tensorflow/tensorflow/tree/master/tensorflow/c
 
+
+#Tensorflow 2.3.1 works well with CUDA 10 and cudnn-10.0-linux-x64-v7.6.5.32.tgz
+#wget https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-linux-x86_64-2.3.1.tar.gz
+
 #if you want the latest version 
 #you can download it from https://storage.googleapis.com/tensorflow-nightly/github/tensorflow/lib_package/libtensorflow-gpu-linux-x86_64.tar.gz
-#however it is based on TF2.0 which is not yet tested ..!
+
+#==========================================================================
+#==========================================================================
+#==========================================================================
 clear
   echo "         Do you want to use your GPU in Tensorflow ? " 
   echo "If you select Y a GPU-enabled version will be downloaded " 
@@ -170,9 +177,9 @@ clear
   then  
      ARCHITECTURE="gpu"
   fi
-
-#Tensorflow 2.3.1 
-#wget https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-linux-x86_64-2.3.1.tar.gz
+#==========================================================================
+#==========================================================================
+#==========================================================================
 clear
   echo "         Do you want to use Tensorflow 1.x instead of 2.x ? " 
   echo "The project is compatible with both but if you have an older GPU it might be better for you " 
@@ -184,7 +191,9 @@ clear
   then  
     TENSORFLOW_VERSION="1.14.0" # 1.12.0 for CUDA 9.0 / 1.11.0 for CUDA9 with  older compute capabilities (5.2) .. / 1.8.0 for CUDA9 and a device with compute capability 3.0  / 1.4.1 for CUDA 8 
   fi
-
+#==========================================================================
+#==========================================================================
+#==========================================================================
 echo "Selected Tensorflow version $ARCHITECTURE/$TENSORFLOW_VERSION"
 exit 0
 
