@@ -21,6 +21,25 @@ unsigned long tickBaseMN = 0;
 #define YELLOW  "\033[33m"      /* Yellow */
  
 
+int vectorcmp(std::vector<float> vA,std::vector<float> vB)
+{
+    //fprintf(stderr,"vectorcmp %u vs %u elements \n",vA.size(), vB.size());
+    if (vA.size()>vB.size()) { return -1; } 
+      else
+    if (vA.size()<vB.size()) { return  1; } 
+      else
+    {
+        for (int i=0; i<vA.size(); i++)
+        {
+            //fprintf(stderr," %0.2f/%0.2f  ",vA[i],vB[i]);
+            if (vA[i]<vB[i]) { return -1; } else
+            if (vA[i]>vB[i]) { return 1;  }
+        }
+    }
+    return 0;
+}
+
+
 int nsleep(long nanoseconds)
 {
    struct timespec req, rem;

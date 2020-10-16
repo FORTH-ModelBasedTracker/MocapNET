@@ -3428,6 +3428,7 @@ struct MocapNET2SolutionPart
    std::vector<float> positionalInput;
    std::vector<float> NSDM;
    std::vector<float> neuralNetworkReadyInput;
+   std::vector<float> lastNeuralNetworkReadyInput;
    //-----------------------------------------
    struct TensorflowInstance models[16];
    unsigned int mode;

@@ -10,6 +10,9 @@
 const float goFromRadToDegrees=(float) 180.0 / M_PI; 
 const float goFromDegreesToRad=(float) M_PI / 180.0; 
 
+
+int vectorcmp(std::vector<float> vA,std::vector<float> vB);
+
 int nsleep(long nanoseconds);
 
 /**

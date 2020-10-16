@@ -179,6 +179,9 @@ std::vector<float> mocapnetLowerBody_evaluateInput(struct MocapNET2 * mnet,struc
                                                                              0 // Enable to debug input
                                                                             );
                                                                             
+                                                                            
+                                                                            
+    
     mnet->lowerBody.NSDM  = lowerbodyCreateNDSM(mnet->lowerBody.positionalInput,0/*NSDM Positional*/,1/*NSDM Angular */,0 /*Use Normalization*/);
     
     /*
@@ -219,19 +222,31 @@ std::vector<float> mocapnetLowerBody_evaluateInput(struct MocapNET2 * mnet,struc
              mnet->orientationClassifications[3]= mnet->lowerBody.orientationClassifications[3]; 
          }
       */
-
-    //First run the network that can predict the orientation of the skeleton so we will use the correct
-    //network to get the full BVH result from it 
-    //----------------------------------------------------------------------------------------------
-    std::vector<float> result = localExecution(
+    if (
+         vectorcmp(
+                    mnet->lowerBody.lastNeuralNetworkReadyInput ,
+                    mnet->lowerBody.neuralNetworkReadyInput
+                  )!=0
+        )
+    {
+     //First run the network that can predict the orientation of the skeleton so we will use the correct
+     //network to get the full BVH result from it 
+     //----------------------------------------------------------------------------------------------
+     std::vector<float> result = localExecution(
                                                  &mnet->lowerBody,
                                                  mnet->lowerBody.neuralNetworkReadyInput,
                                                  mnet->orientation,
                                                  1 /*Body Requires orientation trick*/ 
                                                ); 
-    mnet->lowerBody.result = result;
+     mnet->lowerBody.result = result;
+     mnet->lowerBody.lastNeuralNetworkReadyInput = mnet->lowerBody.neuralNetworkReadyInput;
     
     return result;
+    } else
+    {
+      fprintf(stderr,GREEN "Nothing changed on lower body, returning previous result.. \n" NORMAL);
+      return mnet->lowerBody.result;
+    }
 }
 
 
