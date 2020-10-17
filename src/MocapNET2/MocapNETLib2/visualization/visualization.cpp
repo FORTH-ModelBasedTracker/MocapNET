@@ -1135,6 +1135,7 @@ int visualizePoints(
     float thickness=1;
     int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
     
+    int drawOrientation = drawNSDM;
 
     cv::Mat img(height,width, CV_8UC3, Scalar(0,0,0));
     if (mocapNETOutput.size()==0)
@@ -1319,6 +1320,12 @@ int visualizePoints(
     //-----------------------------------------------------------------------------------------------------------------------------
 
  
+    if (height<600)
+    {
+        //If the resolution is very small unclutter visualization..
+        drawNSDM=0;
+        drawOrientation=0;
+    }
 
     //-----------------------
     //     NSDM matrix 
@@ -1362,7 +1369,8 @@ int visualizePoints(
     //-----------------------    
     
     
-    
+    if (drawOrientation)
+    {
     int positionY = height-438;
     visualizeOrientation(
         img,
@@ -1377,6 +1385,8 @@ int visualizePoints(
         NSDMWidth,
         NSDMHeight
     );
+        
+    }
     
     
     if (mocapNETOutput.size()>4)
