@@ -18,7 +18,7 @@ Example :
 
 We present MocapNET v2, a real-time method that estimates the 3D human pose directly in the popular [Bio Vision Hierarchy (BVH)](https://en.wikipedia.org/wiki/Biovision_Hierarchy) format, given estimations of the 2D body joints originating from monocular color images. Our contributions include: 
 
- * A novel and compact 2D pose NSRM representation. 
+ * A novel and compact 2D pose [NSRM representation](https://www.youtube.com/watch?v=Jgz1MRq-I-k#t=27s). 
  * A human body orientation classifier and an ensemble of orientation-tuned neural networks that regress the 3D human pose by also allowing for the decomposition of the body to an upper and lower kinematic hierarchy. This permits the recovery of the human pose even in the case of significant occlusions. 
  * An efficient Inverse Kinematics solver that refines the neural-network-based solution providing 3D human pose estimations that are consistent with the limb sizes of a target person (if known). 
 
