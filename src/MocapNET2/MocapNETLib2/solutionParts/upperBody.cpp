@@ -296,8 +296,9 @@ std::vector<float> mocapnetUpperBody_evaluateInput(struct MocapNET2 * mnet,struc
     
     if (
          vectorcmp(
-                    mnet->upperBody.lastNeuralNetworkReadyInput ,
-                    mnet->upperBody.neuralNetworkReadyInput
+                    mnet->upperBody.lastNeuralNetworkReadyInput,
+                    mnet->upperBody.neuralNetworkReadyInput,
+                    0.1
                   )!=0
        )
     {

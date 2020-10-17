@@ -1,9 +1,6 @@
 project( MocapNETLib2 )  
 cmake_minimum_required(VERSION 3.5) 
 
-set(CMAKE_CXX_FLAGS "-s -O3 -fPIC -march=native -mtune=native")
-set(CMAKE_C_FLAGS "-s -O3 -fPIC -march=native -mtune=native") 
-
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 #Unfortunately needed for  tf_utils.cpp

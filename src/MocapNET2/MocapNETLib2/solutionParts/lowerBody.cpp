@@ -224,8 +224,9 @@ std::vector<float> mocapnetLowerBody_evaluateInput(struct MocapNET2 * mnet,struc
       */
     if (
          vectorcmp(
-                    mnet->lowerBody.lastNeuralNetworkReadyInput ,
-                    mnet->lowerBody.neuralNetworkReadyInput
+                    mnet->lowerBody.lastNeuralNetworkReadyInput,
+                    mnet->lowerBody.neuralNetworkReadyInput,
+                    0.1
                   )!=0
         )
     {
