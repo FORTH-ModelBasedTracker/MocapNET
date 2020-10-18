@@ -56,13 +56,17 @@ Method name is: tensorflow/serving/predict
 */
 
 
-int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,unsigned int inputDimension,unsigned int outputDimension)
+int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,unsigned int inputElements,unsigned int outputElements)
 {
     //Tensorflow boilerplate names, fingers crossed that they don't change them..
     char inputTensorName[]={"serving_default_input_front"}; //Default input layer
     char outputTensorName[]={"StatefulPartitionedCall"};    //Default output layer 
     const char* tags = "serve"; // default model serving tag; can change in future
     int ntags = 1;
+    //--------------------------------------------------------------------------
+    
+    tf2i->inputElements=inputElements;
+    tf2i->outputElements=outputElements;
     
     //Allocate stuff..
     tf2i->graph = TF_NewGraph();
@@ -89,7 +93,8 @@ int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,unsigned i
     }
     
 
-    //****** Get input tensor 
+    //Allocate input tensor 
+    //--------------------------------------------------------------------------------
     tf2i->numberOfInputTensors = 1;
     tf2i->input = (TF_Output*)malloc(sizeof(TF_Output) * tf2i->numberOfInputTensors); 
     tf2i->t0 = {TF_GraphOperationByName(tf2i->graph,inputTensorName), 0};
@@ -97,26 +102,30 @@ int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,unsigned i
         { 
           fprintf(stderr,"ERROR: Failed TF_GraphOperationByName %s\n",inputTensorName); 
           return 0;
-        }
-    
+        } 
     tf2i->input[0] = tf2i->t0;
+    //--------------------------------------------------------------------------------
     
-    //********* Get Output tensor
+    
+    //Allocate Output tensor
+    //--------------------------------------------------------------------------------
     tf2i->numberOfOutputTensors = 1;
     tf2i->output = (TF_Output*)malloc(sizeof(TF_Output) * tf2i->numberOfOutputTensors);
 
     tf2i->t2 = {TF_GraphOperationByName(tf2i->graph,outputTensorName), 0};
     if(tf2i->t2.oper == NULL)
-        printf("ERROR: Failed TF_GraphOperationByName %s\n",outputTensorName);
-    else	
-	printf("TF_GraphOperationByName %s is OK\n",outputTensorName);
-    
+        { 
+          fprintf(stderr,"ERROR: Failed TF_GraphOperationByName %s\n",outputTensorName);
+          return 0;
+        }
     tf2i->output[0] = tf2i->t2;
-
-    //********* Allocate data for inputs & outputs
+    //--------------------------------------------------------------------------------
+    
+    
+    //Allocate memory for input & output data 
     tf2i->inputValues  = (TF_Tensor**) malloc(sizeof(TF_Tensor*)*tf2i->numberOfInputTensors);
     tf2i->outputValues = (TF_Tensor**) malloc(sizeof(TF_Tensor*)*tf2i->numberOfOutputTensors);
-    return 1;
+    return ( (tf2i->inputValues!=0) && (tf2i->outputValues!=0) );
 }
 
 
@@ -131,17 +140,23 @@ void tf2_unloadModel(struct Tensorflow2Instance * tf2i)
 
 
 
-int tf2_run(struct Tensorflow2Instance * tf2i,int64_t * dimensions,unsigned int dimensionsNumber,float * data,unsigned int dataSize)
+int tf2_run(struct Tensorflow2Instance * tf2i,int64_t * dimensions,unsigned int dimensionsNumber,float * data,unsigned int dataSizeBytes)
 {
-    
-    TF_Tensor* int_tensor = TF_NewTensor(TF_FLOAT, dimensions, dimensionsNumber, data, dataSize, &NoOpDeallocator, 0);
-    if (int_tensor != NULL)
+    TF_Tensor* int_tensor = TF_NewTensor(
+                                         TF_FLOAT,
+                                         dimensions,
+                                         dimensionsNumber,
+                                         data,
+                                         dataSizeBytes,
+                                         &NoOpDeallocator,
+                                         0
+                                        );
+    if (int_tensor == NULL)
     {
-        printf("TF_NewTensor is OK\n");
+        fprintf(stderr,"ERROR: Failed TF_NewTensor\n");
+        return 0;
     }
-    else
-	printf("ERROR: Failed TF_NewTensor\n");
-    
+
     tf2i->inputValues[0] = int_tensor;
     
     //Run the Session
@@ -187,7 +202,7 @@ int main()
     {
         data[i] = 1.00;
     }
-    int ndata = sizeof(float)*1*322 ;// This is tricky, it number of bytes not number of element
+    int ndata = sizeof(float)*1*322 ; //number of bytes not number of element
 
     tf2_run(&upperbodyFront,dims,ndims,data,ndata);
 
