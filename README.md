@@ -45,7 +45,7 @@ All the above yield a 33\% accuracy improvement on the [Human 3.6 Million (H3.6M
 ## Citation
 ------------------------------------------------------------------ 
 
-Please cite the following papers [1](http://todo),[2](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf) if this work helps your research :
+Please cite the following papers [1](http://users.ics.forth.gr/~argyros/mypapers/2021_01_ICPR_Qammaz.pdf),[2](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf) if this work helps your research :
 
 
 ```
@@ -53,9 +53,12 @@ Please cite the following papers [1](http://todo),[2](http://users.ics.forth.gr/
   author = {Ammar Qammaz and Antonis A. Argyros},
   title = {Occlusion-tolerant and personalized 3D human pose estimation in RGB images},
   booktitle = {IEEE International Conference on Pattern Recognition (ICPR 2020), (to appear)},
-  year = {2020},
-  month = {December},
-  projects =  {Co4Robots}
+  year = {2021},
+  month = {January},
+  url = {http://users.ics.forth.gr/argyros/res_mocapnet_II.html},
+  projects =  {Co4Robots},
+  pdflink = {http://users.ics.forth.gr/ argyros/mypapers/2021_01_ICPR_Qammaz.pdf},
+  videolink = {https://youtu.be/Jgz1MRq-I-k}
 }
 ```
 
