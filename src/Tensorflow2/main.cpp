@@ -11,31 +11,32 @@
 struct Tensorflow2Instance
 {
   char modelPath[1024];
-  char inputLayerName[512];
-  char outputLayerName[512];
 
+  //Network instance
+  //-------------------------
   TF_Graph* graph;
-  TF_Session* session;
-  unsigned int inputElements;
-  TF_Tensor*  inputTensor;
-  TF_Tensor*  outputTensor;
-  unsigned int outputElements;
- 
-  TF_Output* input;
-  TF_Output t0;
-  
-  int numberOfInputTensors;
-  int numberOfOutputTensors;
- 
-  TF_Tensor** inputValues;
-  TF_Tensor** outputValues;
-  
-  
-  TF_Output* output;
-  TF_Output t2;
- 
   TF_Status* status;
+  TF_Session* session;
   TF_SessionOptions* sessionOptions;
+  
+  //Input
+  //-------------------------  
+  TF_Output t0;
+  TF_Output* input;
+  TF_Tensor*  inputTensor;
+  TF_Tensor** inputValues;
+  unsigned int inputElements;
+  int numberOfInputTensors;
+  
+  //Output
+  //-------------------------
+  TF_Output t2;
+  TF_Output* output;
+  TF_Tensor*  outputTensor;
+  TF_Tensor** outputValues;
+  unsigned int outputElements;
+  int numberOfOutputTensors; 
+  //-------------------------
 };
 
 void NoOpDeallocator(void* data, size_t a, void* b) {}
@@ -65,6 +66,8 @@ int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,unsigned i
     int ntags = 1;
     //--------------------------------------------------------------------------
     
+    //Remember parameters..
+    snprintf(tf2i->modelPath,1024,"%s",path);
     tf2i->inputElements=inputElements;
     tf2i->outputElements=outputElements;
     
@@ -174,17 +177,16 @@ int tf2_run(struct Tensorflow2Instance * tf2i,int64_t * dimensions,unsigned int 
                    NULL,
                    tf2i->status
                  );
+                 
+    TF_DeleteTensor(int_tensor);
 
-    if(TF_GetCode(tf2i->status) == TF_OK)
+    if(TF_GetCode(tf2i->status) != TF_OK) 
     {
-        printf("Session is OK\n");
-        return 1;
+        fprintf(stderr,"Error running network : %s",TF_Message(tf2i->status));
+        return 0;
     }
-    else
-    {
-        printf("%s",TF_Message(tf2i->status));
-    }
-  return 0;
+    
+  return 1;
 }
 
 
