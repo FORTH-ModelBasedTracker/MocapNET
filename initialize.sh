@@ -195,7 +195,7 @@ clear
 #==========================================================================
 #==========================================================================
 echo "Selected Tensorflow version $ARCHITECTURE/$TENSORFLOW_VERSION"
-exit 0
+
 
 #I have a special version of tensorflow 1.11.0 tailored for Intel Core 2 and NVIDIA 7XX cards ( compute capabilities ) that you can find here
 #wget http://ammar.gr/mocapnet/libtensorflow-oldgpu-linux-x86_64-1.11.0.tar.gz
