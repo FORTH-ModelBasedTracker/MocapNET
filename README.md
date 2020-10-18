@@ -88,7 +88,7 @@ This code base targets recent Linux (Ubuntu  18.04 - 20.04 +) machines, and reli
 
 Tensorflow is used as the Neural Network framework for our work and OpenCV is used to enable the acquisition of images from webcams or video files as well as to provide an easy visualization method.
 
-We have provided an [initialization script](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) that automatically handles most dependencies, as well as download all needed pretrained models. After running it the application should be ready for use.
+We have provided an [initialization script](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/initialize.sh) that automatically handles most dependencies, as well as download all needed pretrained models. After running it the application should be ready for use. To examine the neural network .pb files provided you can [download](https://github.com/lutzroeder/netron/releases/) and use [Netron](https://github.com/lutzroeder/netron). 
 
 Any issues not automatically resolved by the script can be reported on the [issues](https://github.com/FORTH-ModelBasedTracker/MocapNET/issues) section of this repository.
 
@@ -334,7 +334,6 @@ The BVHGUI2 is a very minimal utility you can use to become more familiar with t
 ```
 ./BVHGUI2 --opengl
 ```
-
 
 
 ## License
