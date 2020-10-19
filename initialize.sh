@@ -5,15 +5,15 @@ cd "$DIR"
 
 ORIG_DIR=`pwd`
   
-COLLAB=0
+ASK_QUESTIONS=1
 if [[ $* == *--collab* ]]
 then 
  echo "Using non-blocking collab mode"
- COLLAB=1
+ ASK_QUESTIONS=0
 fi
 
 
-if [ "$COLLAB" -eq "0" ]; then
+if [ "$ASK_QUESTIONS" -eq "0" ]; then
    echo "We assume collab machines have everything we need.."
 else
 #Simple dependency checker that will apt-get stuff if something is missing
@@ -73,7 +73,7 @@ else
 
   #Only ask if we can answer
   #_____________________________
-  if [ "$COLLAB" -eq "0" ]; then
+  if [ "$ASK_QUESTIONS" -eq "0" ]; then
    answer="Y"
    else
    read answer
@@ -194,7 +194,7 @@ clear
 
   #Only ask if we can answer
   #_____________________________
-  if [ "$COLLAB" -eq "0" ]; then
+  if [ "$ASK_QUESTIONS" -eq "0" ]; then
    answer="Y"
    else
    read answer
@@ -217,7 +217,7 @@ clear
 
   #Only ask if we can answer
   #_____________________________
-  if [ "$COLLAB" -eq "0" ]; then
+  if [ "$ASK_QUESTIONS" -eq "0" ]; then
    answer="N"
    else
    read answer
