@@ -73,6 +73,7 @@ struct MocapNET2Options
     
     float skeletonRotation;
     
+    int  dontBend;
     char forceOutputPositionRotation;
     float outputPosRot[6];
     

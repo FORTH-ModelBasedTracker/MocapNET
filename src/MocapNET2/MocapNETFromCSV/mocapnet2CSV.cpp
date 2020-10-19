@@ -324,7 +324,15 @@ int main(int argc, char *argv[])
                                     bvhFrames[i][2]=0;
                                 }
                         }
-
+                    
+                    if (options.dontBend)
+                       {
+                         for (unsigned int i=0; i<bvhFrames.size(); i++)
+                                {
+                                   if (bvhFrames[i][3]>10)  { bvhFrames[i][3]=10; } else
+                                   if (bvhFrames[i][3]<-10) { bvhFrames[i][3]=-10; }
+                                }   
+                       }
 
                     if ( writeBVHFile(options.outputPath,bvhHeaderToWrite,options.prependTPose,bvhFrames) )
                         {

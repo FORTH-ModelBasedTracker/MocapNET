@@ -182,6 +182,10 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                         } else
                         { argumentError(i,1,argc,argv); }
                 }
+            else if  (strcmp(argv[i],"--dontbend")==0) 
+            {
+                options->dontBend=1;
+            }
             else if  (strcmp(argv[i],"--opengl")==0) 
             {
                 options->useOpenGLVisualization=1;
