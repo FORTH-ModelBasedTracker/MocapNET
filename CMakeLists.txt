@@ -144,7 +144,8 @@ set(BVH_SOURCE
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/simpleRenderer.c 
       )
  MESSAGE("BVH Code found and will be used..")
- add_subdirectory (src/GroundTruthGenerator/) #Ground Truth generator can only be compiled with BVH code..
+ add_subdirectory(src/GroundTruthGenerator/) #Ground Truth generator can only be compiled with BVH code..
+ add_subdirectory(src/MocapNET2/reshapeCSVFileToMakeClassification/) #Orientation classification needs this tool to be built before working..
  #MESSAGE("${BVH_SOURCE}")
 ENDIF()
 #------------------------------------------------------------------------------------------------------------------------------------------------
@@ -338,7 +339,6 @@ add_subdirectory(src/MocapNET2/Converters/H36M)
 add_subdirectory(src/MocapNET2/testCSV/)
 add_subdirectory(src/MocapNET2/drawCSV/)
 add_subdirectory(src/MocapNET2/CSVClusterPlot)
-add_subdirectory(src/MocapNET2/reshapeCSVFileToMakeClassification/)
 #------------------------------------------------------------------
 add_subdirectory(src/JointEstimator2D)
 

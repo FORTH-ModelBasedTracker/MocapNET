@@ -2,8 +2,8 @@ project( ReshapeCSV )
 cmake_minimum_required( VERSION 2.8.7 )   
 #cmake_minimum_required(VERSION 3.5)
 
-find_package(OpenCV REQUIRED)
-INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
+#find_package(OpenCV REQUIRED)
+#INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 
 
 
