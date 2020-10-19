@@ -4,13 +4,22 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
 ORIG_DIR=`pwd`
- 
+  
+COLLAB=0
+if [[ $* == *--collab* ]]
+then 
+ echo "Using non-blocking collab mode"
+ COLLAB=1
+fi
 
 
+if [ "$COLLAB" -eq "0" ]; then
+   echo "We assume collab machines have everything we need.."
+else
 #Simple dependency checker that will apt-get stuff if something is missing
 # sudo apt-get install build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev libpthread-stubs0-dev
 SYSTEM_DEPENDENCIES="build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev libpthread-stubs0-dev"
-
+#------------------------------------------------------------------------------
 for REQUIRED_PKG in $SYSTEM_DEPENDENCIES
 do
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
@@ -28,6 +37,7 @@ if [ "" = "$PKG_OK" ]; then
 fi
 done
 #------------------------------------------------------------------------------
+fi 
 
 
 
@@ -60,7 +70,16 @@ else
   echo "(You probably don't need this if you dont want to use the GenerateGroundTruth/CSVClusterPlot utility)" 
   echo
   echo -n " (Y/N)?"
-  read answer
+
+  #Only ask if we can answer
+  #_____________________________
+  if [ "$COLLAB" -eq "0" ]; then
+   answer="Y"
+   else
+   read answer
+  fi 
+  #_____________________________
+
   if test "$answer" != "N" -a "$answer" != "n";
   then 
      cd "$DIR/dataset"
@@ -172,7 +191,16 @@ clear
   echo "GPU execution is mainly imporant for the RGB->2D neural networks" 
   echo
   echo -n " (Y/N)?"
-  read answer
+
+  #Only ask if we can answer
+  #_____________________________
+  if [ "$COLLAB" -eq "0" ]; then
+   answer="Y"
+   else
+   read answer
+  fi 
+  #_____________________________
+
   if test "$answer" != "N" -a "$answer" != "n";
   then  
      ARCHITECTURE="gpu"
@@ -186,7 +214,17 @@ clear
   echo "to stick with Tensorflow 1.x " 
   echo
   echo -n " (Y/N)?"
-  read answer
+
+  #Only ask if we can answer
+  #_____________________________
+  if [ "$COLLAB" -eq "0" ]; then
+   answer="N"
+   else
+   read answer
+  fi 
+  #_____________________________
+
+
   if test "$answer" != "N" -a "$answer" != "n";
   then  
     TENSORFLOW_VERSION="1.14.0" # 1.12.0 for CUDA 9.0 / 1.11.0 for CUDA9 with  older compute capabilities (5.2) .. / 1.8.0 for CUDA9 and a device with compute capability 3.0  / 1.4.1 for CUDA 8 
