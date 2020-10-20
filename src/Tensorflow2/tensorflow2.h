@@ -45,6 +45,7 @@ struct Tensorflow2Instance
     TF_Tensor** inputValues;
     unsigned int inputElements;
     int numberOfInputTensors;
+    TF_Output input_operation;
 
     //Output
     //-------------------------
@@ -54,7 +55,7 @@ struct Tensorflow2Instance
     TF_Tensor** outputValues;
     unsigned int outputElements;
     int numberOfOutputTensors;
-    //-------------------------
+    TF_Output output_operation; 
 };
 
 void NoOpDeallocator(void* data, size_t a, void* b) {}
@@ -73,6 +74,22 @@ The given SavedModel SignatureDef contains the following output(s):
       name: StatefulPartitionedCall:0
 Method name is: tensorflow/serving/predict
 */
+
+static int tf2_setCPUExecutionSessionConfiguration(struct Tensorflow2Instance * tf2i)
+{
+  //How do you end up with this byte array you might ask ?
+  unsigned char config[] = {0xa,0x7,0xa,0x3,0x43,0x50,0x55,0x10,0x1,0xa,0x7,0xa,0x3,0x47,0x50,0x55,0x10,0x0,0x38,0x1};
+  //Good Question, you use the python code and extract the configuration bytes and copy paste them here..
+  //https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/Tensorflow/createTensorflowConfigurationForC.py
+  /*net->session = tf.ConfigProto(
+                                  device_count={'CPU' : 1, 'GPU' : 0},
+                                  allow_soft_placement=True,
+                                  log_device_placement=False
+                                 );*/
+
+  TF_SetConfig(tf2i->sessionOptions, (void*)config,  20 , tf2i->status);
+  return (TF_GetCode(tf2i->status) == TF_OK); 
+}
 
 //https://github.com/AmmarkoV/AmmarServer/blob/master/src/AmmServerlib/AString/AString.c#L235
 static char * tf2_readFileToMem(const char * filename,unsigned int *length )
@@ -131,21 +148,6 @@ static void tf2_deallocateBuffer(void* data, size_t)
 
 
 
-static int tf2_setCPUExecutionSessionConfiguration(struct Tensorflow2Instance * tf2i)
-{
-  //How do you end up with this byte array you might ask ?
-  unsigned char config[] = { 0xa,0x7,0xa,0x3,0x43,0x50,0x55,0x10,0x1,0xa,0x7,0xa,0x3,0x47,0x50,0x55,0x10,0x0,0x38,0x1};
-  //Good Question, you use the python code and extract the configuration bytes and copy paste them here..
-  //https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/Tensorflow/createTensorflowConfigurationForC.py
-  /*net->session = tf.ConfigProto(
-                                  device_count={'CPU' : 1, 'GPU' : 0},
-                                  allow_soft_placement=True,
-                                  log_device_placement=False
-                                 );*/
-
-  TF_SetConfig(tf2i->sessionOptions, (void*)config,  20 , tf2i->status);
-  return (TF_GetCode(tf2i->status) == TF_OK); 
-}
 
 static int tf2_loadFrozenGraph( 
                          struct Tensorflow2Instance * tf2i,
@@ -202,7 +204,40 @@ static int tf2_loadFrozenGraph(
     TF_DeleteBuffer(tfBufferWithGraph); 
     graphInMemorySize=0;
     
-    //TODO : more stuff here..
+      //--------------------------------------------------------------------------------------------------------------
+    tf2i->input_operation  = {TF_GraphOperationByName(tf2i->graph, inputTensor), 0};
+    if (tf2i->input_operation.oper == nullptr)
+        { 
+            fprintf(stderr,RED "Can't init input for %s \n" NORMAL,inputTensor);
+            return 0;
+        } 
+
+    tf2i->output_operation = {TF_GraphOperationByName(tf2i->graph, outputTensor), 0};
+    if (tf2i->output_operation.oper == nullptr)
+        { 
+            fprintf(stderr,RED "Can't init output for %s \n" NORMAL,outputTensor);
+            return 0;
+        }
+    //--------------------------------------------------------------------------------------------------------------
+ 
+
+    //--------------------------------------------------------------------------------------------------------------
+    tf2i->status             = TF_NewStatus();
+    tf2i->sessionOptions     = TF_NewSessionOptions();
+    if (forceCPU) { tf2_setCPUExecutionSessionConfiguration(tf2i); }
+    
+    
+    tf2i->session = TF_NewSession(tf2i->graph,tf2i->sessionOptions,tf2i->status);
+
+    TF_DeleteSessionOptions(tf2i->sessionOptions);
+    if (TF_GetCode(tf2i->status) != TF_OK)
+        {
+            TF_DeleteStatus(tf2i->status);
+            return 0;
+        }
+    //--------------------------------------------------------------------------------------------------------------
+
+
     return 1;
 }
 
