@@ -39,26 +39,30 @@ struct Tensorflow2Instance
 
     //Input
     //-------------------------
-    TF_Output t0;
+    TF_Output input_operation;
     TF_Output* input;
     TF_Tensor*  inputTensor;
     TF_Tensor** inputValues;
     unsigned int inputElements;
-    int numberOfInputTensors;
-    TF_Output input_operation;
+    int numberOfInputTensors; 
 
     //Output
     //-------------------------
-    TF_Output t2;
+    TF_Output output_operation;
     TF_Output* output;
     TF_Tensor*  outputTensor;
     TF_Tensor** outputValues;
     unsigned int outputElements;
-    int numberOfOutputTensors;
-    TF_Output output_operation; 
+    int numberOfOutputTensors; 
 };
 
-void NoOpDeallocator(void* data, size_t a, void* b) {}
+void tf2_noOpDeallocator(void* data, size_t a, void* b) {}
+
+
+static void tf2_deallocateBuffer(void* data, size_t)
+{
+    free(data);
+}
 
 //saved_model_cli show --dir tmp.pb --tag_set serve --signature_def serving_default
 /*
@@ -141,12 +145,6 @@ static char * tf2_readFileToMem(const char * filename,unsigned int *length )
 
 
 
-static void tf2_deallocateBuffer(void* data, size_t)
-{
-    free(data);
-}
-
-
 
 
 static int tf2_loadFrozenGraph( 
@@ -154,6 +152,8 @@ static int tf2_loadFrozenGraph(
                          const char* graphPath,
                          const char * inputTensor,
                          const char * outputTensor,
+                         unsigned int inputElements,
+                         unsigned int outputElements,
                          unsigned int forceCPU
                         )
 {
@@ -172,6 +172,12 @@ static int tf2_loadFrozenGraph(
             fprintf(stderr,RED "Cannot read buffer from file %s ..\n" NORMAL,graphPath);
             return 0;
         }
+        
+    
+    //Remember parameters..
+    snprintf(tf2i->modelPath,1024,"%s",graphPath);
+    tf2i->inputElements=inputElements;
+    tf2i->outputElements=outputElements;
 
     tf2i->graph = TF_NewGraph();
     tf2i->status = TF_NewStatus();
@@ -200,53 +206,62 @@ static int tf2_loadFrozenGraph(
             tf2i->graph = 0;
         }
 
-    TF_DeleteStatus(tf2i->status); 
     TF_DeleteBuffer(tfBufferWithGraph); 
     graphInMemorySize=0;
     
-      //--------------------------------------------------------------------------------------------------------------
-    tf2i->input_operation  = {TF_GraphOperationByName(tf2i->graph, inputTensor), 0};
-    if (tf2i->input_operation.oper == nullptr)
-        { 
-            fprintf(stderr,RED "Can't init input for %s \n" NORMAL,inputTensor);
-            return 0;
-        } 
-
-    tf2i->output_operation = {TF_GraphOperationByName(tf2i->graph, outputTensor), 0};
-    if (tf2i->output_operation.oper == nullptr)
-        { 
-            fprintf(stderr,RED "Can't init output for %s \n" NORMAL,outputTensor);
-            return 0;
-        }
-    //--------------------------------------------------------------------------------------------------------------
- 
 
     //--------------------------------------------------------------------------------------------------------------
-    tf2i->status             = TF_NewStatus();
     tf2i->sessionOptions     = TF_NewSessionOptions();
     if (forceCPU) { tf2_setCPUExecutionSessionConfiguration(tf2i); }
-    
-    
-    tf2i->session = TF_NewSession(tf2i->graph,tf2i->sessionOptions,tf2i->status);
 
-    TF_DeleteSessionOptions(tf2i->sessionOptions);
-    if (TF_GetCode(tf2i->status) != TF_OK)
-        {
-            TF_DeleteStatus(tf2i->status);
-            return 0;
-        }
+
+    tf2i->session = TF_NewSession(tf2i->graph,tf2i->sessionOptions,tf2i->status);
     //--------------------------------------------------------------------------------------------------------------
 
 
-    return 1;
+    //Allocate input tensor
+    //--------------------------------------------------------------------------------
+    tf2i->numberOfInputTensors = 1;
+    tf2i->input = (TF_Output*)malloc(sizeof(TF_Output) * tf2i->numberOfInputTensors);
+    tf2i->input_operation = {TF_GraphOperationByName(tf2i->graph,inputTensor), 0};
+    if(tf2i->input_operation.oper == NULL)
+    {
+        fprintf(stderr,RED "ERROR: Failed TF_GraphOperationByName %s\n" NORMAL,inputTensor);
+        return 0;
+    }
+    tf2i->input[0] = tf2i->input_operation;
+    //--------------------------------------------------------------------------------
+
+
+    //Allocate Output tensor
+    //--------------------------------------------------------------------------------
+    tf2i->numberOfOutputTensors = 1;
+    tf2i->output = (TF_Output*)malloc(sizeof(TF_Output) * tf2i->numberOfOutputTensors);
+
+    tf2i->output_operation = {TF_GraphOperationByName(tf2i->graph,outputTensor), 0};
+    if(tf2i->output_operation.oper == NULL)
+    {
+        fprintf(stderr,RED "ERROR: Failed TF_GraphOperationByName %s\n" NORMAL,outputTensor);
+        return 0;
+    }
+    tf2i->output[0] = tf2i->output_operation;
+    //--------------------------------------------------------------------------------
+
+
+    //Allocate memory for input & output data
+    tf2i->inputValues  = (TF_Tensor**) malloc(sizeof(TF_Tensor*)*tf2i->numberOfInputTensors);
+    tf2i->outputValues = (TF_Tensor**) malloc(sizeof(TF_Tensor*)*tf2i->numberOfOutputTensors);
+    return ( (tf2i->inputValues!=0) && (tf2i->outputValues!=0) ); 
 }
 
 
 
-static int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,unsigned int inputElements,unsigned int outputElements,unsigned int forceCPU)
+static int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,char * inputTensor,unsigned int inputElements,unsigned int outputElements,unsigned int forceCPU)
 {
     //Tensorflow boilerplate names, fingers crossed that they don't change them..
-    char inputTensorName[]= {"serving_default_input_front"}; //Default input layer
+    char inputTensorName[1024]; //= {"serving_default_input_front"}; //Default input layer
+    snprintf(inputTensorName,1024,"serving_default_%s",inputTensor);
+    
     char outputTensorName[]= {"StatefulPartitionedCall"};   //Default output layer
     const char* tags = "serve"; // default model serving tag; can change in future
     int ntags = 1;
@@ -288,13 +303,13 @@ static int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,uns
     //--------------------------------------------------------------------------------
     tf2i->numberOfInputTensors = 1;
     tf2i->input = (TF_Output*)malloc(sizeof(TF_Output) * tf2i->numberOfInputTensors);
-    tf2i->t0 = {TF_GraphOperationByName(tf2i->graph,inputTensorName), 0};
-    if(tf2i->t0.oper == NULL)
+    tf2i->input_operation = {TF_GraphOperationByName(tf2i->graph,inputTensorName), 0};
+    if(tf2i->input_operation.oper == NULL)
     {
         fprintf(stderr,RED "ERROR: Failed TF_GraphOperationByName %s\n" NORMAL,inputTensorName);
         return 0;
     }
-    tf2i->input[0] = tf2i->t0;
+    tf2i->input[0] = tf2i->input_operation;
     //--------------------------------------------------------------------------------
 
 
@@ -303,13 +318,13 @@ static int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,uns
     tf2i->numberOfOutputTensors = 1;
     tf2i->output = (TF_Output*)malloc(sizeof(TF_Output) * tf2i->numberOfOutputTensors);
 
-    tf2i->t2 = {TF_GraphOperationByName(tf2i->graph,outputTensorName), 0};
-    if(tf2i->t2.oper == NULL)
+    tf2i->output_operation = {TF_GraphOperationByName(tf2i->graph,outputTensorName), 0};
+    if(tf2i->output_operation.oper == NULL)
     {
         fprintf(stderr,RED "ERROR: Failed TF_GraphOperationByName %s\n" NORMAL,outputTensorName);
         return 0;
     }
-    tf2i->output[0] = tf2i->t2;
+    tf2i->output[0] = tf2i->output_operation;
     //--------------------------------------------------------------------------------
 
 
@@ -338,7 +353,7 @@ static int tf2_run(struct Tensorflow2Instance * tf2i,int64_t * dimensions,unsign
                                 dimensionsNumber,
                                 data,
                                 dataSizeBytes,
-                                &NoOpDeallocator,
+                                &tf2_noOpDeallocator,
                                 0
                             );
     if (int_tensor == NULL)
@@ -351,19 +366,14 @@ static int tf2_run(struct Tensorflow2Instance * tf2i,int64_t * dimensions,unsign
 
     //Run the Session
     TF_SessionRun(
-        tf2i->session,
-        NULL,
-        tf2i->input,
-        tf2i->inputValues,
-        tf2i->numberOfInputTensors,
-        tf2i->output,
-        tf2i->outputValues,
-        tf2i->numberOfOutputTensors,
-        NULL,
-        0,
-        NULL,
-        tf2i->status
-    );
+                   tf2i->session,
+                   NULL, //run options
+                   tf2i->input,  tf2i->inputValues,  tf2i->numberOfInputTensors,
+                   tf2i->output, tf2i->outputValues, tf2i->numberOfOutputTensors,
+                   NULL,  0,  
+                   NULL, //Metadata
+                   tf2i->status
+                 );
 
     TF_DeleteTensor(int_tensor);
 
