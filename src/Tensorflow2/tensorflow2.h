@@ -8,6 +8,14 @@
 #define TENSORFLOW_2_H_INCLUDED
 
 #include <tensorflow/c/c_api.h> // TensorFlow C API header
+#include <stdlib.h>
+
+
+#define NORMAL   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
 
 #ifdef __cplusplus
 extern "C"
@@ -66,8 +74,141 @@ The given SavedModel SignatureDef contains the following output(s):
 Method name is: tensorflow/serving/predict
 */
 
+//https://github.com/AmmarkoV/AmmarServer/blob/master/src/AmmServerlib/AString/AString.c#L235
+static char * tf2_readFileToMem(const char * filename,unsigned int *length )
+{
+    *length = 0;
+    FILE * pFile = fopen ( filename , "rb" );
 
-static int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,unsigned int inputElements,unsigned int outputElements)
+    if (pFile==0)
+    {
+        fprintf(stderr,RED "tf2_readFileToMem: failed\n" NORMAL);
+        fprintf(stderr,RED "Could not read file %s \n" NORMAL,filename);
+        return 0;
+    }
+
+    // obtain file size:
+    fseek (pFile , 0 , SEEK_END);
+    unsigned long lSize = ftell (pFile);
+    rewind (pFile);
+
+    // allocate memory to contain the whole file:
+    unsigned long bufferSize = sizeof(char)*(lSize+1);
+    char * buffer = (char*) malloc (bufferSize);
+    if (buffer == 0 )
+    {
+        fprintf(stderr,RED "tf2_readFileToMem: Could not allocate enough memory for file %s \n" NORMAL,filename);
+        fclose(pFile);
+        return 0;
+    }
+
+    // copy the file into the buffer:
+    size_t result = fread (buffer,1,lSize,pFile);
+    if (result != lSize)
+    {
+        free(buffer);
+        fprintf(stderr,RED "tf2_readFileToMem: Could not read the whole file onto memory %s \n" NORMAL,filename);
+        fclose(pFile);
+        return 0;
+    }
+
+    /* the whole file is now loaded in the memory buffer. */
+
+    // terminate
+    fclose (pFile);
+
+    buffer[lSize]=0; //Null Terminate Buffer!
+    *length = (unsigned int) lSize;
+    return buffer;
+}
+
+
+
+static void tf2_deallocateBuffer(void* data, size_t)
+{
+    free(data);
+}
+
+
+
+static int tf2_setCPUExecutionSessionConfiguration(struct Tensorflow2Instance * tf2i)
+{
+  //How do you end up with this byte array you might ask ?
+  unsigned char config[] = { 0xa,0x7,0xa,0x3,0x43,0x50,0x55,0x10,0x1,0xa,0x7,0xa,0x3,0x47,0x50,0x55,0x10,0x0,0x38,0x1};
+  //Good Question, you use the python code and extract the configuration bytes and copy paste them here..
+  //https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/Tensorflow/createTensorflowConfigurationForC.py
+  /*net->session = tf.ConfigProto(
+                                  device_count={'CPU' : 1, 'GPU' : 0},
+                                  allow_soft_placement=True,
+                                  log_device_placement=False
+                                 );*/
+
+  TF_SetConfig(tf2i->sessionOptions, (void*)config,  20 , tf2i->status);
+  return (TF_GetCode(tf2i->status) == TF_OK); 
+}
+
+static int tf2_loadFrozenGraph( 
+                         struct Tensorflow2Instance * tf2i,
+                         const char* graphPath,
+                         const char * inputTensor,
+                         const char * outputTensor,
+                         unsigned int forceCPU
+                        )
+{
+    fprintf(stderr,"LoadGraph %s using TensorFlow Version: %s\n",graphPath,TF_Version());
+    if (graphPath == 0)
+        {
+            fprintf(stderr,RED "Cannot load graph with null path..\n" NORMAL);
+            return 0;
+        }
+    
+    unsigned int graphInMemorySize=0;
+    char * graphInMemory = tf2_readFileToMem(graphPath,&graphInMemorySize);
+
+    if (graphInMemory == 0)
+        {
+            fprintf(stderr,RED "Cannot read buffer from file %s ..\n" NORMAL,graphPath);
+            return 0;
+        }
+
+    tf2i->graph = TF_NewGraph();
+    tf2i->status = TF_NewStatus();
+    TF_ImportGraphDefOptions* opts = TF_NewImportGraphDefOptions();
+    
+    
+    TF_Buffer* tfBufferWithGraph = TF_NewBuffer();
+    tfBufferWithGraph->data = graphInMemory;
+    tfBufferWithGraph->length = graphInMemorySize;
+    tfBufferWithGraph->data_deallocator = tf2_deallocateBuffer;
+
+    TF_GraphImportGraphDef(tf2i->graph,tfBufferWithGraph,opts,tf2i->status);
+    TF_DeleteImportGraphDefOptions(opts);
+    
+
+    if (TF_GetCode(tf2i->status) != TF_OK)
+        {
+            fprintf(stderr,RED "Error importing graph definition..  (%u)\n" NORMAL,TF_GetCode(tf2i->status));
+            switch  (TF_GetCode(tf2i->status))
+                {
+                case TF_INVALID_ARGUMENT :
+                    fprintf(stderr,RED "Invalid Argument in graph..\n" NORMAL);
+                break;
+                };
+            TF_DeleteGraph(tf2i->graph);
+            tf2i->graph = 0;
+        }
+
+    TF_DeleteStatus(tf2i->status); 
+    TF_DeleteBuffer(tfBufferWithGraph); 
+    graphInMemorySize=0;
+    
+    //TODO : more stuff here..
+    return 1;
+}
+
+
+
+static int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,unsigned int inputElements,unsigned int outputElements,unsigned int forceCPU)
 {
     //Tensorflow boilerplate names, fingers crossed that they don't change them..
     char inputTensorName[]= {"serving_default_input_front"}; //Default input layer
@@ -85,6 +226,8 @@ static int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,uns
     tf2i->graph = TF_NewGraph();
     tf2i->status = TF_NewStatus();
     tf2i->sessionOptions = TF_NewSessionOptions();
+    if (forceCPU) { tf2_setCPUExecutionSessionConfiguration(tf2i); }
+    
     TF_Buffer* runOptions = NULL;
 
     //Actual loading from a saved model assuming :
@@ -101,7 +244,7 @@ static int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,uns
                     );
     if(TF_GetCode(tf2i->status) != TF_OK)
     {
-        fprintf(stderr,"Error loading model : %s \n",TF_Message(tf2i->status));
+        fprintf(stderr,RED "Error loading model : %s \n" NORMAL,TF_Message(tf2i->status));
         return 0;
     }
 
@@ -113,7 +256,7 @@ static int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,uns
     tf2i->t0 = {TF_GraphOperationByName(tf2i->graph,inputTensorName), 0};
     if(tf2i->t0.oper == NULL)
     {
-        fprintf(stderr,"ERROR: Failed TF_GraphOperationByName %s\n",inputTensorName);
+        fprintf(stderr,RED "ERROR: Failed TF_GraphOperationByName %s\n" NORMAL,inputTensorName);
         return 0;
     }
     tf2i->input[0] = tf2i->t0;
@@ -128,7 +271,7 @@ static int tf2_loadModel(struct Tensorflow2Instance * tf2i,const char * path,uns
     tf2i->t2 = {TF_GraphOperationByName(tf2i->graph,outputTensorName), 0};
     if(tf2i->t2.oper == NULL)
     {
-        fprintf(stderr,"ERROR: Failed TF_GraphOperationByName %s\n",outputTensorName);
+        fprintf(stderr,RED "ERROR: Failed TF_GraphOperationByName %s\n" NORMAL,outputTensorName);
         return 0;
     }
     tf2i->output[0] = tf2i->t2;
