@@ -164,7 +164,7 @@ int loadTensorflowInstance(
             //How do you end up with this byte array you might ask ?
             uint8_t config[] = { 0xa,0x7,0xa,0x3,0x43,0x50,0x55,0x10,0x1,0xa,0x7,0xa,0x3,0x47,0x50,0x55,0x10,0x0,0x38,0x1};
             //Good Question, you use the python code and extract the configuration bytes and copy paste them here..
-            // https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/Tensorflow/createTensorflowConfigurationForC.py
+            //https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/Tensorflow/createTensorflowConfigurationForC.py
             /*net->session = tf.ConfigProto(
                                              device_count={'CPU' : 1, 'GPU' : 0},
                                              allow_soft_placement=True,
