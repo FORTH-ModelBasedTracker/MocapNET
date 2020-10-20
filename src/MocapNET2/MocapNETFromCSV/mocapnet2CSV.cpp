@@ -334,6 +334,9 @@ int main(int argc, char *argv[])
                                 }   
                        }
 
+                    //fix https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/35
+                    fixBVHHip(bvhFrames); 
+
                     if ( writeBVHFile(options.outputPath,bvhHeaderToWrite,options.prependTPose,bvhFrames) )
                         {
                             fprintf(stderr,"Successfully wrote %lu frames to bvh file %s.. \n",bvhFrames.size(),options.outputPath);

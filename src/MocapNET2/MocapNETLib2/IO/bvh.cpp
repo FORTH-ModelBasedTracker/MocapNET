@@ -209,6 +209,25 @@ int stopIK()
 
 
 
+//This should fix the wrong Z Y X rotation thing happening
+//in https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/35
+int fixBVHHip(
+              std::vector<std::vector<float> > &bvhFrames
+             )
+{
+  for (unsigned int frameID=0; frameID<bvhFrames.size(); frameID++)
+    {
+     if (bvhFrames[frameID].size() >= 6)
+     {
+       bvhFrames[frameID][3]=-bvhFrames[frameID][3];    
+       bvhFrames[frameID][4]=-bvhFrames[frameID][4];    
+       bvhFrames[frameID][5]=-bvhFrames[frameID][5];    
+     }
+    }
+    
+  return 0;                    
+}
+
 
 int writeBVHFile(
                  const char * filename,
@@ -262,7 +281,8 @@ int writeBVHFile(
                     //fprintf(fp,"0.0 0.0 0.0 ");
                      for (j=0; j<frame.size(); j++)
                         {
-                            fprintf(fp,"%0.4f ",frame[j]);
+                            if (frame[j]==0.0) { fprintf(fp,"0 "); } else // Reduce .bvh size..
+                                               { fprintf(fp,"%0.4f ",frame[j]); }
                         }
                      fprintf(fp,"\n");
                     }

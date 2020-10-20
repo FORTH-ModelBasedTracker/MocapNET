@@ -1039,6 +1039,12 @@ int loadCalibration(struct MocapNET2Options * options,const char* directory,cons
 
 void overrideBVHSubsystemFocalLength(float newFx,float newFy);
 
+
+//This should fix the wrong Z Y X rotation thing happening
+//in https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/35
+int fixBVHHip(std::vector<std::vector<float> > &bvhFrames);
+
+
 /**
  * @brief After collecting a vector of BVH output vectors this call can write them to disk in BVH format
  * to make them accessible by third party 3D animation software like blender etc.
