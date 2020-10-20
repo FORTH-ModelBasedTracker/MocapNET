@@ -35,7 +35,8 @@ cd ..
 #Where is our datasets located, compared to the current directory..
 datasetDir="dataset/MotionCapture"
 #MocapNET1 -> datasetSubDir="01 02 03 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19"
-datasetSubDir="01 02 03 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 45 46 47 49 54 55 56 60 61 62 63 64 69 70 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 93 94 102 103 104 105 106 107 108 111 113 114 115 117 118 120 121 122 123 124 125 126 127 128 131 132 133 134 135 136 137 138 139 140 141 142 143 144"
+datasetSubDir="h36 01 02 03 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 45 46 47 49 54 55 56 60 61 62 63 64 69 70 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 93 94 102 103 104 105 106 107 108 111 113 114 115 117 118 120 121 122 123 124 125 126 127 128 131 132 133 134 135 136 137 138 139 140 141 142 143 144"
+#datasetSubDir="h36"
 
 #Where is our output located
 outputDir="dataset/"
@@ -100,8 +101,9 @@ if [ "$RAM" -gt "31861780" ]; then
 ITERATIONS="2"  
 fi
 
-#Uncomment next line to override settings and make the minimum training set for development
-ITERATIONS="0"
+#Uncomment next line to override settings and make the 
+#minimum training set for development
+#ITERATIONS="0"
 
 
 totaldatasetsToGo=`echo "$datasetSubDir" | awk '{print NF}'`
@@ -230,8 +232,6 @@ generateDataset upperbody_back.csv "$FILTER_OUT --csvOrientation back --randomiz
 generateDataset upperbody_left.csv "$FILTER_OUT --csvOrientation left --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $LEFT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $LEFT_MAX_ORIENTATION $MAX_LIM" "$SELECTUPPERBODY $RAND_UPPER_BODY"
 generateDataset upperbody_right.csv "$FILTER_OUT --csvOrientation right --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $RIGHT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $RIGHT_MAX_ORIENTATION $MAX_LIM" "$SELECTUPPERBODY $RAND_UPPER_BODY"
 
-#exit 0 # <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <>
-
 
 #LOWER BODY
 generateDataset lowerbody_all.csv "--randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM -179.999999 $MIN_LIM $MAX_LIM 180 $MAX_LIM" "$SELECTLOWERBODY" 
@@ -244,6 +244,15 @@ generateDataset lowerbody_back.csv "--csvOrientation back --randomize2D $MIN_DEP
 generateDataset lowerbody_left.csv "--csvOrientation left --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $LEFT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $LEFT_MAX_ORIENTATION $MAX_LIM" "$SELECTLOWERBODY $RAND_LOWER_BODY"
 generateDataset lowerbody_right.csv "--csvOrientation right --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $RIGHT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $RIGHT_MAX_ORIENTATION $MAX_LIM" "$SELECTLOWERBODY $RAND_LOWER_BODY"
 
+
+exit 0 # <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <>
+
+#This is a better hand dataset generator that ignores poses
+./createRandomHandDataset.sh
+
+exit 0 # <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <>
+
+#This hand is just based on CMU poses 
 #LEFT HAND
 generateDataset lhand_front.csv "--csvOrientation front --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $FRONT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $FRONT_MAX_ORIENTATION $MAX_LIM" "$SELECT_LHAND $RANDOMIZE_LEFT_HAND"
 generateDataset lhand_back.csv "--csvOrientation back --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $BACK_MIN_ORIENTATION $MIN_LIM $MAX_LIM $BACK_MAX_ORIENTATION $MAX_LIM" "$SELECT_LHAND $RANDOMIZE_LEFT_HAND"
