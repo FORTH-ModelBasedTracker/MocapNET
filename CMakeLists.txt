@@ -98,10 +98,10 @@ set(BVH_SOURCE "")
 IF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader")
 add_definitions(-DUSE_BVH)
 set(BVH_SOURCE 
-               #--------------------------------------------------------------------------------
-               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/PThreadWorkerPool/pthreadWorkerPool.h
-               #--------------------------------------------------------------------------------
-               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_loader.c
+              #--------------------------------------------------------------------------------
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/PThreadWorkerPool/pthreadWorkerPool.h
+              #--------------------------------------------------------------------------------
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_loader.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/calculate/bvh_to_tri_pose.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/calculate/bvh_transform.c 
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/calculate/bvh_project.c 
