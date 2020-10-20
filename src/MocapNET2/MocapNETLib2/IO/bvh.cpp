@@ -281,8 +281,8 @@ int writeBVHFile(
                     //fprintf(fp,"0.0 0.0 0.0 ");
                      for (j=0; j<frame.size(); j++)
                         {
-                            if (frame[j]==0.0) { fprintf(fp,"0 "); } else // Reduce .bvh size..
-                                               { fprintf(fp,"%0.4f ",frame[j]); }
+                            if ( (frame[j]<0.0001) && (frame[j]>-0.0001) ) { fprintf(fp,"0 "); }               else // Reduce .bvh size..
+                                                                           { fprintf(fp,"%0.4f ",frame[j]); }
                         }
                      fprintf(fp,"\n");
                     }
