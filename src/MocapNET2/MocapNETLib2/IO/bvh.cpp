@@ -1062,10 +1062,12 @@ std::vector<float> improveBVHFrameUsingInverseKinematics(
 
  std::vector<float> bvhFrame = bvhFrameInput;
  //Flip HIP X/Y/Z rotations here as well ?
- bvhFrame[3]=-1* bvhFrame[3]; 
- bvhFrame[4]=-1* bvhFrame[4]; 
- bvhFrame[5]=-1* bvhFrame[5]; 
-  
+ if (bvhFrame.size()>=6)
+ {
+  bvhFrame[3]=-1* bvhFrame[3]; 
+  bvhFrame[4]=-1* bvhFrame[4]; 
+  bvhFrame[5]=-1* bvhFrame[5]; 
+ }  
 
  if (bvhMotion.numberOfValuesPerFrame!= bvhFrame.size())
  {
