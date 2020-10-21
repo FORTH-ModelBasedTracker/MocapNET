@@ -1040,7 +1040,7 @@ for (unsigned int i=0; i<mLim; i++)
 std::vector<float> improveBVHFrameUsingInverseKinematics(
                                                           const std::vector<float> bvhPenultimateFrame,
                                                           const std::vector<float> bvhPreviousFrame,
-                                                          const std::vector<float> bvhFrame,
+                                                          const std::vector<float> bvhFrameInput,
                                                           //--------------
                                                           unsigned int frameNumber,
                                                           //--------------
@@ -1059,6 +1059,14 @@ std::vector<float> improveBVHFrameUsingInverseKinematics(
                                                         )
 {
  #if USE_BVH
+
+ std::vector<float> bvhFrame = bvhFrameInput;
+ //Flip HIP X/Y/Z rotations here as well ?
+ bvhFrame[3]=-1* bvhFrame[3]; 
+ bvhFrame[4]=-1* bvhFrame[4]; 
+ bvhFrame[5]=-1* bvhFrame[5]; 
+  
+
  if (bvhMotion.numberOfValuesPerFrame!= bvhFrame.size())
  {
      fprintf(stderr,"improveBVHFrameUsingInverseKinematics: Mismatch in bvh frame received and bvh frame loaded..\n");
