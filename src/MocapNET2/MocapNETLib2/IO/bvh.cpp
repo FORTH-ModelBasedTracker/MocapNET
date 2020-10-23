@@ -12,6 +12,8 @@
 #define GREEN   "\033[32m"      /* Green */
 #define YELLOW  "\033[33m"      /* Yellow */
 
+#define APPLY_BVH_FIX_TO_IK_INPUT 0
+
 #if USE_BVH
 #include "../../../../dependencies/RGBDAcquisition/tools/Calibration/calibration.h"
 #include "../../../../dependencies/RGBDAcquisition/tools/AmMatrix/matrix4x4Tools.h"
@@ -1061,6 +1063,8 @@ std::vector<float> improveBVHFrameUsingInverseKinematics(
  #if USE_BVH
 
  std::vector<float> bvhFrame = bvhFrameInput;
+
+ #if APPLY_BVH_FIX_TO_IK_INPUT
  //Flip HIP X/Y/Z rotations here as well ?
  if (bvhFrame.size()>=6)
  {
@@ -1068,6 +1072,7 @@ std::vector<float> improveBVHFrameUsingInverseKinematics(
   bvhFrame[4]=-1* bvhFrame[4]; 
   bvhFrame[5]=-1* bvhFrame[5]; 
  }  
+ #endif
 
  if (bvhMotion.numberOfValuesPerFrame!= bvhFrame.size())
  {
