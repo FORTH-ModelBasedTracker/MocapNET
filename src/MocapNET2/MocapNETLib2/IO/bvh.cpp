@@ -1,6 +1,8 @@
 #include "bvh.hpp"
 #include <string.h>
 
+#include "../config.h"
+
 #include "commonSkeleton.hpp"
 #include "skeletonSerializedToBVHTransform.hpp"
 #include "../mocapnet2.hpp"
@@ -12,7 +14,6 @@
 #define GREEN   "\033[32m"      /* Green */
 #define YELLOW  "\033[33m"      /* Yellow */
 
-#define APPLY_BVH_FIX_TO_IK_INPUT 0
 
 #if USE_BVH
 #include "../../../../dependencies/RGBDAcquisition/tools/Calibration/calibration.h"

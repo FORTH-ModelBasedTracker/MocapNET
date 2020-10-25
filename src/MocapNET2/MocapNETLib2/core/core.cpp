@@ -2,6 +2,8 @@
 
 #include "../../../Tensorflow/tf_utils.hpp"
 
+#include "../config.h"
+
 #include <string.h>
 
 //MOCAPNET2 ------------------------------------
@@ -56,11 +58,21 @@ int getMocapNETOrientationFromAngle(float direction)
         }
     else if ( (orientation>=45.0) && (orientation<=135.0) )
         {
-            return MOCAPNET_ORIENTATION_RIGHT;
+            #if SWAP_LEFT_RIGHT_ENSEMBLES
+             fprintf(stderr,"Swapped right ensemble");
+             return MOCAPNET_ORIENTATION_LEFT;
+            #else
+             return MOCAPNET_ORIENTATION_RIGHT;
+            #endif
         }
     else if ( (orientation>=-135.0) && (orientation<=-45.0) )
         {
-            return MOCAPNET_ORIENTATION_LEFT;
+            #if SWAP_LEFT_RIGHT_ENSEMBLES
+             fprintf(stderr,"Swapped left ensemble");
+             return MOCAPNET_ORIENTATION_RIGHT;
+            #else
+             return MOCAPNET_ORIENTATION_LEFT;
+            #endif
         }
     else if ( (orientation<=-135) && (orientation>=-225) )
         {
