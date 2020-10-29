@@ -3,8 +3,9 @@ cmake_minimum_required( VERSION 2.8.7 )
 
 #Make fast, lean and platform independent binaries..
 #The -fuse-ld=gold flag solves issue https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/34
-set(CMAKE_CXX_FLAGS "-s -O3 -fPIC -march=native -mtune=native -fuse-ld=gold")
-set(CMAKE_C_FLAGS "-s -O3 -fPIC -march=native -mtune=native -fuse-ld=gold") 
+#However it causes https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/38
+set(CMAKE_CXX_FLAGS "-s -O3 -fPIC -march=native -mtune=native") #-fuse-ld=gold
+set(CMAKE_C_FLAGS "-s -O3 -fPIC -march=native -mtune=native") #-fuse-ld=gold
 
 OPTION(ENABLE_OPENGL OFF)
 OPTION(INTEL_OPTIMIZATIONS OFF)
