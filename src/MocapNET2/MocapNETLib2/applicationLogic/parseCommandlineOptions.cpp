@@ -75,6 +75,8 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
             fprintf(stderr,"GPU : %s\n",options->GPUName);
         } 
          
+    options->inputFramerate = 30.0;
+
     options->quality=1.0;
     options->mocapNETMode=5;
     options->doGestureDetection=0;
@@ -150,7 +152,18 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                             }
                         }
                 }
-             else              
+             else     
+
+            if (strcmp(argv[i],"--inputFramerate")==0)
+                {
+                    if (argc>i+1)
+                        {
+                           options->inputFramerate = atof(argv[i+1]); 
+                           fprintf(stderr,"Input Framerate set to %0.2f \n", options->inputFramerate);
+                        }
+                }
+             else    
+         
             if (strcmp(argv[i],"--msg")==0)
                 {
                     if (argc>i+1)

@@ -96,7 +96,7 @@ void commonInitialization(struct MocapNET2 * mnet)
 
     fprintf(stderr,"Initializing output filters : ");
     float filterCutoff = 5.0;
-    float approximateFramerate = 30.0;
+    float approximateFramerate = mnet->options->inputFramerate;
     //---------------------------------------------------
     //initButterWorth(&mnet->directionSignal,approximateFramerate,filterCutoff);
 
@@ -108,6 +108,12 @@ void commonInitialization(struct MocapNET2 * mnet)
 
     //XYZ are smoother
     for (int i=0;  i<3; i++ )
+        {
+            fprintf(stderr,".");
+            initButterWorth(&mnet->outputSignals[i],approximateFramerate*2,filterCutoff);
+        }
+    //hip rotations are large and smoother
+    for (int i=3;  i<6; i++ )
         {
             fprintf(stderr,".");
             initButterWorth(&mnet->outputSignals[i],approximateFramerate*2,filterCutoff);

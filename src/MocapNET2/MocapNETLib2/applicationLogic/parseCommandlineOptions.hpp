@@ -26,6 +26,8 @@ struct MocapNET2Options
 
     unsigned int skipNeuralNetworkIfItIsNotNeeded;
     unsigned int maximumNeuralNetworkSkipFrames;
+    
+    float inputFramerate;
 
     float learningRate;
     float spring;

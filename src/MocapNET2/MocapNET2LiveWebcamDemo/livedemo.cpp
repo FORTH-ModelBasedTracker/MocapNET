@@ -446,10 +446,10 @@ int main(int argc, char *argv[])
                             
                             if (highResEncoding) 
                             {
-                              snprintf(formatString,256,"ffmpeg -framerate 25 -i vis%%05d.jpg  -s 1200x720  -y -r 30 -pix_fmt yuv420p -threads 8 livelastRun3DHiRes.mp4 && rm ./*.jpg");
+                              snprintf(formatString,256,"ffmpeg -framerate %f -i vis%%05d.jpg  -s 1200x720  -y -r %f -pix_fmt yuv420p -threads 8 livelastRun3DHiRes.mp4 && rm ./*.jpg",options.inputFramerate,options.inputFramerate);
                             } else
                             {
-                              snprintf(formatString,256,"ffmpeg -framerate 25 -i vis%%05d.jpg -y -r 30 -threads 8 -crf 9 -pix_fmt yuv420p lastRun3D.webm && rm ./*.jpg");  
+                              snprintf(formatString,256,"ffmpeg -framerate %f -i vis%%05d.jpg -y -r %f -threads 8 -crf 9 -pix_fmt yuv420p lastRun3D.webm && rm ./*.jpg",options.inputFramerate,options.inputFramerate);  
                             }
                             int i=system(formatString);
 

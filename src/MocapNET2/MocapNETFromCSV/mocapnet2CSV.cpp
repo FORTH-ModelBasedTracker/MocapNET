@@ -382,22 +382,10 @@ int main(int argc, char *argv[])
             if (options.saveVisualization)
                 { 
                     int i;
-                    /* no longer producing or using this visualization..
-                    snprintf(formatString,1024,"ffmpeg -framerate 25 -i cr%%05d.jpg  -s 1920x1080  -y -r 30 -pix_fmt yuv420p -threads 8  %s_lastCR.mp4 && rm ./cr*.jpg",options.path);
-                    i=system(formatString);
-                    if (i==0)
-                        {
-                            fprintf(stderr,"Successfully wrote video file to %s_lastCR.mp4 .. \n",options.path);
-                        }
-                    else
-                        {
-                            fprintf(stderr,"Failed to write a video file.. \n");
-                        }*/
-
                     //Low-Res video encoding
                     //int i=system("ffmpeg -framerate 25 -i vis%05d.jpg -y -r 30 -threads 8 -crf 9 -pix_fmt yuv420p  lastRun3D.webm");
                     //High-Res video encoding
-                    snprintf(formatString,1024,"ffmpeg -framerate 25 -i vis%%05d.jpg -s 1200x720 -y -r 30 -pix_fmt yuv420p -threads 8 %s_lastRun3DHiRes.mp4 && rm ./vis*.jpg",options.path); // 
+                    snprintf(formatString,1024,"ffmpeg -framerate %f -i vis%%05d.jpg -s 1200x720 -y -r %f -pix_fmt yuv420p -threads 8 %s_lastRun3DHiRes.mp4 && rm ./vis*.jpg",options.inputFramerate,options.inputFramerate,options.path); // 
                     i=system(formatString);
                     if (i==0)
                         {
