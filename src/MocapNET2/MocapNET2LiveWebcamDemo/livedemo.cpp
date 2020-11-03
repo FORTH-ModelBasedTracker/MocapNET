@@ -124,17 +124,7 @@ int main(int argc, char *argv[])
                              options.useCPUOnlyFor2DEstimator
                             ))
         {
-            if ( loadMocapNET2(
-                        &mnet,
-                        "test",
-                        options.quality,
-                        options.mocapNETMode,
-                        options.doUpperBody,
-                        options.doLowerBody,
-                        options.doFace,
-                        options.doHands,
-                        options.useCPUOnlyForMocapNET
-                    ) )
+            if ( loadMocapNET2(&mnet,"Live Demo") )
                 {
                     //------------------------------
                     mnet.learningRate=options.learningRate;

@@ -137,16 +137,7 @@ int main(int argc, char *argv[])
 
 
 
-    if ( loadMocapNET2(&mnet,
-                       "test",
-                       options.quality,
-                       options.mocapNETMode,
-                       options.doUpperBody,
-                       options.doLowerBody,
-                       options.doFace,
-                       options.doHands,
-                       options.useCPUOnlyForMocapNET
-                      ) )
+    if ( loadMocapNET2(&mnet,"CSV Demo") )
         {
             //------------------------------
             mnet.learningRate=options.learningRate;

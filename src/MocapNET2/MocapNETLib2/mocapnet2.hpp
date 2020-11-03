@@ -3578,23 +3578,10 @@ int initializeMocapNET2InputAssociation(
  * @brief Load a MocapNET from .pb files on disk
  * @ingroup mocapnet
  * @param Pointer to a struct MocapNET that will hold the tensorflow instances on load.
- * @param Path to .pb files that are needed
- * @param Quality setting, can currently be 1.0 ( highest quality ), 1.5  or 2.0 ( highest performance )
- * @param Mode setting, can currently be 2 (default ) or 4 (experimental)
- * @param Force the usage of CPU for MocapNET ( should be 1 as MocapNET is designed for CPU while GPU handles 2D )
+ * @param Description of MocapNET session
  * @retval 1 = Success loading the files  , 0 = Failure
  */
-int loadMocapNET2(
-                  struct MocapNET2 * mnet,
-                  const char * filename,
-                  float qualitySetting,
-                  int mode,
-                  unsigned int doUpperBody,
-                  unsigned int doLowerBody,
-                  unsigned int doFace,
-                  unsigned int doHands,
-                  unsigned int forceCPU
-                 );
+int loadMocapNET2(struct MocapNET2 * mnet, const char * description);
 
 
 /**

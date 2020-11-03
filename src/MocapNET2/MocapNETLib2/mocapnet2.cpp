@@ -129,41 +129,38 @@ void commonInitialization(struct MocapNET2 * mnet)
 }
 
 
-int loadMocapNET2(
-    struct MocapNET2 * mnet,
-    const char * filename,
-    float qualitySetting,
-    int mode,
-    unsigned int doUpperBody,
-    unsigned int doLowerBody,
-    unsigned int doFace,
-    unsigned int doHands,
-    unsigned int forceCPU
-)
+int loadMocapNET2(struct MocapNET2 * mnet, const char * description)
 {
     commonInitialization(mnet);
 
     int result = 0;
     int target = 0;
 
+    float qualitySetting = mnet->options->quality;
+    int mode = mnet->options->mocapNETMode;
+    unsigned int doUpperBody = mnet->options->doUpperBody;
+    unsigned int doLowerBody = mnet->options->doLowerBody;
+    unsigned int doFace = mnet->options->doFace;
+    unsigned int doHands = mnet->options->doHands;
+    unsigned int forceCPU = mnet->options->useCPUOnlyForMocapNET;
 
     if (doUpperBody)
         {
-            result += mocapnetUpperBody_initialize(mnet,filename,qualitySetting,mode,forceCPU);
+            result += mocapnetUpperBody_initialize(mnet,description,qualitySetting,mode,forceCPU);
             ++target;
         }
 
     if (doLowerBody)
         {
-            result += mocapnetLowerBody_initialize(mnet,filename,qualitySetting,mode,forceCPU);
+            result += mocapnetLowerBody_initialize(mnet,description,qualitySetting,mode,forceCPU);
             ++target;
         }
 
     if (doHands)
         {
             //TODO add hands
-            //result += mocapnetRightHand_initialize(mnet,filename,qualitySetting,mode,forceCPU);
-            //result += mocapnetLeftHand_initialize(mnet,filename,qualitySetting,mode,forceCPU);
+            //result += mocapnetRightHand_initialize(mnet,description,qualitySetting,mode,forceCPU);
+            //result += mocapnetLeftHand_initialize(mnet,description,qualitySetting,mode,forceCPU);
             //target += 2;
         }
 
