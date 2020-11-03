@@ -5,6 +5,8 @@
 
 A [new version of MocapNET](https://github.com/FORTH-ModelBasedTracker/MocapNET/milestone/1) has landed! It contains a very big list of improvements that have been carried out during 2020 over the original work that allows higher accuracy, smoother BVH output and better occlusion robustness while maintaining realtime perfomance. MocapNET2 will appear in [the 25th International Conference on Pattern Recognition](https://www.icpr2020.it/)
 
+![Sample run](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/shuffle.gif)
+
 If you are interested in the older MocapNET v1 release you can find it in the [mnet1 branch](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet1), 
 
 With MocapNET2 a [youtube video like this](https://www.youtube.com/watch?v=GtJct8nKjcc) can be converted to a [.BVH file like this](http://ammar.gr/mocapnet/mnet2/sept2020version.bvh) that can be imported in your favourite 3D editor or engine like [Blender](http://ammar.gr/mocapnet/mnet2/sept2020versionBlender.ogv). 
