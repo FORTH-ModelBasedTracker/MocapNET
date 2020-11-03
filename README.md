@@ -8,7 +8,7 @@ A [new version of MocapNET](https://github.com/FORTH-ModelBasedTracker/MocapNET/
 If you are interested in the older MocapNET v1 release you can find it in the [mnet1 branch](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet1), 
 
 Example Real-time Visualization: 
-With MocapNET2 an [RGB video feed like this](https://www.youtube.com/watch?v=Orb4pawcfFY#t=9m10s) can be converted to a .BVH file in real-time. The result can be easily steramed or imported in your favourite 3D engine or editor. 
+With MocapNET2 an [RGB video feed like this](https://www.youtube.com/watch?v=Orb4pawcfFY#t=10m) can be converted to a .BVH file in real-time. The result can be easily steramed or imported in your favourite 3D engine or editor. 
 
 ![Sample run](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/shuffle.gif)
 
