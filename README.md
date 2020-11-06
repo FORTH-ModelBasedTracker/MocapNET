@@ -60,7 +60,7 @@ Please cite the following papers [1](http://users.ics.forth.gr/~argyros/mypapers
   month = {January},
   url = {http://users.ics.forth.gr/argyros/res_mocapnet_II.html},
   projects =  {Co4Robots},
-  pdflink = {http://users.ics.forth.gr/ argyros/mypapers/2021_01_ICPR_Qammaz.pdf},
+  pdflink = {http://users.ics.forth.gr/argyros/mypapers/2021_01_ICPR_Qammaz.pdf},
   videolink = {https://youtu.be/Jgz1MRq-I-k}
 }
 ```
@@ -77,7 +77,7 @@ Please cite the following papers [1](http://users.ics.forth.gr/~argyros/mypapers
   address = {Cardiff, UK},
   url = {http://users.ics.forth.gr/argyros/res_mocapnet.html},
   projects =  {CO4ROBOTS,MINGEI},
-  pdflink = {http://users.ics.forth.gr/ argyros/mypapers/2019_09_BMVC_mocapnet.pdf},
+  pdflink = {http://users.ics.forth.gr/argyros/mypapers/2019_09_BMVC_mocapnet.pdf},
   videolink = {https://youtu.be/fH5e-KMBvM0}
 }
 ```
