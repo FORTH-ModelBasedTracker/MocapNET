@@ -1,7 +1,7 @@
 #include "opencv2/opencv.hpp"
 /** @file livedemo.cpp
- *  @brief This is the main "demo" offered in this repository, it will take a stream from a webcam or video file using OpenCV and run 
-*   2D pose estimation + MocapNET giving you a nice 3D visualization as well as an output .bvh file  
+ *  @brief This is the main "demo" offered in this repository, it will take a stream from a webcam or video file using OpenCV and run
+*   2D pose estimation + MocapNET giving you a nice 3D visualization as well as an output .bvh file
  *  @author Ammar Qammaz (AmmarkoV)
  */
 #include <stdio.h>
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     struct MocapNET2Options options= {0};
     struct MocapNET2 mnet= {0};
     mnet.options = & options;
-    
+
     struct JointEstimator2D jointEstimator;
 
     std::vector<float> inputValues;
@@ -48,16 +48,16 @@ int main(int argc, char *argv[])
     std::vector<float> points3DFlatOutput;
 
     struct skeletonSerialized resultAsSkeletonSerialized= {0};
-     
+
     float frameRateSummary = 0.0;
     unsigned int frameSamples=0;
 
     defaultMocapNET2Options(&options);
-    
+
    /*
-    *  Force effortless IK configuration on Webcam Demo 
+    *  Force effortless IK configuration on Webcam Demo
     */
-    //Be unconstrained by default 
+    //Be unconstrained by default
      options.constrainPositionRotation=0;
      //Use IK  ========
      options.useInverseKinematics=1;
@@ -71,13 +71,13 @@ int main(int argc, char *argv[])
     //for most webcams, you can change this using --size X Y commandline parameter
     options.width = 640;
     options.height = 480;
-    
-     
+
+
     loadOptionsFromCommandlineOptions(&options,argc,argv);
 
     std::cerr<<"Trying to open source ("<<options.webcamSource<<") \n";
     VideoCapture cap(options.webcamSource); // open the default camera
-     
+
      if (strstr(options.webcamSource,"/dev/video")!=0)
      {
        std::cerr<<"Source seems to be a webcam ("<<options.webcamSource<<" @ "<<options.width<<","<<options.height<<") \n";
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
      int itIsTheFirstFrame=1;
      cap >> frame;
 
-     //We will accept the input resolution and force it 
+     //We will accept the input resolution and force it
      //on visualization..
      options.width     = frame.size().width;
      options.height    = frame.size().height;
@@ -99,20 +99,20 @@ int main(int argc, char *argv[])
      //-----------------------------------------------------
 
 
-    //We might want to load a special bvh file based on our options..! 
+    //We might want to load a special bvh file based on our options..!
     loadOptionsAfterBVHLoadFromCommandlineOptions(&options,argc,argv);
 
     //If the initialization didnt happen inside the previous call lets do it now
     if (!options.hasInit)
-            { 
+            {
                if (initializeBVHConverter(0,options.visWidth,options.visHeight))
                  {
                    fprintf(stderr,"BVH code initalization successfull..\n");
-                   options.hasInit=1;                   
+                   options.hasInit=1;
                  }
             }
             //--------------------------------------------------------------------------
-    
+
     //Switch to realtime priority before opening tensorflow stuff..
     requestRealtimePriority();
 
@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
                     cv::Mat viewMat = Mat(Size(jointEstimator.inputWidth2DJointDetector,jointEstimator.inputHeight2DJointDetector),CV_8UC3, Scalar(0,0,0));
 
                     struct Skeletons2DDetected skeleton2DEstimations= {0};
-                    
+
                     if (options.visualize)
                     {
                      //cv::namedWindow("Video Input Feed",1);
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
                      cv::namedWindow("Skeletons",1);
                      cv::moveWindow("Skeletons",1920-jointEstimator.inputWidth2DJointDetector-50,100);
                     }
-                    
+
                     unsigned int frameID=0;
                     unsigned int skippedFramesInARow=0;
 
@@ -163,11 +163,11 @@ int main(int argc, char *argv[])
                        while ( (options.frameLimit==0) || (frameID<options.frameLimit) )
                         {
                             options.loopStartTime = GetTickCountMicrosecondsMN();
-                            
-                            if (itIsTheFirstFrame) { itIsTheFirstFrame=0; } else 
+
+                            if (itIsTheFirstFrame) { itIsTheFirstFrame=0; } else
                                                    { cap >> frame; }
-                            
-                            //If we are running in a low-end computer and need to keep in sync with a live video feed we can frame-skip 
+
+                            //If we are running in a low-end computer and need to keep in sync with a live video feed we can frame-skip
                                  if (options.frameSkip)
                                 {
                                     for (int i=0; i<options.frameSkip; i++)
@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
                                             cap >> frame;
                                         }
                                 }
-                            
+
                             frame.copyTo(frameCentered);
                             if ( (frameCentered.size().width>0) && (frameCentered.size().height>0) )
                                 {
@@ -195,15 +195,15 @@ int main(int argc, char *argv[])
                                     // viewMat.setTo(Scalar(0,0,0));
 
                                     //Tensorflow works with Floating point input so we need to convert our buffer..
-                                    frameCentered.convertTo(frameCentered,CV_32FC3); 
-                                    
+                                    frameCentered.convertTo(frameCentered,CV_32FC3);
+
                                     //At this point we are ready to execute the neural network
                                     long startTime2D = GetTickCountMicrosecondsMN();
-                                    
+
                                     //We count the framerate of our acquisition
                                     options.fpsAcquisition = convertStartEndTimeFromMicrosecondsToFPS(options.loopStartTime,startTime2D);
-                                    
-                                    
+
+
                                     std::vector<std::vector<float> >  heatmaps = getHeatmaps(
                                                 &jointEstimator,
                                                 frameCentered.data,
@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
                                             long endTime2D = GetTickCountMicrosecondsMN();
 
                                             options.fps2DEstimator = convertStartEndTimeFromMicrosecondsToFPS(startTime2D,endTime2D);
-                                            
+
                                             if (options.visualize)
                                             {
                                                dj_drawExtractedSkeletons(
@@ -265,17 +265,16 @@ int main(int argc, char *argv[])
                                                                  options.doFace,
                                                                  options.doGestureDetection,
                                                                  options.useInverseKinematics,
-                                                                 options.doOutputFiltering,
-                                                                 options.forceFront
+                                                                 options.doOutputFiltering
                                                              );
                                                     bvhFrames.push_back(result);
                                                     //--------------------------------------------------------
                                                     long endTime = GetTickCountMicrosecondsMN();
                                                     options.fpsMocapNET = convertStartEndTimeFromMicrosecondsToFPS(startTime,endTime);
-                                                    frameRateSummary += options.fpsMocapNET; 
+                                                    frameRateSummary += options.fpsMocapNET;
                                                     ++frameSamples;
                                                     //--------------------------------------------------------
-                                                    
+
 
                                                     options.numberOfMissingJoints = upperbodyCountMissingNSDMElements(mnet.upperBody.NSDM,0 /*Dont spam */);
                                                     //Don't spam with missing joints..
@@ -307,7 +306,7 @@ int main(int argc, char *argv[])
                                                             //TODO : Compare resultAsSkeletonSerialized and skeleton
                                                             doReprojectionCheck(&skeleton,&resultAsSkeletonSerialized);
                                                         }
- 
+
                                                 }
                                             else
                                                 {
@@ -328,7 +327,7 @@ int main(int argc, char *argv[])
                                                         frameID,
                                                         1// We will do the waitKey call ourselves
                                                     );
- 
+
                                                     imshow("Skeletons", viewMat);
                                                 }
                                         }
@@ -345,17 +344,17 @@ int main(int argc, char *argv[])
                                 }
 
                             options.loopEndTime = GetTickCountMicrosecondsMN();
-                            
+
                             options.totalLoopFPS = convertStartEndTimeFromMicrosecondsToFPS(options.loopStartTime,options.loopEndTime);
-                            
-                            
+
+
                             //------------------------------------------------------
-                            // These final calls add delays to frame processing so 
+                            // These final calls add delays to frame processing so
                             // they are not counted in loop time
-                            //------------------------------------------------------ 
+                            //------------------------------------------------------
                             if (options.visualize)
                                             {
-                            char key = 0; 
+                            char key = 0;
                             if (options.delay!=0)
                                 {
                                     key = waitKey(options.delay);
@@ -363,9 +362,9 @@ int main(int argc, char *argv[])
                                 {
                                     key = waitKey(1);
                                 }
-                            
+
                             ++frameID;
-                            
+
                             if (key==27)
                             {
                                 fprintf(stderr,GREEN "Received Escape key from UI, terminating the application.." NORMAL);
@@ -381,8 +380,8 @@ int main(int argc, char *argv[])
                         } // End of grabber loop
 
                     unsigned prependTPose=0;
-                    
-                    
+
+
                     if (options.bvhCenter)
                         {
                             for (unsigned int i=0; i<bvhFrames.size(); i++)
@@ -392,19 +391,19 @@ int main(int argc, char *argv[])
                                     bvhFrames[i][2]=0;
                                 }
                         }
-                    
+
                     if (options.dontBend)
                        {
                          for (unsigned int i=0; i<bvhFrames.size(); i++)
                                 {
                                    if (bvhFrames[i][3]>10)  { bvhFrames[i][3]=10; } else
                                    if (bvhFrames[i][3]<-10) { bvhFrames[i][3]=-10; }
-                                }   
+                                }
                        }
 
                     //fix https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/35
-                    fixBVHHip(bvhFrames); 
-                    
+                    fixBVHHip(bvhFrames);
+
                     if ( writeBVHFile(options.outputPath,0,prependTPose,bvhFrames) )
                         {
                             fprintf(stderr,GREEN "Successfully wrote %lu frames to bvh file.. \n" NORMAL,bvhFrames.size());
@@ -433,13 +432,13 @@ int main(int argc, char *argv[])
                         {
                             int highResEncoding=1;
                             char formatString[256];
-                            
-                            if (highResEncoding) 
+
+                            if (highResEncoding)
                             {
                               snprintf(formatString,256,"ffmpeg -framerate %f -i vis%%05d.jpg  -s 1200x720  -y -r %f -pix_fmt yuv420p -threads 8 livelastRun3DHiRes.mp4 && rm ./*.jpg",options.inputFramerate,options.inputFramerate);
                             } else
                             {
-                              snprintf(formatString,256,"ffmpeg -framerate %f -i vis%%05d.jpg -y -r %f -threads 8 -crf 9 -pix_fmt yuv420p lastRun3D.webm && rm ./*.jpg",options.inputFramerate,options.inputFramerate);  
+                              snprintf(formatString,256,"ffmpeg -framerate %f -i vis%%05d.jpg -y -r %f -threads 8 -crf 9 -pix_fmt yuv420p lastRun3D.webm && rm ./*.jpg",options.inputFramerate,options.inputFramerate);
                             }
                             int i=system(formatString);
 
@@ -460,8 +459,8 @@ int main(int argc, char *argv[])
 
                 } //3D pose estimator ok
         } //2D joint estimator ok
-     
-    //Offer a summary of system and the achieved framerate..! 
+
+    //Offer a summary of system and the achieved framerate..!
     if (frameSamples!=0)
     {
      fprintf(stderr,"\n\nCPU : %s \n",options.CPUName);
@@ -471,9 +470,9 @@ int main(int argc, char *argv[])
      if (options.doMultiThreadedIK)
                          { fprintf(stderr,"Multi-threading was on\n"); }
      if (codeOptimizationsForIKEnabled())
-                         { fprintf(stderr,"Code optimizations where on\n"); }     
+                         { fprintf(stderr,"Code optimizations where on\n"); }
     }
-    
+
     // the camera will be deinitialized automatically in VideoCapture destructor
     return 0;
 }

@@ -32,24 +32,24 @@
 #define GREEN   "\033[32m"      /* Green */
 #define YELLOW  "\033[33m"      /* Yellow */
 
- 
+
 
 int main(int argc, char *argv[])
 {
     struct MocapNET2Options options= {0};
     struct MocapNET2 mnet= {0};
     mnet.options = & options;
-    
+
     struct skeletonSerialized resultAsSkeletonSerialized= {0};
 
     defaultMocapNET2Options(&options);
     options.GPUName[0]=0; //The CSV demo does not use the GPU so don't display it..
-    
-    
+
+
    /*
-    *  Force effortless IK configuration on CSV demo 
+    *  Force effortless IK configuration on CSV demo
     */
-    //Be unconstrained by default 
+    //Be unconstrained by default
      options.constrainPositionRotation=0;
      //Use IK  ========
      options.useInverseKinematics=1;
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
                             options.datasetPath[i]=options.path[i];
                         }
                       options.datasetPath[positionOfSlash+1]=0; //Null termination
-                    } 
+                    }
                 }
         }
 
@@ -167,18 +167,18 @@ int main(int argc, char *argv[])
                             fprintf(stderr,"Assuming default image dimensions %ux%u , you can change this using --size x y\n",options.width,options.height);
                         }
                 }
- 
 
-            //We might want to load a special bvh file based on our options..! 
+
+            //We might want to load a special bvh file based on our options..!
             loadOptionsAfterBVHLoadFromCommandlineOptions(&options,argc,argv);
-           
+
             //If the initialization didnt happen inside the previous call lets do it now
             if (!options.hasInit)
-            { 
+            {
                if (initializeBVHConverter(0,options.visWidth,options.visHeight))
                  {
                    fprintf(stderr,"BVH code initalization successfull..\n");
-                   options.hasInit=1;                   
+                   options.hasInit=1;
                  }
             }
             //--------------------------------------------------------------------------
@@ -217,8 +217,7 @@ int main(int argc, char *argv[])
                                          options.doFace,
                                          options.doGestureDetection,
                                          options.useInverseKinematics,
-                                         options.doOutputFiltering,
-                                         options.forceFront);
+                                         options.doOutputFiltering);
                             bvhFrames.push_back(result);
                             //--------------------------------------------------------
                             long endTime = GetTickCountMicrosecondsMN();
@@ -277,7 +276,7 @@ int main(int argc, char *argv[])
                                                              frameID,
                                                              0 //Visualization code must handle messages..
                                                             );
-                                                                                         
+
                                 }
 
 
@@ -286,7 +285,7 @@ int main(int argc, char *argv[])
 
                             if (options.delay!=0)
                                 {
-                                    fprintf(stderr,"Sleeping for %u milliseconds\n",options.delay); 
+                                    fprintf(stderr,"Sleeping for %u milliseconds\n",options.delay);
                                     nsleep(options.delay*1000);
                                 }
 
@@ -315,18 +314,18 @@ int main(int argc, char *argv[])
                                     bvhFrames[i][2]=0;
                                 }
                         }
-                    
+
                     if (options.dontBend)
                        {
                          for (unsigned int i=0; i<bvhFrames.size(); i++)
                                 {
                                    if (bvhFrames[i][3]>10)  { bvhFrames[i][3]=10; } else
                                    if (bvhFrames[i][3]<-10) { bvhFrames[i][3]=-10; }
-                                }   
+                                }
                        }
 
                     //fix https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/35
-                    fixBVHHip(bvhFrames); 
+                    fixBVHHip(bvhFrames);
 
                     if ( writeBVHFile(options.outputPath,bvhHeaderToWrite,options.prependTPose,bvhFrames) )
                         {
@@ -371,12 +370,12 @@ int main(int argc, char *argv[])
 
 
             if (options.saveVisualization)
-                { 
+                {
                     int i;
                     //Low-Res video encoding
                     //int i=system("ffmpeg -framerate 25 -i vis%05d.jpg -y -r 30 -threads 8 -crf 9 -pix_fmt yuv420p  lastRun3D.webm");
                     //High-Res video encoding
-                    snprintf(formatString,1024,"ffmpeg -framerate %f -i vis%%05d.jpg -s 1200x720 -y -r %f -pix_fmt yuv420p -threads 8 %s_lastRun3DHiRes.mp4 && rm ./vis*.jpg",options.inputFramerate,options.inputFramerate,options.path); // 
+                    snprintf(formatString,1024,"ffmpeg -framerate %f -i vis%%05d.jpg -s 1200x720 -y -r %f -pix_fmt yuv420p -threads 8 %s_lastRun3DHiRes.mp4 && rm ./vis*.jpg",options.inputFramerate,options.inputFramerate,options.path); //
                     i=system(formatString);
                     if (i==0)
                         {

@@ -18,7 +18,6 @@ void * mocapNETWorkerThread(void * arg)
   int doGestureDetection = ctx->doGestureDetection;
   unsigned int useInverseKinematics = ctx->useInverseKinematics;
   int doOutputFiltering = ctx->doOutputFiltering;
-  int forceFront = ctx->forceFront;
 
   std::vector<float> result;
 
@@ -29,7 +28,7 @@ void * mocapNETWorkerThread(void * arg)
     switch (ptr->threadID)
     {
        case 0:
-            result = mocapnetUpperBody_evaluateInput(mnet,input,forceFront);
+            result = mocapnetUpperBody_evaluateInput(mnet,input);
        break;
        //----------------------------------------------------------------
        case 1:
@@ -73,8 +72,7 @@ std::vector<float> multiThreadedMocapNET(
                                            int doFace,
                                            int doGestureDetection,
                                            unsigned int useInverseKinematics,
-                                           int doOutputFiltering,
-                                           int forceFront
+                                           int doOutputFiltering
                                          )
 {
     #if USE_BVH
@@ -92,7 +90,6 @@ std::vector<float> multiThreadedMocapNET(
           ctx[i].doGestureDetection=doGestureDetection;
           ctx[i].useInverseKinematics=useInverseKinematics;
           ctx[i].doOutputFiltering=doOutputFiltering;
-          ctx[i].forceFront=forceFront;
          }
 
        int okToRunMTCode=0;
@@ -120,7 +117,7 @@ std::vector<float> multiThreadedMocapNET(
          if (okToRunMTCode)
          {
           threadpoolMainThreadPrepareWorkForWorkers(&mnet->threadPool);
-               mocapnetUpperBody_getOrientation(mnet,input,forceFront);
+               mocapnetUpperBody_getOrientation(mnet,input);
           threadpoolMainThreadWaitForWorkersToFinish(&mnet->threadPool);
 
           std::vector<float> result = gatherResults(
@@ -147,7 +144,6 @@ std::vector<float> multiThreadedMocapNET(
                                     doFace,
                                     doGestureDetection,
                                     useInverseKinematics,
-                                    doOutputFiltering,
-                                    forceFront
+                                    doOutputFiltering
                                    );
 }

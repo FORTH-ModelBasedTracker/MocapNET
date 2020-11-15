@@ -65,16 +65,15 @@ std::vector<float> singleThreadedMocapNET(
                                            int doFace,
                                            int doGestureDetection,
                                            unsigned int useInverseKinematics,
-                                           int doOutputFiltering,
-                                           int forceFront
+                                           int doOutputFiltering
                                          )
 {
     std::vector<float> resultBody,resultLowerBody,resultUpperBody,resultLeftHand,resultRightHand,resultFace;
     //---------------------------------------------------------------------------------------------------------------------------------------------
     //resultBody = mocapnetBody_evaluateInput(mnet,input);
     //-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-    mocapnetUpperBody_getOrientation(mnet,input,forceFront);
-    resultUpperBody = mocapnetUpperBody_evaluateInput(mnet,input,forceFront);
+    mocapnetUpperBody_getOrientation(mnet,input);
+    resultUpperBody = mocapnetUpperBody_evaluateInput(mnet,input);
     //-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     if ( (doLowerbody) && (mnet->lowerBody.loadedModels>0) )
         {

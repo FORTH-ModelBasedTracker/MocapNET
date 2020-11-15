@@ -35,6 +35,5 @@ std::vector<float> singleThreadedMocapNET(
                                            int doFace,
                                            int doGestureDetection,
                                            unsigned int useInverseKinematics,
-                                           int doOutputFiltering,
-                                           int forceFront
+                                           int doOutputFiltering
                                          );

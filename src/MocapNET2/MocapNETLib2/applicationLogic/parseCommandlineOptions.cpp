@@ -23,7 +23,7 @@ const char   outputPathStatic[]="out.bvh";
 void  defaultMocapNET2Options(struct MocapNET2Options * options)
 {
     memset(options,0,sizeof(struct MocapNET2Options));
-    
+
     options->isJSONFile=0;
     options->isCSVFile=0;
     options->webcamSource = 0;
@@ -36,9 +36,12 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
     options->doFace=0;
     options->doHands=0;
     options->forceFront=0;
+    options->forceLeft=0;
+    options->forceRight=0;
+    options->forceBack=0;
     options->visualizationType=0;
 
-    //Default IK options 
+    //Default IK options
     options->useInverseKinematics=0;
     options->learningRate=0.01;
     options->spring =20.0;
@@ -59,12 +62,12 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
     options->saveVisualization=0;
     options->saveCSV3DFile=0;
     options->constrainPositionRotation=1;
-    
+
     options->delay=0;
     options->prependTPose=0;
     options->serialLength=5;
     options->bvhCenter=0;
-    
+
     if (getCPUName(options->CPUName,512))
         {
             fprintf(stderr,"CPU : %s\n",options->CPUName);
@@ -73,15 +76,15 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
     if (getGPUName(options->GPUName,512))
         {
             fprintf(stderr,"GPU : %s\n",options->GPUName);
-        } 
-         
+        }
+
     options->inputFramerate = 30.0;
 
     options->quality=1.0;
     options->mocapNETMode=5;
     options->doGestureDetection=0;
     options->doOutputFiltering=1;
-    options->useCPUOnlyForMocapNET=1; //Use CPU for MocapNET 
+    options->useCPUOnlyForMocapNET=1; //Use CPU for MocapNET
     options->useCPUOnlyFor2DEstimator=0; // Use GPU for 2D estimator
     options->brokenFrames=0;
     options->numberOfMissingJoints=0;
@@ -90,20 +93,20 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
     options->visHeight=1080;
     options->width=1920;
     options->height=1080;
-    
-    
+
+
     options->scale=1.0;
     options->scaleX=1.0;
     options->scaleY=1.0;
     options->fScaleX=1.0;
     options->fScaleY=1.0;
-    
+
     options->loopStartTime=0;
     options->loopEndTime=1000;
     options->totalLoopFPS=0.0;
     options->fpsMocapNET=0.0;
-    options->fps2DEstimator=0.0;         
-    
+    options->fps2DEstimator=0.0;
+
     options->frameSkip=0;
     options->frameLimit=0;
 }
@@ -118,7 +121,7 @@ void argumentError(int currentlyAt,int extraAt,int argc, char *argv[])
 
 int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc, char *argv[])
 {
-    
+
 //(struct BVH_MotionCapture * bvhMotion,float shoulderToElbowLength,float elbowToHandLength,float hipToKneeLength,float kneeToFootLength)
     //------------------------------------------------------
     //                Parse arguments
@@ -128,51 +131,51 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
             if (strcmp(argv[i],"--forceOutputPositionRotation")==0)
                 {
                     if (argc>i+1)
-                        {  
+                        {
                           options->forceOutputPositionRotation=1;
-                          options->outputPosRot[0]=atof(argv[i+1]); 
-                          options->outputPosRot[1]=atof(argv[i+2]); 
-                          options->outputPosRot[2]=atof(argv[i+3]); 
-                          options->outputPosRot[3]=atof(argv[i+4]); 
-                          options->outputPosRot[4]=atof(argv[i+5]); 
+                          options->outputPosRot[0]=atof(argv[i+1]);
+                          options->outputPosRot[1]=atof(argv[i+2]);
+                          options->outputPosRot[2]=atof(argv[i+3]);
+                          options->outputPosRot[3]=atof(argv[i+4]);
+                          options->outputPosRot[4]=atof(argv[i+5]);
                           options->outputPosRot[5]=atof(argv[i+6]);
                         }
                 }
-             else              
+             else
             if (strcmp(argv[i],"--rotateSkeleton")==0)
                 {
                     if (argc>i+1)
-                        { 
+                        {
                             if (strcmp(argv[i+1],"auto")==0)
                             {
-                              options->skeletonRotation=360.0;  
+                              options->skeletonRotation=360.0;
                             } else
                             {
-                              options->skeletonRotation=atof(argv[i+1]);                               
+                              options->skeletonRotation=atof(argv[i+1]);
                             }
                         }
                 }
-             else     
+             else
 
             if (strcmp(argv[i],"--inputFramerate")==0)
                 {
                     if (argc>i+1)
                         {
-                           options->inputFramerate = atof(argv[i+1]); 
+                           options->inputFramerate = atof(argv[i+1]);
                            fprintf(stderr,"Input Framerate set to %0.2f \n", options->inputFramerate);
                         }
                 }
-             else    
-         
+             else
+
             if (strcmp(argv[i],"--msg")==0)
                 {
                     if (argc>i+1)
                         {
                            fprintf(stderr,"Message set to %s \n",argv[i+1]);
-                           snprintf(options->message,512,"%s",argv[i+1]); 
+                           snprintf(options->message,512,"%s",argv[i+1]);
                         }
                 }
-             else            
+             else
             if (strcmp(argv[i],"--map")==0)
                 {
                     if (argc>i+1)
@@ -182,7 +185,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                           options->visualizationType=2;
                         }
                 }
-             else            
+             else
             if (strcmp(argv[i],"--unconstrained")==0)
                 {
                     options->constrainPositionRotation=0;
@@ -195,15 +198,15 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                         } else
                         { argumentError(i,1,argc,argv); }
                 }
-            else if  (strcmp(argv[i],"--dontbend")==0) 
+            else if  (strcmp(argv[i],"--dontbend")==0)
             {
                 options->dontBend=1;
             }
-            else if  (strcmp(argv[i],"--opengl")==0) 
+            else if  (strcmp(argv[i],"--opengl")==0)
             {
                 options->useOpenGLVisualization=1;
             }
-            else if  (strcmp(argv[i],"--save")==0) 
+            else if  (strcmp(argv[i],"--save")==0)
                 {
                     options->saveVisualization=1;
                 }
@@ -235,7 +238,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                         }
                           else
                         { argumentError(i,3,argc,argv); }
-                } 
+                }
             else if (strcmp(argv[i],"--nv")==0)
                 {
                     fprintf(stderr,"Visualization disabled\n");
@@ -259,7 +262,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
             else if (strcmp(argv[i],"--frameskip")==0)
                 {
                    if (argc>i+1)
-                        { 
+                        {
                           options->frameSkip=atoi(argv[i+1]);
                         } else
                         { argumentError(i,1,argc,argv); }
@@ -272,13 +275,13 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
             else if (strcmp(argv[i],"--scale")==0)
                 {
                   if (argc>i+1)
-                        { 
+                        {
                          options->scale=atof(argv[i+1]);
                         } else
                         { argumentError(i,1,argc,argv); }
-                } 
+                }
             else if (strcmp(argv[i],"--scaleX")==0)
-                {                  
+                {
                     if (argc>i+1)
                         {
                          options->scaleX=atof(argv[i+1]);
@@ -288,7 +291,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
             else if (strcmp(argv[i],"--scaleY")==0)
                 {
                     if (argc>i+1)
-                        {  
+                        {
                           options->scaleY=atof(argv[i+1]);
                         } else
                         { argumentError(i,1,argc,argv); }
@@ -305,7 +308,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                          options->fScaleY=atof(argv[i+2]);
                         } else
                         { argumentError(i,2,argc,argv); }
-                } 
+                }
             else if (strcmp(argv[i],"--noise")==0)
                 {
                     if (argc>i+2)
@@ -315,9 +318,22 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                         } else
                         { argumentError(i,2,argc,argv); }
                 }
+
             else if (strcmp(argv[i],"--front")==0)
                 {
                     options->forceFront=1;
+                }
+            else if (strcmp(argv[i],"--back")==0)
+                {
+                    options->forceBack=1;
+                }
+            else if (strcmp(argv[i],"--left")==0)
+                {
+                    options->forceLeft=1;
+                }
+            else if (strcmp(argv[i],"--right")==0)
+                {
+                    options->forceRight=1;
                 }
             else if (strcmp(argv[i],"--bvhcenter")==0)
                 {
@@ -366,7 +382,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                             }
                         } else
                         { argumentError(i,1,argc,argv); }
-                } 
+                }
             else if (strcmp(argv[i],"--quality")==0)
                 {
                  if (argc>i+1)
@@ -379,20 +395,20 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                 if (strcmp(argv[i],"--mt")==0)
                     {
                        options->doMultiThreadedIK=1;
-                    } 
+                    }
              else
                 if (strcmp(argv[i],"--cpu")==0)
                     {
                         options->useCPUOnlyForMocapNET=1;
                         options->useCPUOnlyFor2DEstimator=1;
-                    } 
+                    }
             else
                 //if (strcmp(argv[i],"--cpu")==0)        { setenv("CUDA_VISIBLE_DEVICES", "", 1); } else
                 if (strcmp(argv[i],"--gpu")==0)
                     {
                         options->useCPUOnlyForMocapNET=0;
                         options->useCPUOnlyFor2DEstimator=0;
-                    } 
+                    }
             else if (strcmp(argv[i],"--delay")==0)
                 {
                     //If you want to take some time to check the results that
@@ -407,17 +423,17 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                 {
                     //Allow skipping of frames in the neural network and using only the very fast IK module..
                     options->maximumNeuralNetworkSkipFrames=atoi(argv[i+1]);
-                    
+
                     if (options->maximumNeuralNetworkSkipFrames>0)
                     {
-                      options->skipNeuralNetworkIfItIsNotNeeded=1; 
+                      options->skipNeuralNetworkIfItIsNotNeeded=1;
                       if (options->maximumNeuralNetworkSkipFrames==1)
                       {
-                       fprintf(stderr,"Skipping 1 frame every one frame makes no sense, assuming user wants to skip 1 frame every 2 frames\n"); 
+                       fprintf(stderr,"Skipping 1 frame every one frame makes no sense, assuming user wants to skip 1 frame every 2 frames\n");
                        options->maximumNeuralNetworkSkipFrames=2;
-                      } 
+                      }
                     }
-                } 
+                }
             else if (strcmp(argv[i],"--tpose")==0)
                 {
                    options-> prependTPose=1;
@@ -433,21 +449,21 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
             else if (strcmp(argv[i],"--nohands")==0)
                 {
                     options->doHands=0;
-                } 
+                }
             else if (strcmp(argv[i],"--hands")==0)
                 {
                     options->doHands=1;
-                }    
+                }
             else if (strcmp(argv[i],"--face")==0)
                 {
                     options->doFace=1;
-                }    
+                }
             else if (strcmp(argv[i],"--noface")==0)
                 {
                     options->doFace=0;
-                } 
+                }
                 else if (strcmp(argv[i],"--label")==0)
-                    {                  
+                    {
                       if (argc>i+1)
                         {
                          options->label = argv[i+1];
@@ -495,11 +511,11 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                           options->visHeight = atoi(argv[i+2]);
                         }  else
                         { argumentError(i,2,argc,argv); }
-                    }     
+                    }
                 else if (strcmp(argv[i],"--gestures")==0)
                     {
                         options->doGestureDetection=1;
-                    }                  
+                    }
         }
 
 return 1;
@@ -520,10 +536,10 @@ int  loadOptionsAfterBVHLoadFromCommandlineOptions(struct MocapNET2Options * opt
                                     initializeBVHConverter(0,options->visWidth,options->visHeight);
                                     options->hasInit=1;
                                 }
-                                
-                            changeFeetDimensions( 
+
+                            changeFeetDimensions(
                                                   atof(argv[i+1]),
-                                                  atof(argv[i+2]) 
+                                                  atof(argv[i+2])
                                                 );
                         } else
                         { argumentError(i,2,argc,argv); }
@@ -564,14 +580,14 @@ int  loadOptionsAfterBVHLoadFromCommandlineOptions(struct MocapNET2Options * opt
                             );
                         }
                     else
-                        { 
-                            argumentError(i,9,argc,argv); 
+                        {
+                            argumentError(i,9,argc,argv);
                             fprintf(stderr,"Incorrect number of parameters given..\n");
                             return 0;
                         }
                 }
         }
-    
+
     return 1;
 }
 
@@ -620,6 +636,6 @@ int  takeCareOfScalingInputAndAddingNoiseAccordingToOptions(struct MocapNET2Opti
                                             options->height * options->addNormalizedPixelGaussianNoiseY
                                            );
                                     perturbSerializedSkeletonUsingGaussianNoise(skeleton,options->addNormalizedPixelGaussianNoiseX,options->addNormalizedPixelGaussianNoiseY);
-                                }  
-    return 1;   
+                                }
+    return 1;
 }

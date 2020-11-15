@@ -43,6 +43,5 @@ std::vector<float> multiThreadedMocapNET(
                                            int doFace,
                                            int doGestureDetection,
                                            unsigned int useInverseKinematics,
-                                           int doOutputFiltering,
-                                           int forceFront
+                                           int doOutputFiltering
                                          );

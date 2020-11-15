@@ -237,8 +237,7 @@ std::vector<float> runMocapNET2(
                                  int doFace,
                                  int doGestureDetection,
                                  unsigned int useInverseKinematics,
-                                 int doOutputFiltering,
-                                 int forceFront
+                                 int doOutputFiltering
                                 )
 {
 
@@ -321,8 +320,7 @@ std::vector<float> runMocapNET2(
                                             doFace,
                                             doGestureDetection,
                                             useInverseKinematics,
-                                            doOutputFiltering,
-                                            forceFront
+                                            doOutputFiltering
                                            );
            //-----------------------------------------------------
            long endTimeNeuralNetwork = GetTickCountMicrosecondsMN();

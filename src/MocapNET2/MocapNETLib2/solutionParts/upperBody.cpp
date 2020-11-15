@@ -38,7 +38,7 @@ int mocapnetUpperBody_initialize(struct MocapNET2 * mnet,const char * filename,f
         case 3:
             mnet->upperBody.mode=3;
             fprintf(stderr,RED "Fatal: Mode 3 No longer supported on MocapNET 2 \n" NORMAL);
-            exit(0); 
+            exit(0);
             break;
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -179,7 +179,7 @@ int mocapnetUpperBody_unload(struct MocapNET2 * mnet)
 
 
 
-int mocapnetUpperBody_getOrientation(struct MocapNET2 * mnet,struct skeletonSerialized * input,int forceFront)
+int mocapnetUpperBody_getOrientation(struct MocapNET2 * mnet,struct skeletonSerialized * input)
 {
     mnet->upperBody.positionalInput = deriveMocapNET2InputUsingAssociations(
                                           mnet,
@@ -195,22 +195,22 @@ int mocapnetUpperBody_getOrientation(struct MocapNET2 * mnet,struct skeletonSeri
     {
        unsigned int pivotJoint = 0; //Hip
        unsigned int referenceJoint = 1; //Neck
-    
-       //std::vector<float> original2DPoints  = mnet->upperBody.positionalInput;                                                                   
+
+       //std::vector<float> original2DPoints  = mnet->upperBody.positionalInput;
        //rotate2DPointsBasedOnJointAsCenter(mnet->upperBody.positionalInput,20,0);
-    
+
       //Force alignment of middle finger to make it easier on the neural network mnet->upperBody.positionalInput
-       
-      float angleToRotate = getAngleToAlignToZero(mnet->upperBody.positionalInput,pivotJoint,referenceJoint);                                                                            
+
+      float angleToRotate = getAngleToAlignToZero(mnet->upperBody.positionalInput,pivotJoint,referenceJoint);
       fprintf(stderr,YELLOW "Correcting upperbody skeleton by rotating it %0.2f degrees\n" NORMAL,angleToRotate);
       rotate2DPointsBasedOnJointAsCenter(mnet->upperBody.positionalInput,angleToRotate,0);
-    
-      //debug2DPointAlignment("debugUpperAlignment",original2DPoints,mnet->upperBody.positionalInput,pivotJoint,referenceJoint,800,600); 
+
+      //debug2DPointAlignment("debugUpperAlignment",original2DPoints,mnet->upperBody.positionalInput,pivotJoint,referenceJoint,800,600);
     }
-      
-     
+
+
     mnet->upperBody.NSDM  = upperbodyCreateNDSM(mnet->upperBody.positionalInput,0/*NSDM Positional*/,1/*NSDM Angular */,0/*Do Scale Compensation*/);
-    
+
     mnet->upperBody.neuralNetworkReadyInput.clear();
     mnet->upperBody.neuralNetworkReadyInput.insert(mnet->upperBody.neuralNetworkReadyInput.end(),mnet->upperBody.positionalInput.begin(), mnet->upperBody.positionalInput.end());
     mnet->upperBody.neuralNetworkReadyInput.insert(mnet->upperBody.neuralNetworkReadyInput.end(),mnet->upperBody.NSDM.begin(), mnet->upperBody.NSDM.end());
@@ -220,15 +220,27 @@ int mocapnetUpperBody_getOrientation(struct MocapNET2 * mnet,struct skeletonSeri
     //----------------------------------------------------------------------------------------------
     if (mnet->upperBody.neuralNetworkReadyInput.size()!=MNET_UPPERBODY_IN_NUMBER)
         {
-            fprintf(stderr,RED "MocapNET: Incorrect size of MocapNET input .. \n" NORMAL); 
+            fprintf(stderr,RED "MocapNET: Incorrect size of MocapNET input .. \n" NORMAL);
             return 0;
         }
 
-    int orientationReceived = MOCAPNET_ORIENTATION_NONE; 
-    
-    if (forceFront)
+    int orientationReceived = MOCAPNET_ORIENTATION_NONE;
+
+   if (mnet->options->forceFront)
     {
          mnet->orientation = MOCAPNET_ORIENTATION_FRONT;
+    } else
+    if (mnet->options->forceLeft)
+    {
+         mnet->orientation = MOCAPNET_ORIENTATION_LEFT;
+    } else
+    if (mnet->options->forceBack)
+    {
+         mnet->orientation = MOCAPNET_ORIENTATION_BACK;
+    } else
+    if (mnet->options->forceRight)
+    {
+         mnet->orientation = MOCAPNET_ORIENTATION_RIGHT;
     } else
     {
      orientationReceived = localOrientationExtraction(&mnet->upperBody,mnet->upperBody.neuralNetworkReadyInput);
@@ -242,15 +254,15 @@ int mocapnetUpperBody_getOrientation(struct MocapNET2 * mnet,struct skeletonSeri
             mnet->orientationClassifications[3]= mnet->upperBody.orientationClassifications[3];
         } else
         {
-            fprintf(stderr,RED "MocapNET: Incorrect orientation retrieved from upperbody .. \n" NORMAL); 
+            fprintf(stderr,RED "MocapNET: Incorrect orientation retrieved from upperbody .. \n" NORMAL);
         }
     }
-    
+
     return orientationReceived;
 }
 
 
-std::vector<float> mocapnetUpperBody_evaluateInput(struct MocapNET2 * mnet,struct skeletonSerialized * input,int forceFront)
+std::vector<float> mocapnetUpperBody_evaluateInput(struct MocapNET2 * mnet,struct skeletonSerialized * input)
 {
     mnet->upperBody.positionalInput = deriveMocapNET2InputUsingAssociations(
                                           mnet,
@@ -266,19 +278,19 @@ std::vector<float> mocapnetUpperBody_evaluateInput(struct MocapNET2 * mnet,struc
     {
        unsigned int pivotJoint = 0; //Hip
        unsigned int referenceJoint = 1; //Neck
-    
-       //std::vector<float> original2DPoints  = mnet->upperBody.positionalInput;                                                                   
+
+       //std::vector<float> original2DPoints  = mnet->upperBody.positionalInput;
        //rotate2DPointsBasedOnJointAsCenter(mnet->upperBody.positionalInput,20,0);
-    
+
       //Force alignment of middle finger to make it easier on the neural network mnet->upperBody.positionalInput
-       
-      float angleToRotate = getAngleToAlignToZero(mnet->upperBody.positionalInput,pivotJoint,referenceJoint);                                                                            
+
+      float angleToRotate = getAngleToAlignToZero(mnet->upperBody.positionalInput,pivotJoint,referenceJoint);
       fprintf(stderr,YELLOW "Correcting upperbody skeleton by rotating it %0.2f degrees\n" NORMAL,angleToRotate);
       rotate2DPointsBasedOnJointAsCenter(mnet->upperBody.positionalInput,angleToRotate,0);
-    
-      //debug2DPointAlignment("debugUpperAlignment",original2DPoints,mnet->upperBody.positionalInput,pivotJoint,referenceJoint,800,600); 
+
+      //debug2DPointAlignment("debugUpperAlignment",original2DPoints,mnet->upperBody.positionalInput,pivotJoint,referenceJoint,800,600);
     }
-         
+
     mnet->upperBody.NSDM  = upperbodyCreateNDSM(mnet->upperBody.positionalInput,0/*NSDM Positional*/,1/*NSDM Angular */,0/*Do Scale Compensation*/);
     mnet->upperBody.neuralNetworkReadyInput.clear();
     mnet->upperBody.neuralNetworkReadyInput.insert(mnet->upperBody.neuralNetworkReadyInput.end(),mnet->upperBody.positionalInput.begin(), mnet->upperBody.positionalInput.end());
@@ -293,7 +305,7 @@ std::vector<float> mocapnetUpperBody_evaluateInput(struct MocapNET2 * mnet,struc
             std::vector<float> emptyResult;
             return emptyResult;
         }
-    
+
     if (
          vectorcmp(
                     mnet->upperBody.lastNeuralNetworkReadyInput,
@@ -311,11 +323,11 @@ std::vector<float> mocapnetUpperBody_evaluateInput(struct MocapNET2 * mnet,struc
                                                 mnet->orientation,
                                                 1 /*Body Requires orientation trick*/
                                               );
-    
+
      mnet->upperBody.result = result;
      mnet->upperBody.lastNeuralNetworkReadyInput = mnet->upperBody.neuralNetworkReadyInput;
-    
-     return result; 
+
+     return result;
     } else
     {
       fprintf(stderr,GREEN "Nothing changed on upper body, returning previous result.. \n" NORMAL);

@@ -3591,7 +3591,16 @@ int loadMocapNET2(struct MocapNET2 * mnet, const char * description);
  * @param Vector of input values according to MocapNETUncompressedAndCompressedArrayNames
  * @retval 1=Success,0=Failure
  */
-std::vector<float> runMocapNET2(struct MocapNET2 * mnet,struct skeletonSerialized * input,int doLowerbody,int doHands,int doFace,int doGestureDetection,unsigned int useInverseKinematics,int doOutputFiltering,int forceFront) ;
+std::vector<float> runMocapNET2(
+                                 struct MocapNET2 * mnet,
+                                 struct skeletonSerialized * input,
+                                 int doLowerbody,
+                                 int doHands,
+                                 int doFace,
+                                 int doGestureDetection,
+                                 unsigned int useInverseKinematics,
+                                 int doOutputFiltering
+                              );
 
 /**
  * @brief Deallocate tensorflow instances and free memory
