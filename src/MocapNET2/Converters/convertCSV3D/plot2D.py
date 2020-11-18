@@ -13,6 +13,10 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import axes3d, Axes3D  
 
+width=1920.0
+height=1080.0
+
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -31,8 +35,8 @@ def pointListReturnXYListForScatterPlot(A):
     skeletonID=A[1]
     totalSkeletons=A[2]
     for i in range(3,int(numberOfPoints/3)):
-       x=500+100*float(A[i*3+0])
-       y=500+100*float(A[i*3+1])
+       x=width*float(A[i*3+0])
+       y=height*float(A[i*3+1])
        visibility=int(A[i*3+2])
        if (visibility==1):
           xs.append(x)
@@ -259,8 +263,8 @@ for i in range(0,len(ground['body'])):
    ax2.imshow(img)
 
    #------------------------- 
-   ax.set_xlim(auto=False,left=0,right=1920)
-   ax.set_ylim(auto=False,bottom=1080,top=0)
+   ax.set_xlim(auto=False,left=0,right=width)
+   ax.set_ylim(auto=False,bottom=height,top=0)
    #ax.set_zlim(auto=False,bottom=2000,top=6000)
    ax.set_xlabel('X Axis')
    ax.set_ylabel('Y Axis')
