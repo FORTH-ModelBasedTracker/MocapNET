@@ -56,12 +56,28 @@ int main(int argc, char *argv[])
                                      if (processedLines%1000==0) { fprintf(stderr,"."); }
                                      //fprintf(stderr,".[%0.2f/%u]",skeletonS.skeletonBody[4].value,correspondingClass);
                                      
+                                     /*
+                                      enum MOCAPNET_Orientation
+                                       {
+                                          MOCAPNET_ORIENTATION_NONE=0,
+                                          MOCAPNET_ORIENTATION_FRONT,
+                                          MOCAPNET_ORIENTATION_BACK,
+                                          MOCAPNET_ORIENTATION_LEFT,
+                                          MOCAPNET_ORIENTATION_RIGHT,
+                                          //----------------------------- 
+                                          MOCAPNET_ORIENTATION_NUMBER
+                                       };
+                                      */
+                                      
                                      switch(correspondingClass)
                                      {     
+                                       //The series here is important for MocapNETLib2/core.cpp:
+                                       case  MOCAPNET_ORIENTATION_NONE:  fprintf(stdout,"0,0,0,0\n");   break; //Add erroneous categories to catch bugs
                                        case  MOCAPNET_ORIENTATION_FRONT: fprintf(stdout,"1,0,0,0\n");   break; 
                                        case  MOCAPNET_ORIENTATION_BACK:  fprintf(stdout,"0,1,0,0\n");   break;
                                        case  MOCAPNET_ORIENTATION_LEFT:  fprintf(stdout,"0,0,1,0\n");   break;
                                        case  MOCAPNET_ORIENTATION_RIGHT: fprintf(stdout,"0,0,0,1\n");   break;
+                                       default :                         fprintf(stdout,"0,0,0,0\n");   break; //Add erroneous categories to catch bugs
                                      };
                                      
                                      ++processedLines;

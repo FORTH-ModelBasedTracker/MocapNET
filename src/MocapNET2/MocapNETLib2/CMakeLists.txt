@@ -14,6 +14,7 @@ include_directories(${TENSORFLOW_INCLUDE_ROOT})
 add_library(MocapNETLib2 SHARED 
 ${BVH_SOURCE}
 ${OPENGL_SOURCE}
+../MocapNETLib2/config.h
 ../MocapNETLib2/core/core.cpp
 ../MocapNETLib2/core/core.hpp
 ../MocapNETLib2/core/singleThreaded.cpp

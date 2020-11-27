@@ -52,33 +52,39 @@ int getMocapNETOrientationFromAngle(float direction)
 {
     float orientation = direction;
 
-    if ( (orientation>=-45.0) && (orientation<=45.0) )
+    if ( (FRONT_MIN_ORIENTATION<=orientation) && (orientation<=FRONT_MAX_ORIENTATION) )
         {
             return MOCAPNET_ORIENTATION_FRONT;
         }
-    else if ( (orientation>=45.0) && (orientation<=135.0) )
+    else if ( (RIGHT_MIN_ORIENTATION<=orientation) && (orientation<=RIGHT_MAX_ORIENTATION) )
         {
+            // To visualy inspect these orienteations use :
+            // ./BVHGUI2 --from dataset/headerWithHeadAndOneMotion.bvh --set 4 135
+            // ./BVHGUI2 --from dataset/headerWithHeadAndOneMotion.bvh --set 4 45
             #if SWAP_LEFT_RIGHT_ENSEMBLES
-             fprintf(stderr,"Swapped right ensemble");
+             fprintf(stderr,YELLOW "Swapped 45<=range<=135 to left ensemble\n" NORMAL);
              return MOCAPNET_ORIENTATION_LEFT;
             #else
              return MOCAPNET_ORIENTATION_RIGHT;
             #endif
         }
-    else if ( (orientation>=-135.0) && (orientation<=-45.0) )
+    else if ( (LEFT_MIN_ORIENTATION<=orientation) && (orientation<=LEFT_MAX_ORIENTATION) )
         {
+            // To visualy inspect these orienteations use :
+            // ./BVHGUI2 --from dataset/headerWithHeadAndOneMotion.bvh --set 4 -135
+            // ./BVHGUI2 --from dataset/headerWithHeadAndOneMotion.bvh --set 4 -45
             #if SWAP_LEFT_RIGHT_ENSEMBLES
-             fprintf(stderr,"Swapped left ensemble");
+             fprintf(stderr,YELLOW "Swapped -135<=range<=-45 to right ensemble\n" NORMAL);
              return MOCAPNET_ORIENTATION_RIGHT;
             #else
              return MOCAPNET_ORIENTATION_LEFT;
             #endif
         }
-    else if ( (orientation<=-135) && (orientation>=-225) )
+    else if ( (BACK_ALT_MIN_ORIENTATION<=orientation) && (orientation<=BACK_ALT_MAX_ORIENTATION) )
         {
             return MOCAPNET_ORIENTATION_BACK;
         }
-    else if ( (orientation>=135) && (orientation<=225) )
+    else if ( (BACK_MIN_ORIENTATION<=orientation) && (orientation<=BACK_MAX_ORIENTATION) )
         {
             return MOCAPNET_ORIENTATION_BACK;
         }
@@ -91,6 +97,7 @@ int getMocapNETOrientationFromAngle(float direction)
     fprintf(stderr,RED "Empty Direction Vector\n" NORMAL);
     return MOCAPNET_ORIENTATION_NONE;
 }
+
 
 
 int  getMocapNETOrientationFromOutputVector(std::vector<float> direction)
