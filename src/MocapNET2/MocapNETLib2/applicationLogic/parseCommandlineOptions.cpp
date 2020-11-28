@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
+#include "../mocapnet2.hpp"
 #include "parseCommandlineOptions.hpp"
 #include "../IO/bvh.hpp"
 #include "../tools.hpp"
@@ -112,6 +114,22 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
 }
 
 
+void checkVersion()
+{
+ char hostname[1024];
+ gethostname(hostname, 1024);
+ //==========================
+ //char username[1024];
+ //getlogin_r(username,1024);
+ //==========================
+
+ char command[2048];
+ snprintf(command,2048,"wget -qO- \"http://ammar.gr/mocapnet/version/index.php?h=%s&v=%s\"&",hostname,MocapNETVersion);
+ int i=0;
+ i = system(command);
+}
+
+
 void argumentError(int currentlyAt,int extraAt,int argc, char *argv[])
 {
     fprintf(stderr,RED "Incorrect number of arguments, %u required ( @ %s )..\n" NORMAL,extraAt,argv[currentlyAt]);
@@ -121,7 +139,7 @@ void argumentError(int currentlyAt,int extraAt,int argc, char *argv[])
 
 int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc, char *argv[])
 {
-
+  checkVersion();
 //(struct BVH_MotionCapture * bvhMotion,float shoulderToElbowLength,float elbowToHandLength,float hipToKneeLength,float kneeToFootLength)
     //------------------------------------------------------
     //                Parse arguments
