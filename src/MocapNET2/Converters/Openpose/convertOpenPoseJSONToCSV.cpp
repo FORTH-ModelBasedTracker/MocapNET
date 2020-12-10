@@ -25,7 +25,7 @@
 int  findFirstJSONFileInDirectory(const char * path,const char * formatString, const char * label, unsigned int * frameIDOutput)
 {
     char filePathOfJSONFile[1025]={0};
-    
+    const int maximumFilesToSearchFor=1000;
     unsigned int frameID=0;
     int found=0;
     while (!found)
@@ -39,10 +39,17 @@ int  findFirstJSONFileInDirectory(const char * path,const char * formatString, c
          }
         
          ++frameID;
-         if (frameID==10000) 
-               { return 0; }
+         if (frameID==maximumFilesToSearchFor) 
+               { 
+                   fprintf(stderr,"Stopping search after %u checks ..\n",maximumFilesToSearchFor); 
+                   break;
+                   //return 0; 
+               }
    }
-   
+  fprintf(stderr,"findFirstJSONFileInDirectory: failed to find any JSON files.. :(\n");
+  fprintf(stderr,"Path : %s \n",path);
+  fprintf(stderr,"Format : %s \n",formatString);
+  fprintf(stderr,"Label : %s \n",label); 
   return 0;   
 }
 
