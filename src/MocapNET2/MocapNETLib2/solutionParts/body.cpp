@@ -1,5 +1,6 @@
 #include "body.hpp"
 
+#include "../../MocapNETLib2/config.h"
 #include "../../MocapNETLib2/IO/conversions.hpp"
 #include "../../MocapNETLib2/tools.hpp"
 #include "../../MocapNETLib2/core/core.hpp"
@@ -213,7 +214,7 @@ std::vector<float> mocapnetBody_evaluateInput(struct MocapNET2 * mnet,struct ske
                                                  &mnet->body,
                                                  mnet->body.neuralNetworkReadyInput,
                                                  mnet->orientation,
-                                                 1 /*Body Requires orientation trick*/ 
+                                                 NN_ORIENTATIONS_TRAINED_AROUND_ZERO_AND_REQUIRE_TRICK /*Body Requires orientation trick*/ 
                                                ); 
     mnet->body.result = result;
     

@@ -6,6 +6,10 @@ extern "C"
 {
 #endif
 
+
+//Neural network orientations centered around 0
+#define NN_ORIENTATIONS_TRAINED_AROUND_ZERO_AND_REQUIRE_TRICK 1
+
 //Also swap bvh rotations before IK step
 #define APPLY_BVH_FIX_TO_IK_INPUT 0
 

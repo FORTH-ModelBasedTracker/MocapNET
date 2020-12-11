@@ -207,7 +207,7 @@ std::vector<float>  MNET5Classes(struct MocapNET2SolutionPart * mnet,std::vector
                     if ( (targetHasOrientationTrick) && (result.size()>4) )
                         {
                             fprintf(stderr,"Orientation changed from %0.2f ",result[4]);
-                            result[4]=undoOrientationTrickForBackOrientation(result[4]);
+                              result[4]=undoOrientationTrickForBackOrientation(result[4]);
                             //result[4]-=180.0;
                             fprintf(stderr,"to %0.2f",result[4]);
                         }
