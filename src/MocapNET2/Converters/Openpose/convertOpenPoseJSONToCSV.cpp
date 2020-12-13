@@ -1,7 +1,53 @@
-/*
- * Export utility from OpenPose BODY 25 JSON format to a more regular CSV file
- * Sample call :   ./convertBody25JSONToCSV --from frames/GOPR3223.MP4-data/ --label colorFrame_0_ -o .
+ /*
+ * Export utility from OpenPose BODY25 + Hands + Face JSON format to a trivially parseable CSV file
+ * Check https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/output.md on more information on OpenPose JSON files..
+ * 
+ * Sample call :   ./convertOpenPoseJSONToCSV --from frames/GOPR3223.MP4-data/ --label colorFrame_0_ -o .
+ *
+ *   This utility converts OpenPose json output to a CSV file that can be easily parsed and used as MocapNET input
+ * 
+ * My workflow when working with OpenPose is first dumping any video file that I want to process (let's call it video.mp4) to images using ffmpeg.
+ * This ensures a well defined framerate and a well defined 1:1 correspondence of color/json/and my output frames regardless of video container.
+ *
+ *  I typically use this script -> https://github.com/AmmarkoV/RGBDAcquisition/blob/master/grabber/frames/dump_video.sh to dump the video to files
+ *  but it is equivalent to running :
+ *                       mkdir videoFiles && ffmpeg -i video.mp4 -r 30 -q:v 1  videoFiles/colorFrame_0_%05d.jpg && cp videoFiles/colorFrame_0_00001.jpg videoFiles/colorFrame_0_00000.jpg
+ *  
+ *  Having a well defined serialized version of the dataset ( with serial numbers that start from 0 instead of 1 ) we can be sure on what frame each openpose output will correspond
+ *  
+ *  Running : 
+ *                openpose.bin -number_people_max 1 --hand --face --write_json videoFiles/ -image_dir videoFiles/
+ *  
+ *  The directory will be populated with colorFrame_0_xxxxx_keypoints.json files
+ *  each of the colorFrame_0_xxxxx_keypoints.json will correspond to a  colorFrame_0_xxxxx.jpg
+ *
+ *  This can then be converted to a CSV file using : 
+ *                 ./convertBody25JSONToCSV --from videoFiles/ -o .
+ *
+ *
+ *  If you want to use a custom json labeling scheme and not rely on images as OpenPose input you will need to :
+ *
+ *  1) provide the proper image resolution ( since the JSON files alone do not have this information ) 
+ *     The image resolution is *CRUCIAL* for the software to correctly normalize input 2D points and respect the training aspect ratio
+ *     if you don't supply the correct size a Full-HD(1920x1080p) input will be assumed. If this does not correspond to the original video resolution output will be adversly affected       
+ *     You can do this with the --size WIDTH HEIGHT parameter
+ *
+ *  2) Depending on your datasets and filenames supply the proper number of characters for a valid serial frame number length
+ *     i.e.   frame_xxxxx_keypoints.json needs --seriallength 5
+ *            frame_xxxxxxx_keypoints.json needs --seriallength 7 
+ *            etc  
+ *
+ *  3) Depending on your datasets and filenames supply the correct label for the dataset 
+ *     i.e.   datasetNameA_xxxxx_keypoints.json needs --label datasetNameA
+ *            AMoreComplexLabel_IsTHIS_0_xxxxxxx_keypoints.json needs --label  AMoreComplexLabel_IsTHIS_0 
+ *            etc
+ *
+ *  4) Depending on the starting frame and ending frame of your dataset supply the --startAt X , --maxFrames X 
+ *     i.e   dataset_00001_keypoints.json - dataset_00101_keypoints.json should need --startAt 1 --maxFrames 102   
+ *     i.e   dataset_00000_keypoints.json - dataset_0099_keypoints.json should need --startAt 0 --maxFrames 100   
+ *
  * */
+
 
 #include <iostream>
 #include <vector>
