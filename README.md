@@ -305,7 +305,7 @@ A utility has been included that can convert the JSON files to a single CSV file
 ```
  ./convertOpenPoseJSONToCSV --from /path/to/outputJSONDirectory/ --label yourVideoFile --seriallength 12 --size 1920 1080 -o .
 ```
-For more information on how to use the conversion utility please [see the documentation inside the utility](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/Converters/convertBody25JsonToCSV.cpp#L2)
+For more information on how to use the conversion utility please [see the documentation inside the utility](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/MocapNET2/Converters/Openpose/convertOpenPoseJSONToCSV.cpp)
 
 A CSV file has been included that can be run by issuing : 
 ```
