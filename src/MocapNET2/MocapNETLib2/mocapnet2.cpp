@@ -55,7 +55,7 @@ void commonInitialization(struct MocapNET2 * mnet)
     //---------------------------------
 
     //Reset pose history..
-    mnet->gesturesMasterSwitch=1;
+    mnet->gesturesMasterSwitch=mnet->options->doGestureDetection;
     mnet->poseHistoryStorage.maxPoseHistory=150;
     mnet->poseHistoryStorage.history.clear();
     mnet->framesReceived=0;
@@ -78,21 +78,22 @@ void commonInitialization(struct MocapNET2 * mnet)
     snprintf(mnet->leftHand.partName,64,"Left Hand");
     snprintf(mnet->rightHand.partName,64,"Right Hand");
 
-    if (!loadGestures(&mnet->recognizedGestures))
+    if (mnet->gesturesMasterSwitch)
+    {
+      if (!loadGestures(&mnet->recognizedGestures))
         {
             fprintf(stderr,RED "Failed to read recognized Gestures\n" NORMAL);
             fprintf(stderr,RED "This is not fatal, but gestures/poses will be deactivated..\n" NORMAL);
             mnet->gesturesMasterSwitch=0;
         }
 
-    if (!loadPoses(&mnet->recognizedPoses))
+       if (!loadPoses(&mnet->recognizedPoses))
         {
             fprintf(stderr,RED "Failed to read recognized Poses\n" NORMAL);
             fprintf(stderr,RED "This is not fatal, but poses/gestures will be deactivated..\n" NORMAL);
             mnet->gesturesMasterSwitch=0;
         }
-
-
+    }
 
     fprintf(stderr,"Initializing output filters : ");
     float filterCutoff = 5.0;
