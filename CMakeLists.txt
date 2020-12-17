@@ -42,22 +42,42 @@ IF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/libtensorflow.so.2
  set(TENSORFLOW_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/" CACHE PATH "tensorflow root") 
  set(TENSORFLOW_INCLUDE_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/include/" CACHE PATH "tensorflow include")  
  set(TENSORFLOW2_FOUND true CACHE BOOL "Tensorflow 2 available")
+ set(TENSORFLOW_SOURCE_FILES
+      ${CMAKE_SOURCE_DIR}/src/NeuralNetworkAbstractionLayer/neuralNetworkAbstraction.cpp
+      ${CMAKE_SOURCE_DIR}/src/Tensorflow/tensorflow.cpp
+      ${CMAKE_SOURCE_DIR}/src/Tensorflow/tf_utils.cpp
+    )
 ELSEIF(EXISTS "/usr/local/lib/libtensorflow.so.2")
  MESSAGE("Using system-wide found libtensorflow v2 C-API")
  set(TENSORFLOW_ROOT "/usr/local/lib/" CACHE PATH "tensorflow root") 
  set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")
  set(TENSORFLOW2_FOUND true CACHE BOOL "Tensorflow 2 available")
+ set(TENSORFLOW_SOURCE_FILES
+      ${CMAKE_SOURCE_DIR}/src/NeuralNetworkAbstractionLayer/neuralNetworkAbstraction.cpp
+      ${CMAKE_SOURCE_DIR}/src/Tensorflow/tensorflow.cpp
+      ${CMAKE_SOURCE_DIR}/src/Tensorflow/tf_utils.cpp
+    )
 #------------------------------------------------------------------------------------------------------------------------------------------------
 #If we can't find it then search for Tensorflow 1.x  
 #------------------------------------------------------------------------------------------------------------------------------------------------
 ELSEIF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/libtensorflow.so")
  MESSAGE("Using locally found libtensorflow v1 C-API")
  set(TENSORFLOW_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/" CACHE PATH "tensorflow root") 
- set(TENSORFLOW_INCLUDE_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/include/" CACHE PATH "tensorflow include")  
+ set(TENSORFLOW_INCLUDE_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/include/" CACHE PATH "tensorflow include")
+ set(TENSORFLOW_SOURCE_FILES
+      ${CMAKE_SOURCE_DIR}/src/NeuralNetworkAbstractionLayer/neuralNetworkAbstraction.cpp
+      ${CMAKE_SOURCE_DIR}/src/Tensorflow/tensorflow.cpp
+      ${CMAKE_SOURCE_DIR}/src/Tensorflow/tf_utils.cpp
+    )
 ELSEIF(EXISTS "/usr/local/lib/libtensorflow.so")
  MESSAGE("Using system-wide found libtensorflow v1 C-API")
  set(TENSORFLOW_ROOT "/usr/local/lib/" CACHE PATH "tensorflow root") 
- set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")  
+ set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")
+ set(TENSORFLOW_SOURCE_FILES
+      ${CMAKE_SOURCE_DIR}/src/NeuralNetworkAbstractionLayer/neuralNetworkAbstraction.cpp
+      ${CMAKE_SOURCE_DIR}/src/Tensorflow/tensorflow.cpp
+      ${CMAKE_SOURCE_DIR}/src/Tensorflow/tf_utils.cpp
+    )
 #------------------------------------------------------------------------------------------------------------------------------------------------
 #If we can't find any Tensorflow just point to the /usr/lib and hope for the best.. 
 #------------------------------------------------------------------------------------------------------------------------------------------------
