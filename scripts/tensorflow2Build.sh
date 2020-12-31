@@ -43,12 +43,13 @@ cd ~/Documents
 mkdir 3dParty
 cd 3dParty
 
-#wget http://ammar.gr/mocapnet/bazel-3.7.2-installer-linux-x86_64.sh
-#chmod +x bazel-3.7.2-installer-linux-x86_64.sh
-#./bazel-3.7.2-installer-linux-x86_64.sh --user
 
-mkdir -p "$HOME/.bazel/bin"
-cd "$HOME/.bazel/bin" && curl -fLO https://releases.bazel.build/3.1.0/release/bazel-3.1.0-linux-x86_64 && chmod +x bazel-3.1.0-linux-x86_64
+#wget https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-installer-linux-x86_64.sh
+#chmod +x bazel-3.1.0-installer-linux-x86_64.sh
+#./bazel-3.1.0-installer-linux-x86_64.sh --user
+
+#mkdir -p "$HOME/.bazel/bin"
+#cd "$HOME/.bazel/bin" && curl -fLO https://releases.bazel.build/3.1.0/release/bazel-3.1.0-linux-x86_64 && chmod +x bazel-3.1.0-linux-x86_64
 
 #Create shared directory
 if [ -f ~/.bashrc ]
