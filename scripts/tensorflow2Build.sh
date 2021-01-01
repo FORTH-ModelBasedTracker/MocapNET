@@ -93,6 +93,15 @@ bazel build --config=opt --config=cuda --config=mkl --config=monolithic $BazelPl
 bazel build --config opt --config=cuda --config=monolithic  //tensorflow/tools/lib_package:libtensorflow
 cp bazel-bin/tensorflow/tools/lib_package/libtensorflow.tar.gz ~/Documents/3dParty/libtensorflow-r$VERSION.tar.gz
 
+
+#Build tensorflow lite
+#https://www.tensorflow.org/lite/guide/build_cmake
+mkdir tflite_buld
+cd tflite_buld/
+cmake ../tensorflow/lite
+cmake --build . -j
+
+
 echo "Please visit ~/Documents/3dParty/ to collect your tensorflow python3 wheel, and C Library.."
 
 
