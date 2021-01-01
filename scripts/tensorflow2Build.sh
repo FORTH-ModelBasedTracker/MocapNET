@@ -88,6 +88,9 @@ bazel clean --expunge
 
 bazel build --config=opt --config=cuda --config=mkl --config=monolithic $BazelPleaseSlowDown  //tensorflow/tools/pip_package:build_pip_package
 ./bazel-bin/tensorflow/tools/pip_package/build_pip_package ~/Documents/3dParty/
+#To install
+#pip3 install ~/Documents/3dParty/tensorflow-2.4.0-cp36-cp36m-linux_x86_64.whl
+
 
 
 bazel build --config opt --config=cuda --config=monolithic  //tensorflow/tools/lib_package:libtensorflow
