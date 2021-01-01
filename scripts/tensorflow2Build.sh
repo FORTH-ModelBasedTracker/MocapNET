@@ -76,6 +76,10 @@ git pull
 git checkout r$VERSION
 
 
+#Make sure to check your target CPU and when asked used the correct -march= / -mtune= 
+# for example for an old intel i7 -march=nehalem is used..
+#https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html
+
 ./configure
 
 bazel clean --expunge
