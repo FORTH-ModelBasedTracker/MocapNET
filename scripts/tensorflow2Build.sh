@@ -110,6 +110,6 @@ cmake --build . -j
 
 
 echo "Please visit ~/Documents/3dParty/ to collect your tensorflow python3 wheel, and C Library.."
-
+echo "Use  :    python -c 'import tensorflow as tf;'      to test your tensorflow"
 
 exit 0
