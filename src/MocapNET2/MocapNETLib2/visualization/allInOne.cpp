@@ -42,6 +42,29 @@ cv::Mat offsetImageWithPadding(const Mat& originalImage, int offsetX, int offset
 #endif
 
 
+int extraWindow(
+                std::vector<std::vector<float> > points2DOutputGUIRealView,
+                std::vector<std::vector<float> > points2DOutputGUIForcedView
+               )
+{
+    //cv::Mat image = cv::Mat(800, 800, CV_8UC3);
+    cv::Mat image = cv::Mat::zeros(1920, 1080, CV_8UC3); 
+    
+    //Switch that controls drawing skeleton labels
+    int draw3DSkeletonJointLabels = 1; 
+                               
+    //This is the 3D skeleton visualized to match the RGB image           
+    //drawSkeleton(image,points2DOutputGUIRealView,-1000,0,draw3DSkeletonJointLabels);    
+
+    //This is the 3D skeleton nailed to be visualized to match the RGB image           
+    drawSkeleton(image,points2DOutputGUIForcedView,-800,0,draw3DSkeletonJointLabels); 
+
+    cv::imshow("New Visualization",image);   
+    return 1;
+}
+
+
+
 int visualizeAllInOne(
     const char* windowName,
     unsigned int frameNumber,
@@ -63,16 +86,13 @@ int visualizeAllInOne(
 
 #if USE_OPENCV
     int success=0;
-    char finalFilename[2048]= {0};
-    cv::Mat raytraced;
-
-
-    snprintf(finalFilename,256,"%s/raytraced2/%04u.png",path,frameNumber);
-    raytraced = imread(finalFilename,cv::IMREAD_COLOR);   // older versions might want the CV_LOAD_IMAGE_COLOR  flag
-
+    char finalFilename[2048]= {0}; 
+    
+    
+    //Handle Background
+    //-----------------------------------------------------------------------------------
     if (alreadyLoadedImage==0)
         {
-
             char formatString[256]= {0};
             snprintf(formatString,256,"%%s/%%s%%0%uu.jpg",serialLength);
 
@@ -111,19 +131,21 @@ int visualizeAllInOne(
                 {
                     image = imread(finalFilename,cv::IMREAD_COLOR);   // older versions might want the CV_LOAD_IMAGE_COLOR  flag
                 }
+    //-----------------------------------------------------------------------------------
 
 
-    //The skeleton offset is wrong for resolutions other than 1920x1080..
+    //The skeleton offset controls offset for the 3D skeleton rendering on top of the image
+    //Offsets are wrong for resolutions other than 1920x1080 since they are hardcoded..
     float offsetX = (float) -1*image.size().width/4;
     float offsetY = 0.0;// (float) -1*image.size().height/1080;
     
-    //Uncomment this to overlay exactly on top
+    //If you uncomment the next like the 3D overlay will stay exactly on top of the skeleton
     //offsetX=0;
 
 
-    //-----------------------
-    //      OpenGL stuff 
-    //-----------------------
+    //---------------------------------------------------------------------
+    //                       OpenGL overlay stuff 
+    //---------------------------------------------------------------------
     cv::Mat * openGLMatForVisualization = 0;
     if (options->useOpenGLVisualization) {
                                            //fprintf(stderr,"updateOpenGLView\n");
@@ -147,7 +169,7 @@ int visualizeAllInOne(
                                                    }
                                           //=====================================================================
                                          }
-                                                        
+
    if (openGLMatForVisualization!=0)
    {
      cv::Mat * glMat = (cv::Mat *) openGLMatForVisualization;
@@ -161,9 +183,10 @@ int visualizeAllInOne(
      //cv::addWeighted(offsetImage,1.0,image,0.8,0.0,image); 
      //cv::add(offsetImage,image,image);
    }
+   //---------------------------------------------------------------------------------
 
             
-    //This is the 2D visualization sitting on top of the RGB Image
+    //This is the 2D visualization sitting on top of the RGB image
     //fprintf(stderr,"2D Visualization skeleton(%0.2f,%0.2f) rendered on %ux%u image\n",skeleton->width,skeleton->height,image.size().width,image.size().height);
     visualizeSkeletonSerialized(
                                 image,
@@ -175,9 +198,23 @@ int visualizeAllInOne(
                                 image.size().width,
                                 image.size().height
                                ); 
-            
-    drawSkeleton(image,points2DOutputGUIRealView,offsetX,offsetY,0);    
+                               
+                               
+    //Switch that controls drawing skeleton labels
+    int draw3DSkeletonJointLabels = 0; 
+                               
+    //This is the 3D skeleton visualized to match the RGB image           
+    drawSkeleton(image,points2DOutputGUIRealView,offsetX,offsetY,draw3DSkeletonJointLabels);    
                 
+    //Uncomment to spawn an extra window with a centered skeleton..!
+    //extraWindow(points2DOutputGUIRealView,points2DOutputGUIForcedView);
+    
+    //If you dont want to see widgets just turn them off using this switch
+    int showWidgets = 1; 
+                
+                 
+    if (showWidgets)
+    {
     int borderToScreen = 15;
     int NSDMWidth=160;  //body leftHand rightHand
     int NSDMHeight=160;
@@ -224,6 +261,7 @@ int visualizeAllInOne(
     { 
      unsigned int framerateWidgetWidth  = NSDMWidth + 40;    
      unsigned int framerateWidgetHeight = NSDMHeight;    
+        
         
      //Keep framerate history
      appendToHistory(frameRateHistoryTotal,options->totalLoopFPS,framerateWidgetWidth);
@@ -291,6 +329,9 @@ int visualizeAllInOne(
     }
     
     //-----------------------------------------------------------------
+    } 
+    
+    
     
     }
 
