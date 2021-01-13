@@ -466,11 +466,21 @@ int main(int argc, char *argv[])
      fprintf(stderr,"\n\nCPU : %s \n",options.CPUName);
      fprintf(stderr,"GPU : %s \n",options.GPUName);
      fprintf(stderr,"Average framerate for %u samples was %0.2f fps \n",frameSamples,((float) frameRateSummary/frameSamples) );
+
+     //Offer some info on options of the run executed..
      //-------------------------------------------------
      if (options.doMultiThreadedIK)
                          { fprintf(stderr,"Multi-threading was on\n"); }
+     //-------------------------------------------------
      if (codeOptimizationsForIKEnabled())
-                         { fprintf(stderr,"Code optimizations where on\n"); }
+                         { fprintf(stderr,"Code optimizations where on\n"); }     
+     //-------------------------------------------------
+     if (options.jointEstimatorUsed==JOINT_2D_ESTIMATOR_FORTH)
+                         { fprintf(stderr,"You can achieve better accuracy by using the homebrewed OpenPose 2D joint estimator using --openpose\n"); }
+     //-------------------------------------------------
+     if (options.jointEstimatorUsed==JOINT_2D_ESTIMATOR_OPENPOSE)
+                         { fprintf(stderr,"You can achieve faster frame-rates by using the standalone --forth 2D joint estimator\n"); }
+     //-------------------------------------------------
     }
 
     // the camera will be deinitialized automatically in VideoCapture destructor
