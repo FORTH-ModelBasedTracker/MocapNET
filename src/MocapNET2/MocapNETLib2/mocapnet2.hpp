@@ -28,7 +28,7 @@
 /**
  * @brief MocapNET version  
  */
-static const char MocapNETVersion[] = { "2.0" };
+static const char MocapNETVersion[] = { "2.1" };
 
 /**
  * @brief MocapNET has been trained on 1920x1080 frames, so all the received coordinates are normalized in the

@@ -479,7 +479,7 @@ int main(int argc, char *argv[])
                          { fprintf(stderr,"You can achieve better accuracy by using the homebrewed OpenPose 2D joint estimator using --openpose\n"); }
      //-------------------------------------------------
      if (options.jointEstimatorUsed==JOINT_2D_ESTIMATOR_OPENPOSE)
-                         { fprintf(stderr,"You can achieve faster frame-rates by using the standalone --forth 2D joint estimator\n"); }
+                         { fprintf(stderr,"You can achieve faster framerates with the bundled FORTH 2D joint estimator using --forth\n"); }
      //-------------------------------------------------
     }
 
