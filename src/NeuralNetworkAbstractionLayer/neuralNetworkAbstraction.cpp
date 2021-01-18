@@ -2,6 +2,26 @@
 
 #include <stdio.h>
 
+
+void neuralNetworkPrintVersion()
+{
+  #if USE_TENSORFLOW1
+    //=========================
+    //=========================
+    fprintf(stderr,"TF1 wrapper / Tensorflow version %s\n",TF_Version());
+    //=========================
+    //=========================
+  #elif USE_TENSORFLOW2
+    //=========================
+    //=========================
+    fprintf(stderr,"TF2 wrapper / Tensorflow version %s\n",TF_Version());
+    //=========================
+    //=========================
+  #else
+    fprintf(stderr,"No Tensorflow support\n");
+  #endif
+}
+
 char * neuralNetworkGetPath(struct neuralNetworkModel * nn)
 {
   #if USE_TENSORFLOW1

@@ -57,6 +57,12 @@ int codeOptimizationsForIKEnabled()
   return codeHasSSE();
 }
 
+void printBVHCodeVersion()
+{
+  fprintf(stderr,"BVH subsystem version %s\n",BVH_LOADER_VERSION_STRING);
+}
+
+
 int initializeIK()
 {
     fprintf(stderr,"Initializing IK code..\n");

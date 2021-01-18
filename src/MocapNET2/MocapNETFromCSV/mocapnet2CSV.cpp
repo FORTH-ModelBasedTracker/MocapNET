@@ -352,7 +352,11 @@ int main(int argc, char *argv[])
 
 
                     float averageTime=(float) totalTime/totalSamples;
-                    fprintf(stderr,"\n\nCPU : %s \n",options.CPUName);
+                    fprintf(stderr,"\n\nMocapNET v%s execution summary :\n",MocapNETVersion);
+                    fprintf(stderr,"__________________________________________\n");
+                    //neuralNetworkPrintVersion();
+                    printBVHCodeVersion();
+                    fprintf(stderr,"CPU : %s \n",options.CPUName);
                     fprintf(stderr,"GPU : %s \n",options.GPUName);
                     fprintf(stderr,"Total %0.2f ms for %u samples - Average %0.2f ms - %0.2f fps\n",totalTime,totalSamples,averageTime,(float) 1000/averageTime);
                     //-----------------------------------------------

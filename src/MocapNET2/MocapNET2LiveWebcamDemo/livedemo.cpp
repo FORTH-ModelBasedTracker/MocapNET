@@ -463,7 +463,11 @@ int main(int argc, char *argv[])
     //Offer a summary of system and the achieved framerate..!
     if (frameSamples!=0)
     {
-     fprintf(stderr,"\n\nCPU : %s \n",options.CPUName);
+     fprintf(stderr,"\n\nMocapNET v%s execution summary :\n",MocapNETVersion);
+     fprintf(stderr,"__________________________________________\n");
+     //neuralNetworkPrintVersion();
+     printBVHCodeVersion();
+     fprintf(stderr,"CPU : %s \n",options.CPUName);
      fprintf(stderr,"GPU : %s \n",options.GPUName);
      fprintf(stderr,"Average framerate for %u samples was %0.2f fps \n",frameSamples,((float) frameRateSummary/frameSamples) );
 

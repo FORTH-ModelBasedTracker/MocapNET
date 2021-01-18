@@ -1035,6 +1035,8 @@ static const char * bvhHeader=
 
 
 
+void printBVHCodeVersion();
+
 int loadCalibration(struct MocapNET2Options * options,const char* directory,const char * file);
 
 void overrideBVHSubsystemFocalLength(float newFx,float newFy);

@@ -22,6 +22,8 @@ struct neuralNetworkModel
 };
 
 
+void neuralNetworkPrintVersion();
+
 char * neuralNetworkGetPath(struct neuralNetworkModel * nn);
 
 int neuralNetworkLoad(
