@@ -23,7 +23,10 @@ extern "C"
 //#define RED     "\033[31m"      /* Red */
 //#define GREEN   "\033[32m"      /* Green */
 //#define YELLOW  "\033[33m"      /* Yellow */
-  
+
+
+typedef unsigned short float16;
+
 
 /**
  * @brief A structure that holds all of the relevant information for a tensorflow instance
@@ -31,7 +34,7 @@ extern "C"
  */
 struct Tensorflow2Instance
 {
-    char modelPath[1024];
+    char modelPath[1025];
 
     //Network instance
     //-------------------------
@@ -46,6 +49,7 @@ struct Tensorflow2Instance
     TF_Output* input;
     TF_Tensor*  inputTensor;
     TF_Tensor** inputValues;
+    char inputIsHalfFloats;
     unsigned int inputElements;
     int numberOfInputTensors; 
 
@@ -55,8 +59,14 @@ struct Tensorflow2Instance
     TF_Output* output;
     TF_Tensor*  outputTensor;
     TF_Tensor** outputValues;
+    char outputIsHalfFloats;
     unsigned int outputElements;
     int numberOfOutputTensors; 
+    
+    //Buffer for itermediate data
+    //-------------------------
+    unsigned int bufferSize;
+    float * buffer;
 };
 
 static void tf2_noOpDeallocator(void* data, size_t a, void* b) {}
@@ -64,16 +74,51 @@ static void tf2_noOpDeallocator(void* data, size_t a, void* b) {}
 
 static void tf2_deallocateBuffer(void* data, size_t)
 {
-    free(data);
+    if (data!=0)
+       { 
+         fprintf(stderr,"tf2_deallocateBuffer\n");
+         free(data); 
+       }
 }
 
 
-typedef unsigned short float16;
+#if INTEL_OPTIMIZATIONS
+#include <immintrin.h>
+#include <emmintrin.h>
 
-//https://en.wikipedia.org/wiki/IEEE_754-2008_revision
-//https://stackoverflow.com/questions/3026441/float32-to-float16/3026505
+//https://software.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top/compiler-reference/intrinsics/intrinsics-for-converting-half-floats/intrinsics-for-converting-half-floats-1.html
+//AVX 
+//This intrinsic takes a 32-bit float value, x , and converts it to a half-float value, which is returned.
+//__m128 _mm_cvtph_ps(__m128i x);
+//This intrinsic takes four packed half-float values and converts them to four 32-bit float values, which are returned. The upper 64-bits of x are ignored. The lower 64-bits are taken as four 16-bit float values for conversion.
+//__m128i _mm_cvtps_ph(_m128 x, int imm);
+
+static float16 convertFloat32ToFloat16(float f)
+{ 
+    /* 
+      (_MM_FROUND_TO_NEAREST_INT |_MM_FROUND_NO_EXC) // round to nearest, and suppress exceptions
+      (_MM_FROUND_TO_NEG_INF |_MM_FROUND_NO_EXC)     // round down, and suppress exceptions
+      (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
+      (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
+       _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
+     * */
+    int imm = _MM_FROUND_TO_NEAREST_INT |_MM_FROUND_NO_EXC;
+    //https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_cvtss_sh&expand=4979,5019,4979,1898
+    return _cvtss_sh(f,imm); 
+}
+ 
+static float convertFloat16ToFloat32(float16 h)
+{
+    //https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_cvtsh_ss&expand=4979,5019,4979,1898,1873
+    return _cvtsh_ss(h);
+}
+#else
 static float16 convertFloat32ToFloat16(float f)
 {
+  //https://en.wikipedia.org/wiki/Half-precision_floating-point_format
+  //https://en.wikipedia.org/wiki/IEEE_754-2008_revision
+  //https://stackoverflow.com/questions/3026441/float32-to-float16/3026505
+  #warning "convertFloat32ToFloat16 is not properly implemented"
   unsigned int * fltInt32 = ( unsigned int * ) &f;
   float16 h;
 
@@ -88,79 +133,24 @@ static float16 convertFloat32ToFloat16(float f)
 
 static float convertFloat16ToFloat32(float16 h)
 {
+  #warning "convertFloat16ToFloat32 is not properly implemented"
+  fprintf(stderr,"convertFloat16ToFloat32 not working.. ");
+  //http://www.fox-toolkit.org/ftp/fasthalffloatconversion.pdf
   float f = ((h&0x8000)<<16) | (((h&0x7c00)+0x1C000)<<13) | ((h&0x03FF)<<13);
   return f;
 }
+#endif
+
+
 
 static int tf2_checkModelUsingExternalTool(const char * path)
 {
-  char commandToCheck[2048];
+  char commandToCheck[4096];
   snprintf(commandToCheck,2000,"saved_model_cli show --dir %s --tag_set serve --signature_def serving_default",path);
   int i = system(commandToCheck);
  
   return (i==0);
 }
-
-
-/*
-#include <tensorflow/lite/c/c_api.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-int tflitetest (int argc, char* argv[]) {
-
-  TfLiteModel* model = TfLiteModelCreateFromFile("model.tflite");
-  TfLiteInterpreterOptions* options = TfLiteInterpreterOptionsCreate();
-  TfLiteInterpreterOptionsSetNumThreads(options, 2);
-  TfLiteInterpreter* interpreter = TfLiteInterpreterCreate(model, options);
-  TfLiteInterpreterAllocateTensors(interpreter);
-  for(int i = 0; i < 3; i++)
-  {
-    printf("Iteration: %d\n", i);
-
-    float input[49] = { 0.0 };
-
-    TfLiteTensor* input_tensor = TfLiteInterpreterGetInputTensor(interpreter, 0);
-    TfLiteTensorCopyFromBuffer(input_tensor, input, 49 * sizeof(float));
-
-    TfLiteInterpreterInvoke(interpreter);
-
-    const TfLiteTensor* output_tensor = TfLiteInterpreterGetOutputTensor(interpreter, 14);
-
-    float output[49];
-    TfLiteTensorCopyToBuffer(output_tensor, output, 49 * sizeof(float));
-
-    printf("Output: \n\n");
-    for (int j = 0; j < 49; j++) {
-      printf("%d: %f\n", j, output[j]);
-    }
-
-  }
-  TfLiteInterpreterDelete(interpreter);
-  TfLiteInterpreterOptionsDelete(options);
-  TfLiteModelDelete(model);
-  return 0;
-}
-*/
-
-
-
-
-//saved_model_cli show --dir tmp.pb --tag_set serve --signature_def serving_default
-/*
-The given SavedModel SignatureDef contains the following input(s):
-  inputs['input_front'] tensor_info:
-      dtype: DT_FLOAT
-      shape: (-1, 322)
-      name: serving_default_input_front:0
-The given SavedModel SignatureDef contains the following output(s):
-  outputs['result_front'] tensor_info:
-      dtype: DT_FLOAT
-      shape: (-1, 42)
-      name: StatefulPartitionedCall:0
-Method name is: tensorflow/serving/predict
-*/
-
 
 
 
@@ -253,7 +243,7 @@ static int tf2_allocateIOTensors(
     //Allocate input tensor
     //--------------------------------------------------------------------------------
     tf2i->numberOfInputTensors = 1;
-    tf2i->input = (TF_Output*)malloc(sizeof(TF_Output) * tf2i->numberOfInputTensors);
+    tf2i->input = (TF_Output*) malloc(sizeof(TF_Output) * tf2i->numberOfInputTensors);
     tf2i->input_operation = {TF_GraphOperationByName(tf2i->graph,inputTensorName), 0};
     if(tf2i->input_operation.oper == NULL)
     {
@@ -267,7 +257,7 @@ static int tf2_allocateIOTensors(
     //Allocate Output tensor
     //--------------------------------------------------------------------------------
     tf2i->numberOfOutputTensors = 1;
-    tf2i->output = (TF_Output*)malloc(sizeof(TF_Output) * tf2i->numberOfOutputTensors);
+    tf2i->output = (TF_Output*) malloc(sizeof(TF_Output) * tf2i->numberOfOutputTensors);
 
     tf2i->output_operation = {TF_GraphOperationByName(tf2i->graph,outputTensorName), 0};
     if(tf2i->output_operation.oper == NULL)
@@ -297,12 +287,12 @@ static int tf2_loadFrozenGraph(
                                unsigned int forceCPU
                               )
 {
-    fprintf(stderr,"LoadGraph %s using TensorFlow Version: %s\n",graphPath,TF_Version());
     if (graphPath == 0)
         {
             fprintf(stderr,"Cannot load graph with null path..\n");
             return 0;
         }
+    fprintf(stderr,"LoadGraph %s using TensorFlow Version: %s\n",graphPath,TF_Version());
     
     unsigned int graphInMemorySize=0;
     char * graphInMemory = tf2_readFileToMem(graphPath,&graphInMemorySize);
@@ -351,7 +341,7 @@ static int tf2_loadFrozenGraph(
     
 
     //--------------------------------------------------------------------------------------------------------------
-    tf2i->sessionOptions     = TF_NewSessionOptions();
+    tf2i->sessionOptions = TF_NewSessionOptions();
     if (forceCPU) { tf2_setCPUExecutionSessionConfiguration(tf2i); }
 
 
@@ -381,11 +371,11 @@ static int tf2_loadModel(
 {
     //https://medium.com/analytics-vidhya/deploying-tensorflow-2-1-as-c-c-executable-1d090845055c
     //Tensorflow boilerplate names, fingers crossed that they don't change them..
-    char inputTensorName[1024]; //= {"serving_default_input_front"}; //Default input layer
+    char inputTensorName[1025]={0}; //= {"serving_default_input_front"}; //Default input layer
     snprintf(inputTensorName,1024,"serving_default_%s",inputTensor);
     //snprintf(inputTensorName,1024,"%s",inputTensor);
     
-    char outputTensorName[1024]; //= {"StatefulPartitionedCall"};   //Default output layer
+    char outputTensorName[1025]={0}; //= {"StatefulPartitionedCall"};   //Default output layer
     snprintf(outputTensorName,1024,"StatefulPartitionedCall");
     
     //--------------------------------------------------------------------------
@@ -475,6 +465,13 @@ static int tf2_unloadModel(struct Tensorflow2Instance * tf2i)
     TF_DeleteStatus(tf2i->status);
     //Can't check status having deleted the status ..
      
+     
+    if (tf2i->buffer!=0)
+    {
+        free(tf2i->buffer);
+        tf2i->buffer=0;
+        tf2i->bufferSize=0;
+    }
     return 1;
 }
 
@@ -486,15 +483,51 @@ static int tf2_run(
                    unsigned int dataSizeBytes
                    )
 {
-    TF_Tensor* int_tensor = TF_NewTensor(
-                                          TF_FLOAT,
-                                          dimensions,
-                                          dimensionsNumber,
-                                          data,
-                                          dataSizeBytes,
-                                          &tf2_noOpDeallocator,
-                                          0
-                                         );
+    int result = 0;
+    TF_Tensor* int_tensor = NULL; 
+    
+    
+    if (tf2i->inputIsHalfFloats)
+    {
+      //In an attempt not to perform unneccessary reallocations 
+      //I rewrite the float array with halfs..
+      unsigned int dataSizeElements = dataSizeBytes / sizeof(float);
+      unsigned int convertedDataSizeBytes = sizeof(float16) * dataSizeElements;
+       
+       float16 * dataAsFloat16 = (float16*) data;
+       float buffer=0.0;
+       
+       for (int i=0; i<dataSizeElements; i++)
+        {
+          //Have an intermediate location..
+          buffer = data[i];
+          dataAsFloat16[i] = convertFloat32ToFloat16(buffer);
+        }
+       int_tensor = TF_NewTensor(
+                                  TF_HALF,
+                                  dimensions,
+                                  dimensionsNumber,
+                                  dataAsFloat16,
+                                  convertedDataSizeBytes,
+                                  &tf2_noOpDeallocator,
+                                  0
+                                 ); 
+    } else
+    {
+      //Regular floats ready to be transported to the tensor
+      int_tensor = TF_NewTensor(
+                                TF_FLOAT,
+                                dimensions,
+                                dimensionsNumber,
+                                data,
+                                dataSizeBytes,
+                                &tf2_noOpDeallocator,
+                                0
+                               );
+    }
+     
+    //----------------------------------------------------------------
+    
     if (int_tensor == NULL)
     {
         fprintf(stderr,"ERROR tf2_run: Failed TF_NewTensor\n");
@@ -502,18 +535,17 @@ static int tf2_run(
         fprintf(stderr,"{ ");
         for (int i=0; i<dimensionsNumber; i++)
         {
-             fprintf(stderr,"%lu ",dimensions[i]); 
+             fprintf(stderr,"%ld ",dimensions[i]); 
         }
         fprintf(stderr,"}\n");
         
-        fprintf(stderr,"Data output size : %u \n",dataSizeBytes);
-        
+        fprintf(stderr,"Data output size : %u \n",dataSizeBytes); 
         return 0;
-    }
-
+    } 
+      else
+    {
     tf2i->inputValues[0] = int_tensor;
-    
-    int result = 1;
+     
     //Run the Session
     TF_SessionRun(
                    tf2i->session,
@@ -523,22 +555,24 @@ static int tf2_run(
                    NULL,  0,  
                    NULL, //Metadata
                    tf2i->status
-                 );
+                 ); 
 
     if(TF_GetCode(tf2i->status) != TF_OK)
     {
-        fprintf(stderr,"tf2_run: Error running network, %s\n",TF_Message(tf2i->status));
-        
+        fprintf(stderr,"tf2_run: Error running %s network, %s\n",tf2i->modelPath,TF_Message(tf2i->status));
+
         fprintf(stderr,"dimensionsNumber=%u\n",dimensionsNumber);
-        fprintf(stderr,"dataSizeBytes=%u\n",dataSizeBytes);
- 
+        fprintf(stderr,"dataSizeBytes=%u\n",dataSizeBytes); 
         tf2_checkModelUsingExternalTool(tf2i->modelPath);
-         
+
         result = 0;
     }
 
-    TF_DeleteTensor(int_tensor);
-
+     TF_DeleteTensor(int_tensor);
+     tf2i->inputValues[0] =0;
+     int_tensor=0; 
+     result=1;
+    }
 
     return result;
 }
@@ -549,4 +583,3 @@ static int tf2_run(
 #endif
 
 #endif
-

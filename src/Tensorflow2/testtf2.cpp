@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h> 
+#include <math.h> 
 #include <vector>
 
 #include "tensorflow2.h"
@@ -10,6 +11,33 @@
 #define RED     "\033[31m"      /* Red */
 #define GREEN   "\033[32m"      /* Green */
 #define YELLOW  "\033[33m"      /* Yellow */
+
+
+float rand_FloatRange(float a, float b)
+{
+    return ((b - a) * ((float)rand() / RAND_MAX)) + a;
+}
+
+
+int testFloat16()
+{  
+    unsigned int maxErrors = 10000;
+    unsigned int errors=0;
+    for (int i=0; i<maxErrors; i++)
+    {
+        float r1 = rand_FloatRange(-1000,1000);
+        float r2 = convertFloat16ToFloat32(convertFloat32ToFloat16(r1));
+        float distance = sqrt( (r1-r2) * (r1-r2) );
+        if (distance>0.4)
+        {
+            fprintf(stderr,"%f ",distance);
+            ++errors;
+        }
+    }
+    
+  fprintf(stderr,"\n\n%u errors / %0.2f %% \n",errors,(float) errors*100/maxErrors);
+  return (errors==0);
+}
 
 
 int testUpperBody()
@@ -155,10 +183,11 @@ int getInfoFast(const char * field,char * buffer,unsigned int bufferSize,char te
 
 int testHands()
 {
+//    const char* savedModelDirectory = "/home/ammar/Documents/Programming/DNNTracker/DNNTracker/dataset/combinedModel/mocapnet2/mode1/1.0/rhand_half_all.pb";
     const char* savedModelDirectory = "/home/ammar/Documents/Programming/DNNTracker/DNNTracker/dataset/combinedModel/mocapnet2/mode1/1.0/lhand_all.pb";
     
     #define NUMBER_OF_OUTPUTS 52
-    #define NUMBER_OF_INPUTS 320
+    #define NUMBER_OF_INPUTS 319
     int runOnCPU=1;
 
     int ndims = 2;
@@ -175,9 +204,8 @@ int testHands()
     
     //Check using external tool and a parser
     //-------------------------------------
-    char commandToCheck[1024];
-    snprintf(commandToCheck,1024,"saved_model_cli show --dir %s --tag_set serve --signature_def serving_default",savedModelDirectory);
-    int i = system(commandToCheck);
+    tf2_checkModelUsingExternalTool(savedModelDirectory);
+    /*
     
     static int maxOutputLength=4096;
     unsigned long outputSize=0;
@@ -197,7 +225,7 @@ int testHands()
           getInfoFast("name: ",output,outputSize,10);
         }
     //-------------------------------------
-    
+    */
     unsigned int numberOfInputElements = NUMBER_OF_INPUTS;
     unsigned int numberOfOutputElements = NUMBER_OF_OUTPUTS;
     
@@ -209,13 +237,14 @@ int testHands()
     struct Tensorflow2Instance upperbodyFrontv2={0};
     if ( tf2_loadModel(&upperbodyFrontv2,savedModelDirectory,inputTensor,numberOfInputElements,numberOfOutputElements,runOnCPU) )
     {
+      upperbodyFrontv2.inputIsHalfFloats=1;
       if ( tf2_run(&upperbodyFrontv2,dims,ndims,data,ndata) )
       {
  
       void* buff = TF_TensorData(upperbodyFrontv2.outputValues[0]); 
       float* offsets = (float*)buff;
       printf("Result Tensor v2:\n");
-      for(int i=0;i<upperbodyFrontv2.outputElements;i++)
+      for(int i=0; i<upperbodyFrontv2.outputElements; i++)
        {
         if(i>0) { printf(","); } 
         printf("%f",offsets[i]);
@@ -235,14 +264,12 @@ int testHands()
     }
     
     
-    exit(0);
-    
     
     
     //Tensorflow v1 test..
     struct Tensorflow2Instance upperbodyFrontv1={0};
     if ( tf2_loadFrozenGraph(&upperbodyFrontv1,"dataset/combinedModel/mocapnet2/mode1/1.0/_rhand_all.pb",inputTensor,outputTensor,numberOfInputElements,numberOfOutputElements,runOnCPU) )
-    {
+    { 
       if ( tf2_run(&upperbodyFrontv1,dims,ndims,data,ndata) )
       {
        fprintf(stderr,"Ready to run..!\n");
@@ -251,7 +278,7 @@ int testHands()
        void* buff = TF_TensorData(upperbodyFrontv1.outputValues[0]); 
        float* offsets = (float*)buff;
        printf("Result Tensor v1:\n");
-       for(int i=0;i<upperbodyFrontv1.outputElements;i++)
+       for(int i=0; i<upperbodyFrontv1.outputElements; i++)
        {
         if(i>0) { printf(","); } 
         printf("%f",offsets[i]);
@@ -279,6 +306,8 @@ int testHands()
 
 int main()
 {
+  testFloat16(); 
+    
   return testHands();
 
   //return testUpperBody();
