@@ -68,9 +68,38 @@ static void tf2_deallocateBuffer(void* data, size_t)
 }
 
 
+typedef unsigned short float16;
 
+//https://en.wikipedia.org/wiki/IEEE_754-2008_revision
+//https://stackoverflow.com/questions/3026441/float32-to-float16/3026505
+static float16 convertFloat32ToFloat16(float f)
+{
+  unsigned int * fltInt32 = ( unsigned int * ) &f;
+  float16 h;
 
+  h = (*fltInt32 >> 31) << 5;
+  unsigned short tmp = (*fltInt32 >> 23) & 0xff;
+  tmp = (tmp - 0x70) & ((unsigned int)((int)(0x70 - tmp) >> 4) >> 27);
+  h = (h | tmp) << 10;
+  h |= (*fltInt32 >> 13) & 0x3ff;  
+  
+  return h;
+}
 
+static float convertFloat16ToFloat32(float16 h)
+{
+  float f = ((h&0x8000)<<16) | (((h&0x7c00)+0x1C000)<<13) | ((h&0x03FF)<<13);
+  return f;
+}
+
+static int tf2_checkModelUsingExternalTool(const char * path)
+{
+  char commandToCheck[2048];
+  snprintf(commandToCheck,2000,"saved_model_cli show --dir %s --tag_set serve --signature_def serving_default",path);
+  int i = system(commandToCheck);
+ 
+  return (i==0);
+}
 
 
 /*
@@ -398,6 +427,10 @@ static int tf2_loadModel(
     if(TF_GetCode(tf2i->status) != TF_OK)
     {
         fprintf(stderr,"Error loading model : %s \n",TF_Message(tf2i->status));
+        
+        
+        tf2_checkModelUsingExternalTool(tf2i->modelPath);
+        
         return 0;
     }
 
@@ -444,7 +477,6 @@ static int tf2_unloadModel(struct Tensorflow2Instance * tf2i)
      
     return 1;
 }
-
 
 static int tf2_run(
                    struct Tensorflow2Instance * tf2i,
@@ -495,10 +527,12 @@ static int tf2_run(
 
     if(TF_GetCode(tf2i->status) != TF_OK)
     {
-        fprintf(stderr,"tf2_run: Error running network, %s",TF_Message(tf2i->status));
+        fprintf(stderr,"tf2_run: Error running network, %s\n",TF_Message(tf2i->status));
         
         fprintf(stderr,"dimensionsNumber=%u\n",dimensionsNumber);
         fprintf(stderr,"dataSizeBytes=%u\n",dataSizeBytes);
+ 
+        tf2_checkModelUsingExternalTool(tf2i->modelPath);
          
         result = 0;
     }

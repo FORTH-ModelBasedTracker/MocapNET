@@ -129,7 +129,7 @@ int executeCommandLineAndRetreiveAllResults(const char *  command , char * what2
   return 1;
 }
 
-int getInfoFast(char * field,char * buffer,unsigned int bufferSize,char terminatorCharacter)
+int getInfoFast(const char * field,char * buffer,unsigned int bufferSize,char terminatorCharacter)
 {
    int fieldOffset = strlen(field);
    char * foundAt = strstr(buffer,field);
