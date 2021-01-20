@@ -108,10 +108,14 @@ If you are interested in generating BVH training data for your research, we have
 ## Building the library
 ------------------------------------------------------------------ 
 
-To compile the library issue :
+To download and compile the library issue :
 
 ```
- sudo apt-get install build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev libpthread-stubs0-dev
+sudo apt-get install git build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev libpthread-stubs0-dev
+
+git clone https://github.com/FORTH-ModelBasedTracker/MocapNET
+
+cd MocapNET
 
 ./initialize.sh
 
