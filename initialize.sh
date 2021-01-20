@@ -279,7 +279,12 @@ fi
 
 cd "$DIR"
 if [ -f dependencies/RGBDAcquisition/README.md ]; then
-echo "RGBDAcquisition appears to already exist .."
+ echo "RGBDAcquisition appears to already exist .."
+ #cd "$DIR/dependencies/RGBAcquisition"
+ #echo "We can make sure that it is up to date to avoid issues like https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/48.."
+ #echo "However someone might not want to update the code.. what to do.."
+ #git pull
+ #cd "$DIR"
 else
  cd "$DIR/dependencies"
  git clone https://github.com/AmmarkoV/RGBDAcquisition
