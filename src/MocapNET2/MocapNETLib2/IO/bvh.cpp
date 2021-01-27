@@ -532,6 +532,20 @@ unsigned int getBVHNumberOfJoints()
 }
 
 
+int getBVHJointOffset(unsigned int currentJoint,float * x,float *y,float *z)
+{ 
+#if USE_BVH
+   if (currentJoint<bvhMotion.jointHierarchySize)
+   {
+     *x = bvhMotion.jointHierarchy[currentJoint].offset[0];
+     *y = bvhMotion.jointHierarchy[currentJoint].offset[1];
+     *z = bvhMotion.jointHierarchy[currentJoint].offset[2];
+     return 1; 
+   }
+#endif
+    return 0;
+}
+
 unsigned int getBVHParentJoint(unsigned int currentJoint)
 {
 #if USE_BVH

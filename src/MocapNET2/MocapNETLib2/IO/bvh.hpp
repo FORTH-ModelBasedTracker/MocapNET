@@ -1120,6 +1120,9 @@ unsigned int getBVHNumberOfValuesPerFrame();
 
 unsigned int getBVHNumberOfJoints();
 
+
+int getBVHJointOffset(unsigned int currentJoint,float * x,float *y,float *z);
+
 /**
  * @brief Get the joint ID of the parent of a joint
  * @param JointID that we want to get the parent for
