@@ -3,7 +3,7 @@
 
 ![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/mnet2.png)
 
-If you are interested in [ROS](https://www.ros.org/) development and looking for a 3D pose estimator for your robot, you are in luck, MocapNET has a ROS node! You can [get it here]!(https://github.com/FORTH-ModelBasedTracker/mocapnet_rosnode) 
+If you are interested in [ROS](https://www.ros.org/) development and looking for a 3D pose estimator for your robot, you are in luck, MocapNET has a ROS node! You can [get it here](https://github.com/FORTH-ModelBasedTracker/mocapnet_rosnode)!
 
 A [new version of MocapNET](https://github.com/FORTH-ModelBasedTracker/MocapNET/milestone/1) has landed! It contains a very big list of improvements that have been carried out during 2020 over the original work that allows higher accuracy, smoother BVH output and better occlusion robustness while maintaining realtime perfomance. MocapNET2 will appear in [the 25th International Conference on Pattern Recognition](https://www.icpr2020.it/)
 
