@@ -46,6 +46,7 @@ struct applicationState
     int play;
     int stop;
     int save; 
+    int copyClipboard;
     int frameID;
     int numberOfFrames;
     int redraw;
@@ -59,6 +60,7 @@ int controls(cv::Mat & controlMat,struct applicationState * state)
 
     cv::createTrackbar("Play", "3D Control", &state->play,1);
     cv::createTrackbar("Frame", "3D Control", &state->frameID,state->numberOfFrames);
+    cv::createTrackbar("Clipboard Pose", "3D Control", &state->copyClipboard, 1);
 
     if (visualizeOpenGLEnabled)
         {
@@ -113,6 +115,7 @@ int main(int argc, char *argv[])
     state.visualizationType=0;
     state.stop=0;
     state.save=0;
+    state.copyClipboard=0;
     state.previousVisualizationType=2;// <- force redraw on first loop
     state.redraw=1;
 
@@ -353,6 +356,25 @@ int main(int argc, char *argv[])
                         }
                 }
 
+            if (state.copyClipboard)
+            {
+                char valueStr[10];
+                char motionVectorStringUnsafe[10000]={0};
+                snprintf(motionVectorStringUnsafe,10000,"echo \"%0.2f",state.bvhConfiguration[0]);
+                
+                for (unsigned int i=1; i<state.numberOfBVHMotionValuesPerFrame; i++)
+                                { 
+                                    snprintf(valueStr,10,",%0.2f",state.bvhConfiguration[i]);
+                                    strcat(motionVectorStringUnsafe,valueStr);
+                                }
+                strcat(motionVectorStringUnsafe,"\" | xclip -selection clipboard");
+                int i=system(motionVectorStringUnsafe);
+                if (i!=0)
+                {
+                    fprintf(stderr,"Failed copying to clipboard.. :( \n");
+                }
+                state.copyClipboard=0;
+            }
 
             if (state.save)
                 {
