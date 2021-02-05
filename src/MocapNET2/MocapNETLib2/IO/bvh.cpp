@@ -226,6 +226,7 @@ int fixBVHHip(
               std::vector<std::vector<float> > &bvhFrames
              )
 {
+  return 0;  
   for (unsigned int frameID=0; frameID<bvhFrames.size(); frameID++)
     {
      if (bvhFrames[frameID].size() >= 6)
