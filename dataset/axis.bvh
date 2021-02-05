@@ -1,0 +1,141 @@
+HIERARCHY
+ROOT root
+{
+		OFFSET 0 0 0 
+	    CHANNELS 6 Xposition Yposition Zposition Zrotation Yrotation Xrotation
+		JOINT X_Axis
+		{
+			OFFSET 10.0 0.0 0.0 
+			CHANNELS 3 Zrotation Xrotation Yrotation
+			JOINT X_Axis_Ornament
+			{
+				OFFSET 1.0 0.0 0.0 
+				CHANNELS 3 Zrotation Xrotation Yrotation
+				JOINT X_Ornament_A
+				{
+				  OFFSET 0.0 0.0 0.0 
+				  CHANNELS 3 Zrotation Xrotation Yrotation
+                  End Site
+						{
+							OFFSET 0.0 -5.0 -5.0 
+						} 
+				}
+				JOINT X_Ornament_B
+				{
+				  OFFSET 0.0 0.0 0.0 
+				  CHANNELS 3 Zrotation Xrotation Yrotation
+                  End Site
+						{
+							OFFSET 0.0 5.0 -5.0 
+						} 
+				}
+				JOINT X_Ornament_C
+				{
+				  OFFSET 0.0 0.0 0.0 
+				  CHANNELS 3 Zrotation Xrotation Yrotation
+                  End Site
+						{
+							OFFSET 0.0 5.0 5.0 
+						} 
+				}
+				JOINT X_Ornament_D
+				{
+				  OFFSET 0.0 0.0 0.0 
+				  CHANNELS 3 Zrotation Xrotation Yrotation
+                  End Site
+						{
+							OFFSET 0.0 -5.0 5.0 
+						} 
+				}
+			}
+		}
+		JOINT Y_Axis
+		{
+			OFFSET 0.0 10.0 0.0 
+			CHANNELS 3 Zrotation Xrotation Yrotation
+			JOINT Y_Axis_Ornament
+			{
+				OFFSET 0.0 1.0 0.0 
+				CHANNELS 3 Zrotation Xrotation Yrotation
+				JOINT Y_Ornament_A
+				{
+				  OFFSET 0.0 0.0 0.0 
+				  CHANNELS 3 Zrotation Xrotation Yrotation
+                  End Site
+						{
+							OFFSET -5.0 0.0 -5.0 
+						} 
+				}
+				JOINT Y_Ornament_B
+				{
+				  OFFSET 0.0 0.0 0.0 
+				  CHANNELS 3 Zrotation Xrotation Yrotation
+                  End Site
+						{
+							OFFSET 5.0 0.0 -5.0 
+						} 
+				}
+				JOINT Y_Ornament_C
+				{
+				  OFFSET 0.0 0.0 0.0 
+				  CHANNELS 3 Zrotation Xrotation Yrotation
+                  End Site
+						{
+							OFFSET 0.0 0.0 5.0 
+						} 
+				} 
+			}
+		}
+		JOINT Z_Axis
+		{
+			OFFSET 0.0 0.0 10.0 
+			CHANNELS 3 Zrotation Xrotation Yrotation
+			JOINT Z_Axis_Ornament
+			{
+				OFFSET 0.0 0.0 1.0 
+				CHANNELS 3 Zrotation Xrotation Yrotation
+                JOINT Z_Ornament_A0
+				{
+				  OFFSET -2.5 -2.5 0.0 
+				  CHANNELS 3 Zrotation Xrotation Yrotation
+				  JOINT Z_Ornament_A1
+				  {
+				    OFFSET -2.5 -2.5 0.0 
+				    CHANNELS 3 Zrotation Xrotation Yrotation
+                    JOINT Z_Ornament_A2
+			   	     {
+				      OFFSET 5.0 0.0 0.0 
+				      CHANNELS 3 Zrotation Xrotation Yrotation
+                      End Site
+						{
+							OFFSET 5.0 0.0 0.0 
+						} 
+                     }
+				  }
+                }
+				JOINT Z_Ornament_B0
+				{
+				  OFFSET 2.5 2.5 0.0 
+				  CHANNELS 3 Zrotation Xrotation Yrotation
+                  JOINT Z_Ornament_B1
+				   {
+				     OFFSET 2.5 2.5 0.0 
+				     CHANNELS 3 Zrotation Xrotation Yrotation
+                     JOINT Z_Ornament_B2
+			   	      {
+				       OFFSET -5.0 0.0 0.0 
+				       CHANNELS 3 Zrotation Xrotation Yrotation
+                       End Site
+						{
+							OFFSET -5.0 0.0 0.0 
+						}
+                      } 
+				    }
+                }
+			}
+		}
+}
+MOTION
+Frames: 1
+Frame Time: 0.040000
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
