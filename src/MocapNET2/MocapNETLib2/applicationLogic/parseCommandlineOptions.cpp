@@ -551,7 +551,7 @@ int  loadOptionsAfterBVHLoadFromCommandlineOptions(struct MocapNET2Options * opt
                         {
                             if (!options->hasInit)
                                 {
-                                    initializeBVHConverter(0,options->visWidth,options->visHeight);
+                                    initializeBVHConverter(0,options->visWidth,options->visHeight,0);
                                     options->hasInit=1;
                                 }
 
@@ -569,7 +569,7 @@ int  loadOptionsAfterBVHLoadFromCommandlineOptions(struct MocapNET2Options * opt
                         {
                             if (!options->hasInit)
                                 {
-                                    initializeBVHConverter(0,options->visWidth,options->visHeight);
+                                    initializeBVHConverter(0,options->visWidth,options->visHeight,0);
                                     options->hasInit=1;
                                 }
                             scaleAllJoints(atof(argv[i+1]));
@@ -582,7 +582,7 @@ int  loadOptionsAfterBVHLoadFromCommandlineOptions(struct MocapNET2Options * opt
                         {
                             if (!options->hasInit)
                                 {
-                                    initializeBVHConverter(0,options->visWidth,options->visHeight);
+                                    initializeBVHConverter(0,options->visWidth,options->visHeight,0);
                                     options->hasInit=1;
                                 }
                             changeJointDimensions(

@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     cv::moveWindow("BVH",300,0);
     
 
-    initializeBVHConverter(0,visWidth,visHeight);
+    initializeBVHConverter(0,visWidth,visHeight,1);
 
     while(!state.stop)
         {

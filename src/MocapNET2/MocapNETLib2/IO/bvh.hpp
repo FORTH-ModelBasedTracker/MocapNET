@@ -1113,7 +1113,7 @@ int codeOptimizationsForIKEnabled();
  * @brief Initialize BVH code ( if it is present ) , supplying a null first argument uses default bvh armature
  * @retval 1=Success/0=Failure
  */
-int initializeBVHConverter(const char * specificBVHFilename,int width,int height);
+int initializeBVHConverter(const char * specificBVHFilename,int width,int height, int noIKNeeded);
 
 
 unsigned int getBVHNumberOfValuesPerFrame();

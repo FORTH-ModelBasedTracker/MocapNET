@@ -114,7 +114,7 @@ int initializeIK()
 
 
 
-int initializeBVHConverter(const char * specificBVHFilename,int width,int height)
+int initializeBVHConverter(const char * specificBVHFilename,int width,int height,int noIKNeeded)
 {
 #if USE_BVH
     fprintf(stderr,"Using BVH codebase version %s\n",BVH_LOADER_VERSION_STRING);
@@ -130,6 +130,8 @@ int initializeBVHConverter(const char * specificBVHFilename,int width,int height
 
      const char * selectedBVHFile = specificBVHFilename;
      if (specificBVHFilename==0) { selectedBVHFile="dataset/headerWithHeadAndOneMotion.bvh"; }
+      
+     //noIKNeeded is not used in this version of the code but added to ensure the function signature is the same with dev snapshot..
 
     //if ( bvh_loadBVH("dataset/headerAndOneMotion.bvh",&bvhMotion,1.0) ) //This is the old armature that only has the eyes
      if ( bvh_loadBVH(selectedBVHFile,&bvhMotion,1.0) ) // This is the new armature that includes the head
@@ -185,7 +187,7 @@ int loadCalibration(struct MocapNET2Options * options,const char* directory,cons
         fprintf(stderr,"Focal Lengths fx=%0.2f fy=%0.2f \n",fX,fY);
         if (!options->hasInit)
             {
-              initializeBVHConverter(0,calib.width,calib.height);
+              initializeBVHConverter(0,calib.width,calib.height,0);
               options->hasInit=1;
             }
 

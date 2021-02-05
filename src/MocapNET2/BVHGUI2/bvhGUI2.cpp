@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
         }
 
 
-    if ( !initializeBVHConverter(bvhFilename,visWidth,visHeight) )
+    if ( !initializeBVHConverter(bvhFilename,visWidth,visHeight,1) )
         {
             fprintf(stderr,"Failed to initialize BVH code from %s ..\n",bvhFilename);
             return 0;

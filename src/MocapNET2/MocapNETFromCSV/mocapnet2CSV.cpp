@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
             //If the initialization didnt happen inside the previous call lets do it now
             if (!options.hasInit)
             {
-               if (initializeBVHConverter(0,options.visWidth,options.visHeight))
+               if (initializeBVHConverter(0,options.visWidth,options.visHeight,0))
                  {
                    fprintf(stderr,"BVH code initalization successfull..\n");
                    options.hasInit=1;
