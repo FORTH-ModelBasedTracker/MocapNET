@@ -22,7 +22,7 @@
  *  each of the colorFrame_0_xxxxx_keypoints.json will correspond to a  colorFrame_0_xxxxx.jpg
  *
  *  This can then be converted to a CSV file using : 
- *                 ./convertBody25JSONToCSV --from videoFiles/ -o .
+ *                 ./convertOpenPoseJSONToCSV --from videoFiles/ 
  *
  *
  *  If you want to use a custom json labeling scheme and not rely on images as OpenPose input you will need to :
