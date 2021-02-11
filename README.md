@@ -257,7 +257,7 @@ By starting the live demo using the --gestures argument you can enable an experi
 ## ROS (Robot Operating System) node 
 ------------------------------------------------------------------ 
 
-![mocapnet_rosnode screenshot with rviz](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/mocapnet_rosnode/main/doc/screenshot.jpg)
+[![mocapnet_rosnode screenshot with rviz](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/mocapnet_rosnode/main/doc/screenshot.jpg)](https://github.com/FORTH-ModelBasedTracker/mocapnet_rosnode)
 
 If you are interested in [ROS](https://www.ros.org/) development and looking for a 3D pose estimator for your robot, you are in luck, MocapNET has a ROS node! You can [get it here](https://github.com/FORTH-ModelBasedTracker/mocapnet_rosnode)!
 
