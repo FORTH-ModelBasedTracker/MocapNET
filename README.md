@@ -44,7 +44,7 @@ All the above yield a 33\% accuracy improvement on the [Human 3.6 Million (H3.6M
 
 | ICPR 2020 Poster Session  |  |
 | ------------- | ------------- |
-| [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/ICPR2020_posterYoutubeVideoLink.png)  ](https://www.youtube.com/watch?v=6JGtYN89WE8) | [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/transparentTab.png)  ](https://www.youtube.com/results?search_query=mocapnet)  |
+| [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/ICPR2020_posterYoutubeVideoLink.png)  ](https://www.youtube.com/watch?v=mns2s4xUC7c) | [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/transparentTab.png)  ](https://www.youtube.com/results?search_query=mocapnet)  |
 
 ------------------------------------------------------------------ 
 
