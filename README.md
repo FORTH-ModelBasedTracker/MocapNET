@@ -331,7 +331,7 @@ A CSV file has been included that can be run by issuing :
 ```
 The delay is added in every frame so that there is enough time for the user to see the results, of course the visualization only contains the armature since the CSV file does not have the input images.
 
-
+Check out [this guide contributed by a project user](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/doc/OpenPose.md) for more info.
 
 ## Experimental utilities
 ------------------------------------------------------------------ 
