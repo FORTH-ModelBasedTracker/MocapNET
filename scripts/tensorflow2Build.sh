@@ -3,6 +3,12 @@
 #Script source repository https://github.com/AmmarkoV/MyScripts/blob/master/Tensorflow/tensorflow2Build.sh
 #Script last updated 31-12-2021
 
+#Script that seems to be able to build bazel/tf2 on Ubuntu 20.04
+#I really deeply dislike the bazel build system which is bloated and obfuscated for no reason, just Google "NIH syndrome"
+#However Tensorflow2 is a great NN framework
+# See this video "How To Make Package Managers Cry" ->  https://www.youtube.com/watch?v=NSemlYagjIU#t=19m0s 
+ 
+
 VERSION="2.4"
 
 #Get number of bytes in RAM
@@ -31,12 +37,12 @@ fi
 sudo apt-get install python3-dev python3-pip python3-venv python3-tk
 
 
-pip install -U --user pip numpy wheel
-pip install -U --user keras_preprocessing --no-deps
+pip3 install -U --user pip numpy wheel
+pip3 install -U --user keras_preprocessing --no-deps
 
-#pip install -U --user pip six numpy wheel setuptools mock 'future>=0.17.1'
-#pip install -U --user keras_applications --no-deps
-#pip install -U --user keras_preprocessing --no-deps
+#pip3 install -U --user pip six numpy wheel setuptools mock 'future>=0.17.1'
+#pip3 install -U --user keras_applications --no-deps
+#pip3 install -U --user keras_preprocessing --no-deps
 
 
 cd ~/Documents
@@ -110,6 +116,8 @@ cmake --build . -j
 
 
 echo "Please visit ~/Documents/3dParty/ to collect your tensorflow python3 wheel, and C Library.."
-echo "Use  :    python -c 'import tensorflow as tf;'      to test your tensorflow"
+echo "Will now use  :    python -c 'import tensorflow as tf;'      to test your tensorflow"
+
+python -c 'import tensorflow as tf;'
 
 exit 0

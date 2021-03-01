@@ -3,6 +3,12 @@
 #Script source repository https://github.com/AmmarkoV/MyScripts/blob/master/Tensorflow/tensorflowBuild.sh
 #Script last updated 23-06-2020
 
+#Script that seems to be able to build bazel/tf2 on Ubuntu 20.04
+#I really deeply dislike the bazel build system which is bloated and obfuscated for no reason, just Google "NIH syndrome"
+#However Tensorflow2 is a great NN framework
+# See this video "How To Make Package Managers Cry" ->  https://www.youtube.com/watch?v=NSemlYagjIU#t=19m0s 
+ 
+
 #Get number of bytes in RAM
 RAM=`free | grep Mem | tr -s ' '| cut -f2 -d ' '`
 
