@@ -606,17 +606,32 @@ unsigned int getBVHJointIDFromJointName(const char * jointName)
 void bvh2DCopy(
                struct BVH_Transform * out,
                struct skeletonSerialized * in,
-               unsigned int mID,
+               BVHJointID jID,
                unsigned int skeletonSerializedID_2DX,
                unsigned int skeletonSerializedID_2DY,
-               unsigned int width,
-               unsigned int height
+               float width,
+               float height
               )
-{
-  out->joint[mID].pos2D[0] = in->skeletonBody[skeletonSerializedID_2DX].value * width;
-  out->joint[mID].pos2D[1] = in->skeletonBody[skeletonSerializedID_2DY].value * height;
-  out->joint[mID].pos2DCalculated = ( (out->joint[mID].pos2D[0]!=0.0) || (out->joint[mID].pos2D[1]!=0.0) );
-  out->joint[mID].isBehindCamera = !out->joint[mID].pos2DCalculated;
+{  
+  if ( 
+       (out!=0) && 
+       (out->joint!=0)  
+     )
+     { 
+       if (jID<out->numberOfJointsSpaceAllocated)
+       {
+        out->joint[jID].pos2D[0] = (float) in->skeletonBody[skeletonSerializedID_2DX].value * width;
+        out->joint[jID].pos2D[1] = (float) in->skeletonBody[skeletonSerializedID_2DY].value * height;
+        out->joint[jID].pos2DCalculated = ( (out->joint[jID].pos2D[0]!=0.0) || (out->joint[jID].pos2D[1]!=0.0) );
+        out->joint[jID].isBehindCamera = !out->joint[jID].pos2DCalculated; 
+       } else
+       {
+        fprintf(stderr,"bvh2DCopy: Error accessing joint %u/%u\n",jID,out->numberOfJointsSpaceAllocated);
+       }
+     } else
+     {
+        fprintf(stderr,"bvh2DCopy: Error accessing joint transform\n");
+     }
 }
 
 
@@ -624,22 +639,35 @@ void bvh2DCopy(
 void bvh2DBetween2PointsCopy(
                        struct BVH_Transform * out,
                        struct skeletonSerialized * in,
-                       unsigned int mID,
+                       BVHJointID jID,
                        unsigned int skeletonSerializedID_2DX_A,
                        unsigned int skeletonSerializedID_2DY_A,
                        unsigned int skeletonSerializedID_2DX_B,
                        unsigned int skeletonSerializedID_2DY_B,
-                       unsigned int width,
-                       unsigned int height
+                       float width,
+                       float height
                     )
-{
-  out->joint[mID].pos2D[0] = ((in->skeletonBody[skeletonSerializedID_2DX_A].value + in->skeletonBody[skeletonSerializedID_2DX_B].value)/2) * width;
-  out->joint[mID].pos2D[1] = ((in->skeletonBody[skeletonSerializedID_2DY_A].value + in->skeletonBody[skeletonSerializedID_2DY_B].value)/2) * height;
-  out->joint[mID].pos2DCalculated = ( (out->joint[mID].pos2D[0]!=0.0) || (out->joint[mID].pos2D[1]!=0.0) );
-  out->joint[mID].isBehindCamera = !out->joint[mID].pos2DCalculated;
+{  
+  if ( 
+       (out!=0) && 
+       (out->joint!=0) 
+     )
+     {
+       if  (jID<out->numberOfJointsSpaceAllocated)  
+        {
+         out->joint[jID].pos2D[0] = ((in->skeletonBody[skeletonSerializedID_2DX_A].value + in->skeletonBody[skeletonSerializedID_2DX_B].value)/2) * width;
+         out->joint[jID].pos2D[1] = ((in->skeletonBody[skeletonSerializedID_2DY_A].value + in->skeletonBody[skeletonSerializedID_2DY_B].value)/2) * height;
+         out->joint[jID].pos2DCalculated = ( (out->joint[jID].pos2D[0]!=0.0) || (out->joint[jID].pos2D[1]!=0.0) );
+         out->joint[jID].isBehindCamera = !out->joint[jID].pos2DCalculated;
+       } else
+       {
+        fprintf(stderr,"bvh2DBetween2PointsCopy: Error accessing joint %u/%u\n",jID,out->numberOfJointsSpaceAllocated);
+       }
+     } else
+     {
+        fprintf(stderr,"bvh2DBetween2PointsCopy: Error accessing joint transform\n");
+     }
 }
-
-
 
 void convertFaceSkeletonSerializedToBVHTransform(
                                                    struct BVH_MotionCapture * bvhMotion,
@@ -860,13 +888,15 @@ int convertSkeletonSerializedToBVHTransform(
   unsigned int w = renderer->width;
   unsigned int h = renderer->height;
 
-  //Make sure the structure is clean..
-  for (unsigned int mID=0;  mID<bvhMotion->numberOfValuesPerFrame; mID++ )
+  if ( bvh_allocateTransform(bvhMotion,out) )
   {
-     out->joint[mID].pos2D[0] = 0.0;
-     out->joint[mID].pos2D[1] = 0.0;
-     out->joint[mID].pos2DCalculated = 1;
-     out->joint[mID].isBehindCamera = 0;
+  //Make sure the structure is clean..
+  for (BVHJointID jID=0;  jID<bvhMotion->jointHierarchySize; jID++ )
+  {
+     out->joint[jID].pos2D[0] = 0.0;
+     out->joint[jID].pos2D[1] = 0.0;
+     out->joint[jID].pos2DCalculated = 1;
+     out->joint[jID].isBehindCamera = 0;
   }
 
    //------------------------------------------------------------------------------------------------
@@ -900,6 +930,8 @@ int convertSkeletonSerializedToBVHTransform(
   //------------------------------------------------------------------------------------------------
 
  return 1;
+ } 
+ return 0;
 }
 #endif
 
