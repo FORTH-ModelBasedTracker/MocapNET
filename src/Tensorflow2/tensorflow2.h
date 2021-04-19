@@ -118,7 +118,7 @@ static float16 convertFloat32ToFloat16(float f)
   //https://en.wikipedia.org/wiki/Half-precision_floating-point_format
   //https://en.wikipedia.org/wiki/IEEE_754-2008_revision
   //https://stackoverflow.com/questions/3026441/float32-to-float16/3026505
-  #warning "convertFloat32ToFloat16 is not properly implemented"
+  #warning "convertFloat32ToFloat16 is not correctly implemented on non SSE equipped builds"
   unsigned int * fltInt32 = ( unsigned int * ) &f;
   float16 h;
 
@@ -133,7 +133,7 @@ static float16 convertFloat32ToFloat16(float f)
 
 static float convertFloat16ToFloat32(float16 h)
 {
-  #warning "convertFloat16ToFloat32 is not properly implemented"
+  #warning "convertFloat16ToFloat32 is not properly implemented on non SSE equipped builds"
   fprintf(stderr,"convertFloat16ToFloat32 not working.. ");
   //http://www.fox-toolkit.org/ftp/fasthalffloatconversion.pdf
   float f = ((h&0x8000)<<16) | (((h&0x7c00)+0x1C000)<<13) | ((h&0x03FF)<<13);
@@ -183,6 +183,10 @@ static char tf2_fileExists(const char * filename)
 //https://github.com/AmmarkoV/AmmarServer/blob/master/src/AmmServerlib/AString/AString.c#L235
 static char * tf2_readFileToMem(const char * filename,unsigned int *length )
 {
+    if (length==0)   { return 0; }
+    if (filename==0) { return 0; }
+    //-----------------------------------------
+
     *length = 0;
     FILE * pFile = fopen ( filename , "rb" );
 
@@ -380,8 +384,11 @@ static int tf2_loadModel(
     
     //--------------------------------------------------------------------------
     int ntags = 1;
-    const char* tags = "serve"; // default model serving tag; can change in future
-    //const char* tags = "tensorflow/serving/predict"; // default model serving tag; can change in future
+    
+    //char tags[1025]={0}; //= {"StatefulPartitionedCall"};   //Default output layer
+    //snprintf(tags,1024,"serve");
+    //const char* tags = "serve"; // default model serving tag; can change in future
+    const char* tags[] = {"serve"};
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -408,7 +415,7 @@ static int tf2_loadModel(
                         tf2i->sessionOptions,
                         runOptions,
                         path,
-                        &tags,
+                        tags,
                         ntags,
                         tf2i->graph,
                         NULL,
