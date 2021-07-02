@@ -7,9 +7,14 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
  
 include_directories(${TENSORFLOW_INCLUDE_ROOT})
 
-
-add_library(JointEstimator2D SHARED jointEstimator2D.cpp cameraControl.cpp visualization.cpp ../Tensorflow/tensorflow.cpp ../Tensorflow/tf_utils.cpp)   
-
+add_library(
+            JointEstimator2D SHARED 
+            jointEstimator2D.cpp 
+            cameraControl.cpp 
+            visualization.cpp 
+            ${CMAKE_SOURCE_DIR}/src/Tensorflow/tensorflow.cpp 
+            ${CMAKE_SOURCE_DIR}/src/Tensorflow/tf_utils.cpp
+           )
 
 target_link_libraries(JointEstimator2D rt dl m Tensorflow TensorflowFramework )
 set_target_properties(JointEstimator2D PROPERTIES DEBUG_POSTFIX "D") 
