@@ -9,9 +9,9 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories(${TENSORFLOW_INCLUDE_ROOT})
   
 
-#add_executable(MocapNETLib mocapnet.cpp ../Tensorflow/tf_utils.cpp)   
+#add_executable(MocapNETLib mocapnet.cpp ${CMAKE_SOURCE_DIR}/src/Tensorflow/tf_utils.cpp)   
 
-add_library(MocapNETLib2 SHARED 
+add_library(MocapNETLib2 SHARED
 ${BVH_SOURCE}
 ${OPENGL_SOURCE}
 ../MocapNETLib2/config.h
@@ -54,9 +54,9 @@ ${OPENGL_SOURCE}
 ../MocapNETLib2/solutionParts/body.cpp
 ../MocapNETLib2/solutionParts/upperBody.cpp
 ../MocapNETLib2/solutionParts/lowerBody.cpp
-../../../dependencies/InputParser/InputParser_C.cpp
-../../Tensorflow/tensorflow.cpp
-../../Tensorflow/tf_utils.cpp
+${CMAKE_SOURCE_DIR}/dependencies/InputParser/InputParser_C.cpp
+${CMAKE_SOURCE_DIR}/src/Tensorflow/tensorflow.cpp
+${CMAKE_SOURCE_DIR}/src/Tensorflow/tf_utils.cpp
 )   
 
 
