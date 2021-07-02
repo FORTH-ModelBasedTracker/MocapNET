@@ -55,8 +55,8 @@ ${OPENGL_SOURCE}
 ../MocapNETLib2/solutionParts/upperBody.cpp
 ../MocapNETLib2/solutionParts/lowerBody.cpp
 ${CMAKE_SOURCE_DIR}/dependencies/InputParser/InputParser_C.cpp
-${CMAKE_SOURCE_DIR}/src/Tensorflow/tensorflow.cpp
-${CMAKE_SOURCE_DIR}/src/Tensorflow/tf_utils.cpp
+#Tensorflow stuff..
+${TENSORFLOW_SOURCE_FILES}
 )   
 
 
