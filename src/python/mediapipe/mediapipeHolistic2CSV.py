@@ -132,43 +132,31 @@ def appendCSVOutput(fo,frameNumber,body25BodyNames,leftHandNames,rightHandNames,
   fo.write(",0,0")
   #========================= 
   for label in body25BodyNames:
+       if (allResults["2DX_%s"%(label)]==0.0):
+           allResults["2DX_%s"%(label)]=1.0
        #------------------------------------------ 
-       fo.write(",")
-       fo.write("%0.6f"%(1.0-allResults["2DX_%s"%(label)]))
-       fo.write(",")
-       fo.write("%0.6f"%(allResults["2DY_%s"%(label)]))
-       fo.write(",")
-       fo.write("%.0f"%(allResults["visible_%s"%(label)]))
+       fo.write(",%0.6f,%0.6f,%.0f"%(1.0-allResults["2DX_%s"%(label)],allResults["2DY_%s"%(label)],allResults["visible_%s"%(label)]))
        #------------------------------------------
   #========================= 
   for label in leftHandNames:
+       if (allResults["2DX_%s"%(label)]==0.0):
+           allResults["2DX_%s"%(label)]=1.0
        #------------------------------------------ 
-       fo.write(",")
-       fo.write("%0.6f"%(1.0-allResults["2DX_%s"%(label)]))
-       fo.write(",")
-       fo.write("%0.6f"%(allResults["2DY_%s"%(label)]))
-       fo.write(",")
-       fo.write("%.0f"%(allResults["visible_%s"%(label)]))
+       fo.write(",%0.6f,%0.6f,%.0f"%(1.0-allResults["2DX_%s"%(label)],allResults["2DY_%s"%(label)],allResults["visible_%s"%(label)]))
        #------------------------------------------
   #========================= 
   for label in rightHandNames:
+       if (allResults["2DX_%s"%(label)]==0.0):
+           allResults["2DX_%s"%(label)]=1.0
        #------------------------------------------ 
-       fo.write(",")
-       fo.write("%0.6f"%(1.0-allResults["2DX_%s"%(label)]))
-       fo.write(",")
-       fo.write("%0.6f"%(allResults["2DY_%s"%(label)]))
-       fo.write(",")
-       fo.write("%.0f"%(allResults["visible_%s"%(label)]))
+       fo.write(",%0.6f,%0.6f,%.0f"%(1.0-allResults["2DX_%s"%(label)],allResults["2DY_%s"%(label)],allResults["visible_%s"%(label)]))
        #------------------------------------------
   #========================= 
   for label in headNames:
+       if (allResults["2DX_%s"%(label)]==0.0):
+           allResults["2DX_%s"%(label)]=1.0
        #------------------------------------------ 
-       fo.write(",")
-       fo.write("%0.6f"%(1.0-allResults["2DX_%s"%(label)]))
-       fo.write(",")
-       fo.write("%0.6f"%(allResults["2DY_%s"%(label)]))
-       fo.write(",")
-       fo.write("%.0f"%(allResults["visible_%s"%(label)]))
+       fo.write(",%0.6f,%0.6f,%.0f"%(1.0-allResults["2DX_%s"%(label)],allResults["2DY_%s"%(label)],allResults["visible_%s"%(label)]))
        #------------------------------------------
   #========================= 
   fo.write("\n")
@@ -204,8 +192,6 @@ createDirectory(outputDatasetPath)
 
 fo = open("%s/2dJoints_mediapipe.csv" % (outputDatasetPath), "w")
 
-#fo.write("frameNumber,skeletonID,totalSkeletons,2DX_head,2DY_head,visible_head,2DX_neck,2DY_neck,visible_neck,2DX_rshoulder,2DY_rshoulder,visible_rshoulder,2DX_relbow,2DY_relbow,visible_relbow,2DX_rhand,2DY_rhand,visible_rhand,2DX_lshoulder,2DY_lshoulder,visible_lshoulder,2DX_lelbow,2DY_lelbow,visible_lelbow,2DX_lhand,2DY_lhand,visible_lhand,2DX_hip,2DY_hip,visible_hip,2DX_rhip,2DY_rhip,visible_rhip,2DX_rknee,2DY_rknee,visible_rknee,2DX_rfoot,2DY_rfoot,visible_rfoot,2DX_lhip,2DY_lhip,visible_lhip,2DX_lknee,2DY_lknee,visible_lknee,2DX_lfoot,2DY_lfoot,visible_lfoot,2DX_endsite_eye.r,2DY_endsite_eye.r,visible_endsite_eye.r,2DX_endsite_eye.l,2DY_endsite_eye.l,visible_endsite_eye.l,2DX_rear,2DY_rear,visible_rear,2DX_lear,2DY_lear,visible_lear,2DX_endsite_toe1-2.l,2DY_endsite_toe1-2.l,visible_endsite_toe1-2.l,2DX_endsite_toe5-3.l,2DY_endsite_toe5-3.l,visible_endsite_toe5-3.l,2DX_lheel,2DY_lheel,visible_lheel,2DX_endsite_toe1-2.r,2DY_endsite_toe1-2.r,visible_endsite_toe1-2.r,2DX_endsite_toe5-3.r,2DY_endsite_toe5-3.r,visible_endsite_toe5-3.r,2DX_rheel,2DY_rheel,visible_rheel,2DX_bkg,2DY_bkg,visible_bkg,2DX_lhand,2DY_lhand,visible_lhand,2DX_lthumb,2DY_lthumb,visible_lthumb,2DX_finger1-2.l,2DY_finger1-2.l,visible_finger1-2.l,2DX_finger1-3.l,2DY_finger1-3.l,visible_finger1-3.l,2DX_endsite_finger1-3.l,2DY_endsite_finger1-3.l,visible_endsite_finger1-3.l,2DX_finger2-1.l,2DY_finger2-1.l,visible_finger2-1.l,2DX_finger2-2.l,2DY_finger2-2.l,visible_finger2-2.l,2DX_finger2-3.l,2DY_finger2-3.l,visible_finger2-3.l,2DX_endsite_finger2-3.l,2DY_endsite_finger2-3.l,visible_endsite_finger2-3.l,2DX_finger3-1.l,2DY_finger3-1.l,visible_finger3-1.l,2DX_finger3-2.l,2DY_finger3-2.l,visible_finger3-2.l,2DX_finger3-3.l,2DY_finger3-3.l,visible_finger3-3.l,2DX_endsite_finger3-3.l,2DY_endsite_finger3-3.l,visible_endsite_finger3-3.l,2DX_finger4-1.l,2DY_finger4-1.l,visible_finger4-1.l,2DX_finger4-2.l,2DY_finger4-2.l,visible_finger4-2.l,2DX_finger4-3.l,2DY_finger4-3.l,visible_finger4-3.l,2DX_endsite_finger4-3.l,2DY_endsite_finger4-3.l,visible_endsite_finger4-3.l,2DX_finger5-1.l,2DY_finger5-1.l,visible_finger5-1.l,2DX_finger5-2.l,2DY_finger5-2.l,visible_finger5-2.l,2DX_finger5-3.l,2DY_finger5-3.l,visible_finger5-3.l,2DX_endsite_finger5-3.l,2DY_endsite_finger5-3.l,visible_endsite_finger5-3.l,2DX_rhand,2DY_rhand,visible_rhand,2DX_rthumb,2DY_rthumb,visible_rthumb,2DX_finger1-2.r,2DY_finger1-2.r,visible_finger1-2.r,2DX_finger1-3.r,2DY_finger1-3.r,visible_finger1-3.r,2DX_endsite_finger1-3.r,2DY_endsite_finger1-3.r,visible_endsite_finger1-3.r,2DX_finger2-1.r,2DY_finger2-1.r,visible_finger2-1.r,2DX_finger2-2.r,2DY_finger2-2.r,visible_finger2-2.r,2DX_finger2-3.r,2DY_finger2-3.r,visible_finger2-3.r,2DX_endsite_finger2-3.r,2DY_endsite_finger2-3.r,visible_endsite_finger2-3.r,2DX_finger3-1.r,2DY_finger3-1.r,visible_finger3-1.r,2DX_finger3-2.r,2DY_finger3-2.r,visible_finger3-2.r,2DX_finger3-3.r,2DY_finger3-3.r,visible_finger3-3.r,2DX_endsite_finger3-3.r,2DY_endsite_finger3-3.r,visible_endsite_finger3-3.r,2DX_finger4-1.r,2DY_finger4-1.r,visible_finger4-1.r,2DX_finger4-2.r,2DY_finger4-2.r,visible_finger4-2.r,2DX_finger4-3.r,2DY_finger4-3.r,visible_finger4-3.r,2DX_endsite_finger4-3.r,2DY_endsite_finger4-3.r,visible_endsite_finger4-3.r,2DX_finger5-1.r,2DY_finger5-1.r,visible_finger5-1.r,2DX_finger5-2.r,2DY_finger5-2.r,visible_finger5-2.r,2DX_finger5-3.r,2DY_finger5-3.r,visible_finger5-3.r,2DX_endsite_finger5-3.r,2DY_endsite_finger5-3.r,visible_endsite_finger5-3.r,2DX_head_rchin_0,2DY_head_rchin_0,visible_head_rchin_0,2DX_head_rchin_1,2DY_head_rchin_1,visible_head_rchin_1,2DX_head_rchin_2,2DY_head_rchin_2,visible_head_rchin_2,2DX_head_rchin_3,2DY_head_rchin_3,visible_head_rchin_3,2DX_head_rchin_4,2DY_head_rchin_4,visible_head_rchin_4,2DX_head_rchin_5,2DY_head_rchin_5,visible_head_rchin_5,2DX_head_rchin_6,2DY_head_rchin_6,visible_head_rchin_6,2DX_head_rchin_7,2DY_head_rchin_7,visible_head_rchin_7,2DX_head_chin,2DY_head_chin,visible_head_chin,2DX_head_lchin_7,2DY_head_lchin_7,visible_head_lchin_7,2DX_head_lchin_6,2DY_head_lchin_6,visible_head_lchin_6,2DX_head_lchin_5,2DY_head_lchin_5,visible_head_lchin_5,2DX_head_lchin_4,2DY_head_lchin_4,visible_head_lchin_4,2DX_head_lchin_3,2DY_head_lchin_3,visible_head_lchin_3,2DX_head_lchin_2,2DY_head_lchin_2,visible_head_lchin_2,2DX_head_lchin_1,2DY_head_lchin_1,visible_head_lchin_1,2DX_head_lchin_0,2DY_head_lchin_0,visible_head_lchin_0,2DX_head_reyebrow_0,2DY_head_reyebrow_0,visible_head_reyebrow_0,2DX_head_reyebrow_1,2DY_head_reyebrow_1,visible_head_reyebrow_1,2DX_head_reyebrow_2,2DY_head_reyebrow_2,visible_head_reyebrow_2,2DX_head_reyebrow_3,2DY_head_reyebrow_3,visible_head_reyebrow_3,2DX_head_reyebrow_4,2DY_head_reyebrow_4,visible_head_reyebrow_4,2DX_head_leyebrow_4,2DY_head_leyebrow_4,visible_head_leyebrow_4,2DX_head_leyebrow_3,2DY_head_leyebrow_3,visible_head_leyebrow_3,2DX_head_leyebrow_2,2DY_head_leyebrow_2,visible_head_leyebrow_2,2DX_head_leyebrow_1,2DY_head_leyebrow_1,visible_head_leyebrow_1,2DX_head_leyebrow_0,2DY_head_leyebrow_0,visible_head_leyebrow_0,2DX_head_nosebone_0,2DY_head_nosebone_0,visible_head_nosebone_0,2DX_head_nosebone_1,2DY_head_nosebone_1,visible_head_nosebone_1,2DX_head_nosebone_2,2DY_head_nosebone_2,visible_head_nosebone_2,2DX_head_nosebone_3,2DY_head_nosebone_3,visible_head_nosebone_3,2DX_head_nostrills_0,2DY_head_nostrills_0,visible_head_nostrills_0,2DX_head_nostrills_1,2DY_head_nostrills_1,visible_head_nostrills_1,2DX_head_nostrills_2,2DY_head_nostrills_2,visible_head_nostrills_2,2DX_head_nostrills_3,2DY_head_nostrills_3,visible_head_nostrills_3,2DX_head_nostrills_4,2DY_head_nostrills_4,visible_head_nostrills_4,2DX_head_reye_0,2DY_head_reye_0,visible_head_reye_0,2DX_head_reye_1,2DY_head_reye_1,visible_head_reye_1,2DX_head_reye_2,2DY_head_reye_2,visible_head_reye_2,2DX_head_reye_3,2DY_head_reye_3,visible_head_reye_3,2DX_head_reye_4,2DY_head_reye_4,visible_head_reye_4,2DX_head_reye_5,2DY_head_reye_5,visible_head_reye_5,2DX_head_leye_0,2DY_head_leye_0,visible_head_leye_0,2DX_head_leye_1,2DY_head_leye_1,visible_head_leye_1,2DX_head_leye_2,2DY_head_leye_2,visible_head_leye_2,2DX_head_leye_3,2DY_head_leye_3,visible_head_leye_3,2DX_head_leye_4,2DY_head_leye_4,visible_head_leye_4,2DX_head_leye_5,2DY_head_leye_5,visible_head_leye_5,2DX_head_outmouth_0,2DY_head_outmouth_0,visible_head_outmouth_0,2DX_head_outmouth_1,2DY_head_outmouth_1,visible_head_outmouth_1,2DX_head_outmouth_2,2DY_head_outmouth_2,visible_head_outmouth_2,2DX_head_outmouth_3,2DY_head_outmouth_3,visible_head_outmouth_3,2DX_head_outmouth_4,2DY_head_outmouth_4,visible_head_outmouth_4,2DX_head_outmouth_5,2DY_head_outmouth_5,visible_head_outmouth_5,2DX_head_outmouth_6,2DY_head_outmouth_6,visible_head_outmouth_6,2DX_head_outmouth_7,2DY_head_outmouth_7,visible_head_outmouth_7,2DX_head_outmouth_8,2DY_head_outmouth_8,visible_head_outmouth_8,2DX_head_outmouth_9,2DY_head_outmouth_9,visible_head_outmouth_9,2DX_head_outmouth_10,2DY_head_outmouth_10,visible_head_outmouth_10,2DX_head_outmouth_11,2DY_head_outmouth_11,visible_head_outmouth_11,2DX_head_inmouth_0,2DY_head_inmouth_0,visible_head_inmouth_0,2DX_head_inmouth_1,2DY_head_inmouth_1,visible_head_inmouth_1,2DX_head_inmouth_2,2DY_head_inmouth_2,visible_head_inmouth_2,2DX_head_inmouth_3,2DY_head_inmouth_3,visible_head_inmouth_3,2DX_head_inmouth_4,2DY_head_inmouth_4,visible_head_inmouth_4,2DX_head_inmouth_5,2DY_head_inmouth_5,visible_head_inmouth_5,2DX_head_inmouth_6,2DY_head_inmouth_6,visible_head_inmouth_6,2DX_head_inmouth_7,2DY_head_inmouth_7,visible_head_inmouth_7,2DX_head_reye,2DY_head_reye,visible_head_reye,2DX_head_leye,2DY_head_leye,visible_head_leye\n") 
- 
 #//Generate CSV header..
 fo.write("frameNumber,skeletonID,totalSkeletons,")
 appendListOf2DXY(fo,body25BodyNames)
