@@ -107,27 +107,27 @@ def getHolisticRHandNameList():
 
 
 #2DX_head_rchin_0,2DY_head_rchin_0,visible_head_rchin_0,2DX_head_rchin_1,2DY_head_rchin_1,visible_head_rchin_1,2DX_head_rchin_2,2DY_head_rchin_2,visible_head_rchin_2,2DX_head_rchin_3,2DY_head_rchin_3,visible_head_rchin_3,2DX_head_rchin_4,2DY_head_rchin_4,visible_head_rchin_4,2DX_head_rchin_5,2DY_head_rchin_5,visible_head_rchin_5,2DX_head_rchin_6,2DY_head_rchin_6,visible_head_rchin_6,2DX_head_rchin_7,2DY_head_rchin_7,visible_head_rchin_7,2DX_head_chin,2DY_head_chin,visible_head_chin,2DX_head_lchin_7,2DY_head_lchin_7,visible_head_lchin_7,2DX_head_lchin_6,2DY_head_lchin_6,visible_head_lchin_6,2DX_head_lchin_5,2DY_head_lchin_5,visible_head_lchin_5,2DX_head_lchin_4,2DY_head_lchin_4,visible_head_lchin_4,2DX_head_lchin_3,2DY_head_lchin_3,visible_head_lchin_3,2DX_head_lchin_2,2DY_head_lchin_2,visible_head_lchin_2,2DX_head_lchin_1,2DY_head_lchin_1,visible_head_lchin_1,2DX_head_lchin_0,2DY_head_lchin_0,visible_head_lchin_0,2DX_head_reyebrow_0,2DY_head_reyebrow_0,visible_head_reyebrow_0,2DX_head_reyebrow_1,2DY_head_reyebrow_1,visible_head_reyebrow_1,2DX_head_reyebrow_2,2DY_head_reyebrow_2,visible_head_reyebrow_2,2DX_head_reyebrow_3,2DY_head_reyebrow_3,visible_head_reyebrow_3,2DX_head_reyebrow_4,2DY_head_reyebrow_4,visible_head_reyebrow_4,2DX_head_leyebrow_4,2DY_head_leyebrow_4,visible_head_leyebrow_4,2DX_head_leyebrow_3,2DY_head_leyebrow_3,visible_head_leyebrow_3,2DX_head_leyebrow_2,2DY_head_leyebrow_2,visible_head_leyebrow_2,2DX_head_leyebrow_1,2DY_head_leyebrow_1,visible_head_leyebrow_1,2DX_head_leyebrow_0,2DY_head_leyebrow_0,visible_head_leyebrow_0,2DX_head_nosebone_0,2DY_head_nosebone_0,visible_head_nosebone_0,2DX_head_nosebone_1,2DY_head_nosebone_1,visible_head_nosebone_1,2DX_head_nosebone_2,2DY_head_nosebone_2,visible_head_nosebone_2,2DX_head_nosebone_3,2DY_head_nosebone_3,visible_head_nosebone_3,2DX_head_nostrills_0,2DY_head_nostrills_0,visible_head_nostrills_0,2DX_head_nostrills_1,2DY_head_nostrills_1,visible_head_nostrills_1,2DX_head_nostrills_2,2DY_head_nostrills_2,visible_head_nostrills_2,2DX_head_nostrills_3,2DY_head_nostrills_3,visible_head_nostrills_3,2DX_head_nostrills_4,2DY_head_nostrills_4,visible_head_nostrills_4,2DX_head_reye_0,2DY_head_reye_0,visible_head_reye_0,2DX_head_reye_1,2DY_head_reye_1,visible_head_reye_1,2DX_head_reye_2,2DY_head_reye_2,visible_head_reye_2,2DX_head_reye_3,2DY_head_reye_3,visible_head_reye_3,2DX_head_reye_4,2DY_head_reye_4,visible_head_reye_4,2DX_head_reye_5,2DY_head_reye_5,visible_head_reye_5,2DX_head_leye_0,2DY_head_leye_0,visible_head_leye_0,2DX_head_leye_1,2DY_head_leye_1,visible_head_leye_1,2DX_head_leye_2,2DY_head_leye_2,visible_head_leye_2,2DX_head_leye_3,2DY_head_leye_3,visible_head_leye_3,2DX_head_leye_4,2DY_head_leye_4,visible_head_leye_4,2DX_head_leye_5,2DY_head_leye_5,visible_head_leye_5,2DX_head_outmouth_0,2DY_head_outmouth_0,visible_head_outmouth_0,2DX_head_outmouth_1,2DY_head_outmouth_1,visible_head_outmouth_1,2DX_head_outmouth_2,2DY_head_outmouth_2,visible_head_outmouth_2,2DX_head_outmouth_3,2DY_head_outmouth_3,visible_head_outmouth_3,2DX_head_outmouth_4,2DY_head_outmouth_4,visible_head_outmouth_4,2DX_head_outmouth_5,2DY_head_outmouth_5,visible_head_outmouth_5,2DX_head_outmouth_6,2DY_head_outmouth_6,visible_head_outmouth_6,2DX_head_outmouth_7,2DY_head_outmouth_7,visible_head_outmouth_7,2DX_head_outmouth_8,2DY_head_outmouth_8,visible_head_outmouth_8,2DX_head_outmouth_9,2DY_head_outmouth_9,visible_head_outmouth_9,2DX_head_outmouth_10,2DY_head_outmouth_10,visible_head_outmouth_10,2DX_head_outmouth_11,2DY_head_outmouth_11,visible_head_outmouth_11,2DX_head_inmouth_0,2DY_head_inmouth_0,visible_head_inmouth_0,2DX_head_inmouth_1,2DY_head_inmouth_1,visible_head_inmouth_1,2DX_head_inmouth_2,2DY_head_inmouth_2,visible_head_inmouth_2,2DX_head_inmouth_3,2DY_head_inmouth_3,visible_head_inmouth_3,2DX_head_inmouth_4,2DY_head_inmouth_4,visible_head_inmouth_4,2DX_head_inmouth_5,2DY_head_inmouth_5,visible_head_inmouth_5,2DX_head_inmouth_6,2DY_head_inmouth_6,visible_head_inmouth_6,2DX_head_inmouth_7,2DY_head_inmouth_7,visible_head_inmouth_7,2DX_head_reye,2DY_head_reye,visible_head_reye,2DX_head_leye,2DY_head_leye,visible_head_leye
-def getHolisticRHandNameList():
+def getHolisticFaceNameList():
  bn=list()
  #---------------------------------------------------
- bn.append("")                    #0   - 
- bn.append("")                    #1   - 
- bn.append("")                    #2   - 
+ bn.append("head_outmouth_3")                    #0   - 
+ bn.append("head_nosebone_3")                    #1   - 
+ bn.append("head_nostrills_2")                    #2   - 
  bn.append("")                    #3   - 
  bn.append("")                    #4   - 
- bn.append("")                    #5   - 
- bn.append("")                    #6   - 
+ bn.append("head_nosebone_2")                    #5   - 
+ bn.append("head_nosebone_1")                    #6   - 
  bn.append("")                    #7   - 
  bn.append("")                    #8   - 
  bn.append("")                    #9   - 
  bn.append("")                    #10   - 
  bn.append("")                    #11   - 
- bn.append("")                    #12   - 
+ bn.append("head_inmouth_2")                    #12   - 
  bn.append("")                    #13   - 
  bn.append("")                    #14   - 
- bn.append("")                    #15   - 
+ bn.append("head_inmouth_6")                    #15   - 
  bn.append("")                    #16   - 
- bn.append("")                    #17   - 
+ bn.append("head_outmouth_9")                    #17   - 
  bn.append("")                    #18   - 
  bn.append("")                    #19   - 
  bn.append("")                    #20   - 
@@ -137,21 +137,21 @@ def getHolisticRHandNameList():
  bn.append("")                    #24   - 
  bn.append("")                    #25   - 
  bn.append("")                    #26   - 
- bn.append("")                    #27   - 
+ bn.append("head_outmouth_2")                    #27   - 
  bn.append("")                    #28   - 
  bn.append("")                    #29   - 
  bn.append("")                    #30   - 
  bn.append("")                    #31   - 
  bn.append("")                    #32   - 
- bn.append("")                    #33   - 
+ bn.append("head_reye_0")                    #33   - 
  bn.append("")                    #34   - 
  bn.append("")                    #35   - 
  bn.append("")                    #36   - 
  bn.append("")                    #37   - 
  bn.append("")                    #38   - 
  bn.append("")                    #39   - 
- bn.append("")                    #40   - 
- bn.append("")                    #41   - 
+ bn.append("head_outmouth_1")                    #40   - 
+ bn.append("head_inmouth_1")                    #41   - 
  bn.append("")                    #42   - 
  bn.append("")                    #43   - 
  bn.append("")                    #44   - 
@@ -165,22 +165,22 @@ def getHolisticRHandNameList():
  bn.append("")                    #52   - 
  bn.append("")                    #53   - 
  bn.append("")                    #54   - 
- bn.append("")                    #55   - 
+ bn.append("head_reyebrow_4")                    #55   - 
  bn.append("")                    #56   - 
  bn.append("")                    #57   - 
  bn.append("")                    #58   - 
  bn.append("")                    #59   - 
  bn.append("")                    #60   - 
- bn.append("")                    #61   - 
+ bn.append("head_outmouth_0")                    #61   - 
  bn.append("")                    #62   - 
- bn.append("")                    #63   - 
+ bn.append("head_reyebrow_1")                    #63   - 
  bn.append("")                    #64   - 
  bn.append("")                    #65   - 
- bn.append("")                    #66   - 
+ bn.append("head_reyebrow_3")                    #66   - 
  bn.append("")                    #67   - 
  bn.append("")                    #68   - 
  bn.append("")                    #69   - 
- bn.append("")                    #70   - 
+ bn.append("head_reyebrow_0")                    #70   - 
  bn.append("")                    #71   - 
  bn.append("")                    #72   - 
  bn.append("")                    #73   - 
@@ -188,34 +188,34 @@ def getHolisticRHandNameList():
  bn.append("")                    #75   - 
  bn.append("")                    #76   - 
  bn.append("")                    #77   - 
- bn.append("")                    #78   - 
+ bn.append("head_inmouth_0")                    #78   - 
  bn.append("")                    #79   - 
  bn.append("")                    #80   - 
  bn.append("")                    #81   - 
  bn.append("")                    #82   - 
  bn.append("")                    #83   - 
- bn.append("")                    #84   - 
+ bn.append("head_outmouth_10")                    #84   - 
  bn.append("")                    #85   - 
  bn.append("")                    #86   - 
  bn.append("")                    #87   - 
  bn.append("")                    #88   - 
  bn.append("")                    #89   - 
  bn.append("")                    #90   - 
- bn.append("")                    #91   - 
+ bn.append("head_outmouth_11")                    #91   - 
  bn.append("")                    #92   - 
  bn.append("")                    #93   - 
  bn.append("")                    #94   - 
  bn.append("")                    #95   - 
  bn.append("")                    #96   - 
- bn.append("")                    #97   - 
- bn.append("")                    #98   - 
+ bn.append("head_nostrills_1")                    #97   - 
+ bn.append("head_nostrills_0")                    #98   - 
  bn.append("")                    #99   - 
  bn.append("")                    #100   - 
  bn.append("")                    #101   - 
  bn.append("")                    #102   - 
  bn.append("")                    #103   - 
  bn.append("")                    #104   - 
- bn.append("")                    #105   - 
+ bn.append("head_reyebrow_2")                    #105   - 
  bn.append("")                    #106   - 
  bn.append("")                    #107   - 
  bn.append("")                    #108   - 
@@ -226,7 +226,7 @@ def getHolisticRHandNameList():
  bn.append("")                    #113   - 
  bn.append("")                    #114   - 
  bn.append("")                    #115   - 
- bn.append("")                    #116   - 
+ bn.append("head_rchin_1")                    #116   - 
  bn.append("")                    #117   - 
  bn.append("")                    #118   - 
  bn.append("")                    #119   - 
@@ -243,7 +243,7 @@ def getHolisticRHandNameList():
  bn.append("")                    #130   - 
  bn.append("")                    #131   - 
  bn.append("")                    #132   - 
- bn.append("")                    #133   - 
+ bn.append("head_reye_3")                    #133   - 
  bn.append("")                    #134   - 
  bn.append("")                    #135   - 
  bn.append("")                    #136   - 
@@ -253,24 +253,24 @@ def getHolisticRHandNameList():
  bn.append("")                    #140   - 
  bn.append("")                    #141   - 
  bn.append("")                    #142   - 
- bn.append("")                    #143   - 
- bn.append("")                    #144   - 
+ bn.append("head_rchin_0")                    #143   - 
+ bn.append("head_reye_4")                    #144   - 
  bn.append("")                    #145   - 
  bn.append("")                    #146   - 
- bn.append("")                    #147   - 
- bn.append("")                    #148   - 
+ bn.append("head_rchin_2")                    #147   - 
+ bn.append("head_rchin_7")                    #148   - 
  bn.append("")                    #149   - 
  bn.append("")                    #150   - 
  bn.append("")                    #151   - 
- bn.append("")                    #152   - 
- bn.append("")                    #153   - 
+ bn.append("head_chin")                    #152   - 
+ bn.append("head_reye_4")                    #153   - 
  bn.append("")                    #154   - 
  bn.append("")                    #155   - 
  bn.append("")                    #156   - 
  bn.append("")                    #157   - 
- bn.append("")                    #158   - 
+ bn.append("head_reye_2")                    #158   - 
  bn.append("")                    #159   - 
- bn.append("")                    #160   - 
+ bn.append("head_reye_1")                    #160   - 
  bn.append("")                    #161   - 
  bn.append("")                    #162   - 
  bn.append("")                    #163   - 
@@ -278,18 +278,18 @@ def getHolisticRHandNameList():
  bn.append("")                    #165   - 
  bn.append("")                    #166   - 
  bn.append("")                    #167   - 
- bn.append("")                    #168   - 
+ bn.append("head_nosebone_0")                 #168   - 
  bn.append("")                    #169   - 
- bn.append("")                    #170   - 
+ bn.append("head_rchin_5")                    #170   - 
  bn.append("")                    #171   - 
  bn.append("")                    #172   - 
  bn.append("")                    #173   - 
  bn.append("")                    #174   - 
  bn.append("")                    #175   - 
- bn.append("")                    #176   - 
+ bn.append("head_rchin_6")                    #176   - 
  bn.append("")                    #177   - 
  bn.append("")                    #178   - 
- bn.append("")                    #179   - 
+ bn.append("head_inmouth_7")                    #179   - 
  bn.append("")                    #180   - 
  bn.append("")                    #181   - 
  bn.append("")                    #182   - 
@@ -302,12 +302,12 @@ def getHolisticRHandNameList():
  bn.append("")                    #189   - 
  bn.append("")                    #190   - 
  bn.append("")                    #191   - 
- bn.append("")                    #192   - 
+ bn.append("head_rchin_3")                    #192   - 
  bn.append("")                    #193   - 
  bn.append("")                    #194   - 
  bn.append("")                    #195   - 
  bn.append("")                    #196   - 
- bn.append("")                    #197   - 
+ bn.append("head_nosebone_2")                    #197   - 
  bn.append("")                    #198   - 
  bn.append("")                    #199   - 
  bn.append("")                    #200   - 
@@ -320,7 +320,7 @@ def getHolisticRHandNameList():
  bn.append("")                    #207   - 
  bn.append("")                    #208   - 
  bn.append("")                    #209   - 
- bn.append("")                    #210   - 
+ bn.append("head_rchin_4")                    #210   - 
  bn.append("")                    #211   - 
  bn.append("")                    #212   - 
  bn.append("")                    #213   - 
@@ -363,30 +363,30 @@ def getHolisticRHandNameList():
  bn.append("")                    #250   - 
  bn.append("")                    #251   - 
  bn.append("")                    #252   - 
- bn.append("")                    #253   - 
+ bn.append("head_leye_4")                    #253   - 
  bn.append("")                    #254   - 
  bn.append("")                    #255   - 
- bn.append("")                    #256   - 
+ bn.append("head_leye_5")                    #256   - 
  bn.append("")                    #257   - 
  bn.append("")                    #258   - 
  bn.append("")                    #259   - 
  bn.append("")                    #260   - 
  bn.append("")                    #261   - 
  bn.append("")                    #262   - 
- bn.append("")                    #263   - 
+ bn.append("head_leye_3")                    #263   - 
  bn.append("")                    #264   - 
- bn.append("")                    #265   - 
+ bn.append("head_lchin_0")                    #265   - 
  bn.append("")                    #266   - 
- bn.append("")                    #267   - 
+ bn.append("head_outmouth_4")                    #267   - 
  bn.append("")                    #268   - 
  bn.append("")                    #269   - 
  bn.append("")                    #270   - 
- bn.append("")                    #271   - 
+ bn.append("head_inmouth_3")                    #271   - 
  bn.append("")                    #272   - 
  bn.append("")                    #273   - 
  bn.append("")                    #274   - 
  bn.append("")                    #275   - 
- bn.append("")                    #276   - 
+ bn.append("head_leyebrow_0")                    #276   - 
  bn.append("")                    #277   - 
  bn.append("")                    #278   - 
  bn.append("")                    #279   - 
@@ -395,18 +395,18 @@ def getHolisticRHandNameList():
  bn.append("")                    #282   - 
  bn.append("")                    #283   - 
  bn.append("")                    #284   - 
- bn.append("")                    #285   - 
+ bn.append("head_leyebrow_4")                    #285   - 
  bn.append("")                    #286   - 
  bn.append("")                    #287   - 
  bn.append("")                    #288   - 
  bn.append("")                    #289   - 
  bn.append("")                    #290   - 
- bn.append("")                    #291   - 
+ bn.append("head_outmouth_6")                    #291   - 
  bn.append("")                    #292   - 
- bn.append("")                    #293   - 
+ bn.append("head_leyebrow_1")                    #293   - 
  bn.append("")                    #294   - 
  bn.append("")                    #295   - 
- bn.append("")                    #296   - 
+ bn.append("head_leyebrow_3")                    #296   - 
  bn.append("")                    #297   - 
  bn.append("")                    #298   - 
  bn.append("")                    #299   - 
@@ -418,13 +418,13 @@ def getHolisticRHandNameList():
  bn.append("")                    #305   - 
  bn.append("")                    #306   - 
  bn.append("")                    #307   - 
- bn.append("")                    #308   - 
+ bn.append("head_inmouth_4")                    #308   - 
  bn.append("")                    #309   - 
  bn.append("")                    #310   - 
  bn.append("")                    #311   - 
  bn.append("")                    #312   - 
  bn.append("")                    #313   - 
- bn.append("")                    #314   - 
+ bn.append("head_outmouth_8")                    #314   - 
  bn.append("")                    #315   - 
  bn.append("")                    #316   - 
  bn.append("")                    #317   - 
@@ -436,15 +436,15 @@ def getHolisticRHandNameList():
  bn.append("")                    #323   - 
  bn.append("")                    #324   - 
  bn.append("")                    #325   - 
- bn.append("")                    #326   - 
- bn.append("")                    #327   - 
+ bn.append("head_nostrills_3")                    #326   - 
+ bn.append("head_nostrills_4")                    #327   - 
  bn.append("")                    #328   - 
  bn.append("")                    #329   - 
  bn.append("")                    #330   - 
  bn.append("")                    #331   - 
  bn.append("")                    #332   - 
  bn.append("")                    #333   - 
- bn.append("")                    #334   - 
+ bn.append("head_leyebrow_2")                    #334   - 
  bn.append("")                    #335   - 
  bn.append("")                    #336   - 
  bn.append("")                    #337   - 
@@ -456,7 +456,7 @@ def getHolisticRHandNameList():
  bn.append("")                    #343   - 
  bn.append("")                    #344   - 
  bn.append("")                    #345   - 
- bn.append("")                    #346   - 
+ bn.append("Head_LChin_1")                    #346   - 
  bn.append("")                    #347   - 
  bn.append("")                    #348   - 
  bn.append("")                    #349   - 
@@ -472,7 +472,7 @@ def getHolisticRHandNameList():
  bn.append("")                    #359   - 
  bn.append("")                    #360   - 
  bn.append("")                    #361   - 
- bn.append("")                    #362   - 
+ bn.append("head_leye_0")                    #362   - 
  bn.append("")                    #363   - 
  bn.append("")                    #364   - 
  bn.append("")                    #365   - 
@@ -486,17 +486,17 @@ def getHolisticRHandNameList():
  bn.append("")                    #373   - 
  bn.append("")                    #374   - 
  bn.append("")                    #375   - 
- bn.append("")                    #376   - 
- bn.append("")                    #377   - 
+ bn.append("head_lchin_2")                    #376   - 
+ bn.append("head_lchin_7")                    #377   - 
  bn.append("")                    #378   - 
  bn.append("")                    #379   - 
  bn.append("")                    #380   - 
  bn.append("")                    #381   - 
  bn.append("")                    #382   - 
  bn.append("")                    #383   - 
- bn.append("")                    #384   - 
+ bn.append("head_leye_1")                    #384   - 
  bn.append("")                    #385   - 
- bn.append("")                    #386   - 
+ bn.append("head_leye_2")                    #386   - 
  bn.append("")                    #387   - 
  bn.append("")                    #388   - 
  bn.append("")                    #389   - 
@@ -505,17 +505,17 @@ def getHolisticRHandNameList():
  bn.append("")                    #392   - 
  bn.append("")                    #393   - 
  bn.append("")                    #394   - 
- bn.append("")                    #395   - 
+ bn.append("head_lchin_5")                    #395   - 
  bn.append("")                    #396   - 
  bn.append("")                    #397   - 
  bn.append("")                    #398   - 
  bn.append("")                    #399   - 
- bn.append("")                    #400   - 
+ bn.append("head_lchin_6")                    #400   - 
  bn.append("")                    #401   - 
  bn.append("")                    #402   - 
- bn.append("")                    #403   - 
+ bn.append("head_inmouth_5")                    #403   - 
  bn.append("")                    #404   - 
- bn.append("")                    #405   - 
+ bn.append("head_outmouth_7")                    #405   - 
  bn.append("")                    #406   - 
  bn.append("")                    #407   - 
  bn.append("")                    #408   - 
@@ -526,7 +526,7 @@ def getHolisticRHandNameList():
  bn.append("")                    #413   - 
  bn.append("")                    #414   - 
  bn.append("")                    #415   - 
- bn.append("")                    #416   - 
+ bn.append("head_lchin_3")                    #416   - 
  bn.append("")                    #417   - 
  bn.append("")                    #418   - 
  bn.append("")                    #419   - 
@@ -540,7 +540,7 @@ def getHolisticRHandNameList():
  bn.append("")                    #427   - 
  bn.append("")                    #428   - 
  bn.append("")                    #429   - 
- bn.append("")                    #430   - 
+ bn.append("head_lchin_4")                    #430   - 
  bn.append("")                    #431   - 
  bn.append("")                    #432   - 
  bn.append("")                    #433   - 

@@ -8,13 +8,15 @@ mp_drawing = mp.solutions.drawing_utils
 mp_holistic = mp.solutions.holistic
 
 
-from holisticPartNames import getHolisticBodyNameList,getHolisticLHandNameList,getHolisticRHandNameList
+from holisticPartNames import getHolisticBodyNameList,getHolisticLHandNameList,getHolisticRHandNameList,getHolisticFaceNameList
 body=getHolisticBodyNameList()
 lhand=getHolisticLHandNameList()
 rhand=getHolisticRHandNameList()
+face=getHolisticFaceNameList()
 
 from C_Parser import readCListFromFile
 from tools import checkIfFileExists,createDirectory
+
 
 def appendListOf2DXY(fo,listToUse):
   firstElement=0
@@ -33,7 +35,6 @@ def appendListOf2DXY(fo,listToUse):
        fo.write(elementLowercased)
 
 
-
 def drawListNumbers(image,lst):
   font = cv2.FONT_HERSHEY_SIMPLEX
   org = (50, 50)
@@ -48,7 +49,6 @@ def drawListNumbers(image,lst):
      org = ( int(item.x * image.shape[1]) , int(item.y * image.shape[0]) ) 
      cv2.putText(image, '%s - %u'%(body[itemNumber],itemNumber), org, font, fontScale, color, thickness, cv2.LINE_AA)
      itemNumber = itemNumber +1
-
 
 
 def updateListWithAllInput(listWithAllInput,mediaPipeInput,mediaPipeLabels):
@@ -67,6 +67,25 @@ def updateListWithAllInput(listWithAllInput,mediaPipeInput,mediaPipeLabels):
       itemNumber = itemNumber+1
  return listWithAllInput
 
+
+def cleanPoints(body25BodyNames,leftHandNames,rightHandNames,headNames,allInputTogether):
+    for label in body25BodyNames:
+      allInputTogether["2DX_%s"%(label)]=0.0
+      allInputTogether["2DY_%s"%(label)]=0.0
+      allInputTogether["visible_%s"%(label)]=0.0
+    for label in leftHandNames:
+      allInputTogether["2DX_%s"%(label)]=0.0
+      allInputTogether["2DY_%s"%(label)]=0.0
+      allInputTogether["visible_%s"%(label)]=0.0
+    for label in rightHandNames:
+      allInputTogether["2DX_%s"%(label)]=0.0
+      allInputTogether["2DY_%s"%(label)]=0.0
+      allInputTogether["visible_%s"%(label)]=0.0
+    for label in headNames:
+      allInputTogether["2DX_%s"%(label)]=0.0
+      allInputTogether["2DY_%s"%(label)]=0.0
+      allInputTogether["visible_%s"%(label)]=0.0
+    return allInputTogether
 
 
 def calculateCompositePoints(allResults):
@@ -107,33 +126,20 @@ def calculateCompositePoints(allResults):
   return allResults
 
 
-def cleanPoints(body25BodyNames,leftHandNames,rightHandNames,headNames,allInputTogether):
-    for label in body25BodyNames:
-      allInputTogether["2DX_%s"%(label)]=0.0
-      allInputTogether["2DY_%s"%(label)]=0.0
-      allInputTogether["visible_%s"%(label)]=0.0
-    for label in leftHandNames:
-      allInputTogether["2DX_%s"%(label)]=0.0
-      allInputTogether["2DY_%s"%(label)]=0.0
-      allInputTogether["visible_%s"%(label)]=0.0
-    for label in rightHandNames:
-      allInputTogether["2DX_%s"%(label)]=0.0
-      allInputTogether["2DY_%s"%(label)]=0.0
-      allInputTogether["visible_%s"%(label)]=0.0
-    for label in headNames:
-      allInputTogether["2DX_%s"%(label)]=0.0
-      allInputTogether["2DY_%s"%(label)]=0.0
-      allInputTogether["visible_%s"%(label)]=0.0
-    return allInputTogether
-
 
 def appendCSVOutput(fo,frameNumber,body25BodyNames,leftHandNames,rightHandNames,headNames,allResults):
   fo.write(str(frameNumber))
   fo.write(",0,0")
+
+  countBodyJoints=0
+  countLHandJoints=0
+  countRHandJoints=0
+  countHeadJoints=0
   #========================= 
   for label in body25BodyNames:
        if (allResults["2DX_%s"%(label)]==0.0):
            allResults["2DX_%s"%(label)]=1.0
+       countBodyJoints=countBodyJoints+(allResults["visible_%s"%(label)]!=0)
        #------------------------------------------ 
        fo.write(",%0.6f,%0.6f,%.0f"%(1.0-allResults["2DX_%s"%(label)],allResults["2DY_%s"%(label)],allResults["visible_%s"%(label)]))
        #------------------------------------------
@@ -141,6 +147,7 @@ def appendCSVOutput(fo,frameNumber,body25BodyNames,leftHandNames,rightHandNames,
   for label in leftHandNames:
        if (allResults["2DX_%s"%(label)]==0.0):
            allResults["2DX_%s"%(label)]=1.0
+       countLHandJoints=countLHandJoints+(allResults["visible_%s"%(label)]!=0)
        #------------------------------------------ 
        fo.write(",%0.6f,%0.6f,%.0f"%(1.0-allResults["2DX_%s"%(label)],allResults["2DY_%s"%(label)],allResults["visible_%s"%(label)]))
        #------------------------------------------
@@ -148,6 +155,7 @@ def appendCSVOutput(fo,frameNumber,body25BodyNames,leftHandNames,rightHandNames,
   for label in rightHandNames:
        if (allResults["2DX_%s"%(label)]==0.0):
            allResults["2DX_%s"%(label)]=1.0
+       countRHandJoints=countRHandJoints+(allResults["visible_%s"%(label)]!=0)
        #------------------------------------------ 
        fo.write(",%0.6f,%0.6f,%.0f"%(1.0-allResults["2DX_%s"%(label)],allResults["2DY_%s"%(label)],allResults["visible_%s"%(label)]))
        #------------------------------------------
@@ -155,11 +163,13 @@ def appendCSVOutput(fo,frameNumber,body25BodyNames,leftHandNames,rightHandNames,
   for label in headNames:
        if (allResults["2DX_%s"%(label)]==0.0):
            allResults["2DX_%s"%(label)]=1.0
+       countHeadJoints=countHeadJoints+(allResults["visible_%s"%(label)]!=0)
        #------------------------------------------ 
        fo.write(",%0.6f,%0.6f,%.0f"%(1.0-allResults["2DX_%s"%(label)],allResults["2DY_%s"%(label)],allResults["visible_%s"%(label)]))
        #------------------------------------------
   #========================= 
   fo.write("\n")
+  print("Body : %u | LHand : %u | RHand : %u | Face : %u |"%(countBodyJoints,countLHandJoints,countRHandJoints,countHeadJoints))  
 
 #In an attempt to reduce the upkeep of this codebase as much as possible
 #the python code parses directly the C defines to get the order of joints
@@ -256,10 +266,11 @@ with mp_holistic.Holistic(static_image_mode=True) as holistic:
 
     #drawListNumbers(annotated_image,results.pose_landmarks)
     #============================================
-    allInputTogether = cleanPoints(body25BodyNames,leftHandNames,rightHandNames,headNames,allInputTogether)
+    allInputTogether = cleanPoints(body25BodyNames,leftHandNames,rightHandNames,headNames  ,allInputTogether)
     allInputTogether = updateListWithAllInput(allInputTogether,results.pose_landmarks      ,body)
     allInputTogether = updateListWithAllInput(allInputTogether,results.left_hand_landmarks ,lhand)
     allInputTogether = updateListWithAllInput(allInputTogether,results.right_hand_landmarks,rhand)
+    allInputTogether = updateListWithAllInput(allInputTogether,results.face_landmarks      ,face)
     #============================================
     allInputTogether=calculateCompositePoints(allInputTogether)
 
@@ -275,4 +286,5 @@ cap.release()
 
 
 fo.close()
-
+print("Output is stored at : ",outputDatasetPath)
+print("Done")
