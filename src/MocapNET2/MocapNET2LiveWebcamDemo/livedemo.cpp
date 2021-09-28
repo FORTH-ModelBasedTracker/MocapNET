@@ -379,8 +379,6 @@ int main(int argc, char *argv[])
                             //------------------------------------------------------
                         } // End of grabber loop
 
-                    unsigned prependTPose=0;
-
 
                     if (options.bvhCenter)
                         {
@@ -404,7 +402,7 @@ int main(int argc, char *argv[])
                     //fix https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/35
                     fixBVHHip(bvhFrames);
 
-                    if ( writeBVHFile(options.outputPath,0,prependTPose,bvhFrames) )
+                    if ( writeBVHFile(options.outputPath,0,options.prependTPose,bvhFrames) )
                         {
                             fprintf(stderr,GREEN "Successfully wrote %lu frames to bvh file.. \n" NORMAL,bvhFrames.size());
                         }
