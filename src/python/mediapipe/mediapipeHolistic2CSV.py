@@ -183,6 +183,8 @@ headNames       = readCListFromFile("src/MocapNET2/MocapNETLib2/IO/commonSkeleto
 #---------------------------------------------------------------------------
 
 
+brokenFrames=0
+maxBrokenFrames=30
 outputDatasetPath="frames/shuffle.webm"
 videoFilePath="shuffle.webm"
 
@@ -221,64 +223,67 @@ frameNumber = 0
 # For webcam input:
 cap = cv2.VideoCapture(videoFilePath)
 
+
+
 with mp_holistic.Holistic(static_image_mode=True) as holistic:
   while cap.isOpened():
     success, image = cap.read()
-    if not success:
-      print("Ignoring empty camera frame.")
-      # If loading a video, use 'break' instead of 'continue'.
-      break
-    
-    cv2.imwrite("%s/colorFrame_0_%05u.jpg"%(outputDatasetPath,frameNumber), image)
-    start = time.time()
+    if success: 
+       cv2.imwrite("%s/colorFrame_0_%05u.jpg"%(outputDatasetPath,frameNumber), image)
+       start = time.time()
 
-    # Flip the image horizontally for a later selfie-view display, and convert
-    # the BGR image to RGB.
-    image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
-    # To improve performance, optionally mark the image as not writeable to
-    # pass by reference.
-    image.flags.writeable = False
-    results = holistic.process(image)
+       # Flip the image horizontally for a later selfie-view display, and convert
+       # the BGR image to RGB.
+       image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
+       # To improve performance, optionally mark the image as not writeable to
+       # pass by reference.
+       image.flags.writeable = False
+       results = holistic.process(image)
  
-    # Draw the hand annotations on the image.
-    image.flags.writeable = True
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+       # Draw the hand annotations on the image.
+       image.flags.writeable = True
+       image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-    end = time.time()
-    # Time elapsed
-    seconds = end - start
-    #print ("Time taken : {0} seconds".format(seconds))
-    # Calculate frames per second
-    fps  = 1 / seconds
-    print("{0} fps".format(fps))
-
-
-    annotated_image = image.copy()
-    #-----------------------------------------------------------------------------------------------------
-    mp_drawing.draw_landmarks(annotated_image, results.face_landmarks,       mp_holistic.FACE_CONNECTIONS)
-    mp_drawing.draw_landmarks(annotated_image, results.left_hand_landmarks,  mp_holistic.HAND_CONNECTIONS)
-    mp_drawing.draw_landmarks(annotated_image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
-    #-----------------------------------------------------------------------------------------------------
-    # Use mp_holistic.UPPER_BODY_POSE_CONNECTIONS for drawing below when upper_body_only is set to True.
-    mp_drawing.draw_landmarks(annotated_image, results.pose_landmarks,       mp_holistic.POSE_CONNECTIONS)
-    #-----------------------------------------------------------------------------------------------------
-    #print(results.pose_landmarks)
-
-    #drawListNumbers(annotated_image,results.pose_landmarks)
-    #============================================
-    allInputTogether = cleanPoints(body25BodyNames,leftHandNames,rightHandNames,headNames  ,allInputTogether)
-    allInputTogether = updateListWithAllInput(allInputTogether,results.pose_landmarks      ,body)
-    allInputTogether = updateListWithAllInput(allInputTogether,results.left_hand_landmarks ,lhand)
-    allInputTogether = updateListWithAllInput(allInputTogether,results.right_hand_landmarks,rhand)
-    allInputTogether = updateListWithAllInput(allInputTogether,results.face_landmarks      ,face)
-    #============================================
-    allInputTogether=calculateCompositePoints(allInputTogether)
-
-    appendCSVOutput(fo,frameNumber,body25BodyNames,leftHandNames,rightHandNames,headNames,allInputTogether)
-    #print(allInputTogether)
+       end = time.time()
+       # Time elapsed
+       seconds = end - start
+       #print ("Time taken : {0} seconds".format(seconds))
+       # Calculate frames per second
+       fps  = 1 / seconds
+       print("{0} fps".format(fps))
 
 
-    frameNumber = frameNumber + 1
+       annotated_image = image.copy()
+       #-----------------------------------------------------------------------------------------------------
+       mp_drawing.draw_landmarks(annotated_image, results.face_landmarks,       mp_holistic.FACE_CONNECTIONS)
+       mp_drawing.draw_landmarks(annotated_image, results.left_hand_landmarks,  mp_holistic.HAND_CONNECTIONS)
+       mp_drawing.draw_landmarks(annotated_image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+       #-----------------------------------------------------------------------------------------------------
+       # Use mp_holistic.UPPER_BODY_POSE_CONNECTIONS for drawing below when upper_body_only is set to True.
+       mp_drawing.draw_landmarks(annotated_image, results.pose_landmarks,       mp_holistic.POSE_CONNECTIONS)
+       #-----------------------------------------------------------------------------------------------------
+       #print(results.pose_landmarks)
+
+       #drawListNumbers(annotated_image,results.pose_landmarks)
+       #============================================
+       allInputTogether = cleanPoints(body25BodyNames,leftHandNames,rightHandNames,headNames  ,allInputTogether)
+       allInputTogether = updateListWithAllInput(allInputTogether,results.pose_landmarks      ,body)
+       allInputTogether = updateListWithAllInput(allInputTogether,results.left_hand_landmarks ,lhand)
+       allInputTogether = updateListWithAllInput(allInputTogether,results.right_hand_landmarks,rhand)
+       allInputTogether = updateListWithAllInput(allInputTogether,results.face_landmarks      ,face)
+       #============================================
+       allInputTogether=calculateCompositePoints(allInputTogether)
+
+       appendCSVOutput(fo,frameNumber,body25BodyNames,leftHandNames,rightHandNames,headNames,allInputTogether)
+       #print(allInputTogether)
+       frameNumber = frameNumber + 1
+    else: 
+       print("Ignoring empty camera frame %u/%u ."%(brokenFrames+1,maxBrokenFrames))
+       brokenFrames=brokenFrames+1
+       # If loading a video, use 'break' instead of 'continue'.
+       if (brokenFrames>=maxBrokenFrames):
+         break
+
     cv2.imshow('MediaPipe Holistic', annotated_image)
     if cv2.waitKey(5) & 0xFF == 27:
       break
