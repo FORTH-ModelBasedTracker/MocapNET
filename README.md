@@ -1,5 +1,12 @@
 # MocapNET Project
 
+This is the new MNET3 branch that will hold the new 3D hand pose estimation code until everything is ready to be pulled in the main branch..!
+
+Please be patient as this might take some time, since I need to manually merge a lot of code since both the head of the github repository and the MNET3 code are actually superseeded by my private development snapshot..
+
+Long made short there is a lot of work to do to correctly move the code here..
+
+
 
 ![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/mnet2.png)
 
