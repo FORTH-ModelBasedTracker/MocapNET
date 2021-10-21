@@ -1,7 +1,9 @@
-
 ##Towards Holistic Real-time Human 3D Pose Estimation using MocapNETs
+
 <br/>
+
 ###Ablation study experimental results
+
 <br/>
 _Ammar Qammaz_
 <br/>
