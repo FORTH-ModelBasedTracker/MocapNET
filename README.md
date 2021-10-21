@@ -57,6 +57,21 @@ All the above yield a 33\% accuracy improvement on the [Human 3.6 Million (H3.6M
 Please cite the following papers [1](http://users.ics.forth.gr/~argyros/mypapers/2021_01_ICPR_Qammaz.pdf),[2](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf) if this work helps your research :
 
 
+
+```
+@inproceedings{Qammaz2021,
+  author = {Qammaz, Ammar and Argyros, Antonis A},
+  title = {Towards Holistic Real-time Human 3D Pose Estimation using MocapNETs},
+  booktitle = {British Machine Vision Conference (BMVC 2021)},
+  publisher = {BMVA},
+  year = {2021},
+  month = {November},
+  projects =  {I.C.HUMANS},
+  videolink = {https://www.youtube.com/watch?v=aaLOSY_p6Zc}
+}
+```
+
+
 ```
 @inproceedings{Qammaz2020,
   author = {Ammar Qammaz and Antonis A. Argyros},
