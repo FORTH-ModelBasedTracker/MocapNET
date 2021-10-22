@@ -31,7 +31,7 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
     options->webcamSource = 0;
     options->path=0;
     options->datasetPath=0;
-    options->jointEstimatorUsed = JOINT_2D_ESTIMATOR_FORTH;
+    options->jointEstimatorUsed = JOINT_2D_ESTIMATOR_OPENPOSE; // JOINT_2D_ESTIMATOR_FORTH;
 
     options->doUpperBody=1;
     options->doLowerBody=1;
@@ -356,6 +356,10 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
             else if (strcmp(argv[i],"--bvhcenter")==0)
                 {
                     options->bvhCenter=1;
+                }
+            else if (strcmp(argv[i],"--forth")==0)
+                {
+                    options->jointEstimatorUsed = JOINT_2D_ESTIMATOR_FORTH;
                 }
             else if (strcmp(argv[i],"--openpose")==0)
                 {
