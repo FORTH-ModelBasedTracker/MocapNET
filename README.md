@@ -199,11 +199,11 @@ To dump 5000 frames from the webcam to out.bvh instead of the live directive iss
 ./MocapNET2LiveWebcamDemo --from /dev/video0 --frames 5000
 ```
 
-To control the resolution of your webcam you can use the --size width height parameter, make sure that the resolution you provide is supported by your webcam model. You can use the v4l2-ctl tool by executing it and examining your supported sensor sizes and rates.
+To control the resolution of your webcam you can use the --size width height parameter, make sure that the resolution you provide is supported by your webcam model. You can use the v4l2-ctl tool by executing it and examining your supported sensor sizes and rates. By issuing --forth you can use our FORTH developed 2D joint estimator that performs faster but offers lower accuracy
 
 ```
  v4l2-ctl --list-formats-ext
-./MocapNET2LiveWebcamDemo --from /dev/video0 --live --size 800 600
+./MocapNET2LiveWebcamDemo --from /dev/video0 --live --forth --size 800 600
 ```
 
 
