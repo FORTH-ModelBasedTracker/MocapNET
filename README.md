@@ -215,7 +215,7 @@ To test OpenCV support of your video files issue :
 These tests only use OpenCV (without Tensorflow or any other dependencies) and are intended as a quick method that can identify and debug configuration problems on your system.
 In case of problems playing back video files or your webcam you might want to consider compiling OpenCV yourself. The [scripts/getOpenCV.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/scripts/getOpenCV.sh) script has been included to automatically fetch and make OpenCV for your convinience. The CMake file provided will automatically try to set the OpenCV_DIR variable to target the locally built version made using the script. If you are having trouble switching between the system version and the downloaded version consider using the cmake-gui utility or removing the build directory and making a fresh one, once again following the Building instructions. The new build directory should reset all paths and automatically see the local OpenCV version if you used the [scripts/getOpenCV.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/scripts/getOpenCV.sh) script and use this by default.
 
-## Live Demo
+## Live Demo - Only for Body!
 ------------------------------------------------------------------ 
 
 Assuming that the OpenCVTest executable described previously is working correctly with your input source, to do a live test of the MocapNET library using a webcam issue :
@@ -314,9 +314,8 @@ If you are interested in [ROS](https://www.ros.org/) development and looking for
 
 As described in the paper, the Hierarchical Coordinate Descent Inverse Kinematics algorithm has various hyper-parameters that have been set to default values after experiments. Depending on your deployment scenarios you might to sacrifice some performance for better accuracy. You can do this by altering the IK tuning parameters by using the --ik switch
 
-A default run without the --ik switch is equivalent to a run using a learning rate of 0.01, 5 iterations, 30 epochs. The iterations variable has the biggest impact in performance.
-
-A normal run without the --ik flag is equivalent to 
+By issuing --ik 0.01 5 30 for example you will use a learning rate of 0.01, 5 iterations, 30 epochs. The iterations variable has the biggest impact in performance and overall setting it to a higher number you will get a better fit to the observed 2D data at the cost of framerate.
+ 
 
 ```
 ./MocapNET2LiveWebcamDemo --from shuffle.webm --ik 0.01 5 30
