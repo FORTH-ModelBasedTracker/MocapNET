@@ -127,9 +127,7 @@ cd "$DIR/dataset"
 mkdir -p combinedModel/mocapnet2/mode5/1.0/ 
 cd "$DIR/dataset/combinedModel/mocapnet2/mode5/1.0/"
 
-
-#New ICPR pretrained networks 
-
+#Get ICPR2020 MNET2 pretrained networks 
 LIST_OF_NETWORKS="categorize_lowerbody_all.pb lowerbody_left.pb upperbody_left.pb categorize_upperbody_all.pb lowerbody_right.pb upperbody_right.pb lowerbody_back.pb upperbody_back.pb lowerbody_front.pb upperbody_front.pb"
 
 for NETWORK in $LIST_OF_NETWORKS; do
@@ -137,6 +135,15 @@ if [ ! -f $NETWORK  ]; then
   wget http://ammar.gr/datasets/icpr2020/$NETWORK 
 fi
 done
+
+
+
+#Get BMVC2021 MNET3 all-in-one models with hands
+cd "$DIR/dataset"
+mkdir -p combinedModel/mocapnet2/mode1/1.0/ 
+cd "$DIR/dataset/combinedModel/mocapnet2/mode5/1.0/"
+wget http://ammar.gr/datasets/bmvc2021/mnet3Ensemble.zip
+unzip mnet3Ensemble.zip
 
 
 
@@ -208,27 +215,26 @@ clear
 #==========================================================================
 #==========================================================================
 #==========================================================================
-clear
-  echo "         Do you want to use Tensorflow 1.x instead of 2.x ? " 
-  echo "The project is compatible with both but if you have an older GPU it might be better for you " 
-  echo "to stick with Tensorflow 1.x " 
-  echo
-  echo -n " (Y/N)?"
+#clear
+#  echo "         Do you want to use Tensorflow 1.x instead of 2.x ? " 
+#  echo "The project is compatible with both but if you have an older GPU it might be better for you " 
+#  echo "to stick with Tensorflow 1.x " 
+#  echo
+#  echo -n " (Y/N)?"
 
   #Only ask if we can answer
   #_____________________________
-  if [ "$ASK_QUESTIONS" -eq "0" ]; then
-   answer="N"
-   else
-   read answer
-  fi 
+#  if [ "$ASK_QUESTIONS" -eq "0" ]; then
+#   answer="N"
+#   else
+#   read answer
+#  fi 
   #_____________________________
 
-
-  if test "$answer" != "N" -a "$answer" != "n";
-  then  
-    TENSORFLOW_VERSION="1.14.0" # 1.12.0 for CUDA 9.0 / 1.11.0 for CUDA9 with  older compute capabilities (5.2) .. / 1.8.0 for CUDA9 and a device with compute capability 3.0  / 1.4.1 for CUDA 8 
-  fi
+#  if test "$answer" != "N" -a "$answer" != "n";
+#  then  
+#    TENSORFLOW_VERSION="1.14.0" # 1.12.0 for CUDA 9.0 / 1.11.0 for CUDA9 with  older compute capabilities (5.2) .. / 1.8.0 for CUDA9 and a device with compute capability 3.0  / 1.4.1 for CUDA 8 
+#  fi
 #==========================================================================
 #==========================================================================
 #==========================================================================
