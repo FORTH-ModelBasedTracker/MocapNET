@@ -6,15 +6,21 @@ extern "C"
 {
 #endif
 
-
 //Neural network orientations centered around 0
-#define NN_ORIENTATIONS_TRAINED_AROUND_ZERO_AND_REQUIRE_TRICK 1
+#define NN_ORIENTATIONS_TRAINED_AROUND_ZERO_AND_REQUIRE_TRICK 0
 
 //Also swap bvh rotations before IK step
 #define APPLY_BVH_FIX_TO_IK_INPUT 0
 
 //Test swapped 
 #define SWAP_LEFT_RIGHT_ENSEMBLES 0
+
+//Hands mode ( 1 / 3 (deprecated) / 5 )
+#define HANDS_MODE 1
+
+//Use flip for RHand Regression..!
+#define RHAND_FLIP 1
+
 
 //Limits synced to scripts/createRandomizedDatset.sh
 const float FRONT_MIN_ORIENTATION = -45.0;

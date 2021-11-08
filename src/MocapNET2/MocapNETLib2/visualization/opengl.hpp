@@ -124,7 +124,7 @@ static const char * OpenCOLLADANames[]=
  "finger5-1_R", // 291 "finger5-1.r",
  "finger5-2_R", // 294 "finger5-2.r",
  "finger5-3_R", // 297  "finger5-3.r",
- "__rthumb", // 300 "__rthumb",
+ "rthumbBase", // 300 "__rthumb",
  "RThumb", // 303 "rthumb",
  "finger1-2_R", // 306 "finger1-2.r",
  "finger1-3_R", // 309 "finger1-3.r",
@@ -150,7 +150,7 @@ static const char * OpenCOLLADANames[]=
  "finger5-1_L", // 369 "finger5-1.l",
  "finger5-2_L", // 372 "finger5-2.l",
  "finger5-3_L", // 375 "finger5-3.l",
- "__lthumb", // 378 "__lthumb",
+ "lthumbBase", // 378 "__lthumb",
  "LThumb", // 381 "lthumb",
  "finger1-2_L", // 384 "finger1-2.l",
  "finger1-3_L", // 387 "finger1-3.l",
@@ -212,6 +212,10 @@ int initializeOpenGLStuff(unsigned int openGLFrameWidth,unsigned int openGLFrame
  * @retval 0=Failure else a pointer to an RGB image that holds the OpenGL rendering
  */
 char * visualizeOpenGL(unsigned int *openGLFrameWidth,unsigned int *openGLFrameHeight);
+
+
+
+int updateOpenGLViewBVHAgnostic(void * bvhMotion,std::vector<float> bvhFrame);
 
 
 /**

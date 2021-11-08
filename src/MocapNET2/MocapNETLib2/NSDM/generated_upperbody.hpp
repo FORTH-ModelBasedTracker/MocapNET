@@ -1,7 +1,7 @@
 /** @file generated_upperbody.hpp
  *  @brief A Description the upperbody input of a Tensorflow network required for MocapNET
  *  @author Ammar Qammaz (AmmarkoV)
- *  Automatically generated using :
+ *  Automatically generated @ 2021-01-31 23:41:28.767309 using :
  *     python3 exportCPPCodeFromJSONConfiguration.py --front upperbody --config dataset/upperbody_configuration.json
  *     please note that since the names of the labels are both affected by the dataset/upperbody_configuration.json configuration
  *     as well as the ground truth, if you have made any weird additions you might consider running the ./createRandomizedDataset.sh and ./createTestDataset.sh scripts
@@ -16,6 +16,9 @@
 
 /** @brief This is an array of names for all uncompressed 2D inputs expected. */
 static const unsigned int mocapNET_InputLength_WithoutNSDM_upperbody = 33;
+
+/** @brief Use rich diagonal, part of networks after 31-01-2021 */
+static const unsigned int richDiagonal_upperbody = 1;
 
 /** @brief An array of strings that contains the label for each expected input. */
 static const char * mocapNET_upperbody[] =
@@ -54,7 +57,7 @@ static const char * mocapNET_upperbody[] =
     "2DY_lhand", //31
     "visible_lhand", //32
 //This is where regular input ends and the NSDM data kicks in..
-    "hipY-hipY-Angle", //33
+    "angleUsedFor2DRotation_0", //33
     "hipY-EndSite_eye.rY-Angle", //34
     "hipY-EndSite_eye.lY-Angle", //35
     "hipY-neckY-Angle", //36
@@ -72,7 +75,7 @@ static const char * mocapNET_upperbody[] =
     "hipY-lhandY-Angle", //48
     "hipY-halfway_neck_and_hipY-Angle", //49
     "EndSite_eye.rY-hipY-Angle", //50
-    "EndSite_eye.rY-EndSite_eye.rY-Angle", //51
+    "angleUsedFor2DRotation_1", //51
     "EndSite_eye.rY-EndSite_eye.lY-Angle", //52
     "EndSite_eye.rY-neckY-Angle", //53
     "EndSite_eye.rY-rshoulderY-Angle", //54
@@ -90,7 +93,7 @@ static const char * mocapNET_upperbody[] =
     "EndSite_eye.rY-halfway_neck_and_hipY-Angle", //66
     "EndSite_eye.lY-hipY-Angle", //67
     "EndSite_eye.lY-EndSite_eye.rY-Angle", //68
-    "EndSite_eye.lY-EndSite_eye.lY-Angle", //69
+    "angleUsedFor2DRotation_2", //69
     "EndSite_eye.lY-neckY-Angle", //70
     "EndSite_eye.lY-rshoulderY-Angle", //71
     "EndSite_eye.lY-halfway_rshoulder_and_relbowY-Angle", //72
@@ -108,7 +111,7 @@ static const char * mocapNET_upperbody[] =
     "neckY-hipY-Angle", //84
     "neckY-EndSite_eye.rY-Angle", //85
     "neckY-EndSite_eye.lY-Angle", //86
-    "neckY-neckY-Angle", //87
+    "angleUsedFor2DRotation_3", //87
     "neckY-rshoulderY-Angle", //88
     "neckY-halfway_rshoulder_and_relbowY-Angle", //89
     "neckY-relbowY-Angle", //90
@@ -126,7 +129,7 @@ static const char * mocapNET_upperbody[] =
     "rshoulderY-EndSite_eye.rY-Angle", //102
     "rshoulderY-EndSite_eye.lY-Angle", //103
     "rshoulderY-neckY-Angle", //104
-    "rshoulderY-rshoulderY-Angle", //105
+    "angleUsedFor2DRotation_4", //105
     "rshoulderY-halfway_rshoulder_and_relbowY-Angle", //106
     "rshoulderY-relbowY-Angle", //107
     "rshoulderY-halfway_relbow_and_rhandY-Angle", //108
@@ -144,7 +147,7 @@ static const char * mocapNET_upperbody[] =
     "halfway_rshoulder_and_relbowY-EndSite_eye.lY-Angle", //120
     "halfway_rshoulder_and_relbowY-neckY-Angle", //121
     "halfway_rshoulder_and_relbowY-rshoulderY-Angle", //122
-    "halfway_rshoulder_and_relbowY-halfway_rshoulder_and_relbowY-Angle", //123
+    "angleUsedFor2DRotation_5", //123
     "halfway_rshoulder_and_relbowY-relbowY-Angle", //124
     "halfway_rshoulder_and_relbowY-halfway_relbow_and_rhandY-Angle", //125
     "halfway_rshoulder_and_relbowY-rhandY-Angle", //126
@@ -162,7 +165,7 @@ static const char * mocapNET_upperbody[] =
     "relbowY-neckY-Angle", //138
     "relbowY-rshoulderY-Angle", //139
     "relbowY-halfway_rshoulder_and_relbowY-Angle", //140
-    "relbowY-relbowY-Angle", //141
+    "angleUsedFor2DRotation_6", //141
     "relbowY-halfway_relbow_and_rhandY-Angle", //142
     "relbowY-rhandY-Angle", //143
     "relbowY-virtual_hip_x_minus_0_15_y_minus_0_15Y-Angle", //144
@@ -180,7 +183,7 @@ static const char * mocapNET_upperbody[] =
     "halfway_relbow_and_rhandY-rshoulderY-Angle", //156
     "halfway_relbow_and_rhandY-halfway_rshoulder_and_relbowY-Angle", //157
     "halfway_relbow_and_rhandY-relbowY-Angle", //158
-    "halfway_relbow_and_rhandY-halfway_relbow_and_rhandY-Angle", //159
+    "angleUsedFor2DRotation_7", //159
     "halfway_relbow_and_rhandY-rhandY-Angle", //160
     "halfway_relbow_and_rhandY-virtual_hip_x_minus_0_15_y_minus_0_15Y-Angle", //161
     "halfway_relbow_and_rhandY-virtual_hip_x_plus0_15_y_minus_0_15Y-Angle", //162
@@ -198,7 +201,7 @@ static const char * mocapNET_upperbody[] =
     "rhandY-halfway_rshoulder_and_relbowY-Angle", //174
     "rhandY-relbowY-Angle", //175
     "rhandY-halfway_relbow_and_rhandY-Angle", //176
-    "rhandY-rhandY-Angle", //177
+    "angleUsedFor2DRotation_8", //177
     "rhandY-virtual_hip_x_minus_0_15_y_minus_0_15Y-Angle", //178
     "rhandY-virtual_hip_x_plus0_15_y_minus_0_15Y-Angle", //179
     "rhandY-lshoulderY-Angle", //180
@@ -216,7 +219,7 @@ static const char * mocapNET_upperbody[] =
     "virtual_hip_x_minus_0_15_y_minus_0_15Y-relbowY-Angle", //192
     "virtual_hip_x_minus_0_15_y_minus_0_15Y-halfway_relbow_and_rhandY-Angle", //193
     "virtual_hip_x_minus_0_15_y_minus_0_15Y-rhandY-Angle", //194
-    "virtual_hip_x_minus_0_15_y_minus_0_15Y-virtual_hip_x_minus_0_15_y_minus_0_15Y-Angle", //195
+    "angleUsedFor2DRotation_9", //195
     "virtual_hip_x_minus_0_15_y_minus_0_15Y-virtual_hip_x_plus0_15_y_minus_0_15Y-Angle", //196
     "virtual_hip_x_minus_0_15_y_minus_0_15Y-lshoulderY-Angle", //197
     "virtual_hip_x_minus_0_15_y_minus_0_15Y-halfway_lshoulder_and_lelbowY-Angle", //198
@@ -234,7 +237,7 @@ static const char * mocapNET_upperbody[] =
     "virtual_hip_x_plus0_15_y_minus_0_15Y-halfway_relbow_and_rhandY-Angle", //210
     "virtual_hip_x_plus0_15_y_minus_0_15Y-rhandY-Angle", //211
     "virtual_hip_x_plus0_15_y_minus_0_15Y-virtual_hip_x_minus_0_15_y_minus_0_15Y-Angle", //212
-    "virtual_hip_x_plus0_15_y_minus_0_15Y-virtual_hip_x_plus0_15_y_minus_0_15Y-Angle", //213
+    "angleUsedFor2DRotation_10", //213
     "virtual_hip_x_plus0_15_y_minus_0_15Y-lshoulderY-Angle", //214
     "virtual_hip_x_plus0_15_y_minus_0_15Y-halfway_lshoulder_and_lelbowY-Angle", //215
     "virtual_hip_x_plus0_15_y_minus_0_15Y-lelbowY-Angle", //216
@@ -252,7 +255,7 @@ static const char * mocapNET_upperbody[] =
     "lshoulderY-rhandY-Angle", //228
     "lshoulderY-virtual_hip_x_minus_0_15_y_minus_0_15Y-Angle", //229
     "lshoulderY-virtual_hip_x_plus0_15_y_minus_0_15Y-Angle", //230
-    "lshoulderY-lshoulderY-Angle", //231
+    "angleUsedFor2DRotation_11", //231
     "lshoulderY-halfway_lshoulder_and_lelbowY-Angle", //232
     "lshoulderY-lelbowY-Angle", //233
     "lshoulderY-halfway_lelbow_and_lhandY-Angle", //234
@@ -270,7 +273,7 @@ static const char * mocapNET_upperbody[] =
     "halfway_lshoulder_and_lelbowY-virtual_hip_x_minus_0_15_y_minus_0_15Y-Angle", //246
     "halfway_lshoulder_and_lelbowY-virtual_hip_x_plus0_15_y_minus_0_15Y-Angle", //247
     "halfway_lshoulder_and_lelbowY-lshoulderY-Angle", //248
-    "halfway_lshoulder_and_lelbowY-halfway_lshoulder_and_lelbowY-Angle", //249
+    "angleUsedFor2DRotation_12", //249
     "halfway_lshoulder_and_lelbowY-lelbowY-Angle", //250
     "halfway_lshoulder_and_lelbowY-halfway_lelbow_and_lhandY-Angle", //251
     "halfway_lshoulder_and_lelbowY-lhandY-Angle", //252
@@ -288,7 +291,7 @@ static const char * mocapNET_upperbody[] =
     "lelbowY-virtual_hip_x_plus0_15_y_minus_0_15Y-Angle", //264
     "lelbowY-lshoulderY-Angle", //265
     "lelbowY-halfway_lshoulder_and_lelbowY-Angle", //266
-    "lelbowY-lelbowY-Angle", //267
+    "angleUsedFor2DRotation_13", //267
     "lelbowY-halfway_lelbow_and_lhandY-Angle", //268
     "lelbowY-lhandY-Angle", //269
     "lelbowY-halfway_neck_and_hipY-Angle", //270
@@ -306,7 +309,7 @@ static const char * mocapNET_upperbody[] =
     "halfway_lelbow_and_lhandY-lshoulderY-Angle", //282
     "halfway_lelbow_and_lhandY-halfway_lshoulder_and_lelbowY-Angle", //283
     "halfway_lelbow_and_lhandY-lelbowY-Angle", //284
-    "halfway_lelbow_and_lhandY-halfway_lelbow_and_lhandY-Angle", //285
+    "angleUsedFor2DRotation_14", //285
     "halfway_lelbow_and_lhandY-lhandY-Angle", //286
     "halfway_lelbow_and_lhandY-halfway_neck_and_hipY-Angle", //287
     "lhandY-hipY-Angle", //288
@@ -324,7 +327,7 @@ static const char * mocapNET_upperbody[] =
     "lhandY-halfway_lshoulder_and_lelbowY-Angle", //300
     "lhandY-lelbowY-Angle", //301
     "lhandY-halfway_lelbow_and_lhandY-Angle", //302
-    "lhandY-lhandY-Angle", //303
+    "angleUsedFor2DRotation_15", //303
     "lhandY-halfway_neck_and_hipY-Angle", //304
     "halfway_neck_and_hipY-hipY-Angle", //305
     "halfway_neck_and_hipY-EndSite_eye.rY-Angle", //306
@@ -342,7 +345,7 @@ static const char * mocapNET_upperbody[] =
     "halfway_neck_and_hipY-lelbowY-Angle", //318
     "halfway_neck_and_hipY-halfway_lelbow_and_lhandY-Angle", //319
     "halfway_neck_and_hipY-lhandY-Angle", //320
-    "halfway_neck_and_hipY-halfway_neck_and_hipY-Angle", //321
+    "angleUsedFor2DRotation_16", //321
     "end"
 };
 /** @brief Programmer friendly enumerator of expected inputs*/
@@ -381,7 +384,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_2DX_LHAND, //30
     MNET_UPPERBODY_IN_2DY_LHAND, //31
     MNET_UPPERBODY_IN_VISIBLE_LHAND, //32
-    MNET_UPPERBODY_IN_HIPY_HIPY_ANGLE, //33
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_0, //33
     MNET_UPPERBODY_IN_HIPY_ENDSITE_EYE_RY_ANGLE, //34
     MNET_UPPERBODY_IN_HIPY_ENDSITE_EYE_LY_ANGLE, //35
     MNET_UPPERBODY_IN_HIPY_NECKY_ANGLE, //36
@@ -399,7 +402,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_HIPY_LHANDY_ANGLE, //48
     MNET_UPPERBODY_IN_HIPY_HALFWAY_NECK_AND_HIPY_ANGLE, //49
     MNET_UPPERBODY_IN_ENDSITE_EYE_RY_HIPY_ANGLE, //50
-    MNET_UPPERBODY_IN_ENDSITE_EYE_RY_ENDSITE_EYE_RY_ANGLE, //51
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_1, //51
     MNET_UPPERBODY_IN_ENDSITE_EYE_RY_ENDSITE_EYE_LY_ANGLE, //52
     MNET_UPPERBODY_IN_ENDSITE_EYE_RY_NECKY_ANGLE, //53
     MNET_UPPERBODY_IN_ENDSITE_EYE_RY_RSHOULDERY_ANGLE, //54
@@ -417,7 +420,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_ENDSITE_EYE_RY_HALFWAY_NECK_AND_HIPY_ANGLE, //66
     MNET_UPPERBODY_IN_ENDSITE_EYE_LY_HIPY_ANGLE, //67
     MNET_UPPERBODY_IN_ENDSITE_EYE_LY_ENDSITE_EYE_RY_ANGLE, //68
-    MNET_UPPERBODY_IN_ENDSITE_EYE_LY_ENDSITE_EYE_LY_ANGLE, //69
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_2, //69
     MNET_UPPERBODY_IN_ENDSITE_EYE_LY_NECKY_ANGLE, //70
     MNET_UPPERBODY_IN_ENDSITE_EYE_LY_RSHOULDERY_ANGLE, //71
     MNET_UPPERBODY_IN_ENDSITE_EYE_LY_HALFWAY_RSHOULDER_AND_RELBOWY_ANGLE, //72
@@ -435,7 +438,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_NECKY_HIPY_ANGLE, //84
     MNET_UPPERBODY_IN_NECKY_ENDSITE_EYE_RY_ANGLE, //85
     MNET_UPPERBODY_IN_NECKY_ENDSITE_EYE_LY_ANGLE, //86
-    MNET_UPPERBODY_IN_NECKY_NECKY_ANGLE, //87
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_3, //87
     MNET_UPPERBODY_IN_NECKY_RSHOULDERY_ANGLE, //88
     MNET_UPPERBODY_IN_NECKY_HALFWAY_RSHOULDER_AND_RELBOWY_ANGLE, //89
     MNET_UPPERBODY_IN_NECKY_RELBOWY_ANGLE, //90
@@ -453,7 +456,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_RSHOULDERY_ENDSITE_EYE_RY_ANGLE, //102
     MNET_UPPERBODY_IN_RSHOULDERY_ENDSITE_EYE_LY_ANGLE, //103
     MNET_UPPERBODY_IN_RSHOULDERY_NECKY_ANGLE, //104
-    MNET_UPPERBODY_IN_RSHOULDERY_RSHOULDERY_ANGLE, //105
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_4, //105
     MNET_UPPERBODY_IN_RSHOULDERY_HALFWAY_RSHOULDER_AND_RELBOWY_ANGLE, //106
     MNET_UPPERBODY_IN_RSHOULDERY_RELBOWY_ANGLE, //107
     MNET_UPPERBODY_IN_RSHOULDERY_HALFWAY_RELBOW_AND_RHANDY_ANGLE, //108
@@ -471,7 +474,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_HALFWAY_RSHOULDER_AND_RELBOWY_ENDSITE_EYE_LY_ANGLE, //120
     MNET_UPPERBODY_IN_HALFWAY_RSHOULDER_AND_RELBOWY_NECKY_ANGLE, //121
     MNET_UPPERBODY_IN_HALFWAY_RSHOULDER_AND_RELBOWY_RSHOULDERY_ANGLE, //122
-    MNET_UPPERBODY_IN_HALFWAY_RSHOULDER_AND_RELBOWY_HALFWAY_RSHOULDER_AND_RELBOWY_ANGLE, //123
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_5, //123
     MNET_UPPERBODY_IN_HALFWAY_RSHOULDER_AND_RELBOWY_RELBOWY_ANGLE, //124
     MNET_UPPERBODY_IN_HALFWAY_RSHOULDER_AND_RELBOWY_HALFWAY_RELBOW_AND_RHANDY_ANGLE, //125
     MNET_UPPERBODY_IN_HALFWAY_RSHOULDER_AND_RELBOWY_RHANDY_ANGLE, //126
@@ -489,7 +492,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_RELBOWY_NECKY_ANGLE, //138
     MNET_UPPERBODY_IN_RELBOWY_RSHOULDERY_ANGLE, //139
     MNET_UPPERBODY_IN_RELBOWY_HALFWAY_RSHOULDER_AND_RELBOWY_ANGLE, //140
-    MNET_UPPERBODY_IN_RELBOWY_RELBOWY_ANGLE, //141
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_6, //141
     MNET_UPPERBODY_IN_RELBOWY_HALFWAY_RELBOW_AND_RHANDY_ANGLE, //142
     MNET_UPPERBODY_IN_RELBOWY_RHANDY_ANGLE, //143
     MNET_UPPERBODY_IN_RELBOWY_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_ANGLE, //144
@@ -507,7 +510,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_HALFWAY_RELBOW_AND_RHANDY_RSHOULDERY_ANGLE, //156
     MNET_UPPERBODY_IN_HALFWAY_RELBOW_AND_RHANDY_HALFWAY_RSHOULDER_AND_RELBOWY_ANGLE, //157
     MNET_UPPERBODY_IN_HALFWAY_RELBOW_AND_RHANDY_RELBOWY_ANGLE, //158
-    MNET_UPPERBODY_IN_HALFWAY_RELBOW_AND_RHANDY_HALFWAY_RELBOW_AND_RHANDY_ANGLE, //159
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_7, //159
     MNET_UPPERBODY_IN_HALFWAY_RELBOW_AND_RHANDY_RHANDY_ANGLE, //160
     MNET_UPPERBODY_IN_HALFWAY_RELBOW_AND_RHANDY_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_ANGLE, //161
     MNET_UPPERBODY_IN_HALFWAY_RELBOW_AND_RHANDY_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_ANGLE, //162
@@ -525,7 +528,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_RHANDY_HALFWAY_RSHOULDER_AND_RELBOWY_ANGLE, //174
     MNET_UPPERBODY_IN_RHANDY_RELBOWY_ANGLE, //175
     MNET_UPPERBODY_IN_RHANDY_HALFWAY_RELBOW_AND_RHANDY_ANGLE, //176
-    MNET_UPPERBODY_IN_RHANDY_RHANDY_ANGLE, //177
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_8, //177
     MNET_UPPERBODY_IN_RHANDY_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_ANGLE, //178
     MNET_UPPERBODY_IN_RHANDY_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_ANGLE, //179
     MNET_UPPERBODY_IN_RHANDY_LSHOULDERY_ANGLE, //180
@@ -543,7 +546,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_RELBOWY_ANGLE, //192
     MNET_UPPERBODY_IN_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_HALFWAY_RELBOW_AND_RHANDY_ANGLE, //193
     MNET_UPPERBODY_IN_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_RHANDY_ANGLE, //194
-    MNET_UPPERBODY_IN_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_ANGLE, //195
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_9, //195
     MNET_UPPERBODY_IN_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_ANGLE, //196
     MNET_UPPERBODY_IN_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_LSHOULDERY_ANGLE, //197
     MNET_UPPERBODY_IN_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_HALFWAY_LSHOULDER_AND_LELBOWY_ANGLE, //198
@@ -561,7 +564,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_HALFWAY_RELBOW_AND_RHANDY_ANGLE, //210
     MNET_UPPERBODY_IN_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_RHANDY_ANGLE, //211
     MNET_UPPERBODY_IN_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_ANGLE, //212
-    MNET_UPPERBODY_IN_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_ANGLE, //213
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_10, //213
     MNET_UPPERBODY_IN_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_LSHOULDERY_ANGLE, //214
     MNET_UPPERBODY_IN_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_HALFWAY_LSHOULDER_AND_LELBOWY_ANGLE, //215
     MNET_UPPERBODY_IN_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_LELBOWY_ANGLE, //216
@@ -579,7 +582,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_LSHOULDERY_RHANDY_ANGLE, //228
     MNET_UPPERBODY_IN_LSHOULDERY_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_ANGLE, //229
     MNET_UPPERBODY_IN_LSHOULDERY_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_ANGLE, //230
-    MNET_UPPERBODY_IN_LSHOULDERY_LSHOULDERY_ANGLE, //231
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_11, //231
     MNET_UPPERBODY_IN_LSHOULDERY_HALFWAY_LSHOULDER_AND_LELBOWY_ANGLE, //232
     MNET_UPPERBODY_IN_LSHOULDERY_LELBOWY_ANGLE, //233
     MNET_UPPERBODY_IN_LSHOULDERY_HALFWAY_LELBOW_AND_LHANDY_ANGLE, //234
@@ -597,7 +600,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_HALFWAY_LSHOULDER_AND_LELBOWY_VIRTUAL_HIP_X_MINUS_0_15_Y_MINUS_0_15Y_ANGLE, //246
     MNET_UPPERBODY_IN_HALFWAY_LSHOULDER_AND_LELBOWY_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_ANGLE, //247
     MNET_UPPERBODY_IN_HALFWAY_LSHOULDER_AND_LELBOWY_LSHOULDERY_ANGLE, //248
-    MNET_UPPERBODY_IN_HALFWAY_LSHOULDER_AND_LELBOWY_HALFWAY_LSHOULDER_AND_LELBOWY_ANGLE, //249
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_12, //249
     MNET_UPPERBODY_IN_HALFWAY_LSHOULDER_AND_LELBOWY_LELBOWY_ANGLE, //250
     MNET_UPPERBODY_IN_HALFWAY_LSHOULDER_AND_LELBOWY_HALFWAY_LELBOW_AND_LHANDY_ANGLE, //251
     MNET_UPPERBODY_IN_HALFWAY_LSHOULDER_AND_LELBOWY_LHANDY_ANGLE, //252
@@ -615,7 +618,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_LELBOWY_VIRTUAL_HIP_X_PLUS0_15_Y_MINUS_0_15Y_ANGLE, //264
     MNET_UPPERBODY_IN_LELBOWY_LSHOULDERY_ANGLE, //265
     MNET_UPPERBODY_IN_LELBOWY_HALFWAY_LSHOULDER_AND_LELBOWY_ANGLE, //266
-    MNET_UPPERBODY_IN_LELBOWY_LELBOWY_ANGLE, //267
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_13, //267
     MNET_UPPERBODY_IN_LELBOWY_HALFWAY_LELBOW_AND_LHANDY_ANGLE, //268
     MNET_UPPERBODY_IN_LELBOWY_LHANDY_ANGLE, //269
     MNET_UPPERBODY_IN_LELBOWY_HALFWAY_NECK_AND_HIPY_ANGLE, //270
@@ -633,7 +636,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_HALFWAY_LELBOW_AND_LHANDY_LSHOULDERY_ANGLE, //282
     MNET_UPPERBODY_IN_HALFWAY_LELBOW_AND_LHANDY_HALFWAY_LSHOULDER_AND_LELBOWY_ANGLE, //283
     MNET_UPPERBODY_IN_HALFWAY_LELBOW_AND_LHANDY_LELBOWY_ANGLE, //284
-    MNET_UPPERBODY_IN_HALFWAY_LELBOW_AND_LHANDY_HALFWAY_LELBOW_AND_LHANDY_ANGLE, //285
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_14, //285
     MNET_UPPERBODY_IN_HALFWAY_LELBOW_AND_LHANDY_LHANDY_ANGLE, //286
     MNET_UPPERBODY_IN_HALFWAY_LELBOW_AND_LHANDY_HALFWAY_NECK_AND_HIPY_ANGLE, //287
     MNET_UPPERBODY_IN_LHANDY_HIPY_ANGLE, //288
@@ -651,7 +654,7 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_LHANDY_HALFWAY_LSHOULDER_AND_LELBOWY_ANGLE, //300
     MNET_UPPERBODY_IN_LHANDY_LELBOWY_ANGLE, //301
     MNET_UPPERBODY_IN_LHANDY_HALFWAY_LELBOW_AND_LHANDY_ANGLE, //302
-    MNET_UPPERBODY_IN_LHANDY_LHANDY_ANGLE, //303
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_15, //303
     MNET_UPPERBODY_IN_LHANDY_HALFWAY_NECK_AND_HIPY_ANGLE, //304
     MNET_UPPERBODY_IN_HALFWAY_NECK_AND_HIPY_HIPY_ANGLE, //305
     MNET_UPPERBODY_IN_HALFWAY_NECK_AND_HIPY_ENDSITE_EYE_RY_ANGLE, //306
@@ -669,11 +672,12 @@ enum mocapNET_upperbody_enum
     MNET_UPPERBODY_IN_HALFWAY_NECK_AND_HIPY_LELBOWY_ANGLE, //318
     MNET_UPPERBODY_IN_HALFWAY_NECK_AND_HIPY_HALFWAY_LELBOW_AND_LHANDY_ANGLE, //319
     MNET_UPPERBODY_IN_HALFWAY_NECK_AND_HIPY_LHANDY_ANGLE, //320
-    MNET_UPPERBODY_IN_HALFWAY_NECK_AND_HIPY_HALFWAY_NECK_AND_HIPY_ANGLE, //321
+    MNET_UPPERBODY_IN_ANGLEUSEDFOR2DROTATION_16, //321
     MNET_UPPERBODY_IN_NUMBER
 };
 
-/** @brief Programmer friendly enumerator of expected outputs*/
+/** @brief Programmer friendly enumerator of expected outputs
+ TODO: CAREFULL!*/
 enum mocapNET_Output_upperbody_enum
 {
     MOCAPNET_UPPERBODY_OUTPUT_HIP_XPOSITION = 0, //0
@@ -936,7 +940,7 @@ static float getJoint2DDistance_UPPERBODY(std::vector<float> in,int jointA,int j
 }
 
 /** @brief This function returns a vector of NSDM values ready for use with the MocapNET upperbody network */
-static std::vector<float> upperbodyCreateNDSM(std::vector<float> in,int havePositionalElements,int haveAngularElements,int doNormalization)
+static std::vector<float> upperbodyCreateNDSM(std::vector<float> in,float alignmentAngle2D,int havePositionalElements,int haveAngularElements,int doNormalization,int eNSRM)
 {
     std::vector<float> result;
     int secondTargetJointID;
@@ -1072,10 +1076,10 @@ static std::vector<float> upperbodyCreateNDSM(std::vector<float> in,int havePosi
     }  // i for loop end
 
 
- if (doNormalization)
- {
-    if (havePositionalElements)
+    if (doNormalization)
     {
+        if (havePositionalElements)
+        {
             //Normalization-------------------------------------------------------------------------------
             unsigned int numberOfNSDMScalingRules=2;
             if (numberOfNSDMScalingRules>0)
@@ -1110,34 +1114,34 @@ static std::vector<float> upperbodyCreateNDSM(std::vector<float> in,int havePosi
                 }
             } //If there are normalization rules..
 //-------------------------------------------------------------------------------------------------
-        for (int i=0; i<result.size(); i++)
-        {
-            if (result[i]!=0.0)
+            for (int i=0; i<result.size(); i++)
             {
-                result[i]=0.5+result[i];
+                if (result[i]!=0.0)
+                {
+                    result[i]=0.5+result[i];
+                }
             }
+//-------------------------------------------------------------------------------------------------
         }
-//-------------------------------------------------------------------------------------------------
-    }
 
 
 
 //-------------------------------------------------------------------------------------------------
-    if ( (haveAngularElements) && (!havePositionalElements) && (0))
-    {
-        float minValue=result[0], maxValue=result[0];
-        for (int i=0; i<result.size(); i++)
+        if ( (haveAngularElements) && (!havePositionalElements) )
         {
-            if (result[i]<minValue) {
-                minValue=result[i];
+            float minValue=result[0], maxValue=result[0];
+            for (int i=0; i<result.size(); i++)
+            {
+                if (result[i]<minValue) {
+                    minValue=result[i];
+                }
+                if (result[i]>maxValue) {
+                    maxValue=result[i];
+                }
             }
-            if (result[i]>maxValue) {
-                maxValue=result[i];
-            }
-        }
-        fprintf(stderr,"Original Min Value %0.2f, Max Value %0.2f \n",minValue,maxValue);
+            fprintf(stderr,"Original Min Value %0.2f, Max Value %0.2f \n",minValue,maxValue);
 
- 
+
             unsigned int iJointID=mocapNET_AlignmentStart_upperbody[0];
             unsigned int jJointID=mocapNET_AlignmentEnd_upperbody[0];
             float aX=in[iJointID*3+0];
@@ -1152,24 +1156,49 @@ static std::vector<float> upperbodyCreateNDSM(std::vector<float> in,int havePosi
                     result[i]= alignmentAngle + result[i];
                 }
             }
-            
-        minValue=result[0], maxValue=result[0];
-        for (int i=0; i<result.size(); i++)
-        {
-            if (result[i]<minValue) {
-                minValue=result[i];
+            minValue=result[0], maxValue=result[0];
+            for (int i=0; i<result.size(); i++)
+            {
+                if (result[i]<minValue) {
+                    minValue=result[i];
+                }
+                if (result[i]>maxValue) {
+                    maxValue=result[i];
+                }
             }
-            if (result[i]>maxValue) {
-                maxValue=result[i];
-            }
+            fprintf(stderr,"Aligned Min Value %0.2f, Max Value %0.2f \n",minValue,maxValue);
+
+
         }
-        fprintf(stderr,"Aligned Min Value %0.2f, Max Value %0.2f \n",minValue,maxValue);
-
-
-    }
- }//Normalization enabled..
 //-------------------------------------------------------------------------------------------------
 
 
+    } //If normalization is enabled..
+
+
+//New normalization code that overrides diagonal of Matrix
+if (eNSRM)
+{
+    unsigned int elementID=0;
+    unsigned int firstJointID=mocapNET_ResolveJoint_upperbody[0];
+    for (unsigned int i=0; i<MNET_NSDM_UPPERBODY_NUMBER; i++)
+    {
+        for (unsigned int j=0; j<MNET_NSDM_UPPERBODY_NUMBER; j++)
+        {
+            if (i==j)
+            {
+                result[elementID]=alignmentAngle2D;
+                //Rest diagonal elements will encode euclidean distances from base joint
+                //if richDiagonal_upperbody flag is set..
+                if ( (i>0) && (richDiagonal_upperbody) )
+                {
+                    unsigned int jJointID=mocapNET_ResolveJoint_upperbody[j];
+                    result[elementID]=getJoint2DDistance_UPPERBODY(in,firstJointID,jJointID);
+                }
+            }
+            elementID+=1;
+        }
+    }
+}
     return result;
 }

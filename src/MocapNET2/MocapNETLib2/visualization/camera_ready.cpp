@@ -433,7 +433,7 @@ int visualizeCameraReady(
 
     if (saveVisualization)
         {
-            char filename[1024];
+            char filename[1025]={0};
             snprintf(filename,1024,"cr%05u.jpg",frameNumber);
             imwrite(filename,visualization);
         }

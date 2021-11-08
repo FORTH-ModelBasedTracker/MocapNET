@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 #Written by Ammar Qammaz a.k.a AmmarkoV - 2020
+#pip install matplotlib h5py numpy --user
 
 import numpy as np
 

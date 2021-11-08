@@ -12,6 +12,161 @@
 
 
 
+int visualizeJustIllustration(
+    const char* windowName,
+    unsigned int frameNumber,
+    unsigned int saveVisualization,
+    cv::Mat * alreadyLoadedImage,
+    const char * path,
+    const char * label,
+    unsigned int serialLength,
+    unsigned int width,
+    unsigned int height,
+    struct skeletonSerialized * skeleton,
+    struct MocapNET2 * mnet,
+    struct MocapNET2Options * options,
+    std::vector<std::vector<float> > points2DOutputGUIRealView,
+    std::vector<std::vector<float> > points2DOutputGUIForcedView, 
+    unsigned int numberOfMissingJoints
+)
+{
+
+#if USE_OPENCV
+    int success=0;
+     char finalFilename[2048]= {0};
+    cv::Mat raytraced;
+
+
+    snprintf(finalFilename,256,"%s/raytraced2/%04u.png",path,frameNumber);
+    raytraced = imread(finalFilename,cv::IMREAD_COLOR);   // older versions might want the CV_LOAD_IMAGE_COLOR  flag
+
+    if (alreadyLoadedImage==0)
+        {
+
+            char formatString[256]= {0};
+            snprintf(formatString,256,"%%s/%%s%%0%uu.jpg",serialLength);
+
+            //colorFrame_0_00001.jpg
+            snprintf(finalFilename,2048,formatString,path,label,frameNumber/*Frame ID*/);
+            //snprintf(finalFilename,2048,"%s/colorFrame_0_%05d.jpg",path,frameNumber+1);
+        }
+
+    int showFramerate=30; //30 or 0 
+
+    float scale=1.0;
+    cv::Mat image;
+    cv::Rect roi;
+    cv::Mat destinationROI;
+
+    if ( (fileExists(finalFilename) ) || (alreadyLoadedImage!=0) )
+        {
+            if (alreadyLoadedImage!=0)
+                {
+                    image = *alreadyLoadedImage;
+                    
+                    if  ( 
+                          ( image.size().width < 640 ) || 
+                          ( image.size().height < 480 )  
+                        )
+                        {
+                            fprintf(stderr,"Very small given frame ( %ux%u..\n",image.size().width,image.size().height);
+                            return 0;
+                        }
+                   
+                    //cv::imshow(windowName,image); //
+                    //cv::waitKey(0); 
+                }
+                 else
+            if (fileExists(finalFilename) )
+                {
+                    //image = imread(finalFilename,cv::IMREAD_COLOR);   // older versions might want the CV_LOAD_IMAGE_COLOR  flag
+                    cv::Mat frames = imread(finalFilename,cv::IMREAD_COLOR);   // older versions might want the CV_LOAD_IMAGE_COLOR  flag
+
+                    image = cv::Mat(frames.size().height,2*frames.size().width, CV_8UC3, cv::Scalar(0,0,0));
+                    cv::rectangle(image,cv::Rect(0,0,image.size().width,image.size().height),cv::Scalar(0,0,0),-1);
+                    
+                    cv::Rect area=cv::Rect(0,0,frames.size().width,frames.size().height);
+                    frames.copyTo(image(area));
+                }
+            
+    //Erase
+            /*
+        visualizeSkeletonSerialized(
+                                    image,
+                                    skeleton,
+                                    1,//Show left hand
+                                    1,//Show right hand
+                                    1,//Show face
+                                    0,0,
+                                    image.size().width,
+                                    image.size().height
+                                   ); */
+        drawSkeleton(image,points2DOutputGUIRealView,image.size().width/2,-0,0);    
+                
+
+    int NSDMWidth=160;  //body leftHand rightHand
+    int NSDMHeight=160;
+     
+    int positionX = image.size().width - NSDMWidth - 100;
+    int positionY = 240;
+    
+    
+    //visualizeNSDM(image,"Upper Body",mnet->upperBody.NSDM,1 /*angles*/,positionX,positionY,NSDMWidth,NSDMHeight);
+    positionY+=200;
+    //visualizeNSDM(image,"Lower Body",mnet->lowerBody.NSDM,1 /*angles*/,positionX,positionY,NSDMWidth,NSDMHeight);
+    positionY+=200;
+
+    success=1;
+    /*
+            if(image.data!=0)
+                {
+                    if ( image.size().height > image.size().width )
+                        {
+                            scale=(float) 1024/image.size().height;
+                        }
+                    else
+                        {
+                            scale=(float) 1024/image.size().width;
+                        }
+                    if (scale>1.0)
+                        {
+                            scale=1.0;
+                        }
+                    if (scale!=1.0)
+                        {
+                            cv::resize(image, image, cv::Size(0,0), scale, scale);
+                        }
+
+                    //fprintf(stderr,"Image ( %u x %u )\n",image.size().width,image.size().height);
+                    success=1;
+                }*/
+
+        }
+    else
+        {
+            fprintf(stderr," Could not load %s image, cannot proceed to visualize it\n",finalFilename);
+            return 0;
+        }
+    
+    if (saveVisualization)
+    { 
+        char filename[513]={0};
+        snprintf(filename,512,"vis%05u.jpg",frameNumber) ;
+        cv::imwrite(filename,image);
+    }
+    
+    cv::imshow(windowName,image); //
+    //Did not find a file to show ..
+    return success;
+#else
+    fprintf(stderr,"OpenCV code not present in this build, cannot show visualization..\n");
+#endif
+    return 0;
+}
+
+
+
+
 int visualizeTemplate(
     const char* windowName,
     unsigned int frameNumber,
@@ -169,7 +324,7 @@ int visualizeTemplate(
     
     if (saveVisualization)
     { 
-        char filename[512];
+        char filename[513]={0};
         snprintf(filename,512,"vis%05u.jpg",frameNumber) ;
         cv::imwrite(filename,image);
     }

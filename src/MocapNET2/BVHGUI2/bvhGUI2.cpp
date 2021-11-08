@@ -53,14 +53,95 @@ struct applicationState
 };
 
 
+
+
+int drawIllustrationWindow(struct applicationState * state,struct MocapNET2Options * options,const char * illustrationPath)
+{
+  char finalFilename[2049]= {0}; 
+    
+  char formatString[256]= {0};
+   snprintf(formatString,256,"%%s/%%s%%0%uu.jpg",options->serialLength);
+
+   //colorFrame_0_00001.jpg
+   snprintf(finalFilename,2048,formatString,illustrationPath,options->label,state->frameID/*Frame ID*/);
+   //snprintf(finalFilename,2048,"%s/colorFrame_0_%05d.jpg",path,frameNumber+1); 
+   if (fileExists(finalFilename))
+   {
+    cv::Mat image = imread(finalFilename,cv::IMREAD_COLOR);   
+    
+    float scale=1.0;
+    if(image.data!=0)
+                {
+                    //----------------------------------------------
+                    if ( image.size().height > image.size().width )
+                        {
+                            scale=(float) options->height/image.size().height;
+                        }
+                    else
+                        {
+                            scale=(float) options->width/image.size().width;
+                        }
+                    //----------------------------------------------
+                    if (scale>1.0)
+                        {
+                            scale=1.0;
+                        }
+                    //----------------------------------------------
+                    if (scale!=1.0)
+                        {
+                            cv::resize(image, image, cv::Size(0,0), scale, scale);
+                        }
+                    //---------------------------------------------- 
+                }
+    
+    
+    imshow("ILLUSTRATION",image);
+    return 1; 
+   } else
+   {
+       fprintf(stderr,"File %s does not exist \n",finalFilename);
+   }
+   
+   return 0;
+}
+
+
+
+
+int interactiveSizeConfiguration()
+{
+   float neckLength, torsoLength, chestWidth, shoulderToElbowLength, elbowToHandLength, waistWidth, hipToKneeLength, kneeToFootLength, shoeLength;
+   
+   if ( 
+        getJointDimensions(
+                           &neckLength,
+                           &torsoLength,
+                           &chestWidth,
+                           &shoulderToElbowLength,
+                           &elbowToHandLength,
+                           &waistWidth,
+                           &hipToKneeLength,
+                           &kneeToFootLength,
+                           &shoeLength
+                         )
+      )
+      {
+          
+      }
+  return 0;
+}
+
+
+
 int controls(cv::Mat & controlMat,struct applicationState * state)
 {
     cv::imshow("3D Control",controlMat);
     cv::createTrackbar("Stop Demo", "3D Control", &state->stop, 1);
+    cv::createTrackbar("Clipboard Pose", "3D Control", &state->copyClipboard, 1);
+
 
     cv::createTrackbar("Play", "3D Control", &state->play,1);
     cv::createTrackbar("Frame", "3D Control", &state->frameID,state->numberOfFrames);
-    cv::createTrackbar("Clipboard Pose", "3D Control", &state->copyClipboard, 1);
 
     if (visualizeOpenGLEnabled)
         {
@@ -72,8 +153,8 @@ int controls(cv::Mat & controlMat,struct applicationState * state)
     cv::createTrackbar("Distance            ", "3D Control", &state->distance,  1360);
 
     cv::createTrackbar("Selected Motion Channel", "3D Control", &state->selectedMotionChannel, state->numberOfBVHMotionValuesPerFrame-1);
-    cv::createTrackbar("Positive Value ", "3D Control", &state->positiveRotation,  360);
-    cv::createTrackbar("Negative Value ", "3D Control", &state->negativeRotation,  360);
+    cv::createTrackbar("Positive Value", "3D Control", &state->positiveRotation,  360);
+    cv::createTrackbar("Negative Value", "3D Control", &state->negativeRotation,  360);
 
     return 1;
 }
@@ -83,20 +164,30 @@ int controls(cv::Mat & controlMat,struct applicationState * state)
 static void onMouse( int event, int x, int y, int, void* stateUncast)
 {
     struct applicationState * state = (struct applicationState *) stateUncast;
-    if( event != EVENT_LBUTTONDOWN )
-        return;
-
-    if (visualizeOpenGLEnabled)
+    
+    if  ( (event == EVENT_LBUTTONDOWN) && (visualizeOpenGLEnabled) )
         {
             clickOpenGLView(x,y,event);
-        }
-    else
+        } else
         {
-            fprintf(stderr,"Unhandled click @ %u,%u \n",x,y);
-        }
+          switch (event)
+          {
+            case EVENT_LBUTTONDOWN:  fprintf(stderr,"Unhandled left click @ %u,%u \n",x,y);        break;
+            case EVENT_LBUTTONUP:    fprintf(stderr,"Unhandled stop left click @ %u,%u \n",x,y);   break;
+            case EVENT_RBUTTONDOWN:  fprintf(stderr,"Unhandled right click @ %u,%u \n",x,y);       break;
+            case EVENT_RBUTTONUP:    fprintf(stderr,"Unhandled stop right click @ %u,%u \n",x,y);  break;
+            case EVENT_MBUTTONDOWN:  fprintf(stderr,"Unhandled middle click @ %u,%u \n",x,y);      break;
+            case EVENT_MBUTTONUP:    fprintf(stderr,"Unhandled stop middle click @ %u,%u \n",x,y); break;
+            case EVENT_MOUSEWHEEL:   fprintf(stderr,"Unhandled mouse wheel  @ %u,%u \n",x,y);      break;
+            default :
+               fprintf(stderr,"Mouse movement @ %u,%u \n",x,y);
+            break;
+          };
+        } 
 }
 
 
+// ./BVHGUI2 --from dataset/lhand.qbvh --set 3 0.5 --set 4 -0.5 --set 5 -0.5 --set 6 0.5 --set 61 -61 --set 64 90 --set 65 --set 66 90 --set 67 -35 --set 68 10
 
 
 int main(int argc, char *argv[])
@@ -128,7 +219,18 @@ int main(int argc, char *argv[])
 
     struct BVH_MotionCapture bvhMotion= {0};
 
-
+    char * illustrationPath=0;
+    
+    struct MocapNET2Options options= {0};
+    defaultMocapNET2Options(&options);
+    options.GPUName[0]=0; //The CSV demo does not use the GPU so don't display it..
+    
+    //640x480 should be a high framerate compatible resolution
+    //for most webcams, you can change this using --size X Y commandline parameter
+    options.width = 1920;
+    options.height = 1080;
+    loadOptionsFromCommandlineOptions(&options,argc,argv);
+    
     for (int i=0; i<argc; i++)
         {
             if (strcmp(argv[i],"--distance")==0)
@@ -136,6 +238,13 @@ int main(int argc, char *argv[])
                     if(argc>i+1)
                         {
                             state.distance=atoi(argv[i+1]);
+                        }
+                }
+            else if (strcmp(argv[i],"--illustrate")==0)
+                {
+                    if(argc>i+1)
+                        {
+                            illustrationPath = argv[i+1]; 
                         }
                 }
             else if (strcmp(argv[i],"--size")==0)
@@ -160,6 +269,10 @@ int main(int argc, char *argv[])
                             state.selectedMotionChannel=4;
                             state.rotation=atoi(argv[i+1]);
                         }
+                } 
+            else if (strcmp(argv[i],"--pause")==0)
+                {
+                    state.play=0;
                 }
             else if (strcmp(argv[i],"--from")==0)
                 {
@@ -172,6 +285,7 @@ int main(int argc, char *argv[])
                                     state.frameID=0;
                                     state.numberOfFrames=bvhMotion.numberOfFrames;
                                     state.play=1;
+                                    fprintf(stderr,"Note : --from negates any previous --pause commands..\n");
                                     state.numberOfBVHMotionValuesPerFrame=bvhMotion.numberOfValuesPerFrame;
                                     useBVH=1;
                                 }
@@ -183,7 +297,6 @@ int main(int argc, char *argv[])
                         }
                 }
             else
-
                 if (strcmp(argv[i],"--opengl")==0)
                     {
                         visualizeOpenGLEnabled=1;
@@ -223,15 +336,16 @@ int main(int argc, char *argv[])
     cv::Mat viewMat = Mat(Size(visWidth,visHeight),CV_8UC3, Scalar(0,0,0));
     cv::imshow("BVH", viewMat);
     cv::moveWindow("BVH",300,0);
-    setMouseCallback("BVH", onMouse, (void*) &state );
+    cv::setMouseCallback("BVH", onMouse, (void*) &state );
 
 
     cv::Mat controlMat = Mat(Size(300,1),CV_8UC3, Scalar(0,0,0));
     controls(controlMat,&state);
-    cv::moveWindow("3D Control",0,0); //y=inputHeight2DJointDetector
+    cv::moveWindow("3D Control",20,100); //y=inputHeight2DJointDetector
 
     fprintf(stderr,"ok!\n");
-
+    
+    interactiveSizeConfiguration();
 
     for (int i=0; i<argc; i++)
         {
@@ -273,7 +387,7 @@ int main(int argc, char *argv[])
                             unsigned int maximumValidMotionID = getBVHNumberOfValuesPerFrame();
                             if (useBVH)
                                 {
-                                    maximumValidMotionID = bvhMotion.jointHierarchySize;
+                                    maximumValidMotionID = bvhMotion.numberOfValuesPerFrame;
                                 }
 
                             if (bvhMotionID<maximumValidMotionID)
@@ -309,7 +423,11 @@ int main(int argc, char *argv[])
                         }
                 }
         }
-
+        
+    printBVHSummary();
+    
+    
+    fprintf(stderr,"bvhGUI2 initialization done, entering session..\n");
     while(!state.stop)
         {
             if (useBVH)
@@ -335,7 +453,7 @@ int main(int argc, char *argv[])
                                 {
                                   state.bvhConfiguration[0]=0;
                                   state.bvhConfiguration[1]=0;
-                                 state.bvhConfiguration[2]=(float) -1 * state.distance;
+                                  state.bvhConfiguration[2]=(float) -1 * state.distance;
                                 }
                                 //----------------------------------------------------------------------------------------
                             if (forceRotation)
@@ -355,11 +473,12 @@ int main(int argc, char *argv[])
                             fprintf(stderr,"Frame %u exceeds allocated number of motion values\n",state.frameID);
                         }
                 }
-
+            
             if (state.copyClipboard)
             {
+                fprintf(stderr,"Doing unsafe copy to clipboard \n");
                 char valueStr[10];
-                char motionVectorStringUnsafe[10000]={0};
+                char motionVectorStringUnsafe[10001]={0};
                 snprintf(motionVectorStringUnsafe,10000,"echo \"%0.2f",state.bvhConfiguration[0]);
                 
                 for (unsigned int i=1; i<state.numberOfBVHMotionValuesPerFrame; i++)
@@ -414,43 +533,30 @@ int main(int argc, char *argv[])
                     state.previousVisualizationType=state.visualizationType;
                 }
 
-            if (state.selectedMotionChannel!=state.previousSelection)
-                {
-                    if (!state.redraw)
-                        {
-                            state.redraw=1;
-                        }
-                    state.previousSelection=state.selectedMotionChannel;
-                    state.rotation=state.bvhConfiguration[state.selectedMotionChannel];
-                    if (state.rotation<0)
-                        {
-                            state.negativeRotation=-1*state.rotation;
-                        }
-                    else
-                        {
-                            state.positiveRotation=state.rotation;
-                        }
-                    controls(controlMat,&state);
-                }
-
-
+            //Store Positive/Negative Rotation to state.rotation
+            //--------------------------------------------------------------
             if (state.previousPositiveRotation!=state.positiveRotation)
                 {
                     state.previousPositiveRotation=state.positiveRotation;
                     state.rotation=state.positiveRotation;
-                }
-            else if (state.previousNegativeRotation!=state.negativeRotation)
+                } 
+                else 
+            if (state.previousNegativeRotation!=state.negativeRotation)
                 {
                     state.previousNegativeRotation=state.negativeRotation;
                     state.rotation=-1* state.negativeRotation;
                 }
+            //--------------------------------------------------------------
 
-            if ( state.bvhConfiguration[state.selectedMotionChannel]!=state.rotation )
+
+
+            if (state.bvhConfiguration[state.selectedMotionChannel]!=state.rotation)
                 {
                     if (!state.redraw)
                         {
                             state.redraw=1;
                         }
+                        
                     state.bvhConfiguration[state.selectedMotionChannel]=state.rotation;
                     if (state.rotation<0)
                         {
@@ -461,6 +567,48 @@ int main(int argc, char *argv[])
                             state.positiveRotation=state.rotation;
                         }
                 }
+                
+                
+                
+            if (state.selectedMotionChannel!=state.previousSelection)
+                { //New Motion Channel Selected
+                
+                    //Force redraw..
+                    if (!state.redraw)
+                        {
+                            state.redraw=1;
+                        }
+                        
+                    //Remember our previous change.. 
+                    //state.bvhConfiguration[state.previousSelection]=state.rotation;
+                    fprintf(stderr,"New Motion channel selected ( went from %u to %u )\n",state.previousSelection,state.selectedMotionChannel);
+                    //Update our current change.. 
+                    state.previousSelection=state.selectedMotionChannel;
+                    state.rotation=state.bvhConfiguration[state.selectedMotionChannel];
+                    
+                    if (state.rotation<0)
+                        {
+                            state.negativeRotation=-1*state.rotation;
+                            cv::setTrackbarPos("Negative Value","3D Control",state.negativeRotation);
+                            state.previousNegativeRotation=state.negativeRotation;
+                            fprintf(stderr,"New Motion value is negative %d\n",state.rotation);
+                        }
+                    else
+                        {
+                            state.positiveRotation=state.rotation;
+                            cv::setTrackbarPos("Positive Value","3D Control",state.positiveRotation);
+                            state.previousPositiveRotation=state.positiveRotation;
+                            fprintf(stderr,"New Motion value is positive %d\n",state.rotation);
+                        }
+                        
+                    state.previousPositiveRotation=state.positiveRotation;
+                    state.previousNegativeRotation=state.negativeRotation;
+                    
+                    controls(controlMat,&state);
+                    cv::waitKey(15);
+                }
+
+
             // }
 
             if (state.redraw)
@@ -468,12 +616,23 @@ int main(int argc, char *argv[])
                     //fprintf(stderr,"redraw..\n");
                     memset(viewMat.data,0,visWidth*visHeight*3*sizeof(char));
 
+                   if (illustrationPath!=0)
+                     { drawIllustrationWindow(&state,&options,illustrationPath); }
 
+                    
                     //cv::Mat * openGLMatForVisualization = 0;
                     if ( (visualizeOpenGLEnabled) && (state.visualizationType) )
                         {
-                            //fprintf(stderr,"updateOpenGLView\n");
-                            updateOpenGLView(state.bvhConfiguration);
+                           if (state.bvhConfiguration.size()==MOCAPNET_OUTPUT_NUMBER)
+                             {
+                              //fprintf(stderr,"updateOpenGLView\n");
+                              updateOpenGLView(state.bvhConfiguration);
+                             } 
+                               else
+                             {
+                               updateOpenGLViewBVHAgnostic((void*) &bvhMotion,state.bvhConfiguration);
+                              }
+  
 
                             //fprintf(stderr,"visualizeOpenGL\n");
                             unsigned int openGLFrameWidth=visWidth,openGLFrameHeight=visHeight;
@@ -536,9 +695,9 @@ int main(int argc, char *argv[])
                 }
 
 
-            imshow("BVH", viewMat);
+            cv::imshow("BVH", viewMat);
 
-            waitKey(15);
+            cv::waitKey(15);
 
             if (useBVH)
                 {

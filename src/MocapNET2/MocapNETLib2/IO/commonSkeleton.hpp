@@ -373,27 +373,27 @@ static const char * COCOLeftHandNames[] =
 
 static const char * COCORightHandFriendlyNames[] =
 {
-     "Right_Hand_Wrist",//0
-     "Right_Hand_Thumb_1",//1
+     "Right_Hand_Wrist",   //0
+     "Right_Hand_Thumb_1", //1
      "Right_Hand_Thumb_2", //2
      "Right_Hand_Thumb_3", //3
-     "Right_Hand_Thumb_4",//4
-     "Right_Hand_Index_1",//5
-     "Right_Hand_Index_2",//6
-     "Right_Hand_Index_3",//7
-     "Right_Hand_Index_4",//8
+     "Right_Hand_Thumb_4", //4
+     "Right_Hand_Index_1", //5
+     "Right_Hand_Index_2", //6
+     "Right_Hand_Index_3", //7
+     "Right_Hand_Index_4", //8
      "Right_Hand_Middle_1",//9
      "Right_Hand_Middle_2",//10
      "Right_Hand_Middle_3",//11
      "Right_Hand_Middle_4",//12
-     "Right_Hand_Ring_1",//13
-     "Right_Hand_Ring_2",//14
-     "Right_Hand_Ring_3",//15
-     "Right_Hand_Ring_4",//16
-     "Right_Hand_Pinky_1",//17
-     "Right_Hand_Pinky_2",//18
-     "Right_Hand_Pinky_3",//19
-     "Right_Hand_Pinky_4",//20
+     "Right_Hand_Ring_1",  //13
+     "Right_Hand_Ring_2",  //14
+     "Right_Hand_Ring_3",  //15
+     "Right_Hand_Ring_4",  //16
+     "Right_Hand_Pinky_1", //17
+     "Right_Hand_Pinky_2", //18
+     "Right_Hand_Pinky_3", //19
+     "Right_Hand_Pinky_4", //20
      //--------------------
      "End of Right Hand Names"
 
@@ -517,23 +517,23 @@ enum OP_HeadJoints
 
 static const char * HeadNames[] =
 {
-    "Head_RChin_0", //0
-    "Head_RChin_1",      //1
-    "Head_RChin_2",      //2     
-    "Head_RChin_3",      //3
-    "Head_RChin_4",      //4
-    "Head_RChin_5",      //5
-    "Head_RChin_6",      //6
-    "Head_RChin_7",      //7
-    "Head_Chin",             //8
-    "Head_LChin_7",      //9
-    "Head_LChin_6",      //10
-    "Head_LChin_5",      //11
-    "Head_LChin_4",      //12
-    "Head_LChin_3",      //13
-    "Head_LChin_2",      //14
-    "Head_LChin_1",      //15
-    "Head_LChin_0",      //16
+    "Head_RChin_0",   //0
+    "Head_RChin_1",   //1
+    "Head_RChin_2",   //2     
+    "Head_RChin_3",   //3
+    "Head_RChin_4",   //4
+    "Head_RChin_5",   //5
+    "Head_RChin_6",   //6
+    "Head_RChin_7",   //7
+    "Head_Chin",      //8
+    "Head_LChin_7",   //9
+    "Head_LChin_6",   //10
+    "Head_LChin_5",   //11
+    "Head_LChin_4",   //12
+    "Head_LChin_3",   //13
+    "Head_LChin_2",   //14
+    "Head_LChin_1",   //15
+    "Head_LChin_0",   //16
     "Head_REyebrow_0",//17
     "Head_REyebrow_1",//18
     "Head_REyebrow_2",//19

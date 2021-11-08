@@ -1,18 +1,19 @@
 //MOCAPNET2 ------------------------------------
 #include "../MocapNETLib2/mocapnet2.hpp"
 //----------------------------------------------
+#include "../MocapNETLib2/config.h"
 #include "../MocapNETLib2/tools.hpp"
 #include "../MocapNETLib2/IO/bvh.hpp"
 #include "../MocapNETLib2/IO/jsonRead.hpp"
 #include "../MocapNETLib2/IO/conversions.hpp"
 //----------------------------------------------
 #include "../MocapNETLib2/remoteExecution.hpp"
-//----------------------------------------------
+//----------------------------------------------  
 #include "../MocapNETLib2/core/multiThreaded.hpp"
 //----------------------------------------------
 
 #include <string.h>
-
+ 
 #define NORMAL   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
 #define RED     "\033[31m"      /* Red */
@@ -28,29 +29,29 @@ int registerGestureEventCallbackWithMocapNET(struct MocapNET2 * mnet,void * call
 }
 
 void requestRealtimePriority()
-{
+{ 
     set_realtime_priority();
 }
 
 
-void commonInitialization(struct MocapNET2 * mnet)
+void commonMocapNETInitialization(struct MocapNET2 * mnet)
 {
     mnet->newGestureEventCallback=0;
-
-
+    
+    
     fprintf(stderr,"MocapNET2 Initializing..\n");
-
+    
     //The following line will attempt to escalate the priority
     //to realtime, you probably need to run with sudo otherwise
     //it will silently fail.
-    set_realtime_priority();
-
+    set_realtime_priority(); 
+    
     //Artifacts logic ---------------
     if (mnet->options!=0)
     {
         fprintf(stderr,"Map will be initialized from file %s \n",mnet->options->mapFilePath);
         initializeArtifactsFromFile(&mnet->artifacts,mnet->options->mapFilePath);
-    }
+    } 
     fprintf(stderr," artifacts ok\n");
     //---------------------------------
 
@@ -65,12 +66,13 @@ void commonInitialization(struct MocapNET2 * mnet)
     mnet->iterations=5;
     mnet->epochs=30;
     mnet->spring = 20;
-
+    //---------------------------------------------------
     mnet->upperBody.perform2DAlignmentBeforeEvaluation=0;
     mnet->lowerBody.perform2DAlignmentBeforeEvaluation=0;
-    //--------------------------------------------------
+    //---------------------------------------------------
     mnet->leftHand.perform2DAlignmentBeforeEvaluation=1;
     mnet->rightHand.perform2DAlignmentBeforeEvaluation=1;
+    //---------------------------------------------------
 
     snprintf(mnet->body.partName,64,"Whole Body");
     snprintf(mnet->upperBody.partName,64,"Upper Body");
@@ -96,8 +98,8 @@ void commonInitialization(struct MocapNET2 * mnet)
     }
 
     fprintf(stderr,"Initializing output filters : ");
-    float filterCutoff = 5.0;
-    float approximateFramerate = mnet->options->inputFramerate;
+    float filterCutoff = mnet->options->filterCutoff;//5.0;
+    float approximateFramerate = mnet->options->inputFramerate; //60.0; //
     //---------------------------------------------------
     //initButterWorth(&mnet->directionSignal,approximateFramerate,filterCutoff);
 
@@ -113,7 +115,6 @@ void commonInitialization(struct MocapNET2 * mnet)
             fprintf(stderr,".");
             initButterWorth(&mnet->outputSignals[i],approximateFramerate*2,filterCutoff);
         }
-    //hip rotations are large and smoother
     for (int i=3;  i<6; i++ )
         {
             fprintf(stderr,".");
@@ -130,13 +131,16 @@ void commonInitialization(struct MocapNET2 * mnet)
 }
 
 
-int loadMocapNET2(struct MocapNET2 * mnet, const char * description)
+int loadMocapNET2(
+                   struct MocapNET2 * mnet,
+                   const char * description
+                 )
 {
-    commonInitialization(mnet);
+    commonMocapNETInitialization(mnet);
 
     int result = 0;
     int target = 0;
-
+  
     float qualitySetting = mnet->options->quality;
     int mode = mnet->options->mocapNETMode;
     unsigned int doUpperBody = mnet->options->doUpperBody;
@@ -159,10 +163,9 @@ int loadMocapNET2(struct MocapNET2 * mnet, const char * description)
 
     if (doHands)
         {
-            //TODO add hands
-            //result += mocapnetRightHand_initialize(mnet,description,qualitySetting,mode,forceCPU);
-            //result += mocapnetLeftHand_initialize(mnet,description,qualitySetting,mode,forceCPU);
-            //target += 2;
+            result += mocapnetRightHand_initialize(mnet,description,qualitySetting,HANDS_MODE,forceCPU);
+            result += mocapnetLeftHand_initialize(mnet,description,qualitySetting,HANDS_MODE,forceCPU);
+            target += 2;
         }
 
     //doFace
@@ -203,14 +206,13 @@ int initializeMocapNET2InputAssociation(struct MocapNET2 * mnet,struct skeletonS
 
     if (doHands)
         {
-            //TODO add hands
-            //fprintf(stderr,"Doing lhand associations..\n");
-            //results+= mocapnetLeftHand_initializeAssociations(mnet,input);
-            //++attempts;
+            fprintf(stderr,"Doing lhand associations..\n");
+            results+= mocapnetLeftHand_initializeAssociations(mnet,input);
+            ++attempts;
 
-            //fprintf(stderr,"Doing rhand associations..\n");
-            //results+= mocapnetRightHand_initializeAssociations(mnet,input);
-            //++attempts;
+            fprintf(stderr,"Doing rhand associations..\n");
+            results+= mocapnetRightHand_initializeAssociations(mnet,input);
+            ++attempts;
         }
 
     //This message is confusing and removed - https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/31
@@ -241,7 +243,7 @@ std::vector<float> runMocapNET2(
                                  int doOutputFiltering
                                 )
 {
-
+    
     std::vector<float> emptyResult;
 
     if (mnet==0)
@@ -265,12 +267,11 @@ std::vector<float> runMocapNET2(
             else
                 {
                     fprintf(stderr,RED "MocapNET: Could not adapt to particular source of input\n" NORMAL);
+                    fprintf(stderr,RED "MocapNET: Terminating execution to avoid erroneous output\n" NORMAL);
                     exit(1);
                     return emptyResult;
                 }
         }
-
-    ++mnet->framesReceived;
 
     if (input->skeletonHeaderElements != input->skeletonBodyElements)
         {
@@ -281,18 +282,23 @@ std::vector<float> runMocapNET2(
             return emptyResult;
         }
 
+    //Acknowledge received input
     fprintf(stderr,GREEN "MocapNET: Received %u elements\n" NORMAL,input->skeletonHeaderElements);
-
+    
+    //Increment our frame counter..
+    ++mnet->framesReceived;
+    
+    
     int useNeuralNetworkToExtractResult = ( (!mnet->options->skipNeuralNetworkIfItIsNotNeeded) || (mnet->framesReceived % mnet->options->maximumNeuralNetworkSkipFrames == 1) );
-
+    
     std::vector<float> result;
-
-    //We might not want to run the neural network based on our options
-    //If we dont use the neural network we will rely on the inverse kinematics module..!
+    
+    //We might not want to run the neural network based on our options 
+    //If we dont use the neural network we will exclusively rely on the inverse kinematics module..!
     //If we dont want to use the inverse kinematics module then we are forced to use the neural network..
     if ( (useNeuralNetworkToExtractResult) || (!useInverseKinematics) )
     {
-           //If user has enabled skeleton Rotation turned on on auto ( auto = 360 ) then the skeleton will be automatically rotated..!
+           //If user has enabled skeleton Rotation turned on on auto ( auto = 360 ) then the skeleton will be automatically rotated..!   
            //-------------------------------------------------------------
             char inputHasBeenAltered=0;
             struct skeletonSerialized pureInput;
@@ -305,11 +311,11 @@ std::vector<float> runMocapNET2(
             } else
             {
               inputHasBeenAltered=1;
-              affineSkeletonRotation(input,mnet->options->skeletonRotation);
+              affineSkeletonRotation(input,mnet->options->skeletonRotation);        
             }
            //-------------------------------------------------------------
-
-
+      
+      
            //Run multithreaded mocapNET ( it will fallback to single threaded if multi threading is not enabled through options )
            long startTimeNeuralNetwork = GetTickCountMicrosecondsMN();
            //-----------------------------------------------------
@@ -324,9 +330,9 @@ std::vector<float> runMocapNET2(
                                             doOutputFiltering
                                            );
            //-----------------------------------------------------
-           long endTimeNeuralNetwork = GetTickCountMicrosecondsMN();
+           long endTimeNeuralNetwork = GetTickCountMicrosecondsMN(); 
            mnet->neuralNetworkFramerate = convertStartEndTimeFromMicrosecondsToFPS(startTimeNeuralNetwork,endTimeNeuralNetwork);
-
+                                           
           if (inputHasBeenAltered)
           {
              //If we have altered the input to help the neural network lets restore it for the IK module..!
@@ -336,10 +342,9 @@ std::vector<float> runMocapNET2(
     {
         result = mnet->previousSolution;
     }
-
+    
     if (result.size()>0)
         {
-
             if (useInverseKinematics)
                 {
                     long startTimeIK = GetTickCountMicrosecondsMN();
@@ -358,41 +363,93 @@ std::vector<float> runMocapNET2(
                                  mnet->epochs,
                                  mnet->spring,
                                  springIgnoreChanges,
+                                 (mnet->options->doOutputFiltering==0),
                                  mnet->options->doMultiThreadedIK
                              );
                     long endTimeIK = GetTickCountMicrosecondsMN();
 
-                    mnet->inverseKinematicsFramerate = convertStartEndTimeFromMicrosecondsToFPS(startTimeIK,endTimeIK);
+                    mnet->inverseKinematicsFramerate = convertStartEndTimeFromMicrosecondsToFPS(startTimeIK,endTimeIK); 
                 }
             else
                 {
                     //If we suddenly turn of IK we need to signal this in the framerate..
                     mnet->inverseKinematicsFramerate = 0.0;
                 }
-
-
+                
+                /*
            //User wants to force a specific position and rotation
            //on BVH output
            if (mnet->options->forceOutputPositionRotation)
-           {
+           { 
              fprintf(stderr,YELLOW "forcing output position rotation \n" NORMAL);
-             result[0]=mnet->options->outputPosRot[0];
-             result[1]=mnet->options->outputPosRot[1];
-             result[2]=mnet->options->outputPosRot[2];
-             result[3]=mnet->options->outputPosRot[3];
-             result[4]=mnet->options->outputPosRot[4];
+             result[0]=mnet->options->outputPosRot[0]; 
+             result[1]=mnet->options->outputPosRot[1]; 
+             result[2]=mnet->options->outputPosRot[2]; 
+             result[3]=mnet->options->outputPosRot[3]; 
+             result[4]=mnet->options->outputPosRot[4]; 
              result[5]=mnet->options->outputPosRot[5];
+           }    */
+           
+           
+           if (!mnet->options->doLowerBody)
+           {
+             fprintf(stderr,YELLOW "forcing output lower body to zero\n" NORMAL);
+             result[MOCAPNET_OUTPUT_RBUTTOCK_ZROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_RBUTTOCK_XROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_RBUTTOCK_YROTATION]=0.0;
+             //---------------------------------------------
+             result[MOCAPNET_OUTPUT_RHIP_ZROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_RHIP_XROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_RHIP_YROTATION]=0.0;
+             //---------------------------------------------
+             result[MOCAPNET_OUTPUT_RKNEE_ZROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_RKNEE_XROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_RKNEE_YROTATION]=0.0;
+             //---------------------------------------------
+             result[MOCAPNET_OUTPUT_RFOOT_ZROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_RFOOT_XROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_RFOOT_YROTATION]=0.0;
+             //---------------------------------------------
+             //---------------------------------------------
+             result[MOCAPNET_OUTPUT_LBUTTOCK_ZROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_LBUTTOCK_XROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_LBUTTOCK_YROTATION]=0.0;
+             //---------------------------------------------
+             result[MOCAPNET_OUTPUT_LHIP_ZROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_LHIP_XROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_LHIP_YROTATION]=0.0;
+             //---------------------------------------------
+             result[MOCAPNET_OUTPUT_LKNEE_ZROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_LKNEE_XROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_LKNEE_YROTATION]=0.0;
+             //---------------------------------------------
+             result[MOCAPNET_OUTPUT_LFOOT_ZROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_LFOOT_XROTATION]=0.0;
+             result[MOCAPNET_OUTPUT_LFOOT_YROTATION]=0.0;
+             //---------------------------------------------
            }
-
+                
 
             if (doOutputFiltering)
                 {
                     if (result.size()==MOCAPNET_OUTPUT_NUMBER)
                         {
+                          //if (mnet->framesReceived>20)
+                          {
+                            //If we have a good fix we can use the results of the smoothing filter
                             for (int i=0;  i<result.size(); i++ )
                                 {
                                     result[i] = filter(&mnet->outputSignals[i],result[i]);
                                 }
+                          } /*else
+                          { 
+                            //During the first frames initialization will be near zero so lets just filter output
+                            //but not use it..
+                            for (int i=0;  i<result.size(); i++ )
+                                {
+                                    filter(&mnet->outputSignals[i],result[i]);
+                                }
+                          }*/
                         }
                     else
                         {
@@ -407,13 +464,13 @@ std::vector<float> runMocapNET2(
                 {
                     if (mnet->gesturesMasterSwitch)
                         {
-
+                           
                             int gestureDetected=compareHistoryWithKnownGestures(
-                                                                              &mnet->recognizedGestures,
-                                                                              &mnet->poseHistoryStorage,
-                                                                              GESTURE_COMPLETION_PERCENT,//Percentage complete..
-                                                                              GESTURE_ANGLE_SENSITIVITY //Angle threshold
-                                                                             );
+                                                                                &mnet->recognizedGestures,
+                                                                                &mnet->poseHistoryStorage,
+                                                                                GESTURE_COMPLETION_PERCENT,//Percentage complete..
+                                                                                GESTURE_ANGLE_SENSITIVITY //Angle threshold
+                                                                               );
                             if (gestureDetected!=0)
                               {
                                 mnet->lastActivatedGesture=gestureDetected;
@@ -429,7 +486,7 @@ std::vector<float> runMocapNET2(
                               }
 
 
-                            //Check if the pose we see is familiar, based on the ones we know..
+                            //Check if the pose we see is familiar, based on the ones we know.. 
                             int poseDetected = isThisPoseFamiliar(
                                                                    &mnet->recognizedPoses,
                                                                    result,
@@ -495,18 +552,18 @@ std::vector<float> runMocapNET2(
 int unloadMocapNET2(struct MocapNET2 * mnet)
 {
     if (mnet->threadPool.initialized)
-   {
+    {
        if (!threadpoolDestroy(&mnet->threadPool))
        {
            fprintf(stderr,"Failed deleting IK thread pool\n");
        }
-   }
+    }
 
-    return (
-             mocapnetBody_unload(mnet) &&
-             mocapnetUpperBody_unload(mnet) &&
-             mocapnetLowerBody_unload(mnet)
-             //&& mocapnetRightHand_unload(mnet)
-             //&& mocapnetLeftHand_unload(mnet)
+    return ( 
+             mocapnetBody_unload(mnet) && 
+             mocapnetUpperBody_unload(mnet) && 
+             mocapnetLowerBody_unload(mnet) && 
+             mocapnetRightHand_unload(mnet) && 
+             mocapnetLeftHand_unload(mnet) 
             );
 }

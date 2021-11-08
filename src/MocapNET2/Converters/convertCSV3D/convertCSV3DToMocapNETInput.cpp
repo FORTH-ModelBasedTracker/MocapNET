@@ -34,7 +34,6 @@
 #define YELLOW  "\033[33m"      /* Yellow */
 
 
-
 int main(int argc, char *argv[])
 {
 #if USE_BVH
@@ -284,6 +283,7 @@ int main(int argc, char *argv[])
                                     char * pointLabel = csv.field[pointID*3].str + 4; //This is the fastest way to get rid of the `3D*_` part of the stream
 
                                     //Translate H36M labels to MNET labels..
+                                    //___________________________________________________________________________________________________________________________________
                                     if ( strcmp(pointLabel,"nose")==0 )      { fprintf(fp,",2DX_head,2DY_head,visible_head");    } else 
                                     if ( strcmp(pointLabel,"rwrist")==0 )    { fprintf(fp,",2DX_rhand,2DY_rhand,visible_rhand"); } else 
                                     if ( strcmp(pointLabel,"lwrist")==0 )    { fprintf(fp,",2DX_lhand,2DY_lhand,visible_lhand"); } else
@@ -296,6 +296,11 @@ int main(int argc, char *argv[])
                                     if ( strcmp(pointLabel,"lbigtoe")==0 )   { fprintf(fp,",2DX_endsite_toe1-2.l,2DY_endsite_toe1-2.l,visible_endsite_toe1-2.l"); } else
                                     if ( strcmp(pointLabel,"rsmalltoe")==0 ) { fprintf(fp,",2DX_endsite_toe5-3.r,2DY_endsite_toe5-3.r,visible_endsite_toe5-3.r"); } else
                                     if ( strcmp(pointLabel,"lsmalltoe")==0 ) { fprintf(fp,",2DX_endsite_toe5-3.l,2DY_endsite_toe5-3.l,visible_endsite_toe5-3.l"); } else
+                                    //Awful hack to generate a fake l/r thumbBase.. :(
+                                    //------------------------------------------------------------------------------------------------------
+                                    //if ( strcmp(pointLabel,"lthumb")==0 )    { fprintf(fp,",2DX_lthumbBase,2DY_lthumbBase,visible_lthumbBase,2DX_lthumb,2DY_lthumb,visible_lthumb"); } else
+                                    //if ( strcmp(pointLabel,"rthumb")==0 )    { fprintf(fp,",2DX_rthumbBase,2DY_rthumbBase,visible_rthumbBase,2DX_rthumb,2DY_rthumb,visible_rthumb"); } else
+                                    //------------------------------------------------------------------------------------------------------
                                                                              { fprintf(fp,",2DX_%s,2DY_%s,visible_%s",pointLabel,pointLabel,pointLabel); }
                                 }
                             fprintf(fp,"\n");
@@ -305,8 +310,23 @@ int main(int argc, char *argv[])
                                     fprintf(fp,"%u,0,0",frameID);
                                     for (unsigned int pointID=0; pointID<result[frameID].size(); pointID++)
                                         {
-                                            if ( pointID%2==0) { fprintf(fp,",%f",result[frameID][pointID]);   } else
-                                                               { fprintf(fp,",%f,1",result[frameID][pointID]); }
+                                            //Awful hack to generate a fake l/r thumbBase.. :(
+                                            //char * pointLabel = csv.field[pointID*3].str + 4; //This is the fastest way to get rid of the `3D*_` part of the stream
+                                            //if ( strcmp(pointLabel,"lthumb")==0 )    
+                                            //     { 
+                                            //      if ( pointID%2==0) { fprintf(fp,",0,0,0,%f",result[frameID][pointID]);   } else
+                                            //                         { fprintf(fp,",%f,1",result[frameID][pointID]); }
+                                            //     } else
+                                            //if ( strcmp(pointLabel,"rthumb")==0 )    
+                                            //    { 
+                                            //    if ( pointID%2==0) { fprintf(fp,",0,0,0,%f",result[frameID][pointID]);   } else
+                                            //                       { fprintf(fp,",%f,1",result[frameID][pointID]); }
+                                            //   } else
+                                            //------------------------------------------------------------------------------------------------------
+                                            {
+                                             if ( pointID%2==0) { fprintf(fp,",%f",result[frameID][pointID]);   } else
+                                                                { fprintf(fp,",%f,1",result[frameID][pointID]); }
+                                            }
                                         }
                                     fprintf(fp,"\n");
                                 }

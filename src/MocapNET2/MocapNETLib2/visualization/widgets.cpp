@@ -106,7 +106,7 @@ int plotFloatVector(
     unsigned int plotPosY=y;
     unsigned int widthOfGraphs=width;
     unsigned int heightOfGraphs=height;
-    unsigned int i=0,joint=0;
+    unsigned int i=0;
        
     if (cleanBackground)
       { cv::rectangle(img,cv::Rect(x,y,width,height),cv::Scalar(0,0,0),-1); }
@@ -164,6 +164,7 @@ int visualizeOrientation(
 
     int addSyntheticPoints=1;
     int doScaleCompensation=0;
+    int noClassifications = ( (frontClass==0.0) && (backClass==0.0) && (leftClass==0.0) && (rightClass==0.0) );
 
     thickness=1;
     int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
@@ -218,6 +219,15 @@ int visualizeOrientation(
             font315=cv::Scalar(255,0,255);
         }
 
+    if (noClassifications)
+    {
+     color0 = cv::Scalar(80,80,80);
+     color45 = cv::Scalar(80,80,80);
+     color135 = cv::Scalar(80,80,80);
+     color225 = cv::Scalar(80,80,80);
+     color315 = cv::Scalar(80,80,80);
+    }
+
     for (unsigned int i=0; i<360; i++)
         {
             float rad=((float) 3.1415/180*i);
@@ -261,7 +271,7 @@ int visualizeOrientation(
     
     //Draw an arrow in our orientation..
     unsigned int rad = height/2;
-
+    
     int lineStyle = 0; // https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/30 has problems with CV_AA
     
     cv::Point arrowPointing;
@@ -279,26 +289,29 @@ int visualizeOrientation(
     thickness=2;
     startPoint.x-= width / 7;
 
-    char str[512];
-    snprintf(str,512,"%0.2f",frontClass);
-    txtPosition = startPoint;
-    txtPosition.y += 5+height/4;
-    cv::putText(img,str,txtPosition,fontUsed,0.6,font45,thickness,8);
+    if(!noClassifications)
+    {
+     char str[512];
+     snprintf(str,512,"%0.2f",frontClass);
+     txtPosition = startPoint;
+     txtPosition.y += 5+height/4;
+     cv::putText(img,str,txtPosition,fontUsed,0.6,font45,thickness,8);
+ 
+     snprintf(str,512,"%0.2f",backClass);
+     txtPosition = startPoint;
+     txtPosition.y -= height/4;
+     cv::putText(img,str,txtPosition,fontUsed,0.6,font225,thickness,8);
 
-    snprintf(str,512,"%0.2f",backClass);
-    txtPosition = startPoint;
-    txtPosition.y -= height/4;
-    cv::putText(img,str,txtPosition,fontUsed,0.6,font225,thickness,8);
+     snprintf(str,512,"%0.2f",rightClass);
+     txtPosition = startPoint;
+     txtPosition.x += width/4;
+     cv::putText(img,str,txtPosition,fontUsed,0.6,font0,thickness,8);
 
-    snprintf(str,512,"%0.2f",rightClass);
-    txtPosition = startPoint;
-    txtPosition.x += width/4;
-    cv::putText(img,str,txtPosition,fontUsed,0.6,font0,thickness,8);
-
-    snprintf(str,512,"%0.2f",leftClass);
-    txtPosition = startPoint;
-    txtPosition.x -= width/4;
-    cv::putText(img,str,txtPosition,fontUsed,0.6,font135,thickness,8);
+     snprintf(str,512,"%0.2f",leftClass);
+     txtPosition = startPoint;
+     txtPosition.x -= width/4;
+     cv::putText(img,str,txtPosition,fontUsed,0.6,font135,thickness,8); 
+    }
 
     return 1;
 }
@@ -339,7 +352,7 @@ int visualizeNSDM(
         }
     else if (channelsPerNSDMElement==1)
         {
-            cv::putText(img,"NSRM",txtPosition,fontUsed,0.3,color,thickness,8);
+            cv::putText(img,"NSRMv2",txtPosition,fontUsed,0.3,color,thickness,8);
         }
 
 
@@ -530,6 +543,105 @@ int visualizeNSDMAsBar(
     return 0;
 }
 
+
+#if USE_BVH
+#include "../../../../dependencies/RGBDAcquisition/tools/Calibration/calibration.h"
+#include "../../../../dependencies/RGBDAcquisition/tools/AmMatrix/matrix4x4Tools.h"
+#include "../../../../dependencies/RGBDAcquisition/tools/AmMatrix/simpleRenderer.h"
+#endif
+
+
+/**
+ * @brief  Generate 2D points that draws a 3D grid
+ * @retval Vector of 2D points
+ */
+std::vector<std::vector<float> > convert3DGridTo2DPoints(float roll,float pitch,float yaw,unsigned int dimensions)
+{
+    std::vector<std::vector<float> > result;
+#if USE_BVH
+   
+   struct simpleRenderer * renderer =  (struct simpleRenderer *) getRendererHandle();
+   
+    if (renderer==0)
+        {
+           fprintf(stderr,"convert3DGridTo2DPoints: Cannot work without a renderer initialization\n");
+           return result;
+        }
+
+    std::vector<float> emptyPoint;
+    emptyPoint.clear();
+    emptyPoint.push_back((float) 0.0);
+    emptyPoint.push_back((float) 0.0);
+
+
+    
+    float rotation[3]={roll,yaw,pitch};  
+    float center[4]={0};
+    float pos3D[4]={0};
+    
+    //?
+    pos3D[3]=1.0;
+
+    signed int x=0,y=0,z=0;
+    float position2DX=0,position2DY=0,position2DW=0;
+
+    y=-5;
+    signed int halfDimension = (signed int) dimensions / 2;
+    signed int negativeStart = (signed int) halfDimension * (-1);
+    signed int positiveEnd   = (signed int) halfDimension;
+
+    for (z=negativeStart; z<positiveEnd; z++)
+        {
+            //for (y=-negativeStart; y<positiveEnd; y++)
+            {
+                for (x=negativeStart; x<positiveEnd; x++)
+                    {
+                        pos3D[0]=(float) x;
+                        pos3D[1]=(float) y;
+                        pos3D[2]=(float) z;
+
+                        if (
+                            simpleRendererRender(
+                                renderer ,
+                                pos3D,
+                                center,
+                                rotation,
+                                ROTATION_ORDER_RPY,
+                                &position2DX,
+                                &position2DY,
+                                &position2DW
+                            )
+                        )
+                            {
+                                if (position2DW>0.0)
+                                    {
+                                        std::vector<float> point;
+                                        point.clear();
+                                        point.push_back((float) position2DX);
+                                        point.push_back((float) position2DY);
+                                        result.push_back(point);
+                                    }
+                                else
+                                    {
+                                        result.push_back(emptyPoint);
+                                    }
+                            }
+                        else
+                            {
+                                result.push_back(emptyPoint);
+                            }
+                    }
+            }
+        }
+
+
+
+
+#else
+    fprintf(stderr,"BVH code is not compiled in this version of MocapNET\n");
+#endif // USE_BVH
+    return result;
+}
 
 
 

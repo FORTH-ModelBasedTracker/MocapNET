@@ -14,6 +14,9 @@
 #include <vector>
 #include "../tools.hpp"
 
+/** @brief This the times we need to include alignment angle. */
+static const unsigned int mocapNET_timesToRepeatAlignmentAngle_body = 0;
+
 /** @brief This is an array of names for all uncompressed 2D inputs expected. */
 static const unsigned int mocapNET_InputLength_WithoutNSDM_body = 63;
 
@@ -1736,7 +1739,7 @@ static float getJoint2DDistance_BODY(std::vector<float> in,int jointA,int jointB
 }
 
 /** @brief This function returns a vector of NSDM values ready for use with the MocapNET body network */
-static std::vector<float> bodyCreateNDSM(std::vector<float> in,int havePositionalElements,int haveAngularElements,int doScaleCompensation)
+static std::vector<float> bodyCreateNDSM(std::vector<float> in,int havePositionalElements,int haveAngularElements,int doScaleCompensation,int eNSRM)
 {
     std::vector<float> result;
     for (int i=0; i<MNET_NSDM_BODY_NUMBER; i++)

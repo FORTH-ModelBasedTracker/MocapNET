@@ -76,13 +76,14 @@ int closeCSVFile(struct CSVFileContext * csv)
     if (csv->fp!=0)
         {
             //TODO FREE STUFF HERE..
-            int i=0;
+            unsigned int i=0;
             for (i=0; i<csv->numberOfHeaderFields; i++)
                 {
                     if (csv->field[i].str!=0)
                         {
                             free(csv->field[i].str);
                             csv->field[i].str=0;
+                            csv->field[i].strLength=0;
                         }
                 }
 
@@ -106,7 +107,7 @@ int parseCSVHeader(struct CSVFileContext * csv)
         }
 
     fprintf(stderr,"Parsing CSV header..\n");
-    char whereToStoreItems[513]= {0};
+    char whereToStoreItems[1024]= {0};
     char * line = NULL;
     size_t len = 0;
     ssize_t read;
@@ -116,7 +117,7 @@ int parseCSVHeader(struct CSVFileContext * csv)
             read = getline(&line, &len, csv->fp);
             if (line!=0)
                 {
-                    struct InputParserC * ipc = InputParser_Create(8096,4);
+                    struct InputParserC * ipc = InputParser_Create(10000,4);
                     InputParser_SetDelimeter(ipc,0,',');
                     InputParser_SetDelimeter(ipc,1,0);
                     InputParser_SetDelimeter(ipc,2,10);
@@ -134,16 +135,22 @@ int parseCSVHeader(struct CSVFileContext * csv)
                                     //fprintf(stderr,"CSV Header element %u => %s\n",i,whereToStoreItems);
                                     csv->field[i].strLength = strlen(whereToStoreItems);
                                     csv->field[i].str = (char*) malloc(sizeof(char) * (csv->field[i].strLength+2));
-                                    memcpy(csv->field[i].str,whereToStoreItems,csv->field[i].strLength);
-                                    csv->field[i].str[csv->field[i].strLength]=0;
-                                    ++csv->numberOfHeaderFields;
+                                    if (csv->field[i].str!=0)
+                                       {
+                                         memcpy(csv->field[i].str,whereToStoreItems,csv->field[i].strLength);
+                                         csv->field[i].str[csv->field[i].strLength]=0;
+                                         ++csv->numberOfHeaderFields;
+                                       } else
+                                       {
+                                         fprintf(stderr,"Failed allocating memory for CSV Header ( %u ) ..\n",csv->numberOfHeaderFields);
+                                       }
                                 }
                         }
                     else
                         {
                             fprintf(stderr,"Too many CSV header arguments (encountered %u, max %u)..\n",numberOfArguments,MAX_CSV_HEADER_FIELDS);
                             InputParser_Destroy(ipc);
-                            if (line!=0)
+                            //if (line!=0) //line always not zero here..
                                 {
                                     free(line);
                                     line=0;
@@ -250,18 +257,14 @@ int parseNextCSVFloatLine(struct CSVFileContext * csv,struct CSVFloatFileLine * 
 
 int parseNextCSVCOCOSkeleton(struct CSVFileContext * csv, struct skeletonSerialized * skel)
 {
-    if (csv==0)
+    if ( (csv==0) || (skel==0) )
         {
             return 0;
-        }
-    if (skel==0)
-        {
-            return 0;
-        }
+        } 
 
     char * line = NULL;
     size_t len = 0;
-    ssize_t read;
+    ssize_t read = 0;
 
     if (csv->lineNumber==0)
         {

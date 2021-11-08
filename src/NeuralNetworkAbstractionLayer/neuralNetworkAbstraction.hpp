@@ -46,5 +46,5 @@ int neuralNetworkUnload(
 
 std::vector<float> neuralNetworkExecute(
                                          struct neuralNetworkModel * nn,
-                                         std::vector<float> input
+                                         const std::vector<float> input
                                        );

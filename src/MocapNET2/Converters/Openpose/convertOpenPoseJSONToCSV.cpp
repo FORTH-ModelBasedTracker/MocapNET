@@ -22,7 +22,7 @@
  *  each of the colorFrame_0_xxxxx_keypoints.json will correspond to a  colorFrame_0_xxxxx.jpg
  *
  *  This can then be converted to a CSV file using : 
- *                 ./convertOpenPoseJSONToCSV --from videoFiles/ 
+ *                 ./convertBody25JSONToCSV --from videoFiles/ -o .
  *
  *
  *  If you want to use a custom json labeling scheme and not rely on images as OpenPose input you will need to :
@@ -47,7 +47,6 @@
  *     i.e   dataset_00000_keypoints.json - dataset_0099_keypoints.json should need --startAt 0 --maxFrames 100   
  *
  * */
-
 
 #include <iostream>
 #include <vector>
@@ -252,7 +251,7 @@ int main(int argc, char *argv[])
     while (frameID<frameLimit)
         {
             snprintf(filePathOfJSONFile,1024,formatString,path,label,frameID);
-            fprintf(stderr,"%s (%ux%u)\n",filePathOfJSONFile,width,height);
+            fprintf(stderr," (%ux%u)\n",width,height);
 
             if (parseJsonCOCOSkeleton(filePathOfJSONFile,&skeleton,acceptableThreshold,processed))
                 {
@@ -261,8 +260,8 @@ int main(int argc, char *argv[])
                             writeOpenPoseCSVHeaderFromSkeleton(outputPathFull,&skeleton,width,height);
                         }
                         
-                     if (skeleton.leftHand.isPopulated)    { fprintf(stderr,GREEN "Left Hand " NORMAL); }
-                     if (skeleton.rightHand.isPopulated)  { fprintf(stderr,GREEN "Right Hand " NORMAL); }
+                     if (skeleton.leftHand.isPopulated)         { fprintf(stderr,GREEN "LeftHand " NORMAL); }
+                     if (skeleton.rightHand.isPopulated)        { fprintf(stderr,GREEN "RightHand " NORMAL); }
                      if (skeleton.body.isPopulated)             { fprintf(stderr,GREEN "Body " NORMAL); }
                      if (skeleton.head.isPopulated)             { fprintf(stderr,GREEN "Head " NORMAL); }
 

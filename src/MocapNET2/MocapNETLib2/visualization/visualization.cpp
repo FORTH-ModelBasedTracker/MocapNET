@@ -220,7 +220,7 @@ int visualizeSkeletonCorrespondence(
             cv::Mat img(height,width, CV_8UC3, Scalar(0,0,0));
 
 
-//Just the points and text ( foreground )
+            //Just the points and text ( foreground )
             for (int jointID=0; jointID<points2DInput.size(); jointID++)
                 {
                     float jointInPointX = points2DInput[jointID][0];
@@ -376,7 +376,7 @@ cv::Scalar getColorFromIndex(unsigned int i)
 std::vector<std::vector<float> > place2DSkeletonElsewhere(unsigned int x,unsigned int y,
 unsigned int width,
 unsigned int height, 
-std::vector<std::vector<float> >  skeleton2D)
+std::vector<std::vector<float> > skeleton2D)
 {
     int jointID=0;
     
@@ -393,13 +393,13 @@ std::vector<std::vector<float> >  skeleton2D)
 
 int visualizeHandleMessages()
 {
-#if USE_OPENCV
+ #if USE_OPENCV
     cv::waitKey(1); 
     return 1;
  #else
    fprintf(stderr,"visualizeHandleMessages cannot be compiled without OpenCV\n");
    return 0;
-#endif   
+ #endif   
 }
 
 int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float> > history, std::vector<std::vector<float> >  skeleton2D)
@@ -465,8 +465,13 @@ int visualizeMotionHistory(const char* windowName, std::vector<std::vector<float
              float velocityValue = history[history.size()-1][joint] - history[history.size()-2][joint];  
              float accelerationValue = velocityValue - ( history[history.size()-3][joint] - history[history.size()-4][joint] );  
               
-             
-             snprintf(labelOfPlot,512,"%s  -> %0.2f",MocapNETOutputArrayNames[joint],absoluteValue);
+             if (joint>=MOCAPNET_OUTPUT_NUMBER)
+             {
+               snprintf(labelOfPlot,512,"ELEMENT_%u_OUT_OF_BOUNDS  -> %0.2f",joint,absoluteValue); 
+             } else
+             {
+               snprintf(labelOfPlot,512,"%s  -> %0.2f",MocapNETOutputArrayNames[joint],absoluteValue);
+             }
              cv::putText(img,labelOfPlot, labelPosition, cv::FONT_HERSHEY_DUPLEX, 0.3, cv::Scalar::all(255), 0.2, 8 );
 
              snprintf(labelOfPlot,512,"v %0.2f acc %0.2f",velocityValue,accelerationValue);
@@ -808,9 +813,9 @@ int visualizeInput2DSkeletonFromVectorofVectors(
     
     for (int jID=0; jID<skeleton.size(); jID++)
       { 
-          float pointExists = ( ( skeleton[jID][0] !=0.0 ) || ( skeleton[jID][1] != 0.0 ) );
+          char pointExists = ( ( skeleton[jID][0] !=0.0 ) || ( skeleton[jID][1] != 0.0 ) );
           
-          if (pointExists>0.0)
+          if (pointExists)
           {
             float xNormalized =  (float) skeleton[jID][0] / skeletonWidth;  
             float yNormalized =  (float) skeleton[jID][1] / skeletonHeight; 
@@ -1047,9 +1052,9 @@ int visualizeInput(
      
      if (saveVisualization)
      {
-          char filename[1024];
+          char filename[1025]={0};
           snprintf(filename,1024,"vis%05u.jpg",frameNumber);
-         imwrite(filename,visualization);
+          imwrite(filename,visualization);
      }
 
     //Did not find a file to show ..
@@ -1603,6 +1608,7 @@ int visualizationCommander(
     unsigned int callingProcessPromisesToHandleMessages
 )
 {
+  //return 1;
   if (result.size()==0) { return 0; } 
   
   
@@ -1621,7 +1627,7 @@ int visualizationCommander(
     std::vector<float>  resultCenteredOnScreen = result;
     if (options->constrainPositionRotation>0)
         {
-            if (resultCenteredOnScreen.size()>=MOCAPNET_OUTPUT_HIP_XROTATION)
+            if (resultCenteredOnScreen.size()>=MOCAPNET_OUTPUT_HIP_XROTATION+2)
                 {
                     float distance=0,rollValue=0,yawValue=0,pitchValue=0;
 
@@ -1806,7 +1812,35 @@ int visualizationCommander(
                 points2DFrontOutput,
                 options->numberOfMissingJoints
             ); 
-           if (!callingProcessPromisesToHandleMessages) { visualizeHandleMessages(); } 
+           
+           if (!callingProcessPromisesToHandleMessages) 
+              { visualizeHandleMessages(); } 
+        }          else
+         if (options->visualizationType==5)
+        { 
+            //TEMPLATE VISUALIZATION 
+            std::vector<float> inputValues;
+            
+            visualizeJustIllustration(
+                "3D Points Output",
+                frameID,
+                options->saveVisualization,
+                0,
+                options->datasetPath,
+                options->label,
+                options->serialLength,
+                options->width,
+                options->height,
+                skeleton,
+                mnet,
+                options,
+                exactMocapNET2DOutput,
+                points2DFrontOutput,
+                options->numberOfMissingJoints
+            ); 
+           
+           if (!callingProcessPromisesToHandleMessages) 
+              { visualizeHandleMessages(); } 
         }    
     else
         {

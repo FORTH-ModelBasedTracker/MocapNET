@@ -712,13 +712,10 @@ int visualizeSkeletonSerialized(
 
 int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOutputGUIForcedView,float offsetX,float offsetY,int labels)
 {
-    if (points2DOutputGUIForcedView.size()==0)
-    {
-        return 0;
-    }
+    if (points2DOutputGUIForcedView.size()==0) { return 0; }
     
     
-    for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
+    for (unsigned int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
         {
             float jointPointX = points2DOutputGUIForcedView[jointID][0]+offsetX;
             float jointPointY = points2DOutputGUIForcedView[jointID][1]+offsetY;
@@ -790,7 +787,7 @@ int drawSkeleton(cv::Mat &outputMat,std::vector<std::vector<float> > points2DOut
     char textInfo[512]={0};
  
    //Just the points and text ( foreground )
-    for (int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
+    for (unsigned int jointID=0; jointID<points2DOutputGUIForcedView.size(); jointID++)
         {
             float jointPointX = points2DOutputGUIForcedView[jointID][0]+offsetX;
             float jointPointY = points2DOutputGUIForcedView[jointID][1]+offsetY;

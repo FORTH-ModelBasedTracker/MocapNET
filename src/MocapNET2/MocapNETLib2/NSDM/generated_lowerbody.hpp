@@ -1,7 +1,7 @@
 /** @file generated_lowerbody.hpp
  *  @brief A Description the lowerbody input of a Tensorflow network required for MocapNET
  *  @author Ammar Qammaz (AmmarkoV)
- *  Automatically generated using :
+ *  Automatically generated @ 2021-01-31 23:41:43.271838 using :
  *     python3 exportCPPCodeFromJSONConfiguration.py --front lowerbody --config dataset/lowerbody_configuration.json
  *     please note that since the names of the labels are both affected by the dataset/lowerbody_configuration.json configuration
  *     as well as the ground truth, if you have made any weird additions you might consider running the ./createRandomizedDataset.sh and ./createTestDataset.sh scripts
@@ -16,6 +16,9 @@
 
 /** @brief This is an array of names for all uncompressed 2D inputs expected. */
 static const unsigned int mocapNET_InputLength_WithoutNSDM_lowerbody = 36;
+
+/** @brief Use rich diagonal, part of networks after 31-01-2021 */
+static const unsigned int richDiagonal_lowerbody = 1;
 
 /** @brief An array of strings that contains the label for each expected input. */
 static const char * mocapNET_lowerbody[] =
@@ -57,7 +60,7 @@ static const char * mocapNET_lowerbody[] =
     "2DY_EndSite_toe5-3.l", //34
     "visible_EndSite_toe5-3.l", //35
 //This is where regular input ends and the NSDM data kicks in..
-    "hipY-hipY-Angle", //36
+    "angleUsedFor2DRotation_0", //36
     "hipY-rhipY-Angle", //37
     "hipY-halfway_rhip_and_rkneeY-Angle", //38
     "hipY-rkneeY-Angle", //39
@@ -75,7 +78,7 @@ static const char * mocapNET_lowerbody[] =
     "hipY-virtual_hip_x_0_0_y_plus0_15Y-Angle", //51
     "hipY-virtual_hip_x_0_0_y_plus0_3Y-Angle", //52
     "rhipY-hipY-Angle", //53
-    "rhipY-rhipY-Angle", //54
+    "angleUsedFor2DRotation_1", //54
     "rhipY-halfway_rhip_and_rkneeY-Angle", //55
     "rhipY-rkneeY-Angle", //56
     "rhipY-halfway_rknee_and_rfootY-Angle", //57
@@ -93,7 +96,7 @@ static const char * mocapNET_lowerbody[] =
     "rhipY-virtual_hip_x_0_0_y_plus0_3Y-Angle", //69
     "halfway_rhip_and_rkneeY-hipY-Angle", //70
     "halfway_rhip_and_rkneeY-rhipY-Angle", //71
-    "halfway_rhip_and_rkneeY-halfway_rhip_and_rkneeY-Angle", //72
+    "angleUsedFor2DRotation_2", //72
     "halfway_rhip_and_rkneeY-rkneeY-Angle", //73
     "halfway_rhip_and_rkneeY-halfway_rknee_and_rfootY-Angle", //74
     "halfway_rhip_and_rkneeY-rfootY-Angle", //75
@@ -111,7 +114,7 @@ static const char * mocapNET_lowerbody[] =
     "rkneeY-hipY-Angle", //87
     "rkneeY-rhipY-Angle", //88
     "rkneeY-halfway_rhip_and_rkneeY-Angle", //89
-    "rkneeY-rkneeY-Angle", //90
+    "angleUsedFor2DRotation_3", //90
     "rkneeY-halfway_rknee_and_rfootY-Angle", //91
     "rkneeY-rfootY-Angle", //92
     "rkneeY-EndSite_toe1-2.rY-Angle", //93
@@ -129,7 +132,7 @@ static const char * mocapNET_lowerbody[] =
     "halfway_rknee_and_rfootY-rhipY-Angle", //105
     "halfway_rknee_and_rfootY-halfway_rhip_and_rkneeY-Angle", //106
     "halfway_rknee_and_rfootY-rkneeY-Angle", //107
-    "halfway_rknee_and_rfootY-halfway_rknee_and_rfootY-Angle", //108
+    "angleUsedFor2DRotation_4", //108
     "halfway_rknee_and_rfootY-rfootY-Angle", //109
     "halfway_rknee_and_rfootY-EndSite_toe1-2.rY-Angle", //110
     "halfway_rknee_and_rfootY-virtual_hip_x_plus0_3_y_0Y-Angle", //111
@@ -147,7 +150,7 @@ static const char * mocapNET_lowerbody[] =
     "rfootY-halfway_rhip_and_rkneeY-Angle", //123
     "rfootY-rkneeY-Angle", //124
     "rfootY-halfway_rknee_and_rfootY-Angle", //125
-    "rfootY-rfootY-Angle", //126
+    "angleUsedFor2DRotation_5", //126
     "rfootY-EndSite_toe1-2.rY-Angle", //127
     "rfootY-virtual_hip_x_plus0_3_y_0Y-Angle", //128
     "rfootY-virtual_hip_x_minus_0_3_y_0Y-Angle", //129
@@ -165,7 +168,7 @@ static const char * mocapNET_lowerbody[] =
     "EndSite_toe1-2.rY-rkneeY-Angle", //141
     "EndSite_toe1-2.rY-halfway_rknee_and_rfootY-Angle", //142
     "EndSite_toe1-2.rY-rfootY-Angle", //143
-    "EndSite_toe1-2.rY-EndSite_toe1-2.rY-Angle", //144
+    "angleUsedFor2DRotation_6", //144
     "EndSite_toe1-2.rY-virtual_hip_x_plus0_3_y_0Y-Angle", //145
     "EndSite_toe1-2.rY-virtual_hip_x_minus_0_3_y_0Y-Angle", //146
     "EndSite_toe1-2.rY-lhipY-Angle", //147
@@ -183,7 +186,7 @@ static const char * mocapNET_lowerbody[] =
     "virtual_hip_x_plus0_3_y_0Y-halfway_rknee_and_rfootY-Angle", //159
     "virtual_hip_x_plus0_3_y_0Y-rfootY-Angle", //160
     "virtual_hip_x_plus0_3_y_0Y-EndSite_toe1-2.rY-Angle", //161
-    "virtual_hip_x_plus0_3_y_0Y-virtual_hip_x_plus0_3_y_0Y-Angle", //162
+    "angleUsedFor2DRotation_7", //162
     "virtual_hip_x_plus0_3_y_0Y-virtual_hip_x_minus_0_3_y_0Y-Angle", //163
     "virtual_hip_x_plus0_3_y_0Y-lhipY-Angle", //164
     "virtual_hip_x_plus0_3_y_0Y-halfway_lhip_and_lkneeY-Angle", //165
@@ -201,7 +204,7 @@ static const char * mocapNET_lowerbody[] =
     "virtual_hip_x_minus_0_3_y_0Y-rfootY-Angle", //177
     "virtual_hip_x_minus_0_3_y_0Y-EndSite_toe1-2.rY-Angle", //178
     "virtual_hip_x_minus_0_3_y_0Y-virtual_hip_x_plus0_3_y_0Y-Angle", //179
-    "virtual_hip_x_minus_0_3_y_0Y-virtual_hip_x_minus_0_3_y_0Y-Angle", //180
+    "angleUsedFor2DRotation_8", //180
     "virtual_hip_x_minus_0_3_y_0Y-lhipY-Angle", //181
     "virtual_hip_x_minus_0_3_y_0Y-halfway_lhip_and_lkneeY-Angle", //182
     "virtual_hip_x_minus_0_3_y_0Y-lkneeY-Angle", //183
@@ -219,7 +222,7 @@ static const char * mocapNET_lowerbody[] =
     "lhipY-EndSite_toe1-2.rY-Angle", //195
     "lhipY-virtual_hip_x_plus0_3_y_0Y-Angle", //196
     "lhipY-virtual_hip_x_minus_0_3_y_0Y-Angle", //197
-    "lhipY-lhipY-Angle", //198
+    "angleUsedFor2DRotation_9", //198
     "lhipY-halfway_lhip_and_lkneeY-Angle", //199
     "lhipY-lkneeY-Angle", //200
     "lhipY-halfway_lknee_and_lfootY-Angle", //201
@@ -237,7 +240,7 @@ static const char * mocapNET_lowerbody[] =
     "halfway_lhip_and_lkneeY-virtual_hip_x_plus0_3_y_0Y-Angle", //213
     "halfway_lhip_and_lkneeY-virtual_hip_x_minus_0_3_y_0Y-Angle", //214
     "halfway_lhip_and_lkneeY-lhipY-Angle", //215
-    "halfway_lhip_and_lkneeY-halfway_lhip_and_lkneeY-Angle", //216
+    "angleUsedFor2DRotation_10", //216
     "halfway_lhip_and_lkneeY-lkneeY-Angle", //217
     "halfway_lhip_and_lkneeY-halfway_lknee_and_lfootY-Angle", //218
     "halfway_lhip_and_lkneeY-lfootY-Angle", //219
@@ -255,7 +258,7 @@ static const char * mocapNET_lowerbody[] =
     "lkneeY-virtual_hip_x_minus_0_3_y_0Y-Angle", //231
     "lkneeY-lhipY-Angle", //232
     "lkneeY-halfway_lhip_and_lkneeY-Angle", //233
-    "lkneeY-lkneeY-Angle", //234
+    "angleUsedFor2DRotation_11", //234
     "lkneeY-halfway_lknee_and_lfootY-Angle", //235
     "lkneeY-lfootY-Angle", //236
     "lkneeY-EndSite_toe1-2.lY-Angle", //237
@@ -273,7 +276,7 @@ static const char * mocapNET_lowerbody[] =
     "halfway_lknee_and_lfootY-lhipY-Angle", //249
     "halfway_lknee_and_lfootY-halfway_lhip_and_lkneeY-Angle", //250
     "halfway_lknee_and_lfootY-lkneeY-Angle", //251
-    "halfway_lknee_and_lfootY-halfway_lknee_and_lfootY-Angle", //252
+    "angleUsedFor2DRotation_12", //252
     "halfway_lknee_and_lfootY-lfootY-Angle", //253
     "halfway_lknee_and_lfootY-EndSite_toe1-2.lY-Angle", //254
     "halfway_lknee_and_lfootY-virtual_hip_x_0_0_y_plus0_15Y-Angle", //255
@@ -291,7 +294,7 @@ static const char * mocapNET_lowerbody[] =
     "lfootY-halfway_lhip_and_lkneeY-Angle", //267
     "lfootY-lkneeY-Angle", //268
     "lfootY-halfway_lknee_and_lfootY-Angle", //269
-    "lfootY-lfootY-Angle", //270
+    "angleUsedFor2DRotation_13", //270
     "lfootY-EndSite_toe1-2.lY-Angle", //271
     "lfootY-virtual_hip_x_0_0_y_plus0_15Y-Angle", //272
     "lfootY-virtual_hip_x_0_0_y_plus0_3Y-Angle", //273
@@ -309,7 +312,7 @@ static const char * mocapNET_lowerbody[] =
     "EndSite_toe1-2.lY-lkneeY-Angle", //285
     "EndSite_toe1-2.lY-halfway_lknee_and_lfootY-Angle", //286
     "EndSite_toe1-2.lY-lfootY-Angle", //287
-    "EndSite_toe1-2.lY-EndSite_toe1-2.lY-Angle", //288
+    "angleUsedFor2DRotation_14", //288
     "EndSite_toe1-2.lY-virtual_hip_x_0_0_y_plus0_15Y-Angle", //289
     "EndSite_toe1-2.lY-virtual_hip_x_0_0_y_plus0_3Y-Angle", //290
     "virtual_hip_x_0_0_y_plus0_15Y-hipY-Angle", //291
@@ -327,7 +330,7 @@ static const char * mocapNET_lowerbody[] =
     "virtual_hip_x_0_0_y_plus0_15Y-halfway_lknee_and_lfootY-Angle", //303
     "virtual_hip_x_0_0_y_plus0_15Y-lfootY-Angle", //304
     "virtual_hip_x_0_0_y_plus0_15Y-EndSite_toe1-2.lY-Angle", //305
-    "virtual_hip_x_0_0_y_plus0_15Y-virtual_hip_x_0_0_y_plus0_15Y-Angle", //306
+    "angleUsedFor2DRotation_15", //306
     "virtual_hip_x_0_0_y_plus0_15Y-virtual_hip_x_0_0_y_plus0_3Y-Angle", //307
     "virtual_hip_x_0_0_y_plus0_3Y-hipY-Angle", //308
     "virtual_hip_x_0_0_y_plus0_3Y-rhipY-Angle", //309
@@ -345,7 +348,7 @@ static const char * mocapNET_lowerbody[] =
     "virtual_hip_x_0_0_y_plus0_3Y-lfootY-Angle", //321
     "virtual_hip_x_0_0_y_plus0_3Y-EndSite_toe1-2.lY-Angle", //322
     "virtual_hip_x_0_0_y_plus0_3Y-virtual_hip_x_0_0_y_plus0_15Y-Angle", //323
-    "virtual_hip_x_0_0_y_plus0_3Y-virtual_hip_x_0_0_y_plus0_3Y-Angle", //324
+    "angleUsedFor2DRotation_16", //324
     "end"
 };
 /** @brief Programmer friendly enumerator of expected inputs*/
@@ -387,7 +390,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_2DX_ENDSITE_TOE5_3_L, //33
     MNET_LOWERBODY_IN_2DY_ENDSITE_TOE5_3_L, //34
     MNET_LOWERBODY_IN_VISIBLE_ENDSITE_TOE5_3_L, //35
-    MNET_LOWERBODY_IN_HIPY_HIPY_ANGLE, //36
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_0, //36
     MNET_LOWERBODY_IN_HIPY_RHIPY_ANGLE, //37
     MNET_LOWERBODY_IN_HIPY_HALFWAY_RHIP_AND_RKNEEY_ANGLE, //38
     MNET_LOWERBODY_IN_HIPY_RKNEEY_ANGLE, //39
@@ -405,7 +408,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_HIPY_VIRTUAL_HIP_X_0_0_Y_PLUS0_15Y_ANGLE, //51
     MNET_LOWERBODY_IN_HIPY_VIRTUAL_HIP_X_0_0_Y_PLUS0_3Y_ANGLE, //52
     MNET_LOWERBODY_IN_RHIPY_HIPY_ANGLE, //53
-    MNET_LOWERBODY_IN_RHIPY_RHIPY_ANGLE, //54
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_1, //54
     MNET_LOWERBODY_IN_RHIPY_HALFWAY_RHIP_AND_RKNEEY_ANGLE, //55
     MNET_LOWERBODY_IN_RHIPY_RKNEEY_ANGLE, //56
     MNET_LOWERBODY_IN_RHIPY_HALFWAY_RKNEE_AND_RFOOTY_ANGLE, //57
@@ -423,7 +426,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_RHIPY_VIRTUAL_HIP_X_0_0_Y_PLUS0_3Y_ANGLE, //69
     MNET_LOWERBODY_IN_HALFWAY_RHIP_AND_RKNEEY_HIPY_ANGLE, //70
     MNET_LOWERBODY_IN_HALFWAY_RHIP_AND_RKNEEY_RHIPY_ANGLE, //71
-    MNET_LOWERBODY_IN_HALFWAY_RHIP_AND_RKNEEY_HALFWAY_RHIP_AND_RKNEEY_ANGLE, //72
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_2, //72
     MNET_LOWERBODY_IN_HALFWAY_RHIP_AND_RKNEEY_RKNEEY_ANGLE, //73
     MNET_LOWERBODY_IN_HALFWAY_RHIP_AND_RKNEEY_HALFWAY_RKNEE_AND_RFOOTY_ANGLE, //74
     MNET_LOWERBODY_IN_HALFWAY_RHIP_AND_RKNEEY_RFOOTY_ANGLE, //75
@@ -441,7 +444,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_RKNEEY_HIPY_ANGLE, //87
     MNET_LOWERBODY_IN_RKNEEY_RHIPY_ANGLE, //88
     MNET_LOWERBODY_IN_RKNEEY_HALFWAY_RHIP_AND_RKNEEY_ANGLE, //89
-    MNET_LOWERBODY_IN_RKNEEY_RKNEEY_ANGLE, //90
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_3, //90
     MNET_LOWERBODY_IN_RKNEEY_HALFWAY_RKNEE_AND_RFOOTY_ANGLE, //91
     MNET_LOWERBODY_IN_RKNEEY_RFOOTY_ANGLE, //92
     MNET_LOWERBODY_IN_RKNEEY_ENDSITE_TOE1_2_RY_ANGLE, //93
@@ -459,7 +462,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_HALFWAY_RKNEE_AND_RFOOTY_RHIPY_ANGLE, //105
     MNET_LOWERBODY_IN_HALFWAY_RKNEE_AND_RFOOTY_HALFWAY_RHIP_AND_RKNEEY_ANGLE, //106
     MNET_LOWERBODY_IN_HALFWAY_RKNEE_AND_RFOOTY_RKNEEY_ANGLE, //107
-    MNET_LOWERBODY_IN_HALFWAY_RKNEE_AND_RFOOTY_HALFWAY_RKNEE_AND_RFOOTY_ANGLE, //108
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_4, //108
     MNET_LOWERBODY_IN_HALFWAY_RKNEE_AND_RFOOTY_RFOOTY_ANGLE, //109
     MNET_LOWERBODY_IN_HALFWAY_RKNEE_AND_RFOOTY_ENDSITE_TOE1_2_RY_ANGLE, //110
     MNET_LOWERBODY_IN_HALFWAY_RKNEE_AND_RFOOTY_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_ANGLE, //111
@@ -477,7 +480,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_RFOOTY_HALFWAY_RHIP_AND_RKNEEY_ANGLE, //123
     MNET_LOWERBODY_IN_RFOOTY_RKNEEY_ANGLE, //124
     MNET_LOWERBODY_IN_RFOOTY_HALFWAY_RKNEE_AND_RFOOTY_ANGLE, //125
-    MNET_LOWERBODY_IN_RFOOTY_RFOOTY_ANGLE, //126
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_5, //126
     MNET_LOWERBODY_IN_RFOOTY_ENDSITE_TOE1_2_RY_ANGLE, //127
     MNET_LOWERBODY_IN_RFOOTY_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_ANGLE, //128
     MNET_LOWERBODY_IN_RFOOTY_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_ANGLE, //129
@@ -495,7 +498,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_ENDSITE_TOE1_2_RY_RKNEEY_ANGLE, //141
     MNET_LOWERBODY_IN_ENDSITE_TOE1_2_RY_HALFWAY_RKNEE_AND_RFOOTY_ANGLE, //142
     MNET_LOWERBODY_IN_ENDSITE_TOE1_2_RY_RFOOTY_ANGLE, //143
-    MNET_LOWERBODY_IN_ENDSITE_TOE1_2_RY_ENDSITE_TOE1_2_RY_ANGLE, //144
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_6, //144
     MNET_LOWERBODY_IN_ENDSITE_TOE1_2_RY_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_ANGLE, //145
     MNET_LOWERBODY_IN_ENDSITE_TOE1_2_RY_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_ANGLE, //146
     MNET_LOWERBODY_IN_ENDSITE_TOE1_2_RY_LHIPY_ANGLE, //147
@@ -513,7 +516,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_HALFWAY_RKNEE_AND_RFOOTY_ANGLE, //159
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_RFOOTY_ANGLE, //160
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_ENDSITE_TOE1_2_RY_ANGLE, //161
-    MNET_LOWERBODY_IN_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_ANGLE, //162
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_7, //162
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_ANGLE, //163
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_LHIPY_ANGLE, //164
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_HALFWAY_LHIP_AND_LKNEEY_ANGLE, //165
@@ -531,7 +534,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_RFOOTY_ANGLE, //177
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_ENDSITE_TOE1_2_RY_ANGLE, //178
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_ANGLE, //179
-    MNET_LOWERBODY_IN_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_ANGLE, //180
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_8, //180
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_LHIPY_ANGLE, //181
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_HALFWAY_LHIP_AND_LKNEEY_ANGLE, //182
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_LKNEEY_ANGLE, //183
@@ -549,7 +552,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_LHIPY_ENDSITE_TOE1_2_RY_ANGLE, //195
     MNET_LOWERBODY_IN_LHIPY_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_ANGLE, //196
     MNET_LOWERBODY_IN_LHIPY_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_ANGLE, //197
-    MNET_LOWERBODY_IN_LHIPY_LHIPY_ANGLE, //198
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_9, //198
     MNET_LOWERBODY_IN_LHIPY_HALFWAY_LHIP_AND_LKNEEY_ANGLE, //199
     MNET_LOWERBODY_IN_LHIPY_LKNEEY_ANGLE, //200
     MNET_LOWERBODY_IN_LHIPY_HALFWAY_LKNEE_AND_LFOOTY_ANGLE, //201
@@ -567,7 +570,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_HALFWAY_LHIP_AND_LKNEEY_VIRTUAL_HIP_X_PLUS0_3_Y_0Y_ANGLE, //213
     MNET_LOWERBODY_IN_HALFWAY_LHIP_AND_LKNEEY_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_ANGLE, //214
     MNET_LOWERBODY_IN_HALFWAY_LHIP_AND_LKNEEY_LHIPY_ANGLE, //215
-    MNET_LOWERBODY_IN_HALFWAY_LHIP_AND_LKNEEY_HALFWAY_LHIP_AND_LKNEEY_ANGLE, //216
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_10, //216
     MNET_LOWERBODY_IN_HALFWAY_LHIP_AND_LKNEEY_LKNEEY_ANGLE, //217
     MNET_LOWERBODY_IN_HALFWAY_LHIP_AND_LKNEEY_HALFWAY_LKNEE_AND_LFOOTY_ANGLE, //218
     MNET_LOWERBODY_IN_HALFWAY_LHIP_AND_LKNEEY_LFOOTY_ANGLE, //219
@@ -585,7 +588,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_LKNEEY_VIRTUAL_HIP_X_MINUS_0_3_Y_0Y_ANGLE, //231
     MNET_LOWERBODY_IN_LKNEEY_LHIPY_ANGLE, //232
     MNET_LOWERBODY_IN_LKNEEY_HALFWAY_LHIP_AND_LKNEEY_ANGLE, //233
-    MNET_LOWERBODY_IN_LKNEEY_LKNEEY_ANGLE, //234
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_11, //234
     MNET_LOWERBODY_IN_LKNEEY_HALFWAY_LKNEE_AND_LFOOTY_ANGLE, //235
     MNET_LOWERBODY_IN_LKNEEY_LFOOTY_ANGLE, //236
     MNET_LOWERBODY_IN_LKNEEY_ENDSITE_TOE1_2_LY_ANGLE, //237
@@ -603,7 +606,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_HALFWAY_LKNEE_AND_LFOOTY_LHIPY_ANGLE, //249
     MNET_LOWERBODY_IN_HALFWAY_LKNEE_AND_LFOOTY_HALFWAY_LHIP_AND_LKNEEY_ANGLE, //250
     MNET_LOWERBODY_IN_HALFWAY_LKNEE_AND_LFOOTY_LKNEEY_ANGLE, //251
-    MNET_LOWERBODY_IN_HALFWAY_LKNEE_AND_LFOOTY_HALFWAY_LKNEE_AND_LFOOTY_ANGLE, //252
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_12, //252
     MNET_LOWERBODY_IN_HALFWAY_LKNEE_AND_LFOOTY_LFOOTY_ANGLE, //253
     MNET_LOWERBODY_IN_HALFWAY_LKNEE_AND_LFOOTY_ENDSITE_TOE1_2_LY_ANGLE, //254
     MNET_LOWERBODY_IN_HALFWAY_LKNEE_AND_LFOOTY_VIRTUAL_HIP_X_0_0_Y_PLUS0_15Y_ANGLE, //255
@@ -621,7 +624,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_LFOOTY_HALFWAY_LHIP_AND_LKNEEY_ANGLE, //267
     MNET_LOWERBODY_IN_LFOOTY_LKNEEY_ANGLE, //268
     MNET_LOWERBODY_IN_LFOOTY_HALFWAY_LKNEE_AND_LFOOTY_ANGLE, //269
-    MNET_LOWERBODY_IN_LFOOTY_LFOOTY_ANGLE, //270
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_13, //270
     MNET_LOWERBODY_IN_LFOOTY_ENDSITE_TOE1_2_LY_ANGLE, //271
     MNET_LOWERBODY_IN_LFOOTY_VIRTUAL_HIP_X_0_0_Y_PLUS0_15Y_ANGLE, //272
     MNET_LOWERBODY_IN_LFOOTY_VIRTUAL_HIP_X_0_0_Y_PLUS0_3Y_ANGLE, //273
@@ -639,7 +642,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_ENDSITE_TOE1_2_LY_LKNEEY_ANGLE, //285
     MNET_LOWERBODY_IN_ENDSITE_TOE1_2_LY_HALFWAY_LKNEE_AND_LFOOTY_ANGLE, //286
     MNET_LOWERBODY_IN_ENDSITE_TOE1_2_LY_LFOOTY_ANGLE, //287
-    MNET_LOWERBODY_IN_ENDSITE_TOE1_2_LY_ENDSITE_TOE1_2_LY_ANGLE, //288
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_14, //288
     MNET_LOWERBODY_IN_ENDSITE_TOE1_2_LY_VIRTUAL_HIP_X_0_0_Y_PLUS0_15Y_ANGLE, //289
     MNET_LOWERBODY_IN_ENDSITE_TOE1_2_LY_VIRTUAL_HIP_X_0_0_Y_PLUS0_3Y_ANGLE, //290
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_0_0_Y_PLUS0_15Y_HIPY_ANGLE, //291
@@ -657,7 +660,7 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_0_0_Y_PLUS0_15Y_HALFWAY_LKNEE_AND_LFOOTY_ANGLE, //303
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_0_0_Y_PLUS0_15Y_LFOOTY_ANGLE, //304
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_0_0_Y_PLUS0_15Y_ENDSITE_TOE1_2_LY_ANGLE, //305
-    MNET_LOWERBODY_IN_VIRTUAL_HIP_X_0_0_Y_PLUS0_15Y_VIRTUAL_HIP_X_0_0_Y_PLUS0_15Y_ANGLE, //306
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_15, //306
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_0_0_Y_PLUS0_15Y_VIRTUAL_HIP_X_0_0_Y_PLUS0_3Y_ANGLE, //307
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_0_0_Y_PLUS0_3Y_HIPY_ANGLE, //308
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_0_0_Y_PLUS0_3Y_RHIPY_ANGLE, //309
@@ -675,11 +678,12 @@ enum mocapNET_lowerbody_enum
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_0_0_Y_PLUS0_3Y_LFOOTY_ANGLE, //321
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_0_0_Y_PLUS0_3Y_ENDSITE_TOE1_2_LY_ANGLE, //322
     MNET_LOWERBODY_IN_VIRTUAL_HIP_X_0_0_Y_PLUS0_3Y_VIRTUAL_HIP_X_0_0_Y_PLUS0_15Y_ANGLE, //323
-    MNET_LOWERBODY_IN_VIRTUAL_HIP_X_0_0_Y_PLUS0_3Y_VIRTUAL_HIP_X_0_0_Y_PLUS0_3Y_ANGLE, //324
+    MNET_LOWERBODY_IN_ANGLEUSEDFOR2DROTATION_16, //324
     MNET_LOWERBODY_IN_NUMBER
 };
 
-/** @brief Programmer friendly enumerator of expected outputs*/
+/** @brief Programmer friendly enumerator of expected outputs
+ TODO: CAREFULL!*/
 enum mocapNET_Output_lowerbody_enum
 {
     MOCAPNET_LOWERBODY_OUTPUT_HIP_XPOSITION = 0, //0
@@ -945,7 +949,7 @@ static float getJoint2DDistance_LOWERBODY(std::vector<float> in,int jointA,int j
 }
 
 /** @brief This function returns a vector of NSDM values ready for use with the MocapNET lowerbody network */
-static std::vector<float> lowerbodyCreateNDSM(std::vector<float> in,int havePositionalElements,int haveAngularElements,int doNormalization)
+static std::vector<float> lowerbodyCreateNDSM(std::vector<float> in,float alignmentAngle2D,int havePositionalElements,int haveAngularElements,int doNormalization,int eNSRM)
 {
     std::vector<float> result;
     int secondTargetJointID;
@@ -1146,22 +1150,21 @@ static std::vector<float> lowerbodyCreateNDSM(std::vector<float> in,int havePosi
             }
             fprintf(stderr,"Original Min Value %0.2f, Max Value %0.2f \n",minValue,maxValue);
 
- 
-                unsigned int iJointID=mocapNET_AlignmentStart_lowerbody[0];
-                unsigned int jJointID=mocapNET_AlignmentEnd_lowerbody[0];
-                float aX=in[iJointID*3+0];
-                float aY=in[iJointID*3+1];
-                float bX=in[jJointID*3+0];
-                float bY=in[jJointID*3+1];
-                float alignmentAngle=getAngleToAlignToZero_tools(aX,aY,bX,bY);
-                for (int i=0; i<result.size(); i++)
+
+            unsigned int iJointID=mocapNET_AlignmentStart_lowerbody[0];
+            unsigned int jJointID=mocapNET_AlignmentEnd_lowerbody[0];
+            float aX=in[iJointID*3+0];
+            float aY=in[iJointID*3+1];
+            float bX=in[jJointID*3+0];
+            float bY=in[jJointID*3+1];
+            float alignmentAngle=getAngleToAlignToZero_tools(aX,aY,bX,bY);
+            for (int i=0; i<result.size(); i++)
+            {
+                if (result[i]!=0.0)
                 {
-                    if (result[i]!=0.0)
-                    {
-                        result[i]= alignmentAngle + result[i];
-                    }
+                    result[i]= alignmentAngle + result[i];
                 }
-                
+            }
             minValue=result[0], maxValue=result[0];
             for (int i=0; i<result.size(); i++)
             {
@@ -1180,5 +1183,31 @@ static std::vector<float> lowerbodyCreateNDSM(std::vector<float> in,int havePosi
 
 
     } //If normalization is enabled..
+
+
+//New normalization code that overrides diagonal of Matrix
+if (eNSRM)
+{
+    unsigned int elementID=0;
+    unsigned int firstJointID=mocapNET_ResolveJoint_lowerbody[0];
+    for (unsigned int i=0; i<MNET_NSDM_LOWERBODY_NUMBER; i++)
+    {
+        for (unsigned int j=0; j<MNET_NSDM_LOWERBODY_NUMBER; j++)
+        {
+            if (i==j)
+            {
+                result[elementID]=alignmentAngle2D;
+                //Rest diagonal elements will encode euclidean distances from base joint
+                //if richDiagonal_lowerbody flag is set..
+                if ( (i>0) && (richDiagonal_lowerbody) )
+                {
+                    unsigned int jJointID=mocapNET_ResolveJoint_lowerbody[j];
+                    result[elementID]=getJoint2DDistance_LOWERBODY(in,firstJointID,jJointID);
+                }
+            }
+            elementID+=1;
+        }
+    }
+}
     return result;
 }

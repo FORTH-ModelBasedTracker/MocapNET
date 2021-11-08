@@ -10,6 +10,10 @@ using namespace cv;
 
 int main(int argc, char *argv[])
 {
+    unsigned int width = 640;
+    unsigned int height = 480;
+    
+    
     const char * webcam = 0;
     for (int i=0; i<argc; i++)
         {
@@ -19,7 +23,15 @@ int main(int argc, char *argv[])
                         {
                             webcam = argv[i+1];
                         }
-                }
+                }   else 
+             if (strcmp(argv[i],"--size")==0)
+                    {
+                      if (argc>i+2)
+                        {
+                        width = atoi(argv[i+1]);
+                        height = atoi(argv[i+2]);
+                        }
+                    }
         }
 
 
@@ -27,8 +39,8 @@ int main(int argc, char *argv[])
     if (webcam==0)
         {
             std::cerr<<"Trying to open webcam\n";
-            cap.set(cv::CAP_PROP_FRAME_WIDTH,640); // In case of errors try CV_CAP_PROP_FRAME_WIDTH
-            cap.set(cv::CAP_PROP_FRAME_HEIGHT,480); // In case of errors try CV_CAP_PROP_FRAME_HEIGHT
+            cap.set(CAP_PROP_FRAME_WIDTH,width);
+            cap.set(CAP_PROP_FRAME_HEIGHT,height);
         }
     else
         {

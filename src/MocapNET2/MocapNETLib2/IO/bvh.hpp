@@ -628,7 +628,7 @@ static const char * bvhHeader=
 "                      }\n"
 "                    }\n"
 "                  }\n"
-"                  JOINT __rthumb\n"
+"                  JOINT rthumbBase\n"
 "                  {\n"
 "                    OFFSET -2.815680 -0.279180 0.531660\n"
 "                    CHANNELS 3 Zrotation Xrotation Yrotation \n"
@@ -779,7 +779,7 @@ static const char * bvhHeader=
 "                      }\n"
 "                    }\n"
 "                  }\n"
-"                  JOINT __lthumb\n"
+"                  JOINT lthumbBase\n"
 "                  {\n"
 "                    OFFSET 2.815670 -0.279180 0.531660\n"
 "                    CHANNELS 3 Zrotation Xrotation Yrotation \n"
@@ -1034,7 +1034,18 @@ static const char * bvhHeader=
 "}\n";
 
 
+float * mallocVector(std::vector<float> bvhFrame);
+int copyVectorToFloatArray(float * arr,std::vector<float> bvhFrame);
 
+void * getRendererHandle();
+
+void * getBVHMotionHandle();
+
+void * getBVHLHandQBVHMotionHandle();
+void * getBVHRHandQBVHMotionHandle();
+
+
+void printBVHSummary();
 void printBVHCodeVersion();
 
 int loadCalibration(struct MocapNET2Options * options,const char* directory,const char * file);
@@ -1042,10 +1053,26 @@ int loadCalibration(struct MocapNET2Options * options,const char* directory,cons
 void overrideBVHSubsystemFocalLength(float newFx,float newFy);
 
 
-//This should fix the wrong Z Y X rotation thing happening
-//in https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/35
-int fixBVHHip(std::vector<std::vector<float> > &bvhFrames);
+void convertStandaloneLHandSkeletonSerializedToBVHTransform(
+                                                            struct BVH_MotionCapture * bvhMotion,
+                                                            struct simpleRenderer * renderer,
+                                                            struct BVH_Transform * out,
+                                                            struct skeletonSerialized * in,
+                                                            int skeletonSerializedInputIsAlreadyNormalized
+                                                           );
+                                                           
+                                                           
+void convertStandaloneRHandSkeletonSerializedToBVHTransform(
+                                                            struct BVH_MotionCapture * bvhMotion,
+                                                            struct simpleRenderer * renderer,
+                                                            struct BVH_Transform * out,
+                                                            struct skeletonSerialized * in,
+                                                            int skeletonSerializedInputIsAlreadyNormalized
+                                                           );
 
+int fixBVHHip(
+              std::vector<std::vector<float> > &bvhFrames
+             );
 
 /**
  * @brief After collecting a vector of BVH output vectors this call can write them to disk in BVH format
@@ -1094,6 +1121,21 @@ int changeFeetDimensions(
                           float kneeToFootLength 
                          );
 
+
+
+int getJointDimensions(
+                       float * neckLength,
+                       float * torsoLength,
+                       float * chestWidth,
+                       float * shoulderToElbowLength,
+                       float * elbowToHandLength,
+                       float * waistWidth,
+                       float * hipToKneeLength,
+                       float * kneeToFootLength,
+                       float * shoeLength
+                      );
+
+
 int changeJointDimensions(
                           float neckLength,
                           float torsoLength,
@@ -1113,7 +1155,7 @@ int codeOptimizationsForIKEnabled();
  * @brief Initialize BVH code ( if it is present ) , supplying a null first argument uses default bvh armature
  * @retval 1=Success/0=Failure
  */
-int initializeBVHConverter(const char * specificBVHFilename,int width,int height, int noIKNeeded);
+int initializeBVHConverter(const char * specificBVHFilename,int width,int height,int noIKNeeded);
 
 
 unsigned int getBVHNumberOfValuesPerFrame();
@@ -1121,6 +1163,13 @@ unsigned int getBVHNumberOfValuesPerFrame();
 unsigned int getBVHNumberOfJoints();
 
 
+
+/**
+ * @brief Get the joint ID of the parent of a joint
+ * @param JointID that we want to get the parent for
+ * @retval JointID of the parent/ 0 in the case of an error
+ * @bug 0 can both be a valid joint and signal an error, so it needs special care
+ */
 int getBVHJointOffset(unsigned int currentJoint,float * x,float *y,float *z);
 
 /**
@@ -1131,6 +1180,10 @@ int getBVHJointOffset(unsigned int currentJoint,float * x,float *y,float *z);
  */
 unsigned int getBVHParentJoint(unsigned int currentJoint);
 
+
+#if USE_BVH
+ const char * getBVHJointNameFromMotionStructure(struct BVH_MotionCapture * mc,unsigned int currentJoint);
+#endif
 
 /**
  * @brief Get a string with the name of the joint
@@ -1159,6 +1212,7 @@ unsigned int getBVHJointIDFromJointName(const char * jointName);
 
 
 
+int transferVectorToMotionBufferArray(struct MotionBuffer * mb,const std::vector<float> motionVector);
 
 /**
  * @brief This function performs the Inverse Kinematics logic. You give it the previous BVH frame, the current BVH neural network estimation as well as a skeletonSerialized
@@ -1192,6 +1246,7 @@ std::vector<float> improveBVHFrameUsingInverseKinematics(
                                                           unsigned int epochs,
                                                           float spring,
                                                           unsigned int springIgnoreChanges,
+                                                          int dontUseHistory,
                                                           int multiThreading
                                                         );
 
@@ -1204,6 +1259,9 @@ std::vector<float> improveBVHFrameUsingInverseKinematics(
 std::vector<std::vector<float> > convertBVHFrameTo2DPoints(const std::vector<float> bvhFrame);
 
 
+std::vector<std::vector<float> > convertStandaloneLHandBVHFrameTo2DPoints(const std::vector<float> bvhFrame);
+
+std::vector<std::vector<float> > convertStandaloneRHandBVHFrameTo2DPoints(const std::vector<float> bvhFrame);
 
 /**
  * @brief Convert a BVH motion frame to 3D points for a given 2D viewport
@@ -1213,14 +1271,9 @@ std::vector<std::vector<float> > convertBVHFrameTo2DPoints(const std::vector<flo
 std::vector<float>  convertBVHFrameToFlat3DPoints(std::vector<float> bvhFrame);
 
 
+std::vector<float> convertBVHFrameToFlat3DPoints(std::vector<float> bvhFrame);
 
-/**
- * @brief  Generate 2D points that draws a 3D grid
- * @retval Vector of 2D points
- */
-std::vector<std::vector<float> > convert3DGridTo2DPoints(
-    float roll,
-    float pitch,
-    float yaw,
-    unsigned int dimensions
-);
+std::vector<float> convertStandaloneLHandBVHFrameToFlat3DPoints(const std::vector<float> bvhFrame);
+
+std::vector<float> convertStandaloneRHandBVHFrameToFlat3DPoints(const std::vector<float> bvhFrame);
+ 

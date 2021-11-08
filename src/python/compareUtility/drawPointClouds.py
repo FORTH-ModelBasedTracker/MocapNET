@@ -1,11 +1,24 @@
 #!/usr/bin/env python3
 #Written by Ammar Qammaz a.k.a AmmarkoV - 2020
+#pip install matplotlib h5py numpy --user
 
 import numpy as np
 
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation  
+
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 
 from mpl_toolkits.mplot3d import axes3d, Axes3D  
 print("Using matplotlib:",matplotlib.__version__)
@@ -44,10 +57,13 @@ def get3DDistance(jX,jY,jZ,pX,pY,pZ):
  return np.sqrt( ((jX-pX)*(jX-pX)) + ((jY-pY)*(jY-pY)) + ((jZ-pZ)*(jZ-pZ)) )
 
 def findJointID(jointName,labels):
+  jointNameStreamlined=jointName.lower().strip()
   for i in range(0,len(labels)):
-      if (jointName==labels[i]):
+      labelStreamlined=labels[i].lower().strip()
+      if (jointNameStreamlined==labelStreamlined):
            return i
-  print("Cannot find joint ",jointName," !")
+  print(bcolors.FAIL,"Cannot find joint `%s` between %u labels !"%(jointNameStreamlined,len(labels)),bcolors.ENDC)
+  #print(labels)
   return -1
 
 

@@ -16,6 +16,26 @@ if ! [ -x "$(command -v R)" ]; then
   sudo apt-get install r-base 
 fi 
 
+
+# Ansi color code variables
+red2="\e[0;91m"
+expand_bg="\e[K"
+red_bg="\e[0;101m${expand_bg}"
+reset="\e[0m"
+
+function checkForError
+{ 
+RESULT=$?
+if [ $RESULT -eq 0 ]; then
+  echo "Successfully ran the hand pose estimation"
+else
+  echo -e "${red_bg}TERMINATING SCRIPT${reset}"
+  echo -e "${red2}Failed running $1${reset}"
+  exit 1
+fi
+}
+
+
 function getStatistics 
 { 
   #use R to generate statistics 
@@ -23,6 +43,38 @@ function getStatistics
   R -q -e "x <- read.csv('$1', header = T); summary(x); sd(x[ , 1])" > $2
   cat $1 | wc -l >> $2 
 }  
+
+
+function generateListOfDatasets
+{
+  datasetDir=$1
+  datasetSubDir=$2
+  outputList=$3
+  echo "Generating list ($outputList) of datasets in path $datasetDir"
+  rm $outputList
+  touch $outputList
+  
+  for d in $datasetSubDir
+           do
+             if [ -d $datasetDir/$d ]
+              then
+              echo "Found $d directory $normal" 
+              datasetFile=`ls $datasetDir/$d | grep bvh`
+              ((datasetsProcessed++))
+              #-------------------------------------------------------
+             
+                for f in $datasetFile
+                  do
+                  echo "$green Adding from $1 - $datasetsProcessed/$totaldatasetsToGo - $datasetDir/$d/$f file $normal" 
+                  echo "$datasetDir/$d/$f" >> $outputList
+                done
+
+              #-------------------------------------------------------
+             else
+              echo "$red Could not find $d directory $normal"
+             fi 
+  done
+}
 
 
 #We move to the correct directory..
@@ -34,12 +86,15 @@ cd ..
 
 #Where is our datasets located, compared to the current directory..
 datasetDir="dataset/MotionCapture"
-#MocapNET1 -> datasetSubDir="01 02 03 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19"
-datasetSubDir="h36 01 02 03 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 45 46 47 49 54 55 56 60 61 62 63 64 69 70 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 93 94 102 103 104 105 106 107 108 111 113 114 115 117 118 120 121 122 123 124 125 126 127 128 131 132 133 134 135 136 137 138 139 140 141 142 143 144"
-#datasetSubDir="h36"
+#MocapNET1 -> datasetSubDir="01 02 03 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19" #MocapNET1 only used these datasets!
+datasetSubDir="01 02 03 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 45 46 47 49 54 55 56 60 61 62 63 64 69 70 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 93 94 102 103 104 105 106 107 108 111 113 114 115 117 118 120 121 122 123 124 125 126 127 128 131 132 133 134 135 136 137 138 139 140 141 142 143 144"
+#datasetSubDir="h36" #Uncommenting this will also include training samples from H36M
 
 #Where is our output located
 outputDir="dataset/"
+
+#This next line will generate dataset/bvh.list which contains all selected bvh datasets
+generateListOfDatasets "$datasetDir" "$datasetSubDir" "dataset/bvh.list"
 
 
 # Use --printparams in view commands to view the commands that are given to the utility at stderr
@@ -79,7 +134,7 @@ MIN_DEPTH="900" #1000 original
 MAX_DEPTH="4500" #3000 is too small
 
 
-ITERATIONS="1" #Smallest size..
+ITERATIONS="0" #Smallest size..
 #ITERATIONS="2" #float32 targeting 16GB RAM
 #ITERATIONS="8" #float16 targeting 16GB RAM
 
@@ -101,9 +156,11 @@ if [ "$RAM" -gt "31861780" ]; then
 ITERATIONS="2"  
 fi
 
+
 #Uncomment next line to override settings and make the 
 #minimum training set for development
-#ITERATIONS="0"
+ITERATIONS="0"
+echo "We will use $ITERATIONS iterations of every sample"
 
 
 totaldatasetsToGo=`echo "$datasetSubDir" | awk '{print NF}'`
@@ -132,6 +189,7 @@ function generateDataset
                     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
                        BVHFILE="$datasetDir/$d/$f"                       # --svg $outputDir  
                        ./GroundTruthDumper $VIEW_COMMANDS --haltonerror --from $BVHFILE --filtergimballocks 4 $3 --repeat $ITERATIONS $2 --occlusions --csv $outputDir $1 2d+bvh # --bvh $outputDir/$f-random.bvh
+                       checkForError "$datasetDir/$d/$f" 
                     #|||||||||||||||||||||||||||||||||||||||||||||||||||||||| 
                 done
 
@@ -143,9 +201,8 @@ function generateDataset
 
   #Let's count it and store the numbers so we don't have to spam disk reads on every training..
   wc -l $outputDir/2d_$1 > $outputDir/count_$1
-  #wc -l $outputDir/3d_$1 >> $outputDir/count_$1
-  wc -l $outputDir/bvh_$1 >> $outputDir/count_$1
-
+  #wc -l $outputDir/3d_$1 > $outputDir/count_$1
+  wc -l $outputDir/bvh_$1 > $outputDir/count_$1
 }
 
 
@@ -222,27 +279,35 @@ RIGHT_MAX_ORIENTATION="145" # 135 default
 
 FILTER_OUT="$FILTER_OUT_POSES_WITH_HANDS_IN_SIDE"
 
-#UPPER BODY
+
 generateDataset upperbody_all.csv "$FILTER_OUT --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM -179.999999 $MIN_LIM $MAX_LIM 180 $MAX_LIM" "$SELECTUPPERBODY" 
-./ReshapeCSV dataset/bvh_upperbody_all.csv > dataset/category_upperbody_all.csv
+generateDataset lowerbody_all.csv "--randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM -179.999999 $MIN_LIM $MAX_LIM 180 $MAX_LIM" "$SELECTLOWERBODY" 
+
+
+#UPPER BODY
+#generateDataset upperbody_all.csv "$FILTER_OUT --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM -179.999999 $MIN_LIM $MAX_LIM 180 $MAX_LIM" "$SELECTUPPERBODY" 
+./ReshapeCSV --from dataset/bvh_upperbody_all.csv --orientations 4 > dataset/category_upperbody_all.csv
 echo "Category size = "#cat dataset/category_upperbody_all.csv | wc -c
+
+echo "Probing for erroneous categories.."
+cat dataset/category_upperbody_all.csv | grep "0,0,0,0"
 #-----------------------------------------------
-generateDataset upperbody_front.csv "$FILTER_OUT --csvOrientation front --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $FRONT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $FRONT_MAX_ORIENTATION $MAX_LIM" "$SELECTUPPERBODY $RAND_UPPER_BODY"
-generateDataset upperbody_back.csv "$FILTER_OUT --csvOrientation back --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $BACK_MIN_ORIENTATION $MIN_LIM $MAX_LIM $BACK_MAX_ORIENTATION $MAX_LIM" "$SELECTUPPERBODY $RAND_UPPER_BODY"
-generateDataset upperbody_left.csv "$FILTER_OUT --csvOrientation left --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $LEFT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $LEFT_MAX_ORIENTATION $MAX_LIM" "$SELECTUPPERBODY $RAND_UPPER_BODY"
-generateDataset upperbody_right.csv "$FILTER_OUT --csvOrientation right --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $RIGHT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $RIGHT_MAX_ORIENTATION $MAX_LIM" "$SELECTUPPERBODY $RAND_UPPER_BODY"
+generateDataset upperbody_front.csv "$FILTER_OUT --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $FRONT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $FRONT_MAX_ORIENTATION $MAX_LIM" "$SELECTUPPERBODY $RAND_UPPER_BODY"
+generateDataset upperbody_back.csv "$FILTER_OUT --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $BACK_MIN_ORIENTATION $MIN_LIM $MAX_LIM $BACK_MAX_ORIENTATION $MAX_LIM" "$SELECTUPPERBODY $RAND_UPPER_BODY"
+generateDataset upperbody_left.csv "$FILTER_OUT --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $LEFT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $LEFT_MAX_ORIENTATION $MAX_LIM" "$SELECTUPPERBODY $RAND_UPPER_BODY"
+generateDataset upperbody_right.csv "$FILTER_OUT --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $RIGHT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $RIGHT_MAX_ORIENTATION $MAX_LIM" "$SELECTUPPERBODY $RAND_UPPER_BODY"
 
 
 #LOWER BODY
-generateDataset lowerbody_all.csv "--randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM -179.999999 $MIN_LIM $MAX_LIM 180 $MAX_LIM" "$SELECTLOWERBODY" 
+#generateDataset lowerbody_all.csv "--randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM -179.999999 $MIN_LIM $MAX_LIM 180 $MAX_LIM" "$SELECTLOWERBODY" 
 ./ReshapeCSV dataset/bvh_lowerbody_all.csv > dataset/category_lowerbody_all.csv
 echo "Category size = "
 cat dataset/category_lowerbody_all.csv | wc -c
 #-----------------------------------------------
-generateDataset lowerbody_front.csv "--csvOrientation front --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $FRONT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $FRONT_MAX_ORIENTATION $MAX_LIM" "$SELECTLOWERBODY $RAND_LOWER_BODY"
-generateDataset lowerbody_back.csv "--csvOrientation back --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $BACK_MIN_ORIENTATION $MIN_LIM $MAX_LIM $BACK_MAX_ORIENTATION $MAX_LIM" "$SELECTLOWERBODY $RAND_LOWER_BODY"
-generateDataset lowerbody_left.csv "--csvOrientation left --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $LEFT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $LEFT_MAX_ORIENTATION $MAX_LIM" "$SELECTLOWERBODY $RAND_LOWER_BODY"
-generateDataset lowerbody_right.csv "--csvOrientation right --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $RIGHT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $RIGHT_MAX_ORIENTATION $MAX_LIM" "$SELECTLOWERBODY $RAND_LOWER_BODY"
+generateDataset lowerbody_front.csv " --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $FRONT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $FRONT_MAX_ORIENTATION $MAX_LIM" "$SELECTLOWERBODY $RAND_LOWER_BODY"
+generateDataset lowerbody_back.csv " --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $BACK_MIN_ORIENTATION $MIN_LIM $MAX_LIM $BACK_MAX_ORIENTATION $MAX_LIM" "$SELECTLOWERBODY $RAND_LOWER_BODY"
+generateDataset lowerbody_left.csv " --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $LEFT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $LEFT_MAX_ORIENTATION $MAX_LIM" "$SELECTLOWERBODY $RAND_LOWER_BODY"
+generateDataset lowerbody_right.csv " --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $RIGHT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $RIGHT_MAX_ORIENTATION $MAX_LIM" "$SELECTLOWERBODY $RAND_LOWER_BODY"
 
 
 exit 0 # <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <>
@@ -254,16 +319,16 @@ exit 0 # <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <>
 
 #This hand is just based on CMU poses 
 #LEFT HAND
-generateDataset lhand_front.csv "--csvOrientation front --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $FRONT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $FRONT_MAX_ORIENTATION $MAX_LIM" "$SELECT_LHAND $RANDOMIZE_LEFT_HAND"
-generateDataset lhand_back.csv "--csvOrientation back --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $BACK_MIN_ORIENTATION $MIN_LIM $MAX_LIM $BACK_MAX_ORIENTATION $MAX_LIM" "$SELECT_LHAND $RANDOMIZE_LEFT_HAND"
-generateDataset lhand_left.csv "--csvOrientation left --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $LEFT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $LEFT_MAX_ORIENTATION $MAX_LIM" "$SELECT_LHAND $RANDOMIZE_LEFT_HAND"
-generateDataset lhand_right.csv "--csvOrientation right --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $RIGHT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $RIGHT_MAX_ORIENTATION $MAX_LIM" "$SELECT_LHAND $RANDOMIZE_LEFT_HAND"
+generateDataset lhand_front.csv " --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $FRONT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $FRONT_MAX_ORIENTATION $MAX_LIM" "$SELECT_LHAND $RANDOMIZE_LEFT_HAND"
+generateDataset lhand_back.csv " --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $BACK_MIN_ORIENTATION $MIN_LIM $MAX_LIM $BACK_MAX_ORIENTATION $MAX_LIM" "$SELECT_LHAND $RANDOMIZE_LEFT_HAND"
+generateDataset lhand_left.csv " --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $LEFT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $LEFT_MAX_ORIENTATION $MAX_LIM" "$SELECT_LHAND $RANDOMIZE_LEFT_HAND"
+generateDataset lhand_right.csv " --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $RIGHT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $RIGHT_MAX_ORIENTATION $MAX_LIM" "$SELECT_LHAND $RANDOMIZE_LEFT_HAND"
 
 #RIGHT HAND
-generateDataset rhand_front.csv "--csvOrientation front --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $FRONT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $FRONT_MAX_ORIENTATION $MAX_LIM" "$SELECT_RHAND $RANDOMIZE_RIGHT_HAND"
-generateDataset rhand_back.csv "--csvOrientation back --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $BACK_MIN_ORIENTATION $MIN_LIM $MAX_LIM $BACK_MAX_ORIENTATION $MAX_LIM" "$SELECT_RHAND $RANDOMIZE_RIGHT_HAND"
-generateDataset rhand_left.csv "--csvOrientation left --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $LEFT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $LEFT_MAX_ORIENTATION $MAX_LIM" "$SELECT_RHAND $RANDOMIZE_RIGHT_HAND"
-generateDataset rhand_right.csv "--csvOrientation right --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $RIGHT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $RIGHT_MAX_ORIENTATION $MAX_LIM" "$SELECT_RHAND $RANDOMIZE_RIGHT_HAND"
+generateDataset rhand_front.csv " --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $FRONT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $FRONT_MAX_ORIENTATION $MAX_LIM" "$SELECT_RHAND $RANDOMIZE_RIGHT_HAND"
+generateDataset rhand_back.csv " --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $BACK_MIN_ORIENTATION $MIN_LIM $MAX_LIM $BACK_MAX_ORIENTATION $MAX_LIM" "$SELECT_RHAND $RANDOMIZE_RIGHT_HAND"
+generateDataset rhand_left.csv " --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $LEFT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $LEFT_MAX_ORIENTATION $MAX_LIM" "$SELECT_RHAND $RANDOMIZE_RIGHT_HAND"
+generateDataset rhand_right.csv " --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $RIGHT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $RIGHT_MAX_ORIENTATION $MAX_LIM" "$SELECT_RHAND $RANDOMIZE_RIGHT_HAND"
 
 
 exit 0 # <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <>
@@ -275,10 +340,10 @@ generateDataset body_all.csv "$FILTER_OUT --randomize2D $MIN_DEPTH $MAX_DEPTH $M
 echo "Category size = "
 cat dataset/category_body_all.csv | wc -c
 #-----------------------------------------------
-generateDataset body_front.csv "$FILTER_OUT --csvOrientation front --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $FRONT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $FRONT_MAX_ORIENTATION $MAX_LIM" "$SELECTBODY"
-generateDataset body_back.csv "$FILTER_OUT --csvOrientation back --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $BACK_MIN_ORIENTATION $MIN_LIM $MAX_LIM $BACK_MAX_ORIENTATION $MAX_LIM" "$SELECTBODY"
-generateDataset body_left.csv "$FILTER_OUT --csvOrientation left --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $LEFT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $LEFT_MAX_ORIENTATION $MAX_LIM" "$SELECTBODY"
-generateDataset body_right.csv "$FILTER_OUT --csvOrientation right --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $RIGHT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $RIGHT_MAX_ORIENTATION $MAX_LIM" "$SELECTBODY"
+generateDataset body_front.csv "$FILTER_OUT --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $FRONT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $FRONT_MAX_ORIENTATION $MAX_LIM" "$SELECTBODY"
+generateDataset body_back.csv "$FILTER_OUT  --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $BACK_MIN_ORIENTATION $MIN_LIM $MAX_LIM $BACK_MAX_ORIENTATION $MAX_LIM" "$SELECTBODY"
+generateDataset body_left.csv "$FILTER_OUT --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $LEFT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $LEFT_MAX_ORIENTATION $MAX_LIM" "$SELECTBODY"
+generateDataset body_right.csv "$FILTER_OUT --randomize2D $MIN_DEPTH $MAX_DEPTH $MIN_LIM $RIGHT_MIN_ORIENTATION $MIN_LIM $MAX_LIM $RIGHT_MAX_ORIENTATION $MAX_LIM" "$SELECTBODY"
 
 exit 0 # <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <>
 

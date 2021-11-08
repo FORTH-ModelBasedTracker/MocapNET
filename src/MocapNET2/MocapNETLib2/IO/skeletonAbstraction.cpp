@@ -8,7 +8,6 @@
 #include <vector>
 #include <math.h>
 #include <string.h>
- 
 
 #define NORMAL   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
@@ -17,18 +16,20 @@
 #define YELLOW  "\033[33m"      /* Yellow */
 
 
+
 #include <ctype.h> //toupper
 int strcasecmp_sk(const char * input1,const char * input2)
 {
-  #if CASE_SENSITIVE_OBJECT_NAMES
-    return strcmp(input1,input2);
-  #endif
-
     if ( (input1==0) || (input2==0) )
      {
          fprintf(stderr,"Error , calling strcasecmp_internal with null parameters \n");
          return 1;
      }
+
+  #if CASE_SENSITIVE_OBJECT_NAMES
+    return strcmp(input1,input2);
+  #endif
+
     unsigned int len1 = strlen(input1);
     unsigned int len2 = strlen(input2);
     if (len1!=len2)
@@ -51,7 +52,6 @@ int strcasecmp_sk(const char * input1,const char * input2)
   //why input1 and input2 could not be equal..
   return 0;
 }
-
 
 
 int areFeetMissing(struct skeletonSerialized * skel)
@@ -85,22 +85,20 @@ int areFeetMissing(struct skeletonSerialized * skel)
 }
 
 
-
-
-int isLeftHardExtended(std::vector<float> result)
+int isLeftHardExtended(std::vector<float> &result)
 {
     //TODO:
     return 0;
 }
 
-int isRightHardExtended(std::vector<float> result)
+int isRightHardExtended(std::vector<float> &result)
 {
     //TODO:
     return 0;
 }
 
 
-int  getPointOrientation(std::vector<float> result,float *x, float *y,float *r)
+int  getPointOrientation(std::vector<float> &result,float *x, float *y,float *r)
 {
     //TODO:
     return 0;

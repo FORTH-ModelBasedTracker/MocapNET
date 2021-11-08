@@ -32,6 +32,7 @@ namespace tf_utils
 
 namespace
 {
+    
 static void DeallocateBuffer(void* data, size_t)
 {
     std::free(data);
@@ -71,12 +72,14 @@ static TF_Buffer* ReadBufferFromFile(const char* file)
 
 TF_Graph* LoadGraph(const char* graphPath)
 {
-    fprintf(stderr,"LoadGraph %s using TensorFlow Version: %s\n",graphPath,TF_Version());
-    if (graphPath == nullptr)
+    fprintf(stderr,"LoadGraph called / TensorFlow Version: %s\n",TF_Version());
+    if (graphPath == 0)
         {
             fprintf(stderr,"Cannot load graph with null path..\n");
             return nullptr;
         }
+    fprintf(stderr,"LoadGraph from %s\n",graphPath);
+
 
     TF_Buffer* buffer = ReadBufferFromFile(graphPath);
     if (buffer == nullptr)

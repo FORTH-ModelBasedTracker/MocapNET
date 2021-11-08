@@ -139,8 +139,8 @@ int rotate2DPointsBasedOnJointAsCenter(std::vector<float> &positions,float angle
             return 0;
         }
  
-     float s = sin((float) angle * goFromDegreesToRad );
-     float c = cos((float) angle * goFromDegreesToRad );
+    float s = sin((float) angle * goFromDegreesToRad );
+    float c = cos((float) angle * goFromDegreesToRad );
             
     float cx=positions[centerJoint*3+0];
     float cy=positions[centerJoint*3+1];
@@ -148,7 +148,7 @@ int rotate2DPointsBasedOnJointAsCenter(std::vector<float> &positions,float angle
  
     if (cVisibility==0.0)
         {
-            fprintf(stderr,RED "rotate2DPointsBasedOnJointAsCenter: .. \n" NORMAL);
+            fprintf(stderr,RED "rotate2DPointsBasedOnJointAsCenter: cannot work without pivot joint.. \n" NORMAL);
             return 0;
         }
  
@@ -159,15 +159,15 @@ int rotate2DPointsBasedOnJointAsCenter(std::vector<float> &positions,float angle
             float jVisibility=positions[jID*3+2];
             //fprintf(stderr,"Rotating point %0.2f,%0.2f using pivot %0.2f,%0.2f by %0.2f deg  -> ",jX,jY,cx,cy,angle);
  
-            // translate point back to origin:
+            //Translate point back to origin:
             jX -= cx;
             jY -= cy;
  
-            // rotate point
+            //Rotate point
             float xnew = jX * c - jY * s;
             float ynew = jX * s + jY * c;
  
-            // translate point back:
+            //Translate point back:
             positions[jID*3+0] = xnew + cx;
             positions[jID*3+1] = ynew + cy;
  
@@ -341,7 +341,7 @@ int executeCommandLineNum(const char *  command, char * what2GetBack, unsigned i
 
     /* Read the output a line at a time - output it. */
     unsigned int i=0;
-    while (fgets(what2GetBack, what2GetBackMaxSize, fp) != 0)
+    while (fgets(what2GetBack, what2GetBackMaxSize-1, fp) != 0)
         {
             ++i;
             if (lineNumber==i)

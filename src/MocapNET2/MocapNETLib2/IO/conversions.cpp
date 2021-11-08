@@ -79,6 +79,17 @@ int initializeAssociationsForSubsetOfSkeleton(unsigned int * targetIndexIsInitia
 
     *targetIndexIsInitializedFlag=(unassociatedJoints==0);
     
+    if (unassociatedJoints>0)
+    {
+        fprintf(stderr,RED " %u/%u joint where not associated\n" NORMAL,unassociatedJoints,targetLength); 
+        
+        fprintf(stderr,RED "Encountered joints :" NORMAL); 
+        for (unsigned int z=0; z<input->skeletonHeaderElements; z++)
+         {
+           fprintf(stderr,RED " %s " NORMAL,input->skeletonHeader[z].str); 
+         }
+    }
+    
     return (unassociatedJoints==0);
 }
 
@@ -346,7 +357,7 @@ int convertSkeletons2DDetectedToSkeletonsSerialized(
                     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                 }
         output->skeletonHeaderElements = elementsPopulated;
-    }
+    } 
     // Reduce spam
     // else
     //{
@@ -398,7 +409,10 @@ int convertSkeletons2DDetectedToSkeletonsSerialized(
                     output->skeletonBody[bodyElementsPopulated].value = (float) input->skeletons[skID].body.joint2D[i].y;
                     ++bodyElementsPopulated;
                     
-                    output->skeletonBody[bodyElementsPopulated].value = ( (input->skeletons[skID].body.joint2D[i].x!=0) && (input->skeletons[skID].body.joint2D[i].y!=0) ) ;
+                    char populated = ( (input->skeletons[skID].body.joint2D[i].x!=0) && (input->skeletons[skID].body.joint2D[i].y!=0) ) ;
+                    if (populated)
+                      { output->skeletonBody[bodyElementsPopulated].value =  1.0; } else
+                      { output->skeletonBody[bodyElementsPopulated].value =  0.0; }
                     /*
                     if (!output->skeletonBody[bodyElementsPopulated].value)
                     {
@@ -422,13 +436,17 @@ int convertSkeletons2DDetectedToSkeletonsSerialized(
                                                                          MocapNETTrainingHeight
                                                                        );
                     //--------------------------------------------------------------------------------
-                     output->skeletonBody[bodyElementsPopulated].value = (float) input->skeletons[skID].leftHand.joint2D[i].x;
+                    output->skeletonBody[bodyElementsPopulated].value = (float) input->skeletons[skID].leftHand.joint2D[i].x;
                     ++bodyElementsPopulated;
                      
-                     output->skeletonBody[bodyElementsPopulated].value = (float) input->skeletons[skID].leftHand.joint2D[i].y;
+                    output->skeletonBody[bodyElementsPopulated].value = (float) input->skeletons[skID].leftHand.joint2D[i].y;
                     ++bodyElementsPopulated;
                      
-                     output->skeletonBody[bodyElementsPopulated].value =( (input->skeletons[skID].leftHand.joint2D[i].x!=0) && (input->skeletons[skID].leftHand.joint2D[i].y!=0) ) ;
+                    char populated =  ( (input->skeletons[skID].leftHand.joint2D[i].x!=0) && (input->skeletons[skID].leftHand.joint2D[i].y!=0) ) ;
+                    if (populated)
+                      { output->skeletonBody[bodyElementsPopulated].value =  1.0; } else
+                      { output->skeletonBody[bodyElementsPopulated].value =  0.0; } 
+                       
                     ++bodyElementsPopulated;
                     //--------------------------------------------------------------------------------
                 }
@@ -453,7 +471,11 @@ int convertSkeletons2DDetectedToSkeletonsSerialized(
                     output->skeletonBody[bodyElementsPopulated].value = input->skeletons[skID].rightHand.joint2D[i].y;
                     ++bodyElementsPopulated;
                     
-                    output->skeletonBody[bodyElementsPopulated].value =  ( (input->skeletons[skID].rightHand.joint2D[i].x!=0) && (input->skeletons[skID].rightHand.joint2D[i].y!=0) );
+                   char populated =  ( (input->skeletons[skID].rightHand.joint2D[i].x!=0) && (input->skeletons[skID].rightHand.joint2D[i].y!=0) );
+                    if (populated)
+                      { output->skeletonBody[bodyElementsPopulated].value =  1.0; } else
+                      { output->skeletonBody[bodyElementsPopulated].value =  0.0; } 
+                      
                     ++bodyElementsPopulated;
                     //--------------------------------------------------------------------------------
                 }
@@ -477,7 +499,12 @@ int convertSkeletons2DDetectedToSkeletonsSerialized(
                      output->skeletonBody[bodyElementsPopulated].value = (float) input->skeletons[skID].head.joint2D[i].y;
                     ++bodyElementsPopulated;
                     
-                     output->skeletonBody[bodyElementsPopulated].value =  ( (input->skeletons[skID].head.joint2D[i].x!=0) && (input->skeletons[skID].head.joint2D[i].y!=0) ); 
+                    
+                    char populated = ( (input->skeletons[skID].head.joint2D[i].x!=0) && (input->skeletons[skID].head.joint2D[i].y!=0) ); 
+                    if (populated)
+                      { output->skeletonBody[bodyElementsPopulated].value =  1.0; } else
+                      { output->skeletonBody[bodyElementsPopulated].value =  0.0; } 
+                      
                     ++bodyElementsPopulated;
                 }            
                 
@@ -500,6 +527,9 @@ int convertMocapNET2OutputToSkeletonSerialized(
                                                 unsigned int height
                                               )
 {
+    if (mnet==0) { return 0; }
+    if (output==0) { return 0; }
+    //-------------------------------------
     if (mocapNET2DPointsResult.size()==0)
     {
         fprintf(stderr,"convertMocapNET2OutputToSkeletonSerialized cannot work without 3D point results\n");
@@ -750,6 +780,9 @@ int convertMocapNET2OutputToSkeletonSerialized(
 
 int affineSkeletonRotation(struct skeletonSerialized * input,float degrees)
 {
+    if (input==0) { return 0; }
+    if (input->skeletonBody==0) { return 0; }
+    
     if (degrees==0.0) { return 1; }
     //---------------------------------------------------------------------------
     float rad = degrees_to_radF(degrees);

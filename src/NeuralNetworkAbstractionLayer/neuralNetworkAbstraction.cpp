@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 
-
 void neuralNetworkPrintVersion()
 {
   #if USE_TENSORFLOW1
@@ -105,7 +104,7 @@ int neuralNetworkUnload(
   #endif
 }
 
-std::vector<float> neuralNetworkExecute(struct neuralNetworkModel * nn,std::vector<float> input)
+std::vector<float> neuralNetworkExecute(struct neuralNetworkModel * nn,const std::vector<float> input)
 {
   std::vector<float> result;
   result.clear();
@@ -128,7 +127,7 @@ std::vector<float> neuralNetworkExecute(struct neuralNetworkModel * nn,std::vect
     
     //Cast input vector in a regular C memory block and hold the dimension data..
     //-------------------------------------------------------------------------------------------
-    unsigned int ndata = sizeof(float)*1*nn->model.inputElements; //number of bytes not number of element
+    unsigned int ndata = sizeof(float) * 1 * nn->model.inputElements; //number of bytes not number of element
     int ndims = 2;
     int64_t dims[] = {1,nn->model.inputElements};
     
@@ -137,9 +136,11 @@ std::vector<float> neuralNetworkExecute(struct neuralNetworkModel * nn,std::vect
     if ( (nn->model.buffer!=0) && (nn->model.bufferSize < newBufferSize) )
     {
       //Do reallocation here.. 
-      float * newBuffer = (float*) realloc (nn->model.buffer,newBufferSize);
+      fprintf(stderr,"TF2 Execution buffer changed from %u to %u , doing a realloc..\n",nn->model.bufferSize,newBufferSize);
+      float * newBuffer = (float*) realloc(nn->model.buffer,newBufferSize);
       if (newBuffer!=nn->model.buffer)
       {
+        nn->model.buffer=newBuffer; // We have a new buffer..
         nn->model.bufferSize = newBufferSize;
       }
     } else
@@ -152,6 +153,13 @@ std::vector<float> neuralNetworkExecute(struct neuralNetworkModel * nn,std::vect
      
     if (nn->model.buffer!=0)
     {
+      if (nn->model.inputElements > nn->model.bufferSize)
+      {
+          fprintf(stderr,"neuralNetworkExecute: tf2: Somehow our buffer size is not enough for our input..\n");
+          return result;
+      }
+      
+      
       for(int i=0; i<nn->model.inputElements; i++)
         {
           nn->model.buffer[i] = input[i];
@@ -173,8 +181,8 @@ std::vector<float> neuralNetworkExecute(struct neuralNetworkModel * nn,std::vect
     {
     //Cast ouput from TF tensor data to a vector 
     //-------------------------------------------------------------------------------------------
-      void* buff = TF_TensorData(nn->model.outputValues[0]); 
-      size_t tensorByteSize = TF_TensorByteSize(nn->model.outputValues[0]);
+      void* buff                   = TF_TensorData(nn->model.outputValues[0]); 
+      size_t tensorByteSize        = TF_TensorByteSize(nn->model.outputValues[0]);
       unsigned long tensorElements = TF_TensorElementCount(nn->model.outputValues[0]);
       
       if (tensorElements<nn->model.outputElements)
@@ -191,7 +199,8 @@ std::vector<float> neuralNetworkExecute(struct neuralNetworkModel * nn,std::vect
                {
                 result.push_back(convertFloat16ToFloat32(output[i]));
                }
-          } else
+          } 
+           else
           {
            //Regular float32 output that can be immediately pushed back to the vector
            float* output = (float*) buff; 

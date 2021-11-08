@@ -3,9 +3,15 @@ cmake_minimum_required( VERSION 2.8.7 )
 
 #Make fast, lean and platform independent binaries..
 #The -fuse-ld=gold flag solves issue https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/34
-#However it causes https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/38
-set(CMAKE_CXX_FLAGS "-s -O3 -fPIC -march=native -mtune=native") #-fuse-ld=gold
-set(CMAKE_C_FLAGS "-s -O3 -fPIC -march=native -mtune=native") #-fuse-ld=gold
+# dont -s for debug symbols..
+
+#Useful compilation flags for development..
+set(STRICT_BUILD "-Wall -Wextra -Wformat-security -Werror")
+set(HARDENING "-Wstack-protector -fstack-protector-strong -fstack-clash-protection -pie -fPIE -D_FORTIFY_SOURCE=2 -Wl,-z,relro,-z,now")  #-fvtable-verify=std 
+
+#-s 
+set(CMAKE_CXX_FLAGS "-s -O3 -fPIC -march=native -mtune=native") # ${HARDENING} -fuse-ld=gold
+set(CMAKE_C_FLAGS "-s -O3 -fPIC -march=native -mtune=native")  # ${HARDENING} -fuse-ld=gold
 
 OPTION(ENABLE_OPENGL OFF)
 OPTION(INTEL_OPTIMIZATIONS OFF)
@@ -22,6 +28,7 @@ ENDIF(SSE2_FOUND)
 
 if (INTEL_OPTIMIZATIONS)
 add_definitions(-DINTEL_OPTIMIZATIONS)
+MESSAGE("Intel SSE optimizations enabled..")
 endif(INTEL_OPTIMIZATIONS)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -32,13 +39,12 @@ set(JPG_Libs jpeg)
 set(PNG_Libs png) 
 
 
-
-
 #------------------------------------------------------------------------------------------------------------------------------------------------
 #First search for Tensorflow 2.x
 #------------------------------------------------------------------------------------------------------------------------------------------------
 IF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/libtensorflow.so.2")
  MESSAGE("Using locally found libtensorflow v2 C-API")
+ add_definitions(-DUSE_TENSORFLOW2)
  set(TENSORFLOW_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/" CACHE PATH "tensorflow root") 
  set(TENSORFLOW_INCLUDE_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/include/" CACHE PATH "tensorflow include")  
  set(TENSORFLOW2_FOUND true CACHE BOOL "Tensorflow 2 available")
@@ -49,6 +55,7 @@ IF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/libtensorflow.so.2
     )
 ELSEIF(EXISTS "/usr/local/lib/libtensorflow.so.2")
  MESSAGE("Using system-wide found libtensorflow v2 C-API")
+ add_definitions(-DUSE_TENSORFLOW2)
  set(TENSORFLOW_ROOT "/usr/local/lib/" CACHE PATH "tensorflow root") 
  set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")
  set(TENSORFLOW2_FOUND true CACHE BOOL "Tensorflow 2 available")
@@ -62,8 +69,9 @@ ELSEIF(EXISTS "/usr/local/lib/libtensorflow.so.2")
 #------------------------------------------------------------------------------------------------------------------------------------------------
 ELSEIF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/libtensorflow.so")
  MESSAGE("Using locally found libtensorflow v1 C-API")
+ add_definitions(-DUSE_TENSORFLOW1)
  set(TENSORFLOW_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/" CACHE PATH "tensorflow root") 
- set(TENSORFLOW_INCLUDE_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/include/" CACHE PATH "tensorflow include")
+ set(TENSORFLOW_INCLUDE_ROOT "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/include/" CACHE PATH "tensorflow include")  
  set(TENSORFLOW_SOURCE_FILES
       ${CMAKE_SOURCE_DIR}/src/NeuralNetworkAbstractionLayer/neuralNetworkAbstraction.cpp
       ${CMAKE_SOURCE_DIR}/src/Tensorflow/tensorflow.cpp
@@ -71,8 +79,9 @@ ELSEIF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/libtensorflow/lib/libtensorflow.
     )
 ELSEIF(EXISTS "/usr/local/lib/libtensorflow.so")
  MESSAGE("Using system-wide found libtensorflow v1 C-API")
+ add_definitions(-DUSE_TENSORFLOW1)
  set(TENSORFLOW_ROOT "/usr/local/lib/" CACHE PATH "tensorflow root") 
- set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")
+ set(TENSORFLOW_INCLUDE_ROOT "/usr/local/include/" CACHE PATH "tensorflow include")  
  set(TENSORFLOW_SOURCE_FILES
       ${CMAKE_SOURCE_DIR}/src/NeuralNetworkAbstractionLayer/neuralNetworkAbstraction.cpp
       ${CMAKE_SOURCE_DIR}/src/Tensorflow/tensorflow.cpp
@@ -109,6 +118,9 @@ ENDIF (TENSORFLOW2_FOUND)
 
 
 
+IF (TENSORFLOW2_FOUND)
+add_subdirectory (src/Tensorflow2/)
+ENDIF (TENSORFLOW2_FOUND)
 
 #If our development environment has RGBDAcquisition then we can use BVH capabilities..
 #------------------------------------------------------------------------------------------------------------------------------------------------
@@ -155,6 +167,8 @@ set(BVH_SOURCE
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/Calibration/undistort.c 
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/Calibration/undistort.h 
               #--------------------------------------------------------------------------------
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/solids.c
+              ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/solids.h
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/matrixTools.h
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/matrix3x3Tools.c
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/matrix4x4Tools.c
@@ -166,14 +180,15 @@ set(BVH_SOURCE
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/AmMatrix/simpleRenderer.c 
       )
  MESSAGE("BVH Code found and will be used..")
- add_subdirectory(src/GroundTruthGenerator/) #Ground Truth generator can only be compiled with BVH code..
- add_subdirectory(src/MocapNET2/reshapeCSVFileToMakeClassification/) #Orientation classification needs this tool to be built before working..
+ add_subdirectory (src/GroundTruthGenerator/) #Ground Truth generator can only be compiled with BVH code..
+ add_subdirectory(src/MocapNET2/reshapeCSVFileToMakeClassification/)
  #MESSAGE("${BVH_SOURCE}")
 ENDIF()
 #------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 
@@ -336,11 +351,14 @@ IF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/AmmarServer/src/AmmServerlib")
 ENDIF()
 
 
+
+
 #This needs Tensorflow C-API installed...
 #https://www.tensorflow.org/install/lang_c
 #wget https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-linux-x86_64-1.13.1.tar.gz
 #pip3 show protobuf
 #add_subdirectory (MocapNETStandalone/)
+
 
 
 IF(EXISTS "${CMAKE_SOURCE_DIR}/dependencies/AmmarServer/src/AmmServerlib")
@@ -349,21 +367,24 @@ ENDIF()
 
 if (OpenCV_FOUND)
 add_subdirectory (src/Webcam/)
-#Deactivated to keep build targets  sane
-add_subdirectory(src/MocapNET2/BVHGUI2)
-add_subdirectory(src/MocapNET2/MocapNET2LiveWebcamDemo)
 ENDIF(OpenCV_FOUND)
 
-add_subdirectory(src/MocapNET2/MocapNETLib2/)
-add_subdirectory(src/MocapNET2/MocapNETFromCSV/)
+
 add_subdirectory(src/MocapNET2/Converters/Openpose)
 add_subdirectory(src/MocapNET2/Converters/H36M)
 add_subdirectory(src/MocapNET2/Converters/convertCSV3D)
+
+add_subdirectory(src/MocapNET2/MocapNETLib2/)
+add_subdirectory(src/MocapNET2/MocapNETFromCSV/)
 add_subdirectory(src/MocapNET2/testCSV/)
 add_subdirectory(src/MocapNET2/drawCSV/)
 add_subdirectory(src/MocapNET2/CSVClusterPlot)
-#------------------------------------------------------------------
+
+add_subdirectory(src/MocapNET2/BVHGUI2)
 add_subdirectory(src/JointEstimator2D)
+add_subdirectory(src/MocapNET2/MocapNET2LiveWebcamDemo)
+
+add_subdirectory(src/MocapNET2/HandOnlyTest)
 
 
 # TODO FIX INSTALLATION DIRECTORIES 

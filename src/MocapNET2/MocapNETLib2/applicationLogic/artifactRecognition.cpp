@@ -2,8 +2,7 @@
 
 #include "../../../../dependencies/InputParser/InputParser_C.h"
 #include "../../../../dependencies/RGBDAcquisition/tools/AmMatrix/matrixCalculations.h"
-
-
+ 
  #include <iostream> 
  
  

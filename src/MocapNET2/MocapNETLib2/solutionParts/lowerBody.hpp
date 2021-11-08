@@ -34,6 +34,16 @@ int mocapnetLowerBody_initialize(struct MocapNET2 * mnet,const char * filename,f
  */ 
 int mocapnetLowerBody_unload(struct MocapNET2 * mnet);
 
+
+
+/**
+ * @brief This call inserts the 3D pose extracted from tensorflow into the final resulting BVH vector
+ * @param The final BVH vector that we want to populate with lower body data
+ * @param The lower body result
+ * @retval 1=Success/0=Failure
+ */ 
+std::vector<float> mocapnetLowerBody_emptyResultVector();
+
 /**
  * @brief This call inserts the 3D pose extracted from tensorflow into the final resulting BVH vector
  * @param The final BVH vector that we want to populate with lower body data

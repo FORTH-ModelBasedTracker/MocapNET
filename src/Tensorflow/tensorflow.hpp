@@ -31,6 +31,10 @@ struct TensorflowInstance
   TF_Output input_operation;
   TF_Output output_operation;
 
+  //This is not used and just added for compatibility with TF2
+  char inputIsHalfFloats;
+  char outputIsHalfFloats;
+  
   TF_Status* status;
   TF_SessionOptions* options;
 };

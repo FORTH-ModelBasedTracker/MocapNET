@@ -33,18 +33,32 @@ int mocapnetUpperBody_initialize(struct MocapNET2 * mnet,const char * filename,f
     char modelPath[1025]= {0};
     int result = 0;
 
+    //If you want to change this there are 3x instances of this
+    unsigned int NUMBER_OF_INPUTS = MNET_UPPERBODY_IN_NUMBER;
+    
     int modelNumber=0;
     switch (mode)
         {
+        case 1:
+              mnet->upperBody.mode=1;
+              snprintf(modelPath,1024,"dataset/combinedModel/mocapnet2/mode%u/%0.1f/upperbody_all.pb",mode,qualitySetting);
+              //mnet->upperBody.models[0].model.inputIsHalfFloats=1;
+              //mnet->upperBody.models[0].model.outputIsHalfFloats=1;
+              
+              result += neuralNetworkLoad(&mnet->upperBody.models[0],modelPath,"input_all","result_all/concat",NUMBER_OF_INPUTS,MOCAPNET_UPPERBODY_OUTPUT_NUMBER,forceCPU);
+              mnet->upperBody.loadedModels=result;  
+            break;
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         case 3:
             mnet->upperBody.mode=3;
             fprintf(stderr,RED "Fatal: Mode 3 No longer supported on MocapNET 2 \n" NORMAL);
-            exit(0);
+            exit(0); 
             break;
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+           //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+           //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+           //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         case 5:
             mnet->upperBody.mode=5;
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -54,8 +68,8 @@ int mocapnetUpperBody_initialize(struct MocapNET2 * mnet,const char * filename,f
             snprintf(modelPath,1024,"dataset/combinedModel/mocapnet2/mode%u/%0.1f/categorize_upperbody_all.pb",mode,qualitySetting);
             if (fileExists(modelPath))
                 {
-                    //result += loadTensorflowInstance(&mnet->upperBody.models[modelNumber],modelPath,"input_front","result_front/concat",forceCPU);
-                    result += loadTensorflowInstance(&mnet->upperBody.models[modelNumber],modelPath,"input_all","result_all/concat",forceCPU);
+                    //result += neuralNetworkLoad(&mnet->upperBody.models[modelNumber],modelPath,"input_front","result_front/concat",forceCPU);
+                    result += neuralNetworkLoad(&mnet->upperBody.models[modelNumber],modelPath,"input_all","result_all/concat",NUMBER_OF_INPUTS,MOCAPNET_UPPERBODY_OUTPUT_NUMBER,forceCPU);
                     mnet->upperBody.modelLimits[modelNumber].isFlipped=0;
                     mnet->upperBody.modelLimits[modelNumber].numberOfLimits=1;
                     mnet->upperBody.modelLimits[modelNumber].minimumYaw1=-360.0;
@@ -69,7 +83,7 @@ int mocapnetUpperBody_initialize(struct MocapNET2 * mnet,const char * filename,f
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             snprintf(modelPath,1024,"dataset/combinedModel/mocapnet2/mode%u/%0.1f/upperbody_front.pb",mode,qualitySetting);
-            result += loadTensorflowInstance(&mnet->upperBody.models[modelNumber],modelPath,"input_front","result_front/concat",forceCPU);
+            result += neuralNetworkLoad(&mnet->upperBody.models[modelNumber],modelPath,"input_front","result_front/concat",NUMBER_OF_INPUTS,MOCAPNET_UPPERBODY_OUTPUT_NUMBER,forceCPU);
             mnet->upperBody.modelLimits[modelNumber].isFlipped=0;
             mnet->upperBody.modelLimits[modelNumber].numberOfLimits=1;
             mnet->upperBody.modelLimits[modelNumber].minimumYaw1=-45.0;
@@ -78,7 +92,7 @@ int mocapnetUpperBody_initialize(struct MocapNET2 * mnet,const char * filename,f
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             snprintf(modelPath,1024,"dataset/combinedModel/mocapnet2/mode%u/%0.1f/upperbody_back.pb",mode,qualitySetting);
-            result += loadTensorflowInstance(&mnet->upperBody.models[modelNumber],modelPath,"input_back","result_back/concat",forceCPU);
+            result += neuralNetworkLoad(&mnet->upperBody.models[modelNumber],modelPath,"input_back","result_back/concat",NUMBER_OF_INPUTS,MOCAPNET_UPPERBODY_OUTPUT_NUMBER,forceCPU);
             mnet->upperBody.modelLimits[modelNumber].isFlipped=0;
             mnet->upperBody.modelLimits[modelNumber].numberOfLimits=1;
             mnet->upperBody.modelLimits[modelNumber].minimumYaw1=135.0;//-90.0;
@@ -88,7 +102,7 @@ int mocapnetUpperBody_initialize(struct MocapNET2 * mnet,const char * filename,f
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             snprintf(modelPath,1024,"dataset/combinedModel/mocapnet2/mode%u/%0.1f/upperbody_left.pb",mode,qualitySetting);
-            result += loadTensorflowInstance(&mnet->upperBody.models[modelNumber],modelPath,"input_left","result_left/concat",forceCPU);
+            result += neuralNetworkLoad(&mnet->upperBody.models[modelNumber],modelPath,"input_left","result_left/concat",NUMBER_OF_INPUTS,MOCAPNET_UPPERBODY_OUTPUT_NUMBER,forceCPU);
             mnet->upperBody.modelLimits[modelNumber].isFlipped=0;
             mnet->upperBody.modelLimits[modelNumber].numberOfLimits=1;
             mnet->upperBody.modelLimits[modelNumber].minimumYaw1=-135.0;
@@ -97,7 +111,7 @@ int mocapnetUpperBody_initialize(struct MocapNET2 * mnet,const char * filename,f
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             snprintf(modelPath,1024,"dataset/combinedModel/mocapnet2/mode%u/%0.1f/upperbody_right.pb",mode,qualitySetting);//
-            result += loadTensorflowInstance(&mnet->upperBody.models[modelNumber],modelPath,"input_right","result_right/concat",forceCPU);
+            result += neuralNetworkLoad(&mnet->upperBody.models[modelNumber],modelPath,"input_right","result_right/concat",NUMBER_OF_INPUTS,MOCAPNET_UPPERBODY_OUTPUT_NUMBER,forceCPU);
             mnet->upperBody.modelLimits[modelNumber].isFlipped=0;
             mnet->upperBody.modelLimits[modelNumber].numberOfLimits=1;
             mnet->upperBody.modelLimits[modelNumber].minimumYaw1=45.0;
@@ -131,21 +145,21 @@ int mocapnetUpperBody_initialize(struct MocapNET2 * mnet,const char * filename,f
         {
             fprintf(stderr,"Caching networks after initialization to be ready for use..\n");
             std::vector<float> emptyValues;
-            for (int i=0; i<MNET_UPPERBODY_IN_NUMBER; i++)
+            for (unsigned int i=0; i<MNET_UPPERBODY_IN_NUMBER; i++)
                 {
                     emptyValues.push_back(0.0);
                 }
             //---------------------------------------------------
-            for (int i=0;  i<mnet->upperBody.loadedModels; i++ )
+            for (unsigned int i=0;  i<mnet->upperBody.loadedModels; i++ )
                 {
-                    std::vector<float>  prediction = predictTensorflow(&mnet->upperBody.models[i],emptyValues);
+                    std::vector<float>  prediction = neuralNetworkExecute(&mnet->upperBody.models[i],emptyValues);
                     if (prediction.size()>0)
                         {
-                            fprintf(stderr, GREEN "Caching model %u (%s) was successful\n" NORMAL,i,mnet->upperBody.models[i].modelPath);
+                            fprintf(stderr, GREEN "Caching model %u (%s) was successful\n" NORMAL,i,neuralNetworkGetPath(&mnet->upperBody.models[i]));
                         }
                     else
                         {
-                            fprintf(stderr,RED "Caching model %u (%s) was unsuccessful\n" NORMAL,i,mnet->upperBody.models[i].modelPath);
+                            fprintf(stderr,RED "Caching model %u (%s) was unsuccessful\n" NORMAL,i,neuralNetworkGetPath(&mnet->upperBody.models[i]));
                         }
                 }
 
@@ -161,7 +175,7 @@ int mocapnetUpperBody_unload(struct MocapNET2 * mnet)
     unsigned int result=0;
     for (int i=0;  i<mnet->upperBody.loadedModels; i++ )
         {
-            result+=unloadTensorflow(&mnet->upperBody.models[i]);
+            result+=neuralNetworkUnload(&mnet->upperBody.models[i]);
         }
 
     if (result==mnet->upperBody.loadedModels)
@@ -181,7 +195,10 @@ int mocapnetUpperBody_unload(struct MocapNET2 * mnet)
 
 
 int mocapnetUpperBody_getOrientation(struct MocapNET2 * mnet,struct skeletonSerialized * input)
-{
+{ 
+    //If you want to change this there are 3x instances of this
+    unsigned int NUMBER_OF_INPUTS = MNET_UPPERBODY_IN_NUMBER;
+    
     mnet->upperBody.positionalInput = deriveMocapNET2InputUsingAssociations(
                                           mnet,
                                           input,
@@ -191,43 +208,52 @@ int mocapnetUpperBody_getOrientation(struct MocapNET2 * mnet,struct skeletonSeri
                                           mocapNET_upperbody,
                                           0 // Enable to debug input
                                       );
+                                      
 
-    if (mnet->upperBody.perform2DAlignmentBeforeEvaluation)
+    std::vector<float> modifiedPositionalInput  = mnet->upperBody.positionalInput;     
+    float angleToRotate=0.0;
+                                  
+    //Upperbody is now forced to use NSRMUseAlignmentToPivot so we do the step here
+    fprintf(stderr,RED "Orientation classifier is now trained using the NSRM alignment trick..\n" NORMAL);
+    
+    
+    int eNSRM = (!mnet->options->regularNSRMMatrix);
+    if (eNSRM) // (mnet->upperBody.perform2DAlignmentBeforeEvaluation)
     {
        unsigned int pivotJoint = 0; //Hip
        unsigned int referenceJoint = 1; //Neck
-
-       //std::vector<float> original2DPoints  = mnet->upperBody.positionalInput;
-       //rotate2DPointsBasedOnJointAsCenter(mnet->upperBody.positionalInput,20,0);
-
-      //Force alignment of middle finger to make it easier on the neural network mnet->upperBody.positionalInput
-
-      float angleToRotate = getAngleToAlignToZero(mnet->upperBody.positionalInput,pivotJoint,referenceJoint);
+                                                                   
+    
+      //Force alignment of middle finger to make it easier on the neural network modifiedPositionalInput
+      angleToRotate = getAngleToAlignToZero(modifiedPositionalInput,pivotJoint,referenceJoint);                                                                            
       fprintf(stderr,YELLOW "Correcting upperbody skeleton by rotating it %0.2f degrees\n" NORMAL,angleToRotate);
-      rotate2DPointsBasedOnJointAsCenter(mnet->upperBody.positionalInput,angleToRotate,0);
-
-      //debug2DPointAlignment("debugUpperAlignment",original2DPoints,mnet->upperBody.positionalInput,pivotJoint,referenceJoint,800,600);
+      rotate2DPointsBasedOnJointAsCenter(modifiedPositionalInput,angleToRotate,pivotJoint);
+    
+      //debug2DPointAlignment("debugUpperAlignment",original2DPoints,modifiedPositionalInput,pivotJoint,referenceJoint,800,600); 
     }
-
-
-    mnet->upperBody.NSDM  = upperbodyCreateNDSM(mnet->upperBody.positionalInput,0/*NSDM Positional*/,1/*NSDM Angular */,0/*Do Scale Compensation*/);
-
+      
+     
+    mnet->upperBody.NSDM  = upperbodyCreateNDSM(modifiedPositionalInput,angleToRotate,0/*NSDM Positional*/,1/*NSDM Angular */,0/*Do Scale Compensation*/,eNSRM);
+     
+    
     mnet->upperBody.neuralNetworkReadyInput.clear();
-    mnet->upperBody.neuralNetworkReadyInput.insert(mnet->upperBody.neuralNetworkReadyInput.end(),mnet->upperBody.positionalInput.begin(), mnet->upperBody.positionalInput.end());
+    mnet->upperBody.neuralNetworkReadyInput.insert(mnet->upperBody.neuralNetworkReadyInput.end(),modifiedPositionalInput.begin(),modifiedPositionalInput.end());
     mnet->upperBody.neuralNetworkReadyInput.insert(mnet->upperBody.neuralNetworkReadyInput.end(),mnet->upperBody.NSDM.begin(), mnet->upperBody.NSDM.end());
     //----------------------------------------------------------------------------------------------
     //The code block above should have done everything needed to make a 749 element vector
     //If input is not correct then we should stop right here
     //----------------------------------------------------------------------------------------------
-    if (mnet->upperBody.neuralNetworkReadyInput.size()!=MNET_UPPERBODY_IN_NUMBER)
+    if (mnet->upperBody.neuralNetworkReadyInput.size()!=NUMBER_OF_INPUTS)
         {
-            fprintf(stderr,RED "MocapNET: Incorrect size of MocapNET input .. \n" NORMAL);
+            fprintf(stderr,RED "------------------------------------------------------------------------\n" NORMAL); 
+            fprintf(stderr,RED "MocapNET: Incorrect size of MocapNET input for upperbody orientation .. \n" NORMAL); 
+            fprintf(stderr,RED "------------------------------------------------------------------------\n" NORMAL); 
             return 0;
         }
 
-    int orientationReceived = MOCAPNET_ORIENTATION_NONE;
-
-   if (mnet->options->forceFront)
+    int orientationReceived = MOCAPNET_ORIENTATION_NONE; 
+    
+    if (mnet->options->forceFront)
     {
          mnet->orientation = MOCAPNET_ORIENTATION_FRONT;
     } else
@@ -244,6 +270,7 @@ int mocapnetUpperBody_getOrientation(struct MocapNET2 * mnet,struct skeletonSeri
          mnet->orientation = MOCAPNET_ORIENTATION_RIGHT;
     } else
     {
+     //If orientation is not forced we extract it here using the neural network!
      orientationReceived = localOrientationExtraction(&mnet->upperBody,mnet->upperBody.neuralNetworkReadyInput);
      if (orientationReceived!=MOCAPNET_ORIENTATION_NONE)
         {
@@ -255,16 +282,21 @@ int mocapnetUpperBody_getOrientation(struct MocapNET2 * mnet,struct skeletonSeri
             mnet->orientationClassifications[3]= mnet->upperBody.orientationClassifications[3];
         } else
         {
-            fprintf(stderr,RED "MocapNET: Incorrect orientation retrieved from upperbody .. \n" NORMAL);
+            if (mnet->options->mocapNETMode!=1)
+               { fprintf(stderr,RED "MocapNET: Incorrect orientation retrieved from upperbody .. \n" NORMAL); } 
         }
     }
-
+    
     return orientationReceived;
 }
 
 
 std::vector<float> mocapnetUpperBody_evaluateInput(struct MocapNET2 * mnet,struct skeletonSerialized * input)
 {
+    //If you want to change this there are 3x instances of this
+    unsigned int NUMBER_OF_INPUTS = MNET_UPPERBODY_IN_NUMBER;
+
+    float angleToRotate=0.0;
     mnet->upperBody.positionalInput = deriveMocapNET2InputUsingAssociations(
                                           mnet,
                                           input,
@@ -275,38 +307,44 @@ std::vector<float> mocapnetUpperBody_evaluateInput(struct MocapNET2 * mnet,struc
                                           0 // Enable to debug input
                                       );
 
-    if (mnet->upperBody.perform2DAlignmentBeforeEvaluation)
+    std::vector<float> modifiedPositionalInput  = mnet->upperBody.positionalInput;   
+
+
+    int eNSRM = (!mnet->options->regularNSRMMatrix); 
+    if (eNSRM)// (mnet->upperBody.perform2DAlignmentBeforeEvaluation)
     {
        unsigned int pivotJoint = 0; //Hip
        unsigned int referenceJoint = 1; //Neck
-
-       //std::vector<float> original2DPoints  = mnet->upperBody.positionalInput;
+    
+       //std::vector<float> original2DPoints  = mnet->upperBody.positionalInput;                                                                   
        //rotate2DPointsBasedOnJointAsCenter(mnet->upperBody.positionalInput,20,0);
-
+    
       //Force alignment of middle finger to make it easier on the neural network mnet->upperBody.positionalInput
-
-      float angleToRotate = getAngleToAlignToZero(mnet->upperBody.positionalInput,pivotJoint,referenceJoint);
+       
+      angleToRotate = getAngleToAlignToZero(mnet->upperBody.positionalInput,pivotJoint,referenceJoint);                                                                            
       fprintf(stderr,YELLOW "Correcting upperbody skeleton by rotating it %0.2f degrees\n" NORMAL,angleToRotate);
       rotate2DPointsBasedOnJointAsCenter(mnet->upperBody.positionalInput,angleToRotate,0);
-
-      //debug2DPointAlignment("debugUpperAlignment",original2DPoints,mnet->upperBody.positionalInput,pivotJoint,referenceJoint,800,600);
+    
+      //debug2DPointAlignment("debugUpperAlignment",original2DPoints,mnet->upperBody.positionalInput,pivotJoint,referenceJoint,800,600); 
     }
-
-    mnet->upperBody.NSDM  = upperbodyCreateNDSM(mnet->upperBody.positionalInput,0/*NSDM Positional*/,1/*NSDM Angular */,0/*Do Scale Compensation*/);
+         
+    mnet->upperBody.NSDM  = upperbodyCreateNDSM(modifiedPositionalInput,angleToRotate,0/*NSDM Positional*/,1/*NSDM Angular */,0/*Do Scale Compensation*/,eNSRM);
     mnet->upperBody.neuralNetworkReadyInput.clear();
-    mnet->upperBody.neuralNetworkReadyInput.insert(mnet->upperBody.neuralNetworkReadyInput.end(),mnet->upperBody.positionalInput.begin(), mnet->upperBody.positionalInput.end());
+    mnet->upperBody.neuralNetworkReadyInput.insert(mnet->upperBody.neuralNetworkReadyInput.end(),modifiedPositionalInput.begin(),modifiedPositionalInput.end());
     mnet->upperBody.neuralNetworkReadyInput.insert(mnet->upperBody.neuralNetworkReadyInput.end(),mnet->upperBody.NSDM.begin(), mnet->upperBody.NSDM.end());
     //----------------------------------------------------------------------------------------------
     //The code block above should have done everything needed to make a 749 element vector
     //If input is not correct then we should stop right here
     //----------------------------------------------------------------------------------------------
-    if (mnet->upperBody.neuralNetworkReadyInput.size()!=MNET_UPPERBODY_IN_NUMBER)
+    if (mnet->upperBody.neuralNetworkReadyInput.size()!=NUMBER_OF_INPUTS)
         {
-            fprintf(stderr,RED "MocapNET: Incorrect size of MocapNET input .. \n" NORMAL);
+            fprintf(stderr,RED "------------------------------------------------------------\n" NORMAL); 
+            fprintf(stderr,RED "MocapNET: Incorrect size of MocapNET input for upperbody .. \n" NORMAL); 
+            fprintf(stderr,RED "------------------------------------------------------------\n" NORMAL); 
             std::vector<float> emptyResult;
             return emptyResult;
         }
-
+    
     if (
          vectorcmp(
                     mnet->upperBody.lastNeuralNetworkReadyInput,
@@ -324,11 +362,11 @@ std::vector<float> mocapnetUpperBody_evaluateInput(struct MocapNET2 * mnet,struc
                                                 mnet->orientation,
                                                 NN_ORIENTATIONS_TRAINED_AROUND_ZERO_AND_REQUIRE_TRICK /*Body Requires orientation trick*/
                                               );
-
+    
      mnet->upperBody.result = result;
      mnet->upperBody.lastNeuralNetworkReadyInput = mnet->upperBody.neuralNetworkReadyInput;
-
-     return result;
+    
+     return result; 
     } else
     {
       fprintf(stderr,GREEN "Nothing changed on upper body, returning previous result.. \n" NORMAL);

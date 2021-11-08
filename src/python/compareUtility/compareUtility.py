@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-#Written by Ammar Qammaz a.k.a AmmarkoV - 2020
+#Written by Ammar Qammaz a.k.a AmmarkoV - 2020 
+#pip install matplotlib h5py numpy --user
 
 from align2DPoints import pointListsReturnAvgDistance,compute_similarity_transform
 from drawPointClouds import findJointID,get3DDistance,setupDrawing,drawLimbDimensions,drawLimbError,drawFrameError,drawAfterEndOfComparison
@@ -27,6 +28,8 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+ROOT_JOINT="midhip"
 
 #I have added a seperate list with the joints we want to compare
 #to avoid the weird parent lists when you remove one joint
@@ -303,9 +306,224 @@ def readCSVFile(filename,memPercentage,csvDelimiter,useHalfFloats,groupOutput):
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------------------------------
 
+
+def parseConfiguration(filename):
+    import json
+    configuration = [] 
+    with open(filename) as f:
+              s = f.read()
+              s = s.replace('\t','')
+              s = s.replace('\n','')
+              s = s.replace(',}','}')
+              s = s.replace(',]',']') 
+              configuration = json.loads(s)
+       
+    #Resolve joint order for NSDM matrix..    
+    jointID=0 
+    
+    global ROOT_JOINT
+    ROOT_JOINT = "%s" % (configuration['RootJoint'].lower())
+    print("Root joint is ",ROOT_JOINT)
+
+    #Resolve joint order for NSDM Scaling ..        
+    #---------------------------------------------------------------------------------------------------------------------------
+    global JOINTS_TO_COMPARE
+    JOINTS_TO_COMPARE.clear()
+    for z in range(0,len(configuration['JointsToCompare'])):
+                name=configuration['JointsToCompare'][z]['name']
+                name=name.strip()
+                JOINTS_TO_COMPARE.append(name) 
+    #---------------------------------------------------------------------------------------------------------------------------   
+
+
+    #---------------------------------------------------------------------------------------------------------------------------
+    global JOINT_LABELS
+    global JOINT_PARENTS
+    JOINT_LABELS.clear()
+    JOINT_PARENTS.clear()
+    for z in range(0,len(configuration['JointHierarchy'])):
+                name=configuration['JointHierarchy'][z]['jointName']
+                name=name.strip()
+                JOINT_LABELS.append(name) 
+
+    for z in range(0,len(configuration['JointHierarchy'])):
+                name=configuration['JointHierarchy'][z]['jointParent']
+                name=name.strip()
+                configuration['JointHierarchy'][z]['jointParentID'] = findJointID(name,JOINT_LABELS)
+                JOINT_PARENTS.append(configuration['JointHierarchy'][z]['jointParentID'])
+    #---------------------------------------------------------------------------------------------------------------------------   
+ 
+    global JOINT_PARENT_LABELS
+    JOINT_PARENT_LABELS.clear()
+    for i in range(0,len(JOINT_LABELS)):
+        name=JOINT_LABELS[JOINT_PARENTS[i]]
+        name=name.strip()
+        JOINT_PARENT_LABELS.append(name) 
+
+    print("Configuration : ")
+    print(configuration)
+    return configuration
+
+
+
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------------------------------
+
+def swapJoints(theList,jointA,jointB):
+ #======================
+ jointAX="3dx_%s"%jointA
+ jointAY="3dy_%s"%jointA
+ jointAZ="3dz_%s"%jointA
+ #======================
+ jointBX="3dx_%s"%jointB
+ jointBY="3dy_%s"%jointB
+ jointBZ="3dz_%s"%jointB
+ #======================
+
+ print(bcolors.WARNING,"Attempting to swap ",jointA," with ",jointB,bcolors.ENDC)
+ if ( jointAX in theList ) and ( jointBX in theList ) :
+    print("Both joints exist..!")
+    jAX=theList.pop(jointAX)
+    jAY=theList.pop(jointAY)
+    jAZ=theList.pop(jointAZ)
+    #-----------------------
+    jBX=theList.pop(jointBX)
+    jBY=theList.pop(jointBY)
+    jBZ=theList.pop(jointBZ)
+    #-----------------------
+    theList[jointBX]=jAX
+    theList[jointBY]=jAY
+    theList[jointBZ]=jAZ
+    theList[jointAX]=jBX
+    theList[jointAY]=jBY
+    theList[jointAZ]=jBZ 
+ elif ( jointAX in theList ):
+    print("only joint ",jointAX," exists..!")
+    jAX=theList.pop(jointAX)
+    jAY=theList.pop(jointAY)
+    jAZ=theList.pop(jointAZ)
+    #-----------------------
+    theList[jointBX]=jAX
+    theList[jointBY]=jAY
+    theList[jointBZ]=jAZ
+ elif ( jointBX in theList ):
+    print("only joint ",jointBX," exists..!")
+    jBX=theList.pop(jointBX)
+    jBY=theList.pop(jointBY)
+    jBZ=theList.pop(jointBZ)
+    #-----------------------
+    theList[jointAX]=jBX
+    theList[jointAY]=jBY
+    theList[jointAZ]=jBZ 
+ else:
+    print(bcolors.FAIL,"Neither ",jointA," or ",jointB," exists..!",bcolors.ENDC)
+ return theList
+
+
+def printJointDistances(data,numberOfJointsToCompare,scaleX,scaleY,scaleZ):
+ #All this code just to print out the distance of joints from ground truth..
+ frameID=0
+ for jointIDUnresolved in range(0,numberOfJointsToCompare):
+   #------------------------------------------------------------------
+   jointID = findJointID(JOINTS_TO_COMPARE[jointIDUnresolved],JOINT_LABELS) 
+   if (jointID==-1):
+         print(bcolors.WARNING,"Failed to resolve joint: ",JOINTS_TO_COMPARE[jointIDUnresolved],bcolors.ENDC)
+         sys.exit(0)
+   #------------------------------------------------------------------
+   jointKey = JOINT_LABELS[jointID].lower() 
+   parentKey = JOINT_PARENT_LABELS[jointID].lower() 
+   pX = scaleX*data['3dx_%s' % parentKey][frameID]
+   pY = scaleY*data['3dy_%s' % parentKey][frameID]
+   pZ = scaleZ*data['3dz_%s' % parentKey][frameID]
+   x = scaleX*data['3dx_%s' % jointKey][frameID]
+   y = scaleY*data['3dy_%s' % jointKey][frameID]
+   z = scaleZ*data['3dz_%s' % jointKey][frameID]
+   dist =get3DDistance(
+                       x,y,z,
+                       pX,pY,pZ
+                      )
+   print(parentKey,"->",jointKey,"=",dist)
+
+
+def AUC(values,minValue,maxValue):
+ underCurve=0
+ samples=len(values)
+ for value in values: 
+   if ((minValue<=value) and (value<=maxValue) ):
+    underCurve=underCurve+1 
+ return 100*(underCurve/samples)
+
+
+def printJointNeededImprovements(dataA,scaleAX,scaleAY,scaleAZ,dataB,scaleBX,scaleBY,scaleBZ,numberOfJointsToCompare):
+ #All this code just to print out the distance of joints from ground truth..
+ frameID=0
+ numberOfFrames = len(out['3dx_%s'%(JOINTS_TO_COMPARE[0].lower())])
+ JOINT_DISTANCE_A=list()
+ JOINT_DISTANCE_B=list()
+ for jointIDUnresolved in range(0,numberOfJointsToCompare):
+    JOINT_DISTANCE_A.append(0.0)
+    JOINT_DISTANCE_B.append(0.0)
+
+ for frameID in range(0,numberOfFrames):
+  for jointIDUnresolved in range(0,numberOfJointsToCompare):
+   #------------------------------------------------------------------
+   jointID = findJointID(JOINTS_TO_COMPARE[jointIDUnresolved],JOINT_LABELS) 
+   if (jointID==-1):
+         print(bcolors.WARNING,"Failed to resolve joint: ",JOINTS_TO_COMPARE[jointIDUnresolved],bcolors.ENDC)
+         sys.exit(0)
+   #------------------------------------------------------------------
+   jointKey = JOINT_LABELS[jointID].lower() 
+   parentKey = JOINT_PARENT_LABELS[jointID].lower() 
+   pX = scaleAX*dataA['3dx_%s' % parentKey][frameID]
+   pY = scaleAY*dataA['3dy_%s' % parentKey][frameID]
+   pZ = scaleAZ*dataA['3dz_%s' % parentKey][frameID]
+   x = scaleAX*dataA['3dx_%s' % jointKey][frameID]
+   y = scaleAY*dataA['3dy_%s' % jointKey][frameID]
+   z = scaleAZ*dataA['3dz_%s' % jointKey][frameID]
+   distA = get3DDistance(
+                         x,y,z,
+                         pX,pY,pZ
+                        )
+   JOINT_DISTANCE_A[jointIDUnresolved]+=distA
+ 
+   pX = scaleBX*dataB['3dx_%s' % parentKey][frameID]
+   pY = scaleBY*dataB['3dy_%s' % parentKey][frameID]
+   pZ = scaleBZ*dataB['3dz_%s' % parentKey][frameID]
+   x = scaleBX*dataB['3dx_%s' % jointKey][frameID]
+   y = scaleBY*dataB['3dy_%s' % jointKey][frameID]
+   z = scaleBZ*dataB['3dz_%s' % jointKey][frameID]
+   distB = get3DDistance(
+                         x,y,z,
+                         pX,pY,pZ
+                        )
+   JOINT_DISTANCE_B[jointIDUnresolved]+=distB
+
+ for jointIDUnresolved in range(0,numberOfJointsToCompare):
+   #------------------------------------------------------------------
+   jointID = findJointID(JOINTS_TO_COMPARE[jointIDUnresolved],JOINT_LABELS) 
+   if (jointID==-1):
+         print(bcolors.WARNING,"Failed to resolve joint: ",JOINTS_TO_COMPARE[jointIDUnresolved],bcolors.ENDC)
+         sys.exit(0)
+   #------------------------------------------------------------------
+   jointKey = JOINT_LABELS[jointID].lower() 
+   parentKey = JOINT_PARENT_LABELS[jointID].lower() 
+   #------------------------------------------------------------------
+   distanceAAverage = JOINT_DISTANCE_A[jointIDUnresolved]/numberOfFrames
+   distanceBAverage = JOINT_DISTANCE_B[jointIDUnresolved]/numberOfFrames
+   change = (distanceAAverage)-(distanceBAverage)
+   if (change>0.01): 
+       print(bcolors.FAIL,parentKey,"->",jointKey," needs to be increased ( change ",round(change,2)," mm ) ",bcolors.ENDC)
+   elif (change<-0.01): 
+       print(bcolors.OKBLUE,parentKey,"->",jointKey," needs to be decreased ( change ",round(change,2)," mm ) ",bcolors.ENDC)
+   else: 
+       print(bcolors.OKGREEN,parentKey,"->",jointKey," is ok ( finetune ",round(change,4)," mm )  ",bcolors.ENDC)
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 #Main() program
@@ -334,20 +552,51 @@ ground="h36.csv"  # A default h36.csv filename
 groundDelim=','   # By default the h36.csv has a ',' delimiter
 output="out.csv"  # A default output filename
 outputDelim=';'   # Damien's output has ';' delimiters, mine has ','
+#Multipliers of coordinates to set the correct units everywhere
+#----------------
 ourScaleX=1.0
 ourScaleY=1.0
 ourScaleZ=1.0
+#----------------
+groundScaleX=1.0
+groundScaleY=1.0
+groundScaleZ=1.0
+#----------------
+outputScale=1.0
+#----------------
+aucMin=0
+aucMax=0
 
+simulateAlignedJoint=0
 
 #Modifiers on comparisons..
 #------------------------------------------------------------------------------------------------ 
 if (len(sys.argv)>1):
    #print('Argument List:', str(sys.argv))
    for i in range(0, len(sys.argv)):
+       if (sys.argv[i]=="--simulateAlignedJoint"): 
+          print(bcolors.WARNING,"A Joint virtual aligned joint will be added to comparison",bcolors.ENDC)
+          simulateAlignedJoint=1
+       if (sys.argv[i]=="--ban"): 
+          print(bcolors.WARNING,"Joint ",sys.argv[i+1]," is banned from comparison",bcolors.ENDC)
+          JOINTS_TO_COMPARE.remove(sys.argv[i+1]) 
+       if (sys.argv[i]=="--noscale"): 
+          procrustesScale=0
+       if (sys.argv[i]=="--auc"): 
+          aucMin=float(sys.argv[i+1])
+          aucMax=float(sys.argv[i+2])
+       if (sys.argv[i]=="--config"): 
+          parseConfiguration(sys.argv[i+1])
+       if (sys.argv[i]=="--outputscale"):  
+          outputScale=float(sys.argv[i+1])
        if (sys.argv[i]=="--ourscale"):  
           ourScaleX=float(sys.argv[i+1])
           ourScaleY=float(sys.argv[i+2])
           ourScaleZ=float(sys.argv[i+3])
+       if (sys.argv[i]=="--groundscale"):  
+          groundScaleX=float(sys.argv[i+1])
+          groundScaleY=float(sys.argv[i+2])
+          groundScaleZ=float(sys.argv[i+3])
        if (sys.argv[i]=="--draw"): 
           drawPlot=1
        if (sys.argv[i]=="--from"):  
@@ -366,6 +615,7 @@ if (len(sys.argv)>1):
           camera=sys.argv[i+3]
           addedPixelNoise=float(sys.argv[i+4])
           print("\n Infos Set ",sys.argv[i+1])
+          print("\n actionLabel ",action)
           actionLabel=action
           s=actionLabel.split("-")
           subaction=s[1]
@@ -395,13 +645,44 @@ if (drawPlot):
    ax.set_zlabel('Z Axis') 
    ax.view_init(90, 90) 
 
+print("Joint To Compare : ")
+print(JOINTS_TO_COMPARE)
+ 
+print("Joint Labels : ")
+print(JOINT_LABELS)
+
+print("Joint Parents : ")
+print(JOINT_PARENTS)
+
+for z in range(0,len(JOINT_PARENTS)):
+     print(JOINT_LABELS[JOINT_PARENTS[z]])
 
 
 out=readCSVFile(output,1.0,outputDelim,0,0)
 ground=readCSVFile(ground,1.0,groundDelim,0,0)
 
+
+
+#------------------------------------------------------------------------------------------------ 
+if (len(sys.argv)>1):
+   #print('Argument List:', str(sys.argv))
+   for i in range(0, len(sys.argv)):
+       if (sys.argv[i]=="--swapOurJoint"): 
+          print(bcolors.WARNING,"Joint ",sys.argv[i+1]," will be swapped with ",sys.argv[i+2],bcolors.ENDC)
+          out=swapJoints(out,sys.argv[i+1].lower(),sys.argv[i+2].lower())
+#------------------------------------------------------------------------------------------------ 
+
+
+print("Ground keys : ",ground.keys())
+
+print("Output keys : ",out.keys())
+
 print("Output number of keys : %u " % len(out.keys()) )
 print("GroundTruth number of keys : %u " % len(ground.keys()) )
+
+
+print("Our Scale (XYZ) => (%0.2f,%0.2f,%0.2f)",ourScaleX,ourScaleY,ourScaleZ)
+print("Ground Scale (XYZ) => (%0.2f,%0.2f,%0.2f)",groundScaleX,groundScaleY,groundScaleZ)
 
 if ( len(out.keys()) != len(ground.keys()) ):
     print(bcolors.WARNING,"Inconsistent keys",bcolors.ENDC)
@@ -411,7 +692,7 @@ if ( len(out.keys()) != len(ground.keys()) ):
 totalError=0.0
 totalSamples=0
 numberOfJointsToCompare = len(JOINTS_TO_COMPARE)
-numberOfFrames = len(out['3dx_nose'])
+numberOfFrames = len(out['3dx_%s'%(JOINTS_TO_COMPARE[0].lower())])
 
 
 #-----------------------
@@ -433,6 +714,24 @@ if (len(sys.argv)>1):
 
 
 
+####
+print("Ground Truth Initial Dimensions")
+print("___________________________________________")
+printJointDistances(ground,numberOfJointsToCompare,groundScaleX,groundScaleY,groundScaleZ)
+print("___________________________________________")
+
+print("Our Data Initial  Dimensions")
+print("___________________________________________")
+printJointDistances(out,numberOfJointsToCompare,ourScaleX,ourScaleY,ourScaleZ)
+print("___________________________________________")
+
+
+print("Needed changes")
+#if (procrustesScale):
+#  print(bcolors.WARNING,"Run with --noscale to make sure the measurments here are ok!",bcolors.ENDC)
+print("___________________________________________")
+printJointNeededImprovements(ground,groundScaleX,groundScaleY,groundScaleZ,out,ourScaleX,ourScaleY,ourScaleZ,numberOfJointsToCompare)
+print("___________________________________________")
 
 
 #We want to loop over every frame that we loaded..
@@ -456,11 +755,11 @@ for frameID in range(0,numberOfFrames):
    ylineEnd=list()
    zlineStart=list()
    zlineEnd=list()
-
+ 
    #Align midhip to make sure we start from a sane position
-   offsetX=(ourScaleX*out['3dx_midhip'][frameID])-ground['3dx_midhip'][frameID]
-   offsetY=(ourScaleY*out['3dy_midhip'][frameID])-ground['3dy_midhip'][frameID]
-   offsetZ=(ourScaleZ*out['3dz_midhip'][frameID])-ground['3dz_midhip'][frameID]
+   offsetX=(ourScaleX*out['3dx_%s'%(ROOT_JOINT)][frameID])-(groundScaleX*ground['3dx_%s'%(ROOT_JOINT)][frameID])
+   offsetY=(ourScaleY*out['3dy_%s'%(ROOT_JOINT)][frameID])-(groundScaleY*ground['3dy_%s'%(ROOT_JOINT)][frameID])
+   offsetZ=(ourScaleZ*out['3dz_%s'%(ROOT_JOINT)][frameID])-(groundScaleZ*ground['3dz_%s'%(ROOT_JOINT)][frameID])
 
    for jointIDUnresolved in range(0,numberOfJointsToCompare):
    #------------------------------------------------------------------
@@ -494,16 +793,16 @@ for frameID in range(0,numberOfFrames):
      zlineEnd.append(zParentM)
      #------------------------------------------------------------------ 
      #We select the h36 joint and push it to the point cloud for this particular frame    
-     xH=ground['3dx_%s' % jointKey][frameID]
-     yH=ground['3dy_%s' % jointKey][frameID]
-     zH=ground['3dz_%s' % jointKey][frameID]
+     xH=groundScaleX*ground['3dx_%s' % jointKey][frameID]
+     yH=groundScaleY*ground['3dy_%s' % jointKey][frameID]
+     zH=groundScaleZ*ground['3dz_%s' % jointKey][frameID]
      h36PointCloud.append([xH,yH,zH])
 
      #These lineStarts/lineEnds and parentKeys help draw lines connecting
      #the dots in skeletons
-     xParentH=ground['3dx_%s' % parentKey][frameID]
-     yParentH=ground['3dy_%s' % parentKey][frameID]
-     zParentH=ground['3dz_%s' % parentKey][frameID]
+     xParentH=groundScaleX*ground['3dx_%s' % parentKey][frameID]
+     yParentH=groundScaleY*ground['3dy_%s' % parentKey][frameID]
+     zParentH=groundScaleZ*ground['3dz_%s' % parentKey][frameID]
      xlineStart.append(xH) 
      ylineStart.append(yH) 
      zlineStart.append(zH) 
@@ -530,9 +829,9 @@ for frameID in range(0,numberOfFrames):
 
        #Our point cloud is brought to the same translation and rotation as h36 point cloud
        np_ourPointCloud = (b*np_ourPointCloud.dot(T))+c
-       disparity = pointListsReturnAvgDistance(np_ourPointCloud,np_h36PointCloud)
+       disparity = outputScale * pointListsReturnAvgDistance(np_ourPointCloud,np_h36PointCloud)
    else:
-       disparity = pointListsReturnAvgDistance(np_ourPointCloud,np_h36PointCloud)
+       disparity = outputScale * pointListsReturnAvgDistance(np_ourPointCloud,np_h36PointCloud)
    #-------------------------------------------------------------------------------- 
    
    #We want to calculate Mean Per Joint Position Error (MPJPE)
@@ -541,17 +840,24 @@ for frameID in range(0,numberOfFrames):
    for jID in range(0,numberOfJointsToCompare):
    #------------------------------------------------------------------ 
      #We use the np_ourPointCloud and np_h36PointCloud so that if procrustes analysis is enabled it will be used..
-     perJointDisparity=get3DDistance(
-                                      np_ourPointCloud[jID][0],np_ourPointCloud[jID][1],np_ourPointCloud[jID][2],
-                                      np_h36PointCloud[jID][0],np_h36PointCloud[jID][1],np_h36PointCloud[jID][2]
-                                    )
+     perJointDisparity= outputScale * get3DDistance(
+                                                    np_ourPointCloud[jID][0],np_ourPointCloud[jID][1],np_ourPointCloud[jID][2],
+                                                    np_h36PointCloud[jID][0],np_h36PointCloud[jID][1],np_h36PointCloud[jID][2]
+                                                   )
      totalError+=perJointDisparity
      totalSamples+=1
      #We also keep every sample on a list to do an analysis in the end
      alljointDistances.append(perJointDisparity)
      jointDistance[jID].append(perJointDisparity)
    #------------------------------------------------------------------ 
-       
+   
+   if (simulateAlignedJoint):
+     totalError+=0
+     totalSamples+=1
+     alljointDistances.append(0)
+     jointDistance[0].append(perJointDisparity)
+   #---------------------------
+
    print("Frame %u / Disparity %f " % (frameID,disparity))
    averageErrorDistances.append(disparity)
 
@@ -589,7 +895,11 @@ std     =  np.std(alljointDistances)
 var     =  np.var(alljointDistances)
 print("Mean is ",mean," Std is ",std," Var is ",var)
 
+if (aucMax>0.0):
+ print("AUC (",aucMin,",",aucMax,") is ",AUC(alljointDistances,aucMin,aucMax)," % ")
 
+if (simulateAlignedJoint):
+          print(bcolors.FAIL,"DONT USE RESULTS, THEY CONTAIN A SIMULATED ALIGNED JOINT",bcolors.ENDC)
 
 writeHeader=0
 if not os.path.exists("results.csv"):

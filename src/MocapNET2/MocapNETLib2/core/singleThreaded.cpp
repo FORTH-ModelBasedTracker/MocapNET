@@ -12,12 +12,12 @@
 
 std::vector<float> gatherResults(
                                  struct MocapNET2 * mnet,
-                                 std::vector<float> resultBody,
-                                 std::vector<float> resultUpperBody,
-                                 std::vector<float> resultLowerBody,
-                                 std::vector<float> resultLeftHand,
-                                 std::vector<float> resultRightHand,
-                                 std::vector<float> resultFace
+                                 const std::vector<float> resultBody,
+                                 const std::vector<float> resultUpperBody,
+                                 const std::vector<float> resultLowerBody,
+                                 const std::vector<float> resultLeftHand,
+                                 const std::vector<float> resultRightHand,
+                                 const std::vector<float> resultFace
                                 )
 {
     std::vector<float> result;
@@ -48,6 +48,16 @@ std::vector<float> gatherResults(
         {
             mocapnetLowerBody_fillResultVector(result,resultLowerBody);
         }
+
+    if (mnet->rightHand.loadedModels>0)
+        {
+            mocapnetRightHand_fillResultVector(result,resultRightHand);
+        }
+
+    if (mnet->leftHand.loadedModels>0)
+        {
+            mocapnetLeftHand_fillResultVector(result,resultLeftHand);
+        }
     //----------------------------------------------------------------------------------------------
 
 
@@ -67,7 +77,7 @@ std::vector<float> singleThreadedMocapNET(
                                            unsigned int useInverseKinematics,
                                            int doOutputFiltering
                                          )
-{
+{ 
     std::vector<float> resultBody,resultLowerBody,resultUpperBody,resultLeftHand,resultRightHand,resultFace;
     //---------------------------------------------------------------------------------------------------------------------------------------------
     //resultBody = mocapnetBody_evaluateInput(mnet,input);
@@ -86,8 +96,7 @@ std::vector<float> singleThreadedMocapNET(
     //-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     if ( (doHands) && (mnet->leftHand.loadedModels>0) )
         {
-            //Not implemented..
-            //resultLeftHand = mocapnetLeftHand_evaluateInput(mnet,input);
+            resultLeftHand = mocapnetLeftHand_evaluateInput(mnet,input,1.0);
         }
     else
         {
@@ -96,14 +105,13 @@ std::vector<float> singleThreadedMocapNET(
     //-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     if ( (doHands) && (mnet->rightHand.loadedModels>0) )
         {
-            //Not implemented..
-            //resultRightHand = mocapnetRightHand_evaluateInput(mnet,input);
+            resultRightHand = mocapnetRightHand_evaluateInput(mnet,input,1.0);
         }
     else
         {
             mnet->leftHand.NSDM.clear();
         }
-
+        
     if ( (doFace) && (mnet->face.loadedModels>0) )
         {
             //Not implemented..
@@ -113,8 +121,8 @@ std::vector<float> singleThreadedMocapNET(
         {
             mnet->face.NSDM.clear();
         }
-
-
+        
+        
     //---------------------------------------------------------------------------------------------------------------------------------------------
      std::vector<float>  result = gatherResults(
                                                  mnet,
@@ -126,7 +134,7 @@ std::vector<float> singleThreadedMocapNET(
                                                  resultFace
                                                );
     //---------------------------------------------------------------------------------------------------------------------------------------------
-
-
+    
+    
   return result;
 }

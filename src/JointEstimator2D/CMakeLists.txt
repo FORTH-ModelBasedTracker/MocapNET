@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-#set(CMAKE_CXX_STANDARD 11)  
+set(CMAKE_CXX_STANDARD 11)  
  
 include_directories(${TENSORFLOW_INCLUDE_ROOT})
 
@@ -16,7 +16,7 @@ add_library(
             ${CMAKE_SOURCE_DIR}/src/Tensorflow/tf_utils.cpp
            )
 
-target_link_libraries(JointEstimator2D rt dl m Tensorflow TensorflowFramework )
+target_link_libraries(JointEstimator2D rt dl m Tensorflow TensorflowFramework)
 set_target_properties(JointEstimator2D PROPERTIES DEBUG_POSTFIX "D") 
        
 
@@ -33,7 +33,7 @@ find_package(OpenCV REQUIRED)
 INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 
 add_executable(WebcamAnd2DJoints webcamAnd2DJoints.cpp)   
-target_link_libraries(WebcamAnd2DJoints rt dl m ${OpenCV_LIBRARIES} JointEstimator2D  Tensorflow  TensorflowFramework)
+target_link_libraries(WebcamAnd2DJoints rt dl m ${OpenCV_LIBRARIES} Tensorflow TensorflowFramework JointEstimator2D)
 set_target_properties(WebcamAnd2DJoints PROPERTIES DEBUG_POSTFIX "D") 
        
 

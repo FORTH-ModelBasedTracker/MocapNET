@@ -16,6 +16,8 @@
 #include "../../MocapNETLib2/solutionParts/body.hpp"
 #include "../../MocapNETLib2/solutionParts/upperBody.hpp"
 #include "../../MocapNETLib2/solutionParts/lowerBody.hpp"
+#include "../../MocapNETLib2/solutionParts/rightHand.hpp"
+#include "../../MocapNETLib2/solutionParts/leftHand.hpp"
 
 #if USE_BVH
 #include "../../../../dependencies/RGBDAcquisition/tools/PThreadWorkerPool/pthreadWorkerPool.h"
@@ -32,7 +34,6 @@ struct mocapNETContext
     int doGestureDetection;
     unsigned int useInverseKinematics;
     int doOutputFiltering;
-    int forceFront;
 };
 
 std::vector<float> multiThreadedMocapNET(

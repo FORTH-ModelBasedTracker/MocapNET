@@ -39,8 +39,8 @@ void addLeftFinger(
     int fingerJointC
 );
 
-std::vector<float> flattenskeletonCOCOToVector(struct skeletonStructure * sk,unsigned int width ,unsigned int height);
+std::vector<float> flattenskeletonCOCOToVector(struct skeletonStructure * sk,unsigned int width,unsigned int height);
 
 
 
-int convertBVHFrameToSkeletonCOCO(struct skeletonStructure * sk,std::vector<float>  bvhFrame,unsigned int width ,unsigned int height);
+int convertBVHFrameToSkeletonCOCO(struct skeletonStructure * sk,const std::vector<float> bvhFrame,unsigned int width,unsigned int height);

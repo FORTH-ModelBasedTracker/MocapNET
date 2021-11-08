@@ -253,7 +253,7 @@ std::vector<float> predictTensorflow(struct TensorflowInstance * net,std::vector
 
     TF_SessionRun( net->session,
                    nullptr, // Run options.
-                   &net->input_operation,     &input_tensor,  1, // Input tensors, input tensor values, number of inputs.
+                   &net->input_operation,    &input_tensor,   1, // Input tensors, input tensor values, number of inputs.
                    &net->output_operation,   &output_tensor,  1, // Output tensors, output tensor values, number of outputs.
                    nullptr, 0, // Target operations, number of targets.
                    nullptr, // Run metadata.

@@ -248,6 +248,7 @@ for i in range(0,len(ground['body'])):
    #ax3.cla()
    #ax4.cla()
 
+
  
    categories = np.array([0, 
                           1, 
@@ -272,10 +273,33 @@ for i in range(0,len(ground['body'])):
                           20 
                        ])
 
-   color0=(0.0, 1.0, 1.0, 1.0) #Palm
-   color1=(0.6, 0.0, 0.0, 1.0) #Thumb
+
+   names = ["Palm/Hand" ,         #0
+            "EndSite_Finger_1.3" ,#1
+            "Finger_1.3" ,        #2 
+            "Finger_1.2",         #3
+            "Thumb" ,             #4
+            "EndSite_Finger_2.3" ,#5 
+            "Finger_2.3" ,        #6
+            "Finger_2.2",         #7
+            "Finger_2.1",         #8  
+            "EndSite_Finger_3.3" ,#9
+            "Finger_3.3" ,        #10
+            "Finger_3.2",         #11
+            "Finger_3.1",         #12
+            "EndSite_Finger_4.3" ,#13
+            "Finger_4.3" ,        #14
+            "Finger_4.2",         #15
+            "Finger_4.1",         #16
+            "EndSite_Finger_5.3" ,#17
+            "Finger_5.3" ,        #18
+            "Finger_5.2",         #19
+            "Finger_5.1"          #20
+           ]
+   color0=(0.0, 0.0, 0.0, 1.0) #Palm
+   color1=(0.6, 0.0, 0.0, 1.0) #Finger 1.3
    color2=(0.8, 0.0, 0.0, 1.0) #Finger 1.2
-   color3=(1.0, 0.0, 0.0, 1.0) #Finger 1.3
+   color3=(1.0, 0.0, 0.0, 1.0) #Thumb
    color4=(0.0, 1.0, 1.0, 1.0) #BaseOfFourFingers
    color5=(0.0, 1.0, 0.0, 1.0) #Finger 2.3 
    color6=(0.0, 0.8, 0.0, 1.0) #Finger 2.2
@@ -292,13 +316,22 @@ for i in range(0,len(ground['body'])):
    color17=(1.0, 1.0, 0.0, 1.0) #Finger 5.3
    color18=(0.8, 0.8, 0.0, 1.0) #Finger 5.2
    color19=(0.6, 0.6, 0.0, 1.0) #Finger 5.1
-   color20=(0.4, 0.4, 0.0, 1.0) #Metacarpal 4 
+   color20=(0.4, 0.4, 0.0, 1.0) #Metacarpal 4
 
    colormap = np.array([color0,color1,color2,color3,color4,color5,color6,color7,color8,color9,color10,color11,color12,color13,color14,color15,color16,color17,color18,color19,color20])
 
    xs, ys, zs = pointListReturnXYZListForScatterPlot(ground['body'][i])
  
    ax.scatter(xs, ys, zs,  c=colormap[categories])
+
+ 
+   for p in range(0,20):  
+     label = '(%d, %d, %d), l=%d' % (xs[p], ys[p], zs[p] , p)
+     label = '%d=%s' % (p,names[p])
+     ax.text(xs[p], ys[p], zs[p], label, None )
+
+
+
    img = plt.imread("images/im%u.png" % i)
    ax2.imshow(img)
 

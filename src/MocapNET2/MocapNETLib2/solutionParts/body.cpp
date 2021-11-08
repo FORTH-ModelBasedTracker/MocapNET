@@ -30,7 +30,8 @@ int mocapnetBody_initialize(struct MocapNET2 * mnet,const char * filename,float 
     int result = 0;
     int modelNumber=0;
     
-   
+    unsigned int NUMBER_OF_INPUTS = MNET_BODY_IN_NUMBER;// + mocapNET_timesToRepeatAlignmentAngle_body;
+    
     switch (mode)
         {
         case 3:
@@ -50,7 +51,7 @@ int mocapnetBody_initialize(struct MocapNET2 * mnet,const char * filename,float 
             snprintf(modelPath,1024,"dataset/combinedModel/mocapnet2/mode%u/%0.1f/categorize_body_all.pb",mode,qualitySetting);
             if (fileExists(modelPath))
             {
-              result += loadTensorflowInstance(&mnet->body.models[modelNumber]  ,modelPath  ,"input_all"  ,"result_all/concat",forceCPU);
+              result += neuralNetworkLoad(&mnet->body.models[modelNumber]  ,modelPath  ,"input_all"  ,"result_all/concat",NUMBER_OF_INPUTS,MOCAPNET_BODY_OUTPUT_NUMBER,forceCPU);
               mnet->body.modelLimits[modelNumber].isFlipped=0;
               mnet->body.modelLimits[modelNumber].numberOfLimits=1;
               mnet->body.modelLimits[modelNumber].minimumYaw1=-360.0;
@@ -63,7 +64,7 @@ int mocapnetBody_initialize(struct MocapNET2 * mnet,const char * filename,float 
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             snprintf(modelPath,1024,"dataset/combinedModel/mocapnet2/mode%u/%0.1f/body_front.pb",mode,qualitySetting);
-            result += loadTensorflowInstance(&mnet->body.models[modelNumber],modelPath,"input_front","result_front/concat",forceCPU);
+            result += neuralNetworkLoad(&mnet->body.models[modelNumber],modelPath,"input_front","result_front/concat",NUMBER_OF_INPUTS,MOCAPNET_BODY_OUTPUT_NUMBER,forceCPU);
             mnet->body.modelLimits[modelNumber].isFlipped=0;
             mnet->body.modelLimits[modelNumber].numberOfLimits=1;
             mnet->body.modelLimits[modelNumber].minimumYaw1=-45.0;
@@ -72,7 +73,7 @@ int mocapnetBody_initialize(struct MocapNET2 * mnet,const char * filename,float 
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             snprintf(modelPath,1024,"dataset/combinedModel/mocapnet2/mode%u/%0.1f/body_back.pb",mode,qualitySetting);
-            result += loadTensorflowInstance(&mnet->body.models[modelNumber],modelPath,"input_back","result_back/concat",forceCPU);
+            result += neuralNetworkLoad(&mnet->body.models[modelNumber],modelPath,"input_back","result_back/concat",NUMBER_OF_INPUTS,MOCAPNET_BODY_OUTPUT_NUMBER,forceCPU);
             mnet->body.modelLimits[modelNumber].isFlipped=0;
             mnet->body.modelLimits[modelNumber].numberOfLimits=1;
             mnet->body.modelLimits[modelNumber].minimumYaw1=135.0;//-90.0;
@@ -82,7 +83,7 @@ int mocapnetBody_initialize(struct MocapNET2 * mnet,const char * filename,float 
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             snprintf(modelPath,1024,"dataset/combinedModel/mocapnet2/mode%u/%0.1f/body_left.pb",mode,qualitySetting);
-            result += loadTensorflowInstance(&mnet->body.models[modelNumber] ,modelPath ,"input_left" ,"result_left/concat",forceCPU);
+            result += neuralNetworkLoad(&mnet->body.models[modelNumber] ,modelPath ,"input_left" ,"result_left/concat",NUMBER_OF_INPUTS,MOCAPNET_BODY_OUTPUT_NUMBER,forceCPU);
             mnet->body.modelLimits[modelNumber].isFlipped=0;
             mnet->body.modelLimits[modelNumber].numberOfLimits=1;
             mnet->body.modelLimits[modelNumber].minimumYaw1=-135.0;
@@ -91,7 +92,7 @@ int mocapnetBody_initialize(struct MocapNET2 * mnet,const char * filename,float 
 
             //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             snprintf(modelPath,1024,"dataset/combinedModel/mocapnet2/mode%u/%0.1f/body_right.pb",mode,qualitySetting);//
-            result += loadTensorflowInstance(&mnet->body.models[modelNumber] ,modelPath ,"input_right" ,"result_right/concat",forceCPU);
+            result += neuralNetworkLoad(&mnet->body.models[modelNumber] ,modelPath ,"input_right" ,"result_right/concat",NUMBER_OF_INPUTS,MOCAPNET_BODY_OUTPUT_NUMBER,forceCPU);
             mnet->body.modelLimits[modelNumber].isFlipped=0;
             mnet->body.modelLimits[modelNumber].numberOfLimits=1;
             mnet->body.modelLimits[modelNumber].minimumYaw1=45.0;
@@ -132,14 +133,14 @@ int mocapnetBody_initialize(struct MocapNET2 * mnet,const char * filename,float 
             //---------------------------------------------------
             for (int i=0;  i<mnet->body.loadedModels; i++ )
                 {
-                    std::vector<float>  prediction = predictTensorflow(&mnet->body.models[i],emptyValues);
+                    std::vector<float>  prediction = neuralNetworkExecute(&mnet->body.models[i],emptyValues);
                     if (prediction.size()>0)
                         {
-                            fprintf(stderr, GREEN "Caching model %u (%s) was successful\n" NORMAL ,i,mnet->body.models[i].modelPath);
+                            fprintf(stderr, GREEN "Caching model %u (%s) was successful\n" NORMAL ,i,neuralNetworkGetPath(&mnet->body.models[i]));
                         }
                     else
                         {
-                            fprintf(stderr,RED "Caching model %u (%s) was unsuccessful\n" NORMAL,i,mnet->body.models[i].modelPath);
+                            fprintf(stderr,RED "Caching model %u (%s) was unsuccessful\n" NORMAL,i,neuralNetworkGetPath(&mnet->body.models[i]));
                         }
                 }
                 
@@ -155,7 +156,7 @@ int mocapnetBody_unload(struct MocapNET2 * mnet)
     unsigned int result=0;
     for (int i=0;  i<mnet->body.loadedModels; i++ )
         {
-         result+=unloadTensorflow(&mnet->body.models[i]);
+         result+=neuralNetworkUnload(&mnet->body.models[i]);
         }
 
     if (result==mnet->body.loadedModels) { result=1; } else
@@ -182,8 +183,9 @@ std::vector<float> mocapnetBody_evaluateInput(struct MocapNET2 * mnet,struct ske
                                                                        0 // Enable to debug input
                                                                       );
                                                                                                                                                                                                                                                                                                                  
-                                                                                                                                                              
-    mnet->body.NSDM  = bodyCreateNDSM(mnet->body.positionalInput,1/*NSDM Positional*/,0/*NSDM Angular */,1 /*Use Normalization*/);
+
+    int eNSRM = (!mnet->options->regularNSRMMatrix);
+    mnet->body.NSDM  = bodyCreateNDSM(mnet->body.positionalInput,1/*NSDM Positional*/,0/*NSDM Angular */,1 /*Use Normalization*/,eNSRM);
     mnet->body.neuralNetworkReadyInput.clear();
     mnet->body.neuralNetworkReadyInput.insert(mnet->body.neuralNetworkReadyInput.end(),mnet->body.positionalInput.begin(), mnet->body.positionalInput.end());
     mnet->body.neuralNetworkReadyInput.insert(mnet->body.neuralNetworkReadyInput.end(),mnet->body.NSDM.begin(), mnet->body.NSDM.end());

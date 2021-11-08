@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 #Written by Ammar Qammaz a.k.a AmmarkoV - 2020
-
+#pip install matplotlib h5py numpy --user
 
 import h5py
 import numpy as np
 import csv
 import os
 import sys 
-
-from scipy.spatial import procrustes
-from scipy.linalg import orthogonal_procrustes
  
  
 #Taken from https://github.com/una-dinosauria/3d-pose-baseline/blob/master/src/procrustes.py

@@ -13,6 +13,26 @@
 #include "opencv2/opencv.hpp"
 using namespace cv;
 
+
+int visualizeJustIllustration(
+    const char* windowName,
+    unsigned int frameNumber,
+    unsigned int saveVisualization,
+    cv::Mat * alreadyLoadedImage,
+    const char * path,
+    const char * label,
+    unsigned int serialLength,
+    unsigned int width,
+    unsigned int height,
+    struct skeletonSerialized * skeleton,
+    struct MocapNET2 * mnet,
+    struct MocapNET2Options * options,
+    std::vector<std::vector<float> > points2DOutputGUIRealView,
+    std::vector<std::vector<float> > points2DOutputGUIForcedView, 
+    unsigned int numberOfMissingJoints
+);
+
+
 int visualizeTemplate(
     const char* windowName,
     unsigned int frameNumber,

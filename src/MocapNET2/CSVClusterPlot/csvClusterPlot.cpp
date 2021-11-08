@@ -320,7 +320,7 @@ int main(int argc, char *argv[])
     unsigned int visualizationFrameNumber=0;
     int saveVideo=0;
     char * videoPath=0;
-    char videoFrameFinalFilename[512]= {0};
+    char videoFrameFinalFilename[513]= {0};
 
     float skeletonDistance=-160;
     unsigned int WIDTH = 1000;

@@ -30,11 +30,23 @@ LOW_LIMIT="50";
 LIMIT="150";
 NUMBER_OF_RECORDS=`wc -l $1 | cut -d' ' -f1`
   
-GNUPLOT_CMD="set terminal png; \
- set output \"$OUTPUT_IMAGE\"; set yrange [0:1];\
+
+XRANGE="20:50"
+YRANGE="0:1"
+#YRANGE="0.8:1"
+
+
+BIG_FONTS=" size 1000,800 font 'Helvetica,34'"
+BIG_FONTS=" " 
+
+GNUPLOT_CMD="set terminal png $BIG_FONTS;\
+ set output \"$OUTPUT_IMAGE\"; \
+ set xrange [$XRANGE];\
+ set yrange [$YRANGE];\
  set title \"Frequency precision diagram $IN \";\
  set xlabel \"Distance Of Joints(mm)\"; \
  set ylabel \"Frequency Of Value\"; \
+ set style line 1 lt 1 lc rgb \"green\" lw 3;\
  set arrow from $MEAN, graph 0 to $MEAN, graph 1 nohead; \
  set label \"Mean Value of $MEAN mm \" at $MEAN,0.40; \
  set arrow from $MEDIAN, graph 0 to $MEDIAN, graph 1 nohead; \
@@ -42,7 +54,7 @@ GNUPLOT_CMD="set terminal png; \
  set label \"$STATS\" at $PLACETEXT,0.85; \
  binwidth=3;\
  bin(x,width)=width*floor(x/width);\
- plot [0:] '$IN' using   (bin(\$1,binwidth)):(1.0) smooth cnorm t 'smooth cumulative'"
+ plot [0:] '$IN' using   (bin(\$1,binwidth)):(1.0) smooth cnorm ls 1 t 'smooth cumulative'"
   
 
 echo "WE WILL RUN "

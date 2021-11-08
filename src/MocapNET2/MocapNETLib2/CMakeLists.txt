@@ -11,7 +11,7 @@ include_directories(${TENSORFLOW_INCLUDE_ROOT})
 
 #add_executable(MocapNETLib mocapnet.cpp ${CMAKE_SOURCE_DIR}/src/Tensorflow/tf_utils.cpp)   
 
-add_library(MocapNETLib2 SHARED
+add_library(MocapNETLib2 SHARED 
 ${BVH_SOURCE}
 ${OPENGL_SOURCE}
 ../MocapNETLib2/config.h
@@ -33,6 +33,8 @@ ${OPENGL_SOURCE}
 ../MocapNETLib2/NSDM/generated_body.hpp
 ../MocapNETLib2/NSDM/generated_upperbody.hpp
 ../MocapNETLib2/NSDM/generated_lowerbody.hpp
+../MocapNETLib2/NSDM/generated_rhand.hpp
+../MocapNETLib2/NSDM/generated_lhand.hpp
 ../MocapNETLib2/IO/bvh.cpp
 ../MocapNETLib2/IO/commonSkeleton.hpp
 ../MocapNETLib2/IO/skeletonAbstraction.cpp
@@ -42,6 +44,7 @@ ${OPENGL_SOURCE}
 ../MocapNETLib2/IO/jsonRead.cpp
 ../MocapNETLib2/IO/jsonMocapNETHelpers.cpp
 ../MocapNETLib2/IO/conversions.cpp
+../MocapNETLib2/visualization/drawHands.cpp
 ../MocapNETLib2/visualization/rgb.cpp
 ../MocapNETLib2/visualization/allInOne.cpp
 ../MocapNETLib2/visualization/widgets.cpp
@@ -54,6 +57,10 @@ ${OPENGL_SOURCE}
 ../MocapNETLib2/solutionParts/body.cpp
 ../MocapNETLib2/solutionParts/upperBody.cpp
 ../MocapNETLib2/solutionParts/lowerBody.cpp
+../MocapNETLib2/solutionParts/rightHandSym.cpp
+../MocapNETLib2/solutionParts/rightHand.cpp
+../MocapNETLib2/solutionParts/leftHand.cpp
+../MocapNETLib2/solutionParts/face.cpp
 ${CMAKE_SOURCE_DIR}/dependencies/InputParser/InputParser_C.cpp
 #Tensorflow stuff..
 ${TENSORFLOW_SOURCE_FILES}

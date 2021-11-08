@@ -249,6 +249,74 @@ if (drawPlot):
 
 print("Ground truth file has %u elements ",len(ground['body']))
 
+ 
+categories = np.array([0, 
+                          1, 
+                          2, 
+                          3, 
+                          4, 
+                          5, 
+                          6, 
+                          7, 
+                          8, 
+                          9, 
+                          10,
+                          11,
+                          12,
+                          13,
+                          14,
+                          15,
+                          16,
+                          17,
+                          18
+                       ])
+
+names = ["Palm" ,              #0
+            "Finger_1.3" ,        #1
+            "Finger_1.2" ,        #2 
+            "Thumb",              #3
+            "BaseOfFourFingers" , #4
+            "Finger_2.3" ,        #5 
+            "Finger_2.2" ,        #6
+            "Finger_2.1",         #7
+            "Metacarpal_1",        #8  
+            "Finger_3.3" ,        #9
+            "Finger_3.2" ,        #10
+            "Finger_3.1",         #11
+            "Metacarpal_2",       #12
+            "Finger_4.3" ,        #13
+            "Finger_4.2" ,        #14
+            "Finger_4.1",         #15
+            "Metacarpal_3",       #16
+            "Finger_5.3" ,        #17
+            "Finger_5.2" ,        #18
+            "Finger_5.1",         #19
+            "Metacarpal_4"        #20
+           ]
+
+color0=(0.0, 0.0, 0.0, 1.0) #Palm
+color1=(0.6, 0.0, 0.0, 1.0) #Finger 1.3
+color2=(0.8, 0.0, 0.0, 1.0) #Finger 1.2
+color3=(1.0, 0.0, 0.0, 1.0) #Thumb
+color4=(0.0, 1.0, 1.0, 1.0) #BaseOfFourFingers
+color5=(0.0, 1.0, 0.0, 1.0) #Finger 2.3 
+color6=(0.0, 0.8, 0.0, 1.0) #Finger 2.2
+color7=(0.0, 0.6, 0.0, 1.0) #Finger 2.1
+color8=(0.0, 0.4, 0.0, 1.0) #Metacarpal 1
+color9=(0.0, 0.0, 1.0, 1.0)  #Finger 3.3
+color10=(0.0, 0.0, 0.8, 1.0) #Finger 3.2
+color11=(0.0, 0.0, 0.6, 1.0) #Finger 3.1
+color12=(0.0, 0.0, 0.4, 1.0) #Metacarpal 2
+color13=(0.0, 1.0, 1.0, 1.0) #Finger 4.3
+color14=(0.0, 0.8, 0.8, 1.0) #Finger 4.2
+color15=(0.0, 0.6, 0.6, 1.0) #Finger 4.1
+color16=(0.0, 0.4, 0.4, 1.0) #Metacarpal 3
+color17=(1.0, 1.0, 0.0, 1.0) #Finger 5.3
+color18=(0.8, 0.8, 0.0, 1.0) #Finger 5.2
+color19=(0.6, 0.6, 0.0, 1.0) #Finger 5.1
+color20=(0.4, 0.4, 0.0, 1.0) #Metacarpal 4
+
+colormap = np.array([color0,color1,color2,color3,color4,color5,color6,color7,color8,color9,color10,color11,color12,color13,color14,color15,color16,color17,color18])
 
 for i in range(0,len(ground['body'])):
  if (drawPlot):
@@ -258,7 +326,14 @@ for i in range(0,len(ground['body'])):
 
    xs, ys = pointListReturnXYListForScatterPlot(ground['body'][i])
  
-   ax.scatter(xs, ys)
+   ax.scatter(xs, ys, c=colormap[categories])
+ 
+   for p in range(0,len(xs)):  
+     label = '(%d, %d), l=%d' % (xs[p], ys[p] , p)
+     label = '%d=%s' % (p,names[p])
+     ax.text(xs[p], ys[p], label, None )
+
+
    img = plt.imread("images/im%u.png" % i)
    ax2.imshow(img)
 

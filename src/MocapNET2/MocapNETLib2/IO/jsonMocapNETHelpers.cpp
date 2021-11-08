@@ -553,7 +553,7 @@ std::vector<float> flattenskeletonStructureToVector(struct skeletonStructure * s
 
 
 
-int convertBVHFrameToSkeletonCOCO(struct skeletonStructure * sk,std::vector<float>  bvhFrame,unsigned int width ,unsigned int height)
+int convertBVHFrameToSkeletonCOCO(struct skeletonStructure * sk,const std::vector<float> bvhFrame,unsigned int width,unsigned int height)
 { 
           std::vector<std::vector<float> > bvhFrame2DOutput = convertBVHFrameTo2DPoints(bvhFrame); //,width,height
            

@@ -16,15 +16,17 @@
 #include "../../MocapNETLib2/solutionParts/body.hpp"
 #include "../../MocapNETLib2/solutionParts/upperBody.hpp"
 #include "../../MocapNETLib2/solutionParts/lowerBody.hpp"
+#include "../../MocapNETLib2/solutionParts/rightHand.hpp"
+#include "../../MocapNETLib2/solutionParts/leftHand.hpp"
 
 std::vector<float> gatherResults(
     struct MocapNET2 * mnet,
-    std::vector<float> resultBody,
-    std::vector<float> resultUpperBody,
-    std::vector<float> resultLowerBody,
-    std::vector<float> resultLeftHand,
-    std::vector<float> resultRightHand,
-    std::vector<float> resultFace
+    const std::vector<float> resultBody,
+    const std::vector<float> resultUpperBody,
+    const std::vector<float> resultLowerBody,
+    const std::vector<float> resultLeftHand,
+    const std::vector<float> resultRightHand,
+    const std::vector<float> resultFace
 );
 
 std::vector<float> singleThreadedMocapNET(

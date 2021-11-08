@@ -18,11 +18,13 @@
 #include "../../MocapNETLib2/solutionParts/body.hpp"
 #include "../../MocapNETLib2/solutionParts/upperBody.hpp"
 #include "../../MocapNETLib2/solutionParts/lowerBody.hpp"
+#include "../../MocapNETLib2/solutionParts/rightHand.hpp"
+#include "../../MocapNETLib2/solutionParts/leftHand.hpp"
 //----------------------------------------------
 #include "../../MocapNETLib2/core/singleThreaded.hpp"
 #include "../../MocapNETLib2/core/multiThreaded.hpp"
 //----------------------------------------------
-
+ 
 #define NORMAL   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
 #define RED     "\033[31m"      /* Red */
@@ -99,7 +101,6 @@ int getMocapNETOrientationFromAngle(float direction)
 }
 
 
-
 int  getMocapNETOrientationFromOutputVector(std::vector<float> direction)
 {
     if (direction.size()>0)
@@ -123,16 +124,40 @@ int  getMocapNETOrientationFromProbabilities(float frontProb,float backProb,floa
         }
     else if ((leftProb>frontProb) && (leftProb>backProb) && (leftProb>rightProb))
         {
+            #if SWAP_LEFT_RIGHT_ENSEMBLES
+             fprintf(stderr,"Swapped left ensemble\n");
+             return MOCAPNET_ORIENTATION_RIGHT;
+            #else
             return MOCAPNET_ORIENTATION_LEFT;
+            #endif
         }
     else if ((rightProb>frontProb) && (rightProb>backProb) && (rightProb>leftProb))
         {
-            return MOCAPNET_ORIENTATION_RIGHT;
+            #if SWAP_LEFT_RIGHT_ENSEMBLES
+             fprintf(stderr,"Swapped right ensemble\n");
+             return MOCAPNET_ORIENTATION_LEFT;
+            #else
+             return MOCAPNET_ORIENTATION_RIGHT;
+            #endif
         }
 
     fprintf(stderr,RED "Inconclusive Direction Classification\n" NORMAL);
     return MOCAPNET_ORIENTATION_NONE;
 }
+
+
+std::vector<float> MNETSingleClass(struct MocapNET2SolutionPart * mnet,std::vector<float> mnetInput)
+{
+    //Single Orientation ----------------------------------------------
+    fprintf(stderr,"Single Orientation network .. ");
+     std::vector<float> result = neuralNetworkExecute(&mnet->models[0],mnetInput);
+    
+    if (result.size()>0) { fprintf(stderr,GREEN "executed\n" NORMAL); } else
+                         { fprintf(stderr,RED "failed\n" NORMAL); } 
+    return result;
+}
+
+
 
 
 std::vector<float>  MNET3Classes(struct MocapNET2SolutionPart * mnet,std::vector<float> mnetInput,int orientation)
@@ -147,7 +172,7 @@ std::vector<float>  MNET3Classes(struct MocapNET2SolutionPart * mnet,std::vector
                 {
                     //Back ----------------------------------------------=
                     fprintf(stderr,"Back\n");
-                    result = predictTensorflow(&mnet->models[2],mnetInput);
+                    result = neuralNetworkExecute(&mnet->models[2],mnetInput);
                     if (result.size()>4)
                         {
                             result[4]=undoOrientationTrickForBackOrientation(result[4]);
@@ -158,7 +183,7 @@ std::vector<float>  MNET3Classes(struct MocapNET2SolutionPart * mnet,std::vector
                 {
                     //Front ----------------------------------------------
                     fprintf(stderr,"Front\n");
-                    result = predictTensorflow(&mnet->models[1],mnetInput);
+                    result = neuralNetworkExecute(&mnet->models[1],mnetInput);
                 }
             //===========================================================
         }
@@ -183,8 +208,8 @@ std::vector<float>  MNET5Classes(struct MocapNET2SolutionPart * mnet,std::vector
                         {
                             targetModel-=1;
                         }
-                    result = predictTensorflow(&mnet->models[targetModel],mnetInput);
-
+                    result = neuralNetworkExecute(&mnet->models[targetModel],mnetInput);
+                    
                     /*
                     if ( (targetHasOrientationTrick) && (result.size()>4) )
                         {
@@ -202,12 +227,12 @@ std::vector<float>  MNET5Classes(struct MocapNET2SolutionPart * mnet,std::vector
                         {
                             targetModel-=1;
                         }
-                    result = predictTensorflow(&mnet->models[targetModel],mnetInput);
+                    result = neuralNetworkExecute(&mnet->models[targetModel],mnetInput);
 
                     if ( (targetHasOrientationTrick) && (result.size()>4) )
                         {
                             fprintf(stderr,"Orientation changed from %0.2f ",result[4]);
-                              result[4]=undoOrientationTrickForBackOrientation(result[4]);
+                            result[4]=undoOrientationTrickForBackOrientation(result[4]);
                             //result[4]-=180.0;
                             fprintf(stderr,"to %0.2f",result[4]);
                         }
@@ -220,7 +245,7 @@ std::vector<float>  MNET5Classes(struct MocapNET2SolutionPart * mnet,std::vector
                         {
                             targetModel-=1;
                         }
-                    result = predictTensorflow(&mnet->models[targetModel],mnetInput);
+                    result = neuralNetworkExecute(&mnet->models[targetModel],mnetInput);
 
                     if ( (targetHasOrientationTrick) && (result.size()>4) )
                         {
@@ -237,7 +262,7 @@ std::vector<float>  MNET5Classes(struct MocapNET2SolutionPart * mnet,std::vector
                         {
                             targetModel-=1;
                         }
-                    result = predictTensorflow(&mnet->models[targetModel],mnetInput);
+                    result = neuralNetworkExecute(&mnet->models[targetModel],mnetInput);
 
                     if ( (targetHasOrientationTrick) && (result.size()>4) )
                         {
@@ -249,7 +274,7 @@ std::vector<float>  MNET5Classes(struct MocapNET2SolutionPart * mnet,std::vector
                 //===========================================================
                 default :
                     fprintf(stderr,RED "Unhandled orientation, using front as a last resort \n" NORMAL);
-                    result = predictTensorflow(&mnet->models[1],mnetInput);
+                    result = neuralNetworkExecute(&mnet->models[1],mnetInput);
                     break;
                     //===========================================================
                 };
@@ -272,33 +297,34 @@ int localOrientationExtraction(struct MocapNET2SolutionPart * mnet,std::vector<f
             fprintf(stderr,YELLOW "%s does not have an orientation classifier..\n" NORMAL, mnet->partName);
             return  MOCAPNET_ORIENTATION_NONE;
         }
-    else
-        {
-            fprintf(stderr,GREEN "%s has an orientation classifier..\n" NORMAL, mnet->partName);
-        }
 
-    std::vector<float> direction = predictTensorflow(&mnet->models[0],mnetInput);
+    std::vector<float> direction = neuralNetworkExecute(&mnet->models[0],mnetInput);
 
     if (direction.size()>=4)
         {
-            fprintf(stderr,NORMAL "Orientation : Front(%0.2f)/Back(%0.2f)/Left(%0.2f)/Right(%0.2f)\n" NORMAL,direction[0],direction[1],direction[2],direction[3]);
+            fprintf(stderr,NORMAL "Orientation : Front(%0.2f)/Back(%0.2f)/Left(%0.2f)/Right(%0.2f)\n" NORMAL,
+                    direction[MOCAPNET_ORIENTATION_FRONT-1],
+                    direction[MOCAPNET_ORIENTATION_BACK-1],
+                    direction[MOCAPNET_ORIENTATION_LEFT-1],
+                    direction[MOCAPNET_ORIENTATION_RIGHT-1]
+                   );
             //Output of each Neural Network is -45.0  to 0.0 to 45.0
             //We need to correct it ..
 
             //Apply smoothing to probabilities !
-            direction[0] = filter(&mnet->directionSignals[0],direction[0]);
+            direction[0] = filter(&mnet->directionSignals[0],direction[0]); 
             direction[1] = filter(&mnet->directionSignals[1],direction[1]);
             direction[2] = filter(&mnet->directionSignals[2],direction[2]);
             direction[3] = filter(&mnet->directionSignals[3],direction[3]);
 
             //Cut negative values..
-            if (direction[0]<0.0) { direction[0]=0.0; }
-            if (direction[1]<0.0) { direction[1]=0.0; }
-            if (direction[2]<0.0) { direction[2]=0.0; }
-            if (direction[3]<0.0) { direction[3]=0.0; }
+            if (direction[0]<0.0) { direction[0]=0.0; } 
+            if (direction[1]<0.0) { direction[1]=0.0; } 
+            if (direction[2]<0.0) { direction[2]=0.0; } 
+            if (direction[3]<0.0) { direction[3]=0.0; } 
 
             mnet->hasOrientationScan=1;
-            mnet->orientationClassifications[0]=direction[0];
+            mnet->orientationClassifications[0]=direction[0]; 
             mnet->orientationClassifications[1]=direction[1];
             mnet->orientationClassifications[2]=direction[2];
             mnet->orientationClassifications[3]=direction[3];
@@ -317,35 +343,36 @@ int localOrientationExtraction(struct MocapNET2SolutionPart * mnet,std::vector<f
 std::vector<float> localExecution(struct MocapNET2SolutionPart * mnet,std::vector<float> mnetInput,int orientation,int targetHasOrientationTrick)
 {
     std::vector<float> result;
-
-
-
-    //Don't run empty data-------------------------------------------------
+    
+    //Don't run empty data------------------------------------------------- 
     unsigned int emptyInputElements=0;
     for (unsigned int i=0; i<mnetInput.size(); i++)
     {
       if (mnetInput[i]==0.0) { ++emptyInputElements; }
     }
-
+    
     if ( (mnetInput.size()==0) || (emptyInputElements == mnetInput.size()) )
     {
       fprintf(stderr,"Won't execute dead input..\n");
       return result;
     }
     //----------------------------------------------------------------------
-
-
+    
+    
     //----------------------------------------------------------------------------------------------
     if (orientation!=MOCAPNET_ORIENTATION_NONE)
         {
             switch(mnet->mode)
                 {
-                case 3:
-                    result=MNET3Classes(mnet,mnetInput,orientation);
-                    break;
-                case 5:
-                    result=MNET5Classes(mnet,mnetInput,orientation,targetHasOrientationTrick);
-                    break;
+                  case 1:
+                      result=MNETSingleClass(mnet,mnetInput);
+                      break;
+                  case 3:
+                      result=MNET3Classes(mnet,mnetInput,orientation);
+                      break;
+                  case 5:
+                      result=MNET5Classes(mnet,mnetInput,orientation,targetHasOrientationTrick);
+                      break;
                 //-----------------------------------------------------------
                 default:
                     fprintf(stderr,RED "MocapNET: Incorrect Mode %u for part %s ..\n" NORMAL,mnet->mode,mnet->partName);
@@ -354,7 +381,14 @@ std::vector<float> localExecution(struct MocapNET2SolutionPart * mnet,std::vecto
         }
     else
         {
-            fprintf(stderr,RED "Unable to predict pose orientation..\n" NORMAL);
+            if (mnet->mode==1)
+            {
+              //If mode == 1 we can survive a wrong orientation..
+              result=MNETSingleClass(mnet,mnetInput);
+            } else
+            {
+              fprintf(stderr,RED "Unable to predict pose orientation..\n" NORMAL);  
+            }
         }
     return result;
 }

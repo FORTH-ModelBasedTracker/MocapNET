@@ -64,6 +64,64 @@ int extraWindow(
 }
 
 
+int GDPRFace(cv::Mat &image,struct skeletonSerialized * skeleton)
+{
+    if (skeleton==0) { return 0; }  
+    if (skeleton->skeletonBody==0) { return 0; }  
+    
+    unsigned int x=0;
+    unsigned int y=0;
+    unsigned int width  = image.size().width;
+    unsigned int height = image.size().height;
+    float xRatio = (float) width  / skeleton->width;
+    float yRatio = (float) height / skeleton->height;
+
+    unsigned int jID=16 * 3;
+    cv::Point reye(x+xRatio*skeleton->skeletonBody[jID+0].value,y+yRatio*skeleton->skeletonBody[jID+1].value);
+    jID=17 * 3;
+    cv::Point leye(x+xRatio*skeleton->skeletonBody[jID+0].value,y+yRatio*skeleton->skeletonBody[jID+1].value);
+    jID=18 * 3;
+    cv::Point rear(x+xRatio*skeleton->skeletonBody[jID+0].value,y+yRatio*skeleton->skeletonBody[jID+1].value);
+    jID=19 * 3;
+    cv::Point lear(x+xRatio*skeleton->skeletonBody[jID+0].value,y+yRatio*skeleton->skeletonBody[jID+1].value);
+
+
+    jID=1 * 3;
+    cv::Point head(x+xRatio*skeleton->skeletonBody[jID+0].value,y+yRatio*skeleton->skeletonBody[jID+1].value);
+    jID=2 * 3;
+    cv::Point neck(x+xRatio*skeleton->skeletonBody[jID+0].value,y+yRatio*skeleton->skeletonBody[jID+1].value);    
+    
+    unsigned int headWidth = (unsigned int) (rear.x-lear.x);
+    if (lear.x>rear.x)
+    {
+        headWidth = (unsigned int) (lear.x-rear.x);
+    }
+    
+    
+    unsigned int startBlurX = head.x-(unsigned int) headWidth/2;
+    unsigned int startBlurY = head.y-(unsigned int) headWidth/2;
+    unsigned int blockNumber=5;
+    unsigned int blockSize = headWidth / blockNumber;
+    
+    for (unsigned int yB=0; yB<blockNumber; yB++)
+    {
+      startBlurX = head.x-(unsigned int)  headWidth/2;
+      for (unsigned int xB=0; xB<blockNumber; xB++)
+      { 
+         unsigned char * p = image.ptr(startBlurY,startBlurX); // Y first, X after
+         unsigned char b = *p; p++;
+         unsigned char g = *p; p++;
+         unsigned char r = *p; p++;
+         cv::rectangle(image,cv::Rect(startBlurX,startBlurY,blockSize,blockSize),cv::Scalar(b,g,r),-1);
+         startBlurX+=blockSize;
+      }
+     startBlurY+=blockSize;
+    }
+        
+  //cv::rectangle(image,cv::Rect(head.x-headWidth,head.y-headWidth,headWidth*2,headWidth*2),cv::Scalar(0,0,0),-1);
+  return 1;
+}
+
 
 int visualizeAllInOne(
     const char* windowName,
@@ -86,7 +144,7 @@ int visualizeAllInOne(
 
 #if USE_OPENCV
     int success=0;
-    char finalFilename[2048]= {0}; 
+    char finalFilename[2049]= {0}; 
     
     
     //Handle Background
@@ -115,8 +173,7 @@ int visualizeAllInOne(
                     image = *alreadyLoadedImage;
                     
                     if  ( 
-                          ( image.size().width < 640 ) || 
-                          ( image.size().height < 480 )  
+                          ( image.size().width < 640 ) || ( image.size().height < 480 )  
                         )
                         {
                             fprintf(stderr,"Very small given frame ( %ux%u..\n",image.size().width,image.size().height);
@@ -133,10 +190,19 @@ int visualizeAllInOne(
                 }
     //-----------------------------------------------------------------------------------
 
+    if (options->gdpr)
+     {
+       //Do GDPR blurring of face..
+       GDPRFace(image,skeleton);
+     }
 
     //The skeleton offset controls offset for the 3D skeleton rendering on top of the image
     //Offsets are wrong for resolutions other than 1920x1080 since they are hardcoded..
     float offsetX = (float) -1*image.size().width/4;
+    if (offsetX<0.0) 
+    {
+        offsetX=-1.0 * offsetX;
+    }
     float offsetY = 0.0;// (float) -1*image.size().height/1080;
     
     //If you uncomment the next like the 3D overlay will stay exactly on top of the skeleton
@@ -185,31 +251,8 @@ int visualizeAllInOne(
    }
    //---------------------------------------------------------------------------------
 
-            
-    //This is the 2D visualization sitting on top of the RGB image
-    //fprintf(stderr,"2D Visualization skeleton(%0.2f,%0.2f) rendered on %ux%u image\n",skeleton->width,skeleton->height,image.size().width,image.size().height);
-    visualizeSkeletonSerialized(
-                                image,
-                                skeleton,
-                                (mnet->leftHand.loadedModels>0),
-                                (mnet->rightHand.loadedModels>0),
-                                options->doFace,
-                                0,0,
-                                image.size().width,
-                                image.size().height
-                               ); 
-                               
-                               
-    //Switch that controls drawing skeleton labels
-    int draw3DSkeletonJointLabels = 0; 
-                               
-    //This is the 3D skeleton visualized to match the RGB image           
-    drawSkeleton(image,points2DOutputGUIRealView,offsetX,offsetY,draw3DSkeletonJointLabels);    
-                
-    //Uncomment to spawn an extra window with a centered skeleton..!
-    //extraWindow(points2DOutputGUIRealView,points2DOutputGUIForcedView);
-    
-    //If you dont want to see widgets just turn them off using this switch
+
+  //If you dont want to see widgets just turn them off using this switch
     int showWidgets = 1; 
                 
                  
@@ -243,22 +286,25 @@ int visualizeAllInOne(
     }
 
 
-    visualizeOrientation(
-        image,"Orientation",
-        mnet->currentSolution[4],
-        mnet->orientationClassifications[0],
-        mnet->orientationClassifications[1],
-        mnet->orientationClassifications[2],
-        mnet->orientationClassifications[3],
-        positionX,
-        positionY,
-        NSDMWidth,
-        NSDMHeight
-    );
+    if (mnet->currentSolution.size()>4) 
+       {
+        visualizeOrientation(
+                             image,"Orientation",
+                             mnet->currentSolution[4],
+                             mnet->orientationClassifications[0],
+                             mnet->orientationClassifications[1],
+                             mnet->orientationClassifications[2],
+                             mnet->orientationClassifications[3],
+                             positionX,
+                             positionY,
+                             NSDMWidth,
+                             NSDMHeight
+                           );
+       }
     
      
     if (showFramerate>0)
-    { 
+    {
      unsigned int framerateWidgetWidth  = NSDMWidth + 40;    
      unsigned int framerateWidgetHeight = NSDMHeight;    
         
@@ -304,7 +350,7 @@ int visualizeAllInOne(
     int fontUsed=cv::FONT_HERSHEY_SIMPLEX;
     cv::Scalar fontColor= cv::Scalar(255,255,255);
     cv::Point  txtPosition(positionX,positionY+190);
-    char fpsString[128];
+    char fpsString[129]={0};
 
     snprintf(fpsString,128,"Framerate"); //2D->3D 
     cv::putText(image,fpsString,txtPosition,fontUsed,0.6,fontColor,thickness,8);
@@ -329,14 +375,37 @@ int visualizeAllInOne(
     }
     
     //-----------------------------------------------------------------
-    } 
+    } //show framerate  
+    } //show widgets
+            
+    //This is the 2D visualization sitting on top of the RGB image
+    //fprintf(stderr,"2D Visualization skeleton(%0.2f,%0.2f) rendered on %ux%u image\n",skeleton->width,skeleton->height,image.size().width,image.size().height);
+    visualizeSkeletonSerialized(
+                                image,
+                                skeleton,
+                                (mnet->leftHand.loadedModels>0),
+                                (mnet->rightHand.loadedModels>0),
+                                options->doFace,
+                                0,0,
+                                image.size().width,
+                                image.size().height
+                               ); 
+                               
+                               
+    //Switch that controls drawing skeleton labels
+    int draw3DSkeletonJointLabels = 0; 
+                               
+    //This is the 3D skeleton visualized to match the RGB image           
+    drawSkeleton(image,points2DOutputGUIRealView,offsetX,offsetY,draw3DSkeletonJointLabels);    
+                
+    //Uncomment to spawn an extra window with a centered skeleton..!
+    //extraWindow(points2DOutputGUIRealView,points2DOutputGUIForcedView);
     
-    
-    
-    }
+  
 
-            if(image.data!=0)
+    if(image.data!=0)
                 {
+                    //----------------------------------------------
                     if ( image.size().height > image.size().width )
                         {
                             scale=(float) 720/image.size().height;
@@ -345,15 +414,17 @@ int visualizeAllInOne(
                         {
                             scale=(float) 1024/image.size().width;
                         }
+                    //----------------------------------------------
                     if (scale>1.0)
                         {
                             scale=1.0;
                         }
+                    //----------------------------------------------
                     if (scale!=1.0)
                         {
                             cv::resize(image, image, cv::Size(0,0), scale, scale);
                         }
-
+                    //----------------------------------------------
                     //fprintf(stderr,"Image ( %u x %u )\n",image.size().width,image.size().height);
                     success=1;
                 }
@@ -367,7 +438,7 @@ int visualizeAllInOne(
     
     if (saveVisualization)
     { 
-        char filename[512];
+        char filename[513]={0};
         snprintf(filename,512,"vis%05u.jpg",frameNumber) ;
         cv::imwrite(filename,image);
     }
