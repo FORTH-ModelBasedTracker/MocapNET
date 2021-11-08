@@ -5,11 +5,13 @@
 </br>
 
 
-# This is the new MNET3 branch that will hold the new 3D hand pose estimation code until everything is ready to be pulled in the main branch..!
+# This is the new MNET3 branch that will holds the new 3D hand pose estimation code until everything is ready to be pulled in the main branch..!
 
 # Please be patient as this might take some time, since I need to manually merge a lot of code since both the head of the github repository and the MNET3 code are actually superseeded by my private development snapshot..
 
 # Long made short there is a lot of work to do to correctly move the code here..
+
+# If you use the steps in this Readme about OpenPose and you supply --hands to ./MocapNET2CSV you will get the new hand pose estimation functionality, however things are not exactly user friendly right now.. 
 
 </br>
 </br>
@@ -372,9 +374,11 @@ For more information on how to use the conversion utility please [see the docume
 
 A CSV file has been included that can be run by issuing : 
 ```
- ./MocapNET2CSV --from dataset/sample.csv --visualize --delay 30
+ ./MocapNET2CSV --from dataset/sample.csv --hands --visualize --delay 30
 ```
 The delay is added in every frame so that there is enough time for the user to see the results, of course the visualization only contains the armature since the CSV file does not have the input images.
+
+
 
 Check out [this guide contributed by a project user](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/doc/OpenPose.md) for more info.
 
