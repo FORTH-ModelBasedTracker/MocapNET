@@ -4,7 +4,16 @@
 ![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/mnet2.png)
 
 
-A [new version of MocapNET](https://github.com/FORTH-ModelBasedTracker/MocapNET/milestone/1) has landed! It contains a very big list of improvements that have been carried out during 2020 over the original work that allows higher accuracy, smoother BVH output and better occlusion robustness while maintaining realtime perfomance. MocapNET2 will appear in [the 25th International Conference on Pattern Recognition](https://www.icpr2020.it/)
+
+## News
+------------------------------------------------------------------ 
+
+8-11-2021
+
+MocapNET3 with hand pose estimation support has landed in this repository! The latest version that has been accepted in BMVC2021 is now commited [in the mnet3 branch of this repository](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet3). Since however there is considerable code-polish missing and currently the 2D joint estimator offered does not contain hands there needs to be a transition to a 2D joint estimator like [Mediapipe Holistic](https://google.github.io/mediapipe/solutions/holistic) for a better live webcam demo. MocapNET3 will appear in [the 32nd British Machine Vision Conference](http://www.bmvc2021.com/) that will be held virtually and is free to attend this year!!
+
+
+An [upgraded 2020 version of MocapNET](https://github.com/FORTH-ModelBasedTracker/MocapNET/milestone/1) has landed! It contains a very big list of improvements that have been carried out during 2020 over the original work that allows higher accuracy, smoother BVH output and better occlusion robustness while maintaining realtime perfomance. MocapNET2 will appear in [the 25th International Conference on Pattern Recognition](https://www.icpr2020.it/)
 
 If you are interested in the older MocapNET v1 release you can find it in the [mnet1 branch](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet1), 
 
@@ -18,7 +27,9 @@ Example Output:
 | ------------- | ------------- | ------------- |
 | [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtube.png)](https://www.youtube.com/watch?v=GtJct8nKjcc) | [![BVH File](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/bvh.png)](http://ammar.gr/mocapnet/mnet2/sept2020version.bvh) | [![Blender Video](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/blender.png)](http://ammar.gr/mocapnet/mnet2/sept2020versionBlender.ogv) |
 
+
 ## Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images
+------------------------------------------------------------------ 
 
 We present MocapNET v2, a real-time method that estimates the 3D human pose directly in the popular [Bio Vision Hierarchy (BVH)](https://en.wikipedia.org/wiki/Biovision_Hierarchy) format, given estimations of the 2D body joints originating from monocular color images. 
 
