@@ -354,6 +354,7 @@ add_subdirectory(src/MocapNET2/BVHGUI2)
 add_subdirectory(src/MocapNET2/MocapNET2LiveWebcamDemo)
 ENDIF(OpenCV_FOUND)
 
+#add_subdirectory(src/MocapNET2/BVHTemplate/)
 add_subdirectory(src/MocapNET2/MocapNETLib2/)
 add_subdirectory(src/MocapNET2/MocapNETFromCSV/)
 add_subdirectory(src/MocapNET2/Converters/Openpose)
