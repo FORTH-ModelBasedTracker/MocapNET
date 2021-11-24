@@ -16,7 +16,7 @@ wget http://ammar.gr/datasets/signumtest.zip
 unzip signumtest.zip
 ./MocapNET2CSV --from con0014/2dJoints_v1.4.csv --ik 0.001 15 30 --mt --show 3  --hands --label s10-p01-c0014-f --seriallength 4 --gdpr
 ```
-
+![MocapNET3 SIGNUM sign language hand and body 3D pose estimation snapshot](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/mnet3/doc/mnet3snap.jpg)
 
 ### Thank you for your patience!
 
