@@ -165,12 +165,14 @@ If you are interested in generating BVH training data for your research, we have
 ## Building the library
 ------------------------------------------------------------------ 
 
-To download and compile the library issue :
+To download and compile the MNET3 version of the library issue :
 
 ```
 sudo apt-get install git build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev libpthread-stubs0-dev
 
 git clone https://github.com/FORTH-ModelBasedTracker/MocapNET
+
+git checkout mnet3
 
 cd MocapNET
 
