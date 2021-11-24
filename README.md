@@ -7,7 +7,7 @@
 
 # This is the new MNET3 branch that holds the [BMVC 2021 3D hand pose estimation code](https://www.bmvc2021-virtualconference.com/conference/papers/paper_1334.html), until code is polished and ready to be pulled in the main MocapNET branch..!
 
-### Please be patient as due to the volume of work needed this might take some time, since I need to manually merge a lot of code since both the head of the github repository and the MNET3 code are actually superseeded by my private development snapshot.. For now it is best if someone needs just body to use the master branch and if someone needs body+hands to checkout the mnet3 branch. 
+### Please be patient as due to the volume of work needed this might take some time, since I need to manually merge a lot of code since both the head of the github repository and the MNET3 code are actually superseeded by my private development snapshot.. For now, if someone needs just 3D bodies please use the master branch, if you want bodies+hands then you can checkout the mnet3 branch. Please remember that the ./initialize.sh script needs to be run seperately for each branch to download the correct NN models for each case.
 
 ### If you want to perform a quick test of the new body+hands 3D pose estimation capabilities, after following the installation instructions below please try the following commands!
 
