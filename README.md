@@ -7,11 +7,18 @@
 
 # This is the new MNET3 branch that will holds the new 3D hand pose estimation code until everything is ready to be pulled in the main branch..!
 
-# Please be patient as this might take some time, since I need to manually merge a lot of code since both the head of the github repository and the MNET3 code are actually superseeded by my private development snapshot..
+## Please be patient as this might take some time, since I need to manually merge a lot of code since both the head of the github repository and the MNET3 code are actually superseeded by my private development snapshot..
 
-# Long made short there is a lot of work to do to correctly move the code here..
+## Long made short there is a lot of work to do to correctly move the code here..
 
-# If you use the steps in this Readme about OpenPose and you supply --hands to ./MocapNET2CSV you will get the new hand pose estimation functionality, however things are not exactly user friendly right now.. 
+## To perform a quick test with the new hands capabilities after following the installation instructions below try the following!
+
+```
+wget http://ammar.gr/datasets/signumtest.zip
+unzip signumtest.zip
+/MocapNET2CSV --from con0014/2dJoints_v1.4.csv --ik 0.001 15 30 --mt --show 3  --hands --label s10-p01-c0014-f --seriallength 4 --gdpr
+
+```
 
 </br>
 </br>
