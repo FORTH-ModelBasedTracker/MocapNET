@@ -352,7 +352,7 @@ int visualizeNSDM(
         }
     else if (channelsPerNSDMElement==1)
         {
-            cv::putText(img,"NSRMv2",txtPosition,fontUsed,0.3,color,thickness,8);
+            cv::putText(img,"eNSRM",txtPosition,fontUsed,0.3,color,thickness,8);
         }
 
 
