@@ -16,9 +16,9 @@ sudo apt-get install git build-essential cmake libopencv-dev libjpeg-dev libpng-
 
 git clone https://github.com/FORTH-ModelBasedTracker/MocapNET
 
-git checkout mnet3
-
 cd MocapNET
+
+git checkout mnet3
 
 ./initialize.sh
 
@@ -185,9 +185,9 @@ sudo apt-get install git build-essential cmake libopencv-dev libjpeg-dev libpng-
 
 git clone https://github.com/FORTH-ModelBasedTracker/MocapNET
 
-git checkout mnet3
-
 cd MocapNET
+
+git checkout mnet3
 
 ./initialize.sh
 
