@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
                     if (argc>i+1)
                         {
                             webcam = argv[i+1];
+                            std::cerr<<"Setting source to "<<webcam<<"\n";
                         }
                 }   else 
              if (strcmp(argv[i],"--size")==0)
@@ -30,13 +31,14 @@ int main(int argc, char *argv[])
                         {
                         width = atoi(argv[i+1]);
                         height = atoi(argv[i+2]);
+                        std::cerr<<"Setting resolution to "<<width<<","<<height<<"\n";
                         }
                     }
         }
 
 
     VideoCapture cap(webcam); // open the default camera
-    if (webcam==0)
+    if ( (webcam==0) || (strstr(webcam,"/dev/video")!=0) )
         {
             std::cerr<<"Trying to open webcam\n";
             cap.set(CAP_PROP_FRAME_WIDTH,width);
