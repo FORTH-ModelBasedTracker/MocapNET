@@ -1893,9 +1893,9 @@ if (
     
 
        
-    fprintf(stderr,"Reached bvh_freeTransform\n");
+    //fprintf(stderr,"Reached bvh_freeTransform\n");
      bvh_freeTransform(&bvhTargetTransform);
-    fprintf(stderr,"Survived bvh_freeTransform\n");
+    //fprintf(stderr,"Survived bvh_freeTransform\n");
        
      if ( (ikConfig.dumpScreenshots) && (frameNumber==10) )
      {
