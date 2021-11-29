@@ -207,7 +207,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/Codecs)
 add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/tools/Calibration)
 #add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library) #OpenGLAcquisition
 add_definitions(-DUSE_OPENGL)
-#add_definitions(-DUSE_GLEW)
+add_definitions(-DUSE_GLEW)
 set(OPENGL_LIBS  rt m GL GLU GLEW X11 Codecs CalibrationLibrary)
 set(OPENGL_SOURCE 
               ${CMAKE_SOURCE_DIR}/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/OpenGLAcquisition.c
