@@ -1565,7 +1565,7 @@ std::vector<float> improveBVHFrameUsingInverseKinematics(
                                                         )
 {
  #if USE_BVH 
- fprintf(stderr,"improveBVHFrameUsingInverseKinematics\n");
+ //fprintf(stderr,"improveBVHFrameUsingInverseKinematics\n");
  
  std::vector<float> bvhFrame = bvhFrameInput;
  
