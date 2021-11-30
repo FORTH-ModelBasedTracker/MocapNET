@@ -1,12 +1,38 @@
 import cv2
 import mediapipe as mp
 import time
+import sys
 
 mp_drawing = mp.solutions.drawing_utils
 mp_holistic = mp.solutions.holistic
 
+
+width=640
+height=480
+setCustomResolution=0
+
+if (len(sys.argv)>1):
+   #print('Argument List:', str(sys.argv))
+   for i in range(0, len(sys.argv)):
+       if (sys.argv[i]=="--size"):
+          width=int(sys.argv[i+1])
+          height=int(sys.argv[i+2])
+          setCustomResolution=1
+
+
+
 # For webcam input:
 cap = cv2.VideoCapture(0)
+
+
+#Set Custom resolution..
+if (setCustomResolution):
+   print("Frame default resolution: (" + str(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) + "; " + str(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) + ")")
+   cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+   cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+   print("Frame resolution set to: (" + str(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) + "; " + str(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) + ")")
+
+
 
 with mp_holistic.Holistic(static_image_mode=True) as holistic:
   while cap.isOpened():
