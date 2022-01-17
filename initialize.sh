@@ -141,7 +141,7 @@ done
 #Get BMVC2021 MNET3 all-in-one models with hands
 cd "$DIR/dataset"
 mkdir -p combinedModel/mocapnet2/mode1/1.0/ 
-cd "$DIR/dataset/combinedModel/mocapnet2/mode5/1.0/"
+cd "$DIR/dataset/combinedModel/mocapnet2/mode1/1.0/"
 wget http://ammar.gr/datasets/bmvc2021/mnet3Ensemble.zip
 unzip mnet3Ensemble.zip
 
