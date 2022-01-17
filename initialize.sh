@@ -144,6 +144,7 @@ mkdir -p combinedModel/mocapnet2/mode1/1.0/
 cd "$DIR/dataset/combinedModel/mocapnet2/mode1/1.0/"
 wget http://ammar.gr/datasets/bmvc2021/mnet3Ensemble.zip
 unzip mnet3Ensemble.zip
+rm mnet3Ensemble.zip
 
 
 
