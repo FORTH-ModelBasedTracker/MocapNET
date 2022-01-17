@@ -139,12 +139,16 @@ done
 
 
 #Get BMVC2021 MNET3 all-in-one models with hands
-cd "$DIR/dataset"
-mkdir -p combinedModel/mocapnet2/mode1/1.0/ 
+#--------------------------------------------------------------------
+cd "$DIR"
+mkdir -p dataset/combinedModel/mocapnet2/mode1/1.0/
 cd "$DIR/dataset/combinedModel/mocapnet2/mode1/1.0/"
-wget http://ammar.gr/datasets/bmvc2021/mnet3Ensemble.zip
-unzip mnet3Ensemble.zip
-rm mnet3Ensemble.zip
+#wget http://ammar.gr/datasets/bmvc2021/mnet3Ensemble.zip The zip file was missing variables.. (?)
+#unzip mnet3Ensemble.zip
+wget http://ammar.gr/datasets/bmvc2021/mnet3Ensemble.tar.gz
+tar -xf mnet3Ensemble.tar.gz
+rm mnet3Ensemble.tar.gz #Cleanup the intermediate file..
+#--------------------------------------------------------------------
 
 
 
@@ -154,7 +158,7 @@ cd "$DIR/combinedModel"
 #--------------------------------------------------------------------
 
 #We also downloar pre-trained models for the 2D joint estimation
-#We have 3D flavours available, openpose, vnect and our own 2D detector
+#We have 3 flavours available, openpose, vnect and our own 2D detector
 echo "Downloading 2D Joint Estimator models"
 cd "$DIR/dataset/combinedModel"
 
