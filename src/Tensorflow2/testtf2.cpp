@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h> 
 #include <math.h> 
+#include <cstring>
 #include <vector>
 
 #include "tensorflow2.h"
