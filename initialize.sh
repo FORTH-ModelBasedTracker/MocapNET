@@ -85,8 +85,9 @@ else
      cd "$DIR/dataset"
      echo "Could not find MotionCapture"
      
-     #This is a richer armature that also contains provisons for head and feet animation 
-     wget http://ammar.gr/datasets/CMUPlusHeadMotionCapture.zip
+     #This is a richer armature that also contains provisons for head and feet animation
+     wget http://cvrlcode.ics.forth.gr/web_share/mocapnet/CMUPlusHeadMotionCapture.zip
+     #wget http://ammar.gr/datasets/CMUPlusHeadMotionCapture.zip
      unzip CMUPlusHeadMotionCapture.zip
      mv CMUPlusHeadMotionCapture.zip MotionCapture 
 
