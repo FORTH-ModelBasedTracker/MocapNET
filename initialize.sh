@@ -57,6 +57,16 @@ echo "Categories=Application;Graphics;3DGraphics;2DGraphics;" >> mocapnet.deskto
 chmod +x mocapnet.desktop
 
 
+#unfortunately 2022 has not been kind on the internet and my server so I wont use my server
+CMUDATASET_WEBSERVER="http://ammar.gr/datasets/"
+DATASET_WEBSERVER="http://ammar.gr/datasets/"
+OTHERFILE_WEBSERVER="http://ammar.gr/mocapnet/"
+
+#Instead files are now located on the CVRL FORTH server
+CMUDATASET_WEBSERVER="http://cvrlcode.ics.forth.gr/web_share/mocapnet/"
+DATASET_WEBSERVER="http://cvrlcode.ics.forth.gr/web_share/mocapnet/"
+OTHERFILE_WEBSERVER="http://cvrlcode.ics.forth.gr/web_share/mocapnet/"
+
 
 clear
 
@@ -86,7 +96,7 @@ else
      echo "Could not find MotionCapture"
      
      #This is a richer armature that also contains provisons for head and feet animation
-     wget http://cvrlcode.ics.forth.gr/web_share/mocapnet/CMUPlusHeadMotionCapture.zip
+     wget "$CMUDATASET_WEBSERVER/CMUPlusHeadMotionCapture.zip"
      #wget http://ammar.gr/datasets/CMUPlusHeadMotionCapture.zip
      unzip CMUPlusHeadMotionCapture.zip
      mv CMUPlusHeadMotionCapture.zip MotionCapture 
@@ -101,7 +111,7 @@ fi
 cd "$DIR"
 #Force download of a Video sample
 if [ ! -f shuffle.webm ]; then
-  wget http://ammar.gr/mocapnet/shuffle.webm
+  wget "$OTHERFILE_WEBSERVER/shuffle.webm"
 fi
 #--------------------------------------------
 
@@ -109,14 +119,14 @@ if [ ! -f dataset/makehuman.tri ]; then
   cd "$DIR/dataset"
   #TRI is the internal 3D format used by my 3D renderer to handle 3D meshes
   #https://github.com/AmmarkoV/RGBDAcquisition/blob/master/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/ModelLoader/model_loader_tri.h
-  wget http://ammar.gr/mocapnet/makehuman.tri
+  wget "$OTHERFILE_WEBSERVER/makehuman.tri"
   
   #Also provide the OpenCollada file in case someone wants to create their own .tri by `sudo apt-get install libassimp-dev` and then compiling and using the project 
   # https://github.com/AmmarkoV/RGBDAcquisition/tree/master/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/submodules/Assimp
   #that you will find in $ROOT_DIR/dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/submodules/Assimp/
   #./assimpTester --convert $ROOT_DIR/dataset/makehuman.dae $ROOT_DIR/dataset/makehuman.tri --paint 123 123 123   
   #This dae file has been created usign makehuman(http://www.makehumancommunity.org/) and the CMU+Face Rig (http://www.makehumancommunity.org/content/cmu_plus_face.html)
-  wget http://ammar.gr/mocapnet/makehuman.dae
+  wget "$OTHERFILE_WEBSERVER/makehuman.dae"
 fi
 
 cd "$DIR"
@@ -133,7 +143,7 @@ LIST_OF_NETWORKS="categorize_lowerbody_all.pb lowerbody_left.pb upperbody_left.p
 
 for NETWORK in $LIST_OF_NETWORKS; do
 if [ ! -f $NETWORK  ]; then
-  wget http://ammar.gr/datasets/icpr2020/$NETWORK 
+  wget "$DATASET_WEBSERVER/icpr2020/$NETWORK"
 fi
 done
 
@@ -146,7 +156,7 @@ mkdir -p dataset/combinedModel/mocapnet2/mode1/1.0/
 cd "$DIR/dataset/combinedModel/mocapnet2/mode1/1.0/"
 #wget http://ammar.gr/datasets/bmvc2021/mnet3Ensemble.zip The zip file was missing variables.. (?)
 #unzip mnet3Ensemble.zip
-wget http://ammar.gr/datasets/bmvc2021/mnet3Ensemble.tar.gz
+wget "$DATASET_WEBSERVER/bmvc2021/mnet3Ensemble.tar.gz"
 tar -xf mnet3Ensemble.tar.gz
 rm mnet3Ensemble.tar.gz #Cleanup the intermediate file..
 #--------------------------------------------------------------------
@@ -164,15 +174,15 @@ echo "Downloading 2D Joint Estimator models"
 cd "$DIR/dataset/combinedModel"
 
 if [ ! -f openpose_model.pb ]; then
-  wget http://ammar.gr/datasets/combinedModel/openpose_model.pb
+  wget "$DATASET_WEBSERVER/combinedModel/openpose_model.pb"
 fi
 
 if [ ! -f vnect_sm_pafs_8.1k.pb ]; then
-  wget http://ammar.gr/datasets/combinedModel/vnect_sm_pafs_8.1k.pb
+  wget "$DATASET_WEBSERVER/combinedModel/vnect_sm_pafs_8.1k.pb"
 fi
 
 if [ ! -f mobnet2_tiny_vnect_sm_1.9k.pb ]; then
-  wget http://ammar.gr/datasets/combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb
+  wget "$DATASET_WEBSERVER/combinedModel/mobnet2_tiny_vnect_sm_1.9k.pb"
 fi
  
 cd "$DIR"
