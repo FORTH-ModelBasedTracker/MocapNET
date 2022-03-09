@@ -8,6 +8,14 @@
 ## News
 ------------------------------------------------------------------ 
 
+9-3-2022
+
+MocapNET was one of the selected projects in the [BonsAPPs Open Call for AI talents](https://bonsapps-1oc-ai-talents.fundingbox.com/)
+We are now preparing a version of MocapNET called AUTO-MNET tailored for [3D Body Tracking for automotive uses](https://s3.amazonaws.com/fundingbox-sites/gear%2F1635238346063-BonsAPPs_Guide+for+Applicants+%5BOC1%5D_published.pdf)
+
+Due to our limited resources this has currently pushed back merging of the [mnet3 branch](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet3), however hopefully we will soon have a working MocapNET in the [Bonseyes platform](https://beta.bonseyes.com/).
+
+
 8-11-2021
 
 MocapNET3 with hand pose estimation support has landed in this repository! The latest version that has been accepted in BMVC2021 is now commited [in the mnet3 branch of this repository](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet3). Since however there is considerable code-polish missing and currently the 2D joint estimator offered does not contain hands there needs to be a transition to a 2D joint estimator like [Mediapipe Holistic](https://google.github.io/mediapipe/solutions/holistic) for a better live webcam demo. MocapNET3 will appear in [the 32nd British Machine Vision Conference](http://www.bmvc2021.com/) that will be held virtually and is free to attend this year!!
