@@ -370,7 +370,6 @@ if (OpenCV_FOUND)
 add_subdirectory (src/Webcam/)
 ENDIF(OpenCV_FOUND)
 
-
 add_subdirectory(src/MocapNET2/Converters/Openpose)
 add_subdirectory(src/MocapNET2/Converters/H36M)
 add_subdirectory(src/MocapNET2/Converters/convertCSV3D)
