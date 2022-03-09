@@ -5,7 +5,9 @@
 
 #include "../IO/skeletonAbstraction.hpp"
 #include "opencv2/opencv.hpp"
-#include "../../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_loader.h"
+
+//This is not needed 
+//#include "../../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/bvh_loader.h"
 
 using namespace cv;
 
