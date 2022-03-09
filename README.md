@@ -51,15 +51,12 @@ unzip signumtest.zip
 ## News
 ------------------------------------------------------------------ 
 
-
 9-3-2022
 
 MocapNET was one of the selected projects in the [BonsAPPs Open Call for AI talents](https://bonsapps-1oc-ai-talents.fundingbox.com/)
 We are now preparing a version of MocapNET called AUTO-MNET tailored for [3D Body Tracking for automotive uses](https://s3.amazonaws.com/fundingbox-sites/gear%2F1635238346063-BonsAPPs_Guide+for+Applicants+%5BOC1%5D_published.pdf)
 
 Due to our limited resources this has currently pushed back merging of the [mnet3 branch](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet3), however hopefully we will soon have a working MocapNET in the [Bonseyes platform](https://beta.bonseyes.com/).
-
-
 
 
 8-11-2021
