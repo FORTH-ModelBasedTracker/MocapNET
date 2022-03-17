@@ -116,7 +116,7 @@ All the above yield a 33\% accuracy improvement on the [Human 3.6 Million (H3.6M
 ## Citation
 ------------------------------------------------------------------ 
 
-Please cite the following papers [1](http://users.ics.forth.gr/~argyros/mypapers/2021_01_ICPR_Qammaz.pdf),[2](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf) if this work helps your research :
+Please cite the following papers [1](http://users.ics.forth.gr/~argyros/mypapers/2021_11_BMVC_Qammaz.pdf), [2](http://users.ics.forth.gr/~argyros/mypapers/2021_01_ICPR_Qammaz.pdf), [3](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf) according to the part of this work that helps your research :
 
 
 
