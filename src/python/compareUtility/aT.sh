@@ -1,5 +1,8 @@
 #!/bin/bash
 #Written by Ammar Qammaz a.k.a AmmarkoV - 2020
+#  This bash script uses gnuplot and R so make sure to : 
+#          sudo apt-get install gnuplot r-base 
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
