@@ -887,6 +887,10 @@ for frameID in range(0,numberOfFrames):
 appendRAWResultsForGNUplot("gnuplot.raw",alljointDistances)
 
 #Final results we want is Mean Per Joint Position Error (MPJPE) so we rely on the perJointDisparities etc..
+#The result unit depends on the input to the script but it should be in millimeters for MocapNET output
+#to change units you can use the --ourscale X Y Z commandline parameter, however millimeters of accuracy
+#is the norm for 3D pose estimation work..
+
 print("\nMean Per Joint Error for ",totalSamples," samples is ",totalError/totalSamples)
 median  =  np.median(alljointDistances)
 mean    =  np.mean(alljointDistances)
