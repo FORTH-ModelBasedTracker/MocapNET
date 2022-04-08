@@ -8,6 +8,16 @@
 ## News
 ------------------------------------------------------------------ 
 
+7-4-2022
+
+The open call of [BONSAPPS (https://bonsapps.eu/)](https://bonsapps.eu/) for AI talents received 126 proposals from 31 EU countries.
+Out of these proposals, 30 were actually accepted. 
+Out of the 30 running BONSAPPs projects, 10 were selected yesterday to continue into phase 2. 
+I am very happy to report that our AUTO-MNET MocapNET based work made it to the top ten!
+
+![BonsAPPs Hackathon/Stage 2 selection](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/bonsappshackathon.jpg)
+
+
 9-3-2022
 
 MocapNET was one of the selected projects in the [BonsAPPs Open Call for AI talents](https://bonsapps-1oc-ai-talents.fundingbox.com/)
