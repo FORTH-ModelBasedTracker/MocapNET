@@ -66,14 +66,13 @@ All the above yield a 33\% accuracy improvement on the [Human 3.6 Million (H3.6M
 ## Youtube Videos
 ------------------------------------------------------------------ 
 
-| ICPR 2020 Supplementary Video | BMVC 2019 Supplementary Video |
-| ------------- | ------------- |
-| [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtubevideolink2.jpg)  ](https://www.youtube.com/watch?v=Jgz1MRq-I-k) | [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtubevideolink.jpg)  ](https://www.youtube.com/watch?v=fH5e-KMBvM0)  |
-
-
 | ICPR 2020 Poster Session  | BMVC 2021 Supplementary Video |
 | ------------- | ------------- |
 | [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/ICPR2020_posterYoutubeVideoLink.png)  ](https://www.youtube.com/watch?v=mns2s4xUC7c) | [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/BMVC21YoutubeVideo.png)  ](https://www.youtube.com/watch?v=aaLOSY_p6Zc)  |
+
+| ICPR 2020 Supplementary Video | BMVC 2019 Supplementary Video |
+| ------------- | ------------- |
+| [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtubevideolink2.jpg)  ](https://www.youtube.com/watch?v=Jgz1MRq-I-k) | [![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/youtubevideolink.jpg)  ](https://www.youtube.com/watch?v=fH5e-KMBvM0)  |
 
 ------------------------------------------------------------------ 
 
