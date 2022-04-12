@@ -92,6 +92,7 @@ int main(int argc, char *argv[])
        options.inputIsSingleImage = 1;
        options.doOutputFiltering  = 0; //There is no motion to filter so skip this
        singleImageFrame=imread(options.webcamSource);
+       singleImageFrame.copyTo(frame);
      } else
      if (strstr(options.webcamSource,"/dev/video")!=0)
      {
