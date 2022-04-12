@@ -100,9 +100,13 @@ int main(int argc, char *argv[])
        options.inputIsSingleImage = 0;
        cap.set(cv::CAP_PROP_FRAME_WIDTH,options.width);
        cap.set(cv::CAP_PROP_FRAME_HEIGHT,options.height);
-       cap >> frame;
      }
 
+     //This needs to be grabbed to initialize window sizes either on video source, or on webcam source
+     //--------------------------------------------------------------------
+     if (!options.inputIsSingleImage)
+                          {  cap >> frame; } 
+     //--------------------------------------------------------------------
 
      //We will accept the input resolution and force it
      //on visualization..
@@ -341,8 +345,12 @@ int main(int argc, char *argv[])
                                                         frameID,
                                                         1// We will do the waitKey call ourselves
                                                     );
- 
-                                                    imshow("Skeletons", viewMat);
+
+
+                                                   if ( (viewMat.size().width >0) && (viewMat.size().height>0) )
+                                                      { imshow("Skeletons", viewMat); } else 
+                                                      { std::cerr<<"Invalid skeleton visualization frame.. \n"; }
+
                                                 }
                                         }
                                 }

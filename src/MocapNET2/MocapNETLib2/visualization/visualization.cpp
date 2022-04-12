@@ -1131,6 +1131,13 @@ int visualizePoints(
     unsigned int save3DVisualization
 )
 {  
+    if ( (width<=0) || (height<=0) )
+     {
+         fprintf(stderr,YELLOW "visualizePoints with image %ux%u\n" NORMAL,width,height); 
+         return 0;
+     }
+
+
 #if USE_OPENCV
     char textInfo[512]; 
     cv::Scalar color= cv::Scalar(220,220,220,0 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
@@ -1567,8 +1574,10 @@ int visualizePoints(
 */
 
     //At last we are able to show the window..
-    cv::imshow(windowName,img);
-    
+    if ( (img.size().width >0) && (img.size().height>0) ) { cv::imshow(windowName,img); } else 
+                                                          { std::cerr<<"Invalid visualization frame.. \n"; }
+
+
     if (save3DVisualization)
     {
         char filename[512];
