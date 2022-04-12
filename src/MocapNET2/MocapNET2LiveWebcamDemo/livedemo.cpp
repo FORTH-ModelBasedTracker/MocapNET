@@ -101,8 +101,13 @@ int main(int argc, char *argv[])
        options.inputIsSingleImage = 0;
        cap.set(cv::CAP_PROP_FRAME_WIDTH,options.width);
        cap.set(cv::CAP_PROP_FRAME_HEIGHT,options.height);
-       cap >> frame;
      }
+
+     //This needs to be grabbed to initialize window sizes either on video source, or on webcam source
+     //--------------------------------------------------------------------
+     if (!options.inputIsSingleImage)
+                          {  cap >> frame; } 
+     //--------------------------------------------------------------------
 
      //We will accept the input resolution and force it
      //on visualization..

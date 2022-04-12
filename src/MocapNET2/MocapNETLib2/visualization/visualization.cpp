@@ -1126,6 +1126,13 @@ int visualizePoints(
     unsigned int save3DVisualization
 )
 {  
+    if ( (width<=0) || (height<=0) )
+     {
+         fprintf(stderr,YELLOW "visualizePoints with image %ux%u\n" NORMAL,width,height); 
+         return 0;
+     }
+
+
 #if USE_OPENCV
     char textInfo[512]; 
     cv::Scalar color= cv::Scalar(220,220,220,0 /*Transparency here , although if the cv::Mat does not have an alpha channel it is useless*/);
