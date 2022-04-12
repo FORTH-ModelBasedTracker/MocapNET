@@ -76,20 +76,33 @@ int main(int argc, char *argv[])
 
     std::cerr<<"Trying to open source ("<<options.webcamSource<<") \n";
     VideoCapture cap(options.webcamSource); // open the default camera
-     
+
+     int itIsTheFirstFrame=1;
+     Mat frame;
+     Mat frameCentered;
+
+     if ( 
+          (strstr(options.webcamSource,".jpg")!=0) ||
+          (strstr(options.webcamSource,".png")!=0)
+        )
+     {
+       std::cerr<<"Source seems to be a single image ("<<options.webcamSource<<") \n";
+       options.frameLimit = 10; //let it warmup for a few frames..
+       options.inputIsSingleImage = 1;
+       options.doOutputFiltering  = 0; //There is no motion to filter so skip this
+       frame=imread(options.webcamSource);
+     } else
      if (strstr(options.webcamSource,"/dev/video")!=0)
      {
        std::cerr<<"Source seems to be a webcam ("<<options.webcamSource<<" @ "<<options.width<<","<<options.height<<") \n";
+       options.inputIsSingleImage = 0;
        cap.set(cv::CAP_PROP_FRAME_WIDTH,options.width);
        cap.set(cv::CAP_PROP_FRAME_HEIGHT,options.height);
+       cap >> frame;
      }
 
-     Mat frame;
-     Mat frameCentered;
-     int itIsTheFirstFrame=1;
-     cap >> frame;
 
-     //We will accept the input resolution and force it 
+     //We will accept the input resolution and force it
      //on visualization..
      options.width     = frame.size().width;
      options.height    = frame.size().height;
@@ -161,11 +174,13 @@ int main(int argc, char *argv[])
                        while ( (options.frameLimit==0) || (frameID<options.frameLimit) )
                         {
                             options.loopStartTime = GetTickCountMicrosecondsMN();
-                            
-                            if (itIsTheFirstFrame) { itIsTheFirstFrame=0; } else 
-                                                   { cap >> frame; }
-                            
-                            //If we are running in a low-end computer and need to keep in sync with a live video feed we can frame-skip 
+
+
+                            if (options.inputIsSingleImage) {    /*Do nothing*/    } else
+                            if (itIsTheFirstFrame)          { itIsTheFirstFrame=0; } else
+                                                            { cap >> frame;        }
+
+                            //If we are running in a low-end computer and need to keep in sync with a live video feed we can frame-skip
                                  if (options.frameSkip)
                                 {
                                     for (int i=0; i<options.frameSkip; i++)

@@ -15,6 +15,8 @@ struct MocapNET2Options
     const char * webcamSource;
     const char * path;
     char * datasetPath;
+    unsigned int inputIsSingleImage;
+
     unsigned int isJSONFile;
     unsigned int isCSVFile;
     unsigned int jointEstimatorUsed;
