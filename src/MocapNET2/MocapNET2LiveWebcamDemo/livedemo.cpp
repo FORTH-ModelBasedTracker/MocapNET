@@ -343,7 +343,9 @@ int main(int argc, char *argv[])
                                                         1// We will do the waitKey call ourselves
                                                     );
 
-                                                    imshow("Skeletons", viewMat);
+                                                   if ( (viewMat.size().width >0) && (viewMat.size().height>0) )
+                                                      { imshow("Skeletons", viewMat); } else 
+                                                      { std::cerr<<"Invalid skeleton visualization frame.. \n"; }
                                                 }
                                         }
                                 }

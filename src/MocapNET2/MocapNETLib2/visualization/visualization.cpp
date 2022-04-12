@@ -1562,8 +1562,10 @@ int visualizePoints(
 */
 
     //At last we are able to show the window..
-    cv::imshow(windowName,img);
-    
+    if ( (img.size().width >0) && (img.size().height>0) ) { cv::imshow(windowName,img); } else 
+                                                          { std::cerr<<"Invalid visualization frame.. \n"; }
+
+
     if (save3DVisualization)
     {
         char filename[512];
