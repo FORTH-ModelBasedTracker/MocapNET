@@ -99,6 +99,7 @@ Please cite the following papers [1](http://users.ics.forth.gr/~argyros/mypapers
   videolink = {https://www.youtube.com/watch?v=aaLOSY_p6Zc}
 }
 ```
+For the BMVC21 version of MocapNET please [switch to the MNET3 branch](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet3) 
 
 
 ```
