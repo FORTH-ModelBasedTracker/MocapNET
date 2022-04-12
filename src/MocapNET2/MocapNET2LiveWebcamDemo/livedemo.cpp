@@ -78,6 +78,7 @@ int main(int argc, char *argv[])
     VideoCapture cap(options.webcamSource); // open the default camera
 
      int itIsTheFirstFrame=1;
+     Mat singleImageFrame;
      Mat frame;
      Mat frameCentered;
 
@@ -87,10 +88,10 @@ int main(int argc, char *argv[])
         )
      {
        std::cerr<<"Source seems to be a single image ("<<options.webcamSource<<") \n";
-       options.frameLimit = 10; //let it warmup for a few frames..
+       options.frameLimit = 20; //let it warmup for a few frames..
        options.inputIsSingleImage = 1;
        options.doOutputFiltering  = 0; //There is no motion to filter so skip this
-       frame=imread(options.webcamSource);
+       singleImageFrame=imread(options.webcamSource);
      } else
      if (strstr(options.webcamSource,"/dev/video")!=0)
      {
@@ -175,10 +176,9 @@ int main(int argc, char *argv[])
                         {
                             options.loopStartTime = GetTickCountMicrosecondsMN();
 
-
-                            if (options.inputIsSingleImage) {    /*Do nothing*/    } else
-                            if (itIsTheFirstFrame)          { itIsTheFirstFrame=0; } else
-                                                            { cap >> frame;        }
+                            if (options.inputIsSingleImage) { singleImageFrame.copyTo(frame); } else
+                            if (itIsTheFirstFrame)          { itIsTheFirstFrame=0;            } else
+                                                            { cap >> frame;                   }
 
                             //If we are running in a low-end computer and need to keep in sync with a live video feed we can frame-skip
                                  if (options.frameSkip)
