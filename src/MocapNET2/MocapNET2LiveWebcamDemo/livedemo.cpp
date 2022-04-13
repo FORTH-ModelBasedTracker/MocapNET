@@ -373,7 +373,12 @@ int main(int argc, char *argv[])
                             //------------------------------------------------------
                             // These final calls add delays to frame processing so 
                             // they are not counted in loop time
-                            //------------------------------------------------------ 
+                            //------------------------------------------------------
+
+                            //Frames should increment even when visualization is off.. 
+                            ++frameID;
+
+
                             if (options.visualize)
                                             {
                             char key = 0; 
@@ -384,9 +389,6 @@ int main(int argc, char *argv[])
                                 {
                                     key = waitKey(1);
                                 }
-                            
-                            ++frameID;
-                            
                             if (key==27)
                             {
                                 fprintf(stderr,GREEN "Received Escape key from UI, terminating the application.." NORMAL);
