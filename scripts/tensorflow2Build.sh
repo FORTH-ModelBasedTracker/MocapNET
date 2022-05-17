@@ -1,15 +1,20 @@
 #!/bin/bash
 
-#Script source repository https://github.com/AmmarkoV/MyScripts/blob/master/Tensorflow/tensorflow2Build.sh
-#Script last updated 31-12-2021
+#Script last updated 25-03-2022
 
 #Script that seems to be able to build bazel/tf2 on Ubuntu 20.04
 #I really deeply dislike the bazel build system which is bloated and obfuscated for no reason, just Google "NIH syndrome"
 #However Tensorflow2 is a great NN framework
 # See this video "How To Make Package Managers Cry" ->  https://www.youtube.com/watch?v=NSemlYagjIU#t=19m0s 
  
+echo "Check CUDA"
+ls /usr/local/cuda/extras/CUPTI/lib64
+ls /usr/local/cuda
+ls /usr/local/cuda/lib64/ | grep libcudnn.so 
+nvcc -V
 
-VERSION="2.4"
+
+VERSION="2.8"
 
 #Get number of bytes in RAM
 RAM=`free | grep Mem | tr -s ' '| cut -f2 -d ' '`
@@ -32,30 +37,23 @@ fi
 
 
 #Tensorflow is a great Neural network library that unfortunately is coupled to the terrible Bazel build system
-#This is a download and build script for Ubuntu 20.04, that should work building release 2.4  
+#This is a download and build script for Ubuntu 20.04, that should work building release 2.8  
 
 sudo apt-get install python3-dev python3-pip python3-venv python3-tk
 
-
-pip3 install -U --user pip numpy wheel
+pip3 install -U --user pip numpy wheel packaging
 pip3 install -U --user keras_preprocessing --no-deps
-
-#pip3 install -U --user pip six numpy wheel setuptools mock 'future>=0.17.1'
-#pip3 install -U --user keras_applications --no-deps
-#pip3 install -U --user keras_preprocessing --no-deps
-
 
 cd ~/Documents
 mkdir 3dParty
 cd 3dParty
 
+#wget https://github.com/bazelbuild/bazel/releases/download/4.2.1/bazel-4.2.1-installer-linux-x86_64.sh
+#chmod +x bazel-4.2.1-installer-linux-x86_64.sh
+#./bazel-4.2.1-installer-linux-x86_64.sh --user
 
-#wget https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-installer-linux-x86_64.sh
-#chmod +x bazel-3.1.0-installer-linux-x86_64.sh
-#./bazel-3.1.0-installer-linux-x86_64.sh --user
-
-#mkdir -p "$HOME/.bazel/bin"
-#cd "$HOME/.bazel/bin" && curl -fLO https://releases.bazel.build/3.1.0/release/bazel-3.1.0-linux-x86_64 && chmod +x bazel-3.1.0-linux-x86_64
+#r2.8
+mkdir -p "$HOME/.bazel/bin" && cd "$HOME/.bazel/bin" && curl -fLO https://releases.bazel.build/4.2.1/release/bazel-4.2.1-linux-x86_64 && chmod +x bazel-4.2.1-linux-x86_64
 
 #Create shared directory
 if [ -f ~/.bashrc ]
@@ -86,20 +84,34 @@ git checkout r$VERSION
 # for example for an old intel i7 -march=nehalem is used..
 #https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html
 
+
+echo "Answers to configure questions :" 
+echo "/usr/bin/python3"
+echo "/usr/lib/python3/dist-packages"
+echo "cuda Y"
+echo "tensorrt Y"
+echo "CUDA 11.2"
+echo "CuDNN 8"
+echo "TensorRT 8"
+echo "/usr/local/cuda/,/usr/local/cuda/include/,/usr/local/cuda/bin/,/usr/local/cuda/lib64/,/usr/local/cuda/lib64/,/usr/local/tensorrt-8.2.3/,/usr/local/tensorrt-8.2.3/include/,/usr/local/tensorrt-8.2.3/lib/,"
+echo "Compute capability 6.1 ( for GTX 1050 + cards )"
+
+#Attempt to inform the configure script on how to find the CUDA stuff..
+export CUDNN_INSTALL_PATH=/usr/local/cuda/,/usr/local/cuda/include/,/usr/local/cuda/bin/,/usr/local/cuda/lib64/,/usr/local/cuda/lib64/,/usr/local/tensorrt-8.2.3/,/usr/local/tensorrt-8.2.3/include/,/usr/local/tensorrt-8.2.3/lib/
+
+
 ./configure
 
 bazel clean --expunge
 
-#Flags for bazel if you have gcc<5.0
-#--cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0"
-#--noincompatible_do_not_split_linking_cmdline
 
-#You should use CUDA 11.1 and cudnn-11.1-linux-x64-v8.0.5.39
+
+#You should use CUDA 11.2 and cudnn-11.2-linux-x64-v8.1.1.33 and TensorRT 8.2.3
 
 bazel build --config=opt --config=cuda --config=mkl --config=monolithic $BazelPleaseSlowDown  //tensorflow/tools/pip_package:build_pip_package
 ./bazel-bin/tensorflow/tools/pip_package/build_pip_package ~/Documents/3dParty/
 #To install
-#pip3 install ~/Documents/3dParty/tensorflow-2.4.0-cp36-cp36m-linux_x86_64.whl
+#pip3 --user install ~/Documents/3dParty/tensorflow-2.4.0-cp36-cp36m-linux_x86_64.whl
 
 
 
