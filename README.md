@@ -8,6 +8,12 @@
 ## News
 ------------------------------------------------------------------ 
 
+1-6-2022
+
+An added [python/mediapipe utility](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/master/src/python/mediapipe) can now help with generating 2D data for experiments! 
+This can help you create datasets that include hands that can be processed using [MocapNETv3](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet3)
+
+
 7-4-2022
 
 The open call of [BONSAPPS (https://bonsapps.eu/)](https://bonsapps.eu/) for AI talents received 126 proposals from 31 EU countries.
@@ -359,7 +365,7 @@ To convert video files ready for use as input to MocapNET in a *relatively* easy
 
 ![MediaPipe Video 2 CSV utility](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/mediapipeConverter.jpg)
 
-You can get mediapipe using the [setup.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/python/mediapipe/setup.sh) script or by executing 
+You can get mediapipe using this [src/python/mediapipe/setup.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/python/mediapipe/setup.sh) script or by executing 
 
 ```
 pip install --user mediapipe opencv-python
@@ -376,7 +382,7 @@ After the conversion finishes you can process the generated "dataset" using Moca
 ```
 ./MocapNET2CSV --from tester-mpdata/2dJoints_mediapipe.csv --show 3 
 ```
-
+Due to the higher accuracy of [mediapipe holistic](https://google.github.io/mediapipe/solutions/holistic.html) (as well as inclusion of heads and hands which makes data forward compatible with the next versions of MocapNET) this might be a very useful tool to use in conjunction with MocapNET. In particular if you use this dumper be sure to checkout [MocapNET version 3](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet3) that also supports hand pose estimation!
 
 
 
