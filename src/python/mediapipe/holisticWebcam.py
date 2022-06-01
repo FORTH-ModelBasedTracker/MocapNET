@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import cv2
 import mediapipe as mp
 import time
@@ -33,14 +35,17 @@ with mp_holistic.Holistic(static_image_mode=True) as holistic:
     end = time.time()
     # Time elapsed
     seconds = end - start
-    #print ("Time taken : {0} seconds".format(seconds))
     # Calculate frames per second
     fps  = 1 / seconds
-    print("{0} fps".format(fps))
- 	 
+    print("\r Framerate : ",round(fps,2)," fps \r", end="", flush=True)
 
     annotated_image = image.copy()
-    mp_drawing.draw_landmarks(annotated_image, results.face_landmarks, mp_holistic.FACE_CONNECTIONS)
+    #Compensate for name mediapipe change..
+    try:
+       mp_drawing.draw_landmarks(annotated_image, results.face_landmarks      , mp_holistic.FACEMESH_TESSELATION) #This used to be called FACE_CONNECTIONS
+    except:
+       mp_drawing.draw_landmarks(annotated_image, results.face_landmarks      , mp_holistic.FACE_CONNECTIONS) #This used to be called FACE_CONNECTIONS
+
     mp_drawing.draw_landmarks(annotated_image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
     mp_drawing.draw_landmarks(annotated_image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
     # Use mp_holistic.UPPER_BODY_POSE_CONNECTIONS for drawing below when

@@ -1,4 +1,62 @@
 
+
+def processPoseLandmarks(mnetPose2D,correctLabels,holisticPose):
+   itemNumber=0
+   if holisticPose is not None:
+     for item in holisticPose.landmark:
+        thisLandmarkName = correctLabels[itemNumber].lower() 
+        if (thisLandmarkName!=''):
+          labelX = "2DX_"+thisLandmarkName
+          mnetPose2D[labelX]=1.0-item.x #Do Flip X 
+          labelY = "2DY_"+thisLandmarkName
+          mnetPose2D[labelY]=item.y
+          labelV = "visible_"+thisLandmarkName
+          mnetPose2D[labelV]=item.visibility
+          #print("Joint ",thisLandmarkName,"(",itemNumber,") x=",item.x," y=",item.y," z=",item.z)
+        itemNumber = itemNumber +1
+   return mnetPose2D
+
+
+def guessLandmarks(mnetPose2D):
+   if mnetPose2D is not None:
+        if ("2DX_rshoulder" in mnetPose2D) and ("2DY_rshoulder" in mnetPose2D) and ("visible_rshoulder" in mnetPose2D) and ("2DX_lshoulder" in mnetPose2D) and ("2DY_lshoulder" in mnetPose2D) and ("visible_lshoulder" in mnetPose2D) :
+              #---------------------------------------------
+              rX = float(mnetPose2D["2DX_rshoulder"])
+              rY = float(mnetPose2D["2DY_rshoulder"])
+              rV = float(mnetPose2D["visible_rshoulder"])
+              #---------------------------------------------
+              lX = float(mnetPose2D["2DX_lshoulder"])
+              lY = float(mnetPose2D["2DY_lshoulder"])
+              lV = float(mnetPose2D["visible_lshoulder"])
+              #---------------------------------------------
+              if (rV>0.0) and (lV>0.0):
+                 mnetPose2D["2DX_neck"]=(rX+lX)/2
+                 mnetPose2D["2DY_neck"]=(rY+lY)/2
+                 mnetPose2D["visible_neck"]=(rV+lV)/2
+        #---------------------------------------------------
+
+        if ("2DX_rhip" in mnetPose2D) and ("2DY_rhip" in mnetPose2D) and ("visible_rhip" in mnetPose2D) and ("2DX_lhip" in mnetPose2D) and ("2DY_lhip" in mnetPose2D) and ("visible_lhip" in mnetPose2D) :
+              #---------------------------------------------
+              rX = float(mnetPose2D["2DX_rhip"])
+              rY = float(mnetPose2D["2DY_rhip"])
+              rV = float(mnetPose2D["visible_rhip"])
+              #---------------------------------------------
+              lX = float(mnetPose2D["2DX_lhip"])
+              lY = float(mnetPose2D["2DY_lhip"])
+              lV = float(mnetPose2D["visible_lhip"])
+              #---------------------------------------------
+              if (rV>0.0) and (lV>0.0):
+                 mnetPose2D["2DX_hip"]=(rX+lX)/2
+                 mnetPose2D["2DY_hip"]=(rY+lY)/2
+                 mnetPose2D["visible_hip"]=(rV+lV)/2
+        #---------------------------------------------------
+   return mnetPose2D
+
+
+
+
+
+
 #MocapNET list of expected inputs
 #frameNumber,skeletonID,totalSkeletons,2DX_head,2DY_head,visible_head,2DX_neck,2DY_neck,visible_neck,2DX_rshoulder,2DY_rshoulder,visible_rshoulder,2DX_relbow,2DY_relbow,visible_relbow,2DX_rhand,2DY_rhand,visible_rhand,2DX_lshoulder,2DY_lshoulder,visible_lshoulder,2DX_lelbow,2DY_lelbow,visible_lelbow,2DX_lhand,2DY_lhand,visible_lhand,2DX_hip,2DY_hip,visible_hip,2DX_rhip,2DY_rhip,visible_rhip,2DX_rknee,2DY_rknee,visible_rknee,2DX_rfoot,2DY_rfoot,visible_rfoot,2DX_lhip,2DY_lhip,visible_lhip,2DX_lknee,2DY_lknee,visible_lknee,2DX_lfoot,2DY_lfoot,visible_lfoot,2DX_endsite_eye.r,2DY_endsite_eye.r,visible_endsite_eye.r,2DX_endsite_eye.l,2DY_endsite_eye.l,visible_endsite_eye.l,2DX_rear,2DY_rear,visible_rear,2DX_lear,2DY_lear,visible_lear,2DX_endsite_toe1-2.l,2DY_endsite_toe1-2.l,visible_endsite_toe1-2.l,2DX_endsite_toe5-3.l,2DY_endsite_toe5-3.l,visible_endsite_toe5-3.l,2DX_lheel,2DY_lheel,visible_lheel,2DX_endsite_toe1-2.r,2DY_endsite_toe1-2.r,visible_endsite_toe1-2.r,2DX_endsite_toe5-3.r,2DY_endsite_toe5-3.r,visible_endsite_toe5-3.r,2DX_rheel,2DY_rheel,visible_rheel,2DX_bkg,2DY_bkg,visible_bkg,
 
