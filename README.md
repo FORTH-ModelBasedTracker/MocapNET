@@ -373,6 +373,7 @@ pip install --user mediapipe opencv-python
 
 The converter utility receives an input video stream and creates an output directory with all image frames and the CSV file with 2D joint estimations.  
 
+After going to the root directory of the project
 ```
 python3 src/python/mediapipe/mediapipeHolistic2CSV.py --from shuffle.webm -o tester
 ```
