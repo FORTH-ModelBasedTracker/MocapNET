@@ -51,6 +51,12 @@ unzip signumtest.zip
 ## News
 ------------------------------------------------------------------ 
 
+1-6-2022
+
+An added [python/mediapipe utility](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/master/src/python/mediapipe) can now help with generating 2D data for experiments! 
+This can help you create datasets that include hands that can be processed using [MocapNETv3](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet3)
+
+
 7-4-2022
 
 The open call of [BONSAPPS (https://bonsapps.eu/)](https://bonsapps.eu/) for AI talents received 126 proposals from 31 EU countries.
@@ -394,7 +400,42 @@ When deploying the code on headless environments like [Google Colab](https://git
 To overcome these errors just use the --novisualization switch to disable visualization windows
 
 
-## Higher accuracy using OpenPose JSON files
+
+
+
+## Higher accuracy with relatively little work using Mediapipe Holistic
+------------------------------------------------------------------ 
+To convert video files ready for use as input to MocapNET in a *relatively* easy way I have included a python converter that uses mediapipe/opencv to create the CSV files needed for MocapNET.
+
+![MediaPipe Video 2 CSV utility](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/mediapipeConverter.jpg)
+
+You can get mediapipe using this [src/python/mediapipe/setup.sh](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/python/mediapipe/setup.sh) script or by executing 
+
+```
+pip install --user mediapipe opencv-python
+```
+
+The converter utility receives an input video stream and creates an output directory with all image frames and the CSV file with 2D joint estimations.  
+
+After going to the root directory of the project
+```
+python3 src/python/mediapipe/mediapipeHolistic2CSV.py --from shuffle.webm -o tester
+```
+
+After the conversion finishes you can process the generated "dataset" using MocapNET2CSV 
+
+```
+./MocapNET2CSV --from tester-mpdata/2dJoints_mediapipe.csv --show 3 
+```
+Due to the higher accuracy of [mediapipe holistic](https://google.github.io/mediapipe/solutions/holistic.html) (as well as inclusion of heads and hands which makes data forward compatible with the next versions of MocapNET) this might be a very useful tool to use in conjunction with MocapNET. In particular if you use this dumper be sure to checkout [MocapNET version 3](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet3) that also supports hand pose estimation!
+
+
+
+
+
+
+
+## Higher accuracy with more work deploying Caffe/OpenPose and using OpenPose JSON files
 ------------------------------------------------------------------ 
 
 In order to get higher accuracy output compared to the live demo which is more performance oriented, you can use OpenPose and the 2D output JSON files produced by it. The convertOpenPoseJSONToCSV application can convert them to a BVH file. After downloading [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) and building it you can use it to acquire 2D JSON body pose data by running :

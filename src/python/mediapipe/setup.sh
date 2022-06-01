@@ -6,7 +6,7 @@ source mp_env/bin/activate
 #pip install mediapipe-rpi4 opencv-python
 
 #For Regular x86_64
-pip install mediapipe opencv-python
+python3 -m pip install mediapipe opencv-python
 python3 holisticWebcam.py
 
 

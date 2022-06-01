@@ -11,9 +11,8 @@ from tools import checkIfFileExists,createDirectory
 mp_drawing  = mp.solutions.drawing_utils
 mp_holistic = mp.solutions.holistic
 
-
 #I have added a seperate list with the joints
-from holisticPartNames import getHolisticBodyNameList, getHolisticFaceNameList
+from holisticPartNames import getHolisticBodyNameList, getHolisticFaceNameList, processPoseLandmarks, guessLandmarks
 MEDIAPIPE_POSE_LANDMARK_NAMES=getHolisticBodyNameList()
 MEDIAPIPE_FACE_LANDMARK_NAMES=getHolisticFaceNameList()
  
@@ -102,60 +101,6 @@ def drawListNumbers(image,lst):
 
 
 
-def processPoseLandmarks(mnetPose2D,correctLabels,holisticPose):
-   itemNumber=0
-   if holisticPose is not None:
-     for item in holisticPose.landmark:
-        thisLandmarkName = correctLabels[itemNumber].lower() 
-        if (thisLandmarkName!=''):
-          labelX = "2DX_"+thisLandmarkName
-          mnetPose2D[labelX]=1.0-item.x #Do Flip X 
-          labelY = "2DY_"+thisLandmarkName
-          mnetPose2D[labelY]=item.y
-          labelV = "visible_"+thisLandmarkName
-          mnetPose2D[labelV]=item.visibility
-          #print("Joint ",thisLandmarkName,"(",itemNumber,") x=",item.x," y=",item.y," z=",item.z)
-        itemNumber = itemNumber +1
-   return mnetPose2D
-
-
-def guessLandmarks(mnetPose2D):
-   if mnetPose2D is not None:
-        if ("2DX_rshoulder" in mnetPose2D) and ("2DY_rshoulder" in mnetPose2D) and ("visible_rshoulder" in mnetPose2D) and ("2DX_lshoulder" in mnetPose2D) and ("2DY_lshoulder" in mnetPose2D) and ("visible_lshoulder" in mnetPose2D) :
-              #---------------------------------------------
-              rX = float(mnetPose2D["2DX_rshoulder"])
-              rY = float(mnetPose2D["2DY_rshoulder"])
-              rV = float(mnetPose2D["visible_rshoulder"])
-              #---------------------------------------------
-              lX = float(mnetPose2D["2DX_lshoulder"])
-              lY = float(mnetPose2D["2DY_lshoulder"])
-              lV = float(mnetPose2D["visible_lshoulder"])
-              #---------------------------------------------
-              if (rV>0.0) and (lV>0.0):
-                 mnetPose2D["2DX_neck"]=(rX+lX)/2
-                 mnetPose2D["2DY_neck"]=(rY+lY)/2
-                 mnetPose2D["visible_neck"]=(rV+lV)/2
-        #---------------------------------------------------
-
-        if ("2DX_rhip" in mnetPose2D) and ("2DY_rhip" in mnetPose2D) and ("visible_rhip" in mnetPose2D) and ("2DX_lhip" in mnetPose2D) and ("2DY_lhip" in mnetPose2D) and ("visible_lhip" in mnetPose2D) :
-              #---------------------------------------------
-              rX = float(mnetPose2D["2DX_rhip"])
-              rY = float(mnetPose2D["2DY_rhip"])
-              rV = float(mnetPose2D["visible_rhip"])
-              #---------------------------------------------
-              lX = float(mnetPose2D["2DX_lhip"])
-              lY = float(mnetPose2D["2DY_lhip"])
-              lV = float(mnetPose2D["visible_lhip"])
-              #---------------------------------------------
-              if (rV>0.0) and (lV>0.0):
-                 mnetPose2D["2DX_hip"]=(rX+lX)/2
-                 mnetPose2D["2DY_hip"]=(rY+lY)/2
-                 mnetPose2D["visible_hip"]=(rV+lV)/2
-        #---------------------------------------------------
-   return mnetPose2D
-
-
-
 def convertStreamToMocapNETCSV():
     videoFilePath    ="shuffle.webm"
     outputDatasetPath="frames/shuffle.webm"
@@ -226,7 +171,6 @@ def convertStreamToMocapNETCSV():
         print("\r Frame : ",frameNumber,"   |   ",round(fps,2)," fps \r", end="", flush=True)
 
         annotated_image = image.copy()
-
         #Compensate for name mediapipe change..
         try:
           mp_drawing.draw_landmarks(annotated_image, results.face_landmarks      , mp_holistic.FACEMESH_TESSELATION) #This used to be called FACE_CONNECTIONS
