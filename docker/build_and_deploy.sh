@@ -12,7 +12,7 @@ REPOSITORY=`pwd`
 
 cd "$DIR"
 
-NAME="MocapNET"
+NAME="mocapnet"
 dockerfile_pth="$DIR"
 mount_pth="$REPOSITORY"
 
