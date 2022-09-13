@@ -11,13 +11,13 @@ RUN \
 		&& apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/3bf863cc.pub \
 		&& apt-get update && apt-get install -y \
 			vim \
-            build-essential\
-            cmake\ 
-            libopencv-dev\
-            libjpeg-dev\
-            libpng-dev\
-            libglew-dev\
-            libpthread-stubs0-dev
+            build-essential \
+            cmake \
+            libopencv-dev \
+            libjpeg-dev \
+            libpng-dev \
+            libglew-dev \
+            libpthread-stubs0-dev \
 			git \
 			virtualenv \
 			time \
