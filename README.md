@@ -58,7 +58,7 @@ unzip signumtest.zip
 
 30-9-2022
 
-MocapNET was demonstrated at the Foundation of Research and technology of Greece as part of the European Researcher's Night 2022 event.
+MocapNET was demonstrated at the [Foundation of Research and technology of Greece](https://www.forth.gr/en/home/) as part of the [European Researcher's Night 2022 event](https://cordis.europa.eu/programme/id/HORIZON_HORIZON-MSCA-2022-CITIZENS-01-01).
 
 ![Researcher's Night 2022](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/ren2022.jpg)
 
