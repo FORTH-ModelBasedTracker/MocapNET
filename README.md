@@ -8,6 +8,12 @@
 ## News
 ------------------------------------------------------------------ 
 
+30-9-2022
+
+MocapNET was demonstrated at the Foundation of Research and technology of Greece as part of the European Researcher's Night 2022 event.
+
+![Researcher's Night 2022](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/ren2022.jpg)
+
 1-6-2022
 
 An added [python/mediapipe utility](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/master/src/python/mediapipe) can now help with generating 2D data for experiments! 
