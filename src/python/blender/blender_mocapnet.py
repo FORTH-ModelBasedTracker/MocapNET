@@ -1,7 +1,7 @@
 #Written by Ammar Qammaz 2022-2023
 #This is a Blender Python script that upon loaded can facilitate animating a skinned model created by
 #the MakeHuman plugin for Blender ( http://static.makehumancommunity.org/mpfb.html )
-mnetPluginVersion=float(0.01)
+mnetPluginVersion=float(0.02)
 
 import bpy
 from bpy.props import EnumProperty
@@ -192,16 +192,10 @@ def retrieveSkinToBVHAssotiationDict(doBody=True,doHands=True,doFeet=True,doFace
   return r
 
 
-class MocapNETSettings(bpy.types.PropertyGroup):
-     source=bpy.props.StringProperty(name="source", default="Unknown")
-     target=bpy.props.StringProperty(name="target", default="Unknown")
-
-
-
 
 class MocapNETBVHAnimationPanel(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
-    bl_label = "MocapNET BVH Animation"
+    bl_label = "MocapNET BVH Animation Helper"
     bl_idname = "OBJECT_PT_mocapnet_panel"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
@@ -214,8 +208,6 @@ class MocapNETBVHAnimationPanel(bpy.types.Panel):
         
         
         obj = context.object
-        mocapnetSource = obj#context.scene.mocapnetSource
-        mocapnetTarget = obj#context.scene.mocapnetTarget
         
         #layout = layout.split(factor=0.96, align=True)
         #------------------------------------------------------------------
@@ -226,17 +218,12 @@ class MocapNETBVHAnimationPanel(bpy.types.Panel):
         row = layout.row()
         row.label(text="BVH file to use as source: ")
         row = layout.row()
-        #row.prop_search(scene, "BVH", scene, "objects", icon='OBJECT_DATA')
-        row.prop(mocapnetSource, "name")
-        #row.prop(scene, 'mocapnet_settings.source')
-        #layout.prop_search(item, 'bone_name_target', armature_target.pose, "bones", text='')
+        row.prop_search(scene, "mnetSource", scene, "objects", icon='ARMATURE_DATA')
         #------------------------------------------------------------------
         row = layout.row()
         row.label(text="Skinned Body to use as target: ")
         row = layout.row()
-        #row.prop_search(scene, "Skinned", scene, "objects")
-        #row.prop_search(scene, "Skinned", scene, "objects", icon='OBJECT_DATA')
-        row.prop(mocapnetTarget, "name") 
+        row.prop_search(scene, "mnetTarget", scene, "objects", icon='OUTLINER_OB_ARMATURE')
         #------------------------------------------------------------------
         
         row = layout.row()
@@ -271,16 +258,18 @@ class MocapNETBVHAnimation(bpy.types.Operator):
     @staticmethod
     def copySkeletonConstraints(context):        
         context = bpy.context
-        scene = context.scene
-        
+        scene = context.scene        
+        #-------------------------------------------------------
         associations = retrieveSkinToBVHAssotiationDict()
-
-        skinnedObject = scene.objects.get("newgirl")
-        bvhObject     = scene.objects.get("out")
+        #-------------------------------------------------------
+        bvhObjectName     = bpy.context.scene.mnetSource
+        skinnedObjectName = bpy.context.scene.mnetTarget
+        print("bvhObjectName",bvhObjectName)
+        print("skinnedObjectName",skinnedObjectName)
+        #-------------------------------------------------------
+        skinnedObject = scene.objects.get(skinnedObjectName)
+        bvhObject     = scene.objects.get(bvhObjectName)
         if (skinnedObject is not None) and (bvhObject is not None):
-            
-            
-            
             for skinnedBoneName in associations:
                 #------------------------------------------------
                 bvhBoneName = associations[skinnedBoneName]
@@ -289,14 +278,15 @@ class MocapNETBVHAnimation(bpy.types.Operator):
                 bvhBone     = bvhObject.pose.bones.get(bvhBoneName)
                 # give it a copy rotation constraint
                 if (skinnedBone is not None) and (bvhBone is not None):
-                   for c in skinnedBone.constraints:
+                   if (len(skinnedBone.constraints)>0):   
+                     for c in skinnedBone.constraints:
                        skinnedBone.constraints.remove(c)  # Remove constraint
 
                    crc = skinnedBone.constraints.new('COPY_ROTATION')
-                   #give it a target bone
+                   #give it source object
                    crc.target = bvhObject
-                   # note subtarget uses name not object.
-                   crc.subtarget = bvhBoneName#bvhBone
+                   #give it source bone.
+                   crc.subtarget = bvhBoneName
 
     def execute(self, context):
         if self.action == 'LINK':
@@ -308,26 +298,22 @@ class MocapNETBVHAnimation(bpy.types.Operator):
         return {'FINISHED'}
     
 
-classes = (MocapNETSettings,
-           MocapNETBVHAnimationPanel,
+classes = (MocapNETBVHAnimationPanel,
            MocapNETBVHAnimation)
         
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
-    bpy.types.Scene.mocapnet_settings = bpy.props.CollectionProperty(type=MocapNETSettings)
-    #bpy.types.Scene.mocapnet_settings = bpy.props.PointerProperty(type=MocapNETSettings)
-    
-    my_item = bpy.context.scene.mocapnet_settings.add()
-    my_item.source = "Human"
-    my_item.target = "out"
+    bpy.types.Scene.mnetSource = bpy.props.StringProperty(name="Source BVH", default="Select BVH Object")
+    bpy.types.Scene.mnetTarget = bpy.props.StringProperty(name="Target Obj", default="Select Skinned Object")
     
 
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
-    del bpy.types.Scene.mocapnet_settings
+    del bpy.types.Scene.mnetSource
+    del bpy.types.Scene.mnetTarget
 
 if __name__ == "__main__":
     register()
