@@ -193,8 +193,8 @@ def retrieveSkinToBVHAssotiationDict(doBody=True,doHands=True,doFeet=True,doFace
 
 
 class MocapNETSettings(bpy.types.PropertyGroup):
-    source = bpy.props.StringProperty(name="MocapNET Source", default="Unknown",subtype ='NONE')
-    target = bpy.props.StringProperty(name="MocapNET Target", default="Unknown",subtype ='NONE')
+     source=bpy.props.StringProperty(name="source", default="Unknown")
+     target=bpy.props.StringProperty(name="target", default="Unknown")
 
 
 
@@ -228,6 +228,7 @@ class MocapNETBVHAnimationPanel(bpy.types.Panel):
         row = layout.row()
         #row.prop_search(scene, "BVH", scene, "objects", icon='OBJECT_DATA')
         row.prop(mocapnetSource, "name")
+        #row.prop(scene, 'mocapnet_settings.source')
         #layout.prop_search(item, 'bone_name_target', armature_target.pose, "bones", text='')
         #------------------------------------------------------------------
         row = layout.row()
@@ -312,22 +313,21 @@ classes = (MocapNETSettings,
            MocapNETBVHAnimation)
         
 def register():
-    bpy.utils.register_class(MocapNETBVHAnimation)
-    bpy.utils.register_class(MocapNETBVHAnimationPanel)
-    #bpy_struct "Scene" registration error: could not register
-    #bpy.types.Scene.mocapnet_settings = bpy.props.CollectionProperty(type=MocapNETSettings)
+    for cls in classes:
+        bpy.utils.register_class(cls)
+    bpy.types.Scene.mocapnet_settings = bpy.props.CollectionProperty(type=MocapNETSettings)
     #bpy.types.Scene.mocapnet_settings = bpy.props.PointerProperty(type=MocapNETSettings)
     
-    #my_item = bpy.context.scene.mocapnet_settings.add()
-    #my_item.source = "newgirl"
-    #my_item.target = "out"
+    my_item = bpy.context.scene.mocapnet_settings.add()
+    my_item.source = "Human"
+    my_item.target = "out"
     
 
 
 def unregister():
-    bpy.utils.unregister_class(MocapNETBVHAnimation)
-    bpy.utils.unregister_class(MocapNETBVHAnimationPanel)
-    #del bpy.types.Scene.mocapnet_settings
+    for cls in classes:
+        bpy.utils.unregister_class(cls)
+    del bpy.types.Scene.mocapnet_settings
 
 if __name__ == "__main__":
     register()
