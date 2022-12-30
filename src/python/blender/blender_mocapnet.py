@@ -24,13 +24,6 @@ def retrieveSkinToBVHAssotiationDict(doBody=True,doHands=True,doFeet=True,doFace
      r["lowerarm01.R"]="rForeArm"
      r["wrist.R"]="rHand"
      #---------------------------
-     r["upperleg02.L"]="lThigh"
-     r["lowerleg01.L"]="lShin"
-     r["foot.L"]="lFoot"
-     #---------------------------
-     r["upperleg02.R"]="rThigh"
-     r["lowerleg01.R"]="rShin"
-     r["foot.R"]="rFoot"
 
   if (doHands):     
      #---------------------------
@@ -88,6 +81,14 @@ def retrieveSkinToBVHAssotiationDict(doBody=True,doHands=True,doFeet=True,doFace
      #---------------------------
      
   if (doFeet):
+     r["upperleg02.L"]="lThigh"
+     r["lowerleg01.L"]="lShin"
+     r["foot.L"]="lFoot"
+     #---------------------------
+     r["upperleg02.R"]="rThigh"
+     r["lowerleg01.R"]="rShin"
+     r["foot.R"]="rFoot"
+     
      #---------------------------
      # L Foot
      #---------------------------
@@ -225,11 +226,12 @@ class MocapNETBVHAnimationPanel(bpy.types.Panel):
         row = layout.row()
         row.prop_search(scene, "mnetTarget", scene, "objects", icon='OUTLINER_OB_ARMATURE')
         #------------------------------------------------------------------
-        
         row = layout.row()
-        row.operator("mocapnet.mocapnet_op",text='Link').action='LINK'
-        row.operator("mocapnet.mocapnet_op",text='Add cube').action='ADD_CUBE'
-        row.operator("mocapnet.mocapnet_op",text='Add sphere').action='ADD_SPHERE'
+        row.label(text="Parts of MocapNET BVH file to link: ")
+        row = layout.row()
+        row.operator("mocapnet.mocapnet_op",text='Automatic').action='LINK'
+        row.operator("mocapnet.mocapnet_op",text='Upperbody').action='LINKUP'
+        row.operator("mocapnet.mocapnet_op",text='Face').action='LINKFACE'
         
         
 class MocapNETBVHAnimation(bpy.types.Operator):
@@ -242,8 +244,8 @@ class MocapNETBVHAnimation(bpy.types.Operator):
     action: EnumProperty(
         items=[
             ('LINK', 'Link MocapNET to Skinned Model', 'Link MocapNET to Skinned Model'),
-            ('ADD_CUBE', 'add cube', 'add cube'),
-            ('ADD_SPHERE', 'add sphere', 'add sphere')
+            ('LINKUP', 'Link MocapNET to Upper Body Only', 'Link MocapNET to Upper Body Only'),
+            ('LINKFACE', 'Link MocapNET to Face', 'Link MocapNET to Face')
         ]
     )
 
@@ -256,11 +258,11 @@ class MocapNETBVHAnimation(bpy.types.Operator):
         bpy.ops.mesh.primitive_uv_sphere_add()
 
     @staticmethod
-    def copySkeletonConstraints(context):        
+    def copySkeletonConstraints(context,doBody=True,doHands=True,doFeet=True,doFace=False):        
         context = bpy.context
         scene = context.scene        
         #-------------------------------------------------------
-        associations = retrieveSkinToBVHAssotiationDict()
+        associations = retrieveSkinToBVHAssotiationDict(doBody=doBody,doHands=doHands,doFeet=doFeet,doFace=doFace)
         #-------------------------------------------------------
         bvhObjectName     = bpy.context.scene.mnetSource
         skinnedObjectName = bpy.context.scene.mnetTarget
@@ -290,11 +292,11 @@ class MocapNETBVHAnimation(bpy.types.Operator):
 
     def execute(self, context):
         if self.action == 'LINK':
-            self.copySkeletonConstraints(context=context)
-        elif self.action == 'ADD_CUBE':
-            self.add_cube(context=context)
-        elif self.action == 'ADD_SPHERE':
-            self.add_sphere(context=context)
+            self.copySkeletonConstraints(context=context,doBody=True,doHands=True,doFeet=True,doFace=False)
+        elif self.action == 'LINKUP':
+            self.copySkeletonConstraints(context=context,doBody=True,doHands=True,doFeet=False,doFace=False)
+        elif self.action == 'LINKFACE':
+            self.copySkeletonConstraints(context=context,doBody=False,doHands=False,doFeet=False,doFace=True)
         return {'FINISHED'}
     
 
