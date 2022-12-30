@@ -11,9 +11,12 @@
 30-12-2022
 
 MocapNET has a new [plugin/script](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/src/python/blender/blender_mocapnet.py) for the [Blender](https://www.blender.org/) 3D editor that when combined with [MPFB2](http://static.makehumancommunity.org/mpfb.html) (the MakeHuman addon for Blender) can make 3D animations using custom skinned humans with the output BVH files of MocapNET with a few clicks. The code targets recent Blender Versions 3.4+
-Watch [this video](https://www.youtube.com/watch?v=9jmTdhVjAsI) to learn how to install MPFB2 and [this video](http://ammar.gr/mocapnet/blenderplugin.mkv) to learn how to interface the provided plugin in this repository with the MocapNET output BVH file and the generated MakeHuman armature.
+Watch [this video](https://www.youtube.com/watch?v=9jmTdhVjAsI) to learn how to install MPFB2 and [this video](https://www.youtube.com/watch?v=ooLRUS5j4AI) to learn how to interface the provided plugin in this repository with the MocapNET output BVH file and the generated MakeHuman armature.
 
 ![MocapNET Blender Plugin](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/blenderscript.jpg)
+
+[![YouTube Link](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/blenderytb.png)](https://www.youtube.com/watch?v=ooLRUS5j4AI)
+
 
 30-9-2022
 
