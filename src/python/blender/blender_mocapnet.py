@@ -10,7 +10,7 @@ from bpy.props import EnumProperty
 def retrieveSkinToBVHAssotiationDict(doBody=True,doHands=True,doFeet=True,doFace=False):
   r = dict()
   if (doBody):     
-     r["root"]="Hip"
+     r["root"]="Hip" #This should be hip not Hip but for some reason (ZYX rotation) there is a discrepancy
      r["spine03"]="abdomen"
      r["spine04"]="chest"
      #---------------------------
@@ -232,6 +232,10 @@ class MocapNETBVHAnimationPanel(bpy.types.Panel):
         row.operator("mocapnet.mocapnet_op",text='Automatic').action='LINK'
         row.operator("mocapnet.mocapnet_op",text='Upperbody').action='LINKUP'
         row.operator("mocapnet.mocapnet_op",text='Face').action='LINKFACE'
+        row = layout.row()
+        row.label(text="Positional Component : ")
+        row = layout.row()
+        row.operator("mocapnet.mocapnet_op",text='Link Position').action='LINKPOS'
         
         
 class MocapNETBVHAnimation(bpy.types.Operator):
@@ -245,7 +249,8 @@ class MocapNETBVHAnimation(bpy.types.Operator):
         items=[
             ('LINK', 'Link MocapNET to Skinned Model', 'Link MocapNET to Skinned Model'),
             ('LINKUP', 'Link MocapNET to Upper Body Only', 'Link MocapNET to Upper Body Only'),
-            ('LINKFACE', 'Link MocapNET to Face', 'Link MocapNET to Face')
+            ('LINKFACE', 'Link MocapNET to Face', 'Link MocapNET to Face'),
+            ('LINKPOS', 'Link MocapNET positional component', 'Link MocapNET positional component')
         ]
     )
 
@@ -258,7 +263,40 @@ class MocapNETBVHAnimation(bpy.types.Operator):
         bpy.ops.mesh.primitive_uv_sphere_add()
 
     @staticmethod
-    def copySkeletonConstraints(context,doBody=True,doHands=True,doFeet=True,doFace=False):        
+    def copyPosition(context,doBody=True,doHands=True,doFeet=True,doFace=False):        
+        context = bpy.context
+        scene = context.scene        
+        #-------------------------------------------------------
+        #associations = retrieveSkinToBVHAssotiationDict(doBody=doBody,doHands=doHands,doFeet=doFeet,doFace=doFace)
+        #-------------------------------------------------------
+        bvhObjectName     = bpy.context.scene.mnetSource
+        skinnedObjectName = bpy.context.scene.mnetTarget
+        print("bvhObjectName",bvhObjectName)
+        print("skinnedObjectName",skinnedObjectName)
+        #-------------------------------------------------------
+        skinnedObject = scene.objects.get(skinnedObjectName)
+        bvhObject     = scene.objects.get(bvhObjectName)
+        if (skinnedObject is not None) and (bvhObject is not None):
+                skinnedBoneName = "root"
+                bvhBoneName     = "hip"
+                #------------------------------------------------
+                #bvhBoneName = associations[skinnedBoneName]
+                #------------------------------------------------
+                skinnedBone = skinnedObject.pose.bones.get(skinnedBoneName) 
+                bvhBone     = bvhObject.pose.bones.get(bvhBoneName)
+                print("pos associate ",skinnedBoneName," -> ",bvhBoneName)
+                # give it a copy rotation constraint
+                if (skinnedBone is not None) and (bvhBone is not None):
+                    if (skinnedBoneName=="root"):
+                      crc = skinnedBone.constraints.new('COPY_LOCATION')
+                      crc.target    = bvhObject
+                      crc.subtarget = bvhBoneName
+                      print("DONE ",skinnedBoneName)
+
+
+
+    @staticmethod
+    def copySkeletonConstraints(context,doBody=True,doHands=True,doFeet=True,doFace=False,doPosition=False,doRotation=True):        
         context = bpy.context
         scene = context.scene        
         #-------------------------------------------------------
@@ -283,12 +321,14 @@ class MocapNETBVHAnimation(bpy.types.Operator):
                    if (len(skinnedBone.constraints)>0):   
                      for c in skinnedBone.constraints:
                        skinnedBone.constraints.remove(c)  # Remove constraint
-
-                   crc = skinnedBone.constraints.new('COPY_ROTATION')
-                   #give it source object
-                   crc.target = bvhObject
-                   #give it source bone.
-                   crc.subtarget = bvhBoneName
+                   if (skinnedBoneName=="root") and (doPosition):
+                      crc = skinnedBone.constraints.new('COPY_LOCATION')
+                      crc.target    = bvhObject
+                      crc.subtarget = bvhBoneName
+                   if (doRotation):
+                      crc = skinnedBone.constraints.new('COPY_ROTATION')
+                      crc.target    = bvhObject
+                      crc.subtarget = bvhBoneName
 
     def execute(self, context):
         if self.action == 'LINK':
@@ -297,6 +337,8 @@ class MocapNETBVHAnimation(bpy.types.Operator):
             self.copySkeletonConstraints(context=context,doBody=True,doHands=True,doFeet=False,doFace=False)
         elif self.action == 'LINKFACE':
             self.copySkeletonConstraints(context=context,doBody=False,doHands=False,doFeet=False,doFace=True)
+        elif self.action == 'LINKPOS':
+            self.copyPosition(context=context,doBody=True,doHands=False,doFeet=False,doFace=False)
         return {'FINISHED'}
     
 
