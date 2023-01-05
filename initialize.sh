@@ -18,7 +18,7 @@ if [ "$ASK_QUESTIONS" -eq "0" ]; then
 else
 #Simple dependency checker that will apt-get stuff if something is missing
 # sudo apt-get install build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev libpthread-stubs0-dev
-SYSTEM_DEPENDENCIES="git build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev libpthread-stubs0-dev"
+SYSTEM_DEPENDENCIES="wget git build-essential cmake libopencv-dev libjpeg-dev libpng-dev libglew-dev libpthread-stubs0-dev"
 #------------------------------------------------------------------------------
 for REQUIRED_PKG in $SYSTEM_DEPENDENCIES
 do
