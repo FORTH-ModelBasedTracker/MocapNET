@@ -4,9 +4,18 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
 
-#https://www.blender.org/download/release/Blender3.4/blender-3.4.1-linux-x64.tar.xz/
-wget https://ftp.halifax.rwth-aachen.de/blender/release/Blender3.4/blender-3.4.1-linux-x64.tar.xz
-tar -xf blender-3.4.1-linux-x64.tar.xz
+BLENDER="blender-3.4.1-linux-x64"
+
+if [[ -d "$BLENDER" ]]
+then
+    echo "Blender seems to exist on your filesystem."
+else
+    echo "Will get a copy of blender."
+    #https://www.blender.org/download/release/Blender3.4/blender-3.4.1-linux-x64.tar.xz/
+    wget https://ftp.halifax.rwth-aachen.de/blender/release/Blender3.4/$BLENDER.tar.xz
+    tar -xf $BLENDER.tar.xz
+fi
+
 
 #This now happens from inside the blender_mocapnet.py script in the main function
 #--------------------------------------------------------------------------------
@@ -23,7 +32,8 @@ tar -xf blender-3.4.1-linux-x64.tar.xz
 xdg-open "https://www.youtube.com/watch?v=ooLRUS5j4AI"&
 cd "$DIR"
 
-blender-3.4.1-linux-x64/blender  -y --python blender_mocapnet.py
+
+$BLENDER/blender  -y --python blender_mocapnet.py
 
 
 exit 0
