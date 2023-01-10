@@ -361,3 +361,35 @@ def unregister():
 
 if __name__ == "__main__":
     register()
+
+    # Get a list of all add-ons that are currently activated
+    activated_addons = [addon.module for addon in bpy.context.preferences.addons if addon]
+
+    haveMPFB = False
+    # Print the name of each activated add-on
+    for addon in activated_addons:
+       print(addon)
+       if (addon=="mpfb"):
+           haveMPFB = True
+           print("We already have MPFB!")
+    
+    if (not haveMPFB):
+         import os
+         print("Receiving a fresh copy of MPFB!")
+         current_directory = os.getcwd()
+         print("Working from ",current_directory," directory")
+         os.system("wget http://download.tuxfamily.org/makehuman/plugins/mpfb2-latest.zip")
+         print(" Downloaded mpfb2-latest.zip and will now auto-install it for your convinience ")
+         bpy.ops.preferences.addon_install(filepath='%s/mpfb2-latest.zip' % os.getcwd())
+         bpy.ops.preferences.addon_enable(module='mpfb')
+         bpy.ops.wm.save_userpref()
+         
+         # Get the path to the user preferences file
+         prefs_file = bpy.utils.user_resource('CONFIG') #bpy.context.preferences.filepath
+
+         # Get the directory that contains the preferences file
+         prefs_dir = os.path.dirname(prefs_file)
+
+         print(" Also installing the makehuman system assets!")
+         os.system("cd %s/mpfb/data && wget http://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip && unzip makehuman_system_assets_cc0.zip && rm makehuman_system_assets_cc0.zip" % prefs_dir)
+         
