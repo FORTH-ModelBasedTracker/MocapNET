@@ -95,7 +95,9 @@ int main(int argc, char *argv[])
             else
                 {
                     fprintf(stderr,GREEN "CSV file %s is now open\n" NORMAL,options.path);
-                    options.frameLimit=getBodyLinesOfCSVFIle(&csv,options.path);
+                    if (options.frameLimit==0)
+                      { options.frameLimit=getBodyLinesOfCSVFIle(&csv,options.path); } else
+                      { fprintf(stderr,GREEN "Will obey explicit frame limit of %u frames instead of counting body lines of CSV File\n" NORMAL,options.frameLimit); }
                 }
 
 
@@ -200,6 +202,7 @@ int main(int argc, char *argv[])
             unsigned int frameID=0;
             while ( (options.frameLimit==0) || (frameID<options.frameLimit) )
                 {
+                    fprintf(stderr,"%u / %u \n",frameID,options.frameLimit);
                     if ( parseNextCSVCOCOSkeleton(&csv,&skeleton) )
                         {
                             takeCareOfScalingInputAndAddingNoiseAccordingToOptions(&options,&skeleton);
