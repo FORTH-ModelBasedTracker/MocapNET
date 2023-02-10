@@ -22,7 +22,7 @@
 const char   outputPathStatic[]="out.bvh";
 
 
-// To automatically generate the below seen lists you can use the following command.. 
+// To automatically generate the below seen lists you can use the following command..
 // cat parseCommandlineOptions.cpp | grep strcmp | awk -F'[\"/]' '{print $2}' |  serializelist --name mnetParams
 
 
@@ -93,6 +93,7 @@ static const char *mnetParamsNames[]={
 "--visualizationSize",
 "--gestures",
 "--changeFeetDimensions",
+"--scaleHeadDimensions",
 "--scaleAllJointDimensions",
 "--changeJointDimensions",
 "--nsrm",
@@ -171,6 +172,7 @@ MNETPARAMS_SIZE,
 MNETPARAMS_VISUALIZATIONSIZE,
 MNETPARAMS_GESTURES,
 MNETPARAMS_CHANGEFEETDIMENSIONS,
+MNETPARAMS_SCALEHEADDIMENSIONS,
 MNETPARAMS_SCALEALLJOINTDIMENSIONS,
 MNETPARAMS_CHANGEJOINTDIMENSIONS,
 MNETPARAMS_NSRM,
@@ -189,13 +191,13 @@ void printHelp()
    fprintf(stderr,"____________________________________\n");
    //If you want to update this then do the following.. to get the list of arguments :P
    //cat parseCommandlineOptions.cpp | grep strcmp | awk -F'[\"/]' '{print $2}'
-    
+
    // mnetParamsNames[MNETPARAMS_OPENPOSE]
    for (unsigned int i=0; i<MNETPARAMS_NUMBER; i++)
    {
        //This is not a CPU friendly way to do the list, however the help function is never called
        //and this is the optimally easiest version of the help utility that can be maintainned..
-       switch (i) 
+       switch (i)
        {
          case MNETPARAMS_FORCEOUTPUTPOSITIONROTATION : fprintf(stderr,"%s XPos YPos ZPos Rot1 Rot2 Rot3\n Force skeleton output position and rotation \n",mnetParamsNames[i]); break;
          case MNETPARAMS_ROTATESKELETON :              fprintf(stderr,"%s Value\n Force skeleton orietnation angle , can be auto \n",mnetParamsNames[i]); break;
@@ -247,12 +249,12 @@ void printHelp()
          case MNETPARAMS_SKIP :                        fprintf(stderr,"%s frameSkip\n Allow neural network frameskip up to a maximum number of frames\n",mnetParamsNames[i]); break;
          case MNETPARAMS_TPOSE :                       fprintf(stderr,"%s \n Prepend a T-Pose in BVH output to make 3D animation rigging easier\n",mnetParamsNames[i]); break;
          case MNETPARAMS_NOLOWERBODY :                 fprintf(stderr,"%s \n Ignore Lower body\n",mnetParamsNames[i]); break;
-         case MNETPARAMS_SHOW :                        fprintf(stderr,"%s visualizationType\n Switch between different visualization types : ",mnetParamsNames[i]); 
-                                                       fprintf(stderr,"  0 = Default skeleton only wireframe visualization "); 
-                                                       fprintf(stderr,"  1 = Plot rotation angles "); 
-                                                       fprintf(stderr,"  2 = Map visualization seen in : https://youtu.be/zQsOfPBX8RM "); 
-                                                       fprintf(stderr,"  3 = Visualization of skeleton overlayed on RGB frame "); 
-                                                       fprintf(stderr,"  4 = Visualization using template code ( intended for user development ) "); 
+         case MNETPARAMS_SHOW :                        fprintf(stderr,"%s visualizationType\n Switch between different visualization types : ",mnetParamsNames[i]);
+                                                       fprintf(stderr,"  0 = Default skeleton only wireframe visualization ");
+                                                       fprintf(stderr,"  1 = Plot rotation angles ");
+                                                       fprintf(stderr,"  2 = Map visualization seen in : https://youtu.be/zQsOfPBX8RM ");
+                                                       fprintf(stderr,"  3 = Visualization of skeleton overlayed on RGB frame ");
+                                                       fprintf(stderr,"  4 = Visualization using template code ( intended for user development ) ");
                                                        fprintf(stderr,"  5 = Visualization of RGB frame and on its right the skeleton on a solid color background");
          break;
          case MNETPARAMS_NOHANDS :                     fprintf(stderr,"%s \n Disable regression of hands\n",mnetParamsNames[i]); break;
@@ -267,13 +269,14 @@ void printHelp()
          case MNETPARAMS_VISUALIZATIONSIZE :           fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
          case MNETPARAMS_GESTURES :                    fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
          case MNETPARAMS_CHANGEFEETDIMENSIONS :        fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
+         case MNETPARAMS_SCALEHEADDIMENSIONS :         fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
          case MNETPARAMS_SCALEALLJOINTDIMENSIONS :     fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
          case MNETPARAMS_CHANGEJOINTDIMENSIONS :       fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
        };
-       
-       
-       
-       
+
+
+
+
    }
 
    exit(0);
@@ -288,9 +291,9 @@ void printHelp()
 
 void  defaultMocapNET2Options(struct MocapNET2Options * options)
 {
-    //This causes a problem in valgrind 
+    //This causes a problem in valgrind
     //memset(options,0,sizeof(struct MocapNET2Options));
-    
+
     options->isJSONFile=0;
     options->isCSVFile=0;
     options->webcamSource = 0;
@@ -308,7 +311,7 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
     options->forceBack=0;
     options->visualizationType=0;
 
-    //Default IK options 
+    //Default IK options
     options->useInverseKinematics=0;
     options->learningRate=0.01;
     options->spring =20.0;
@@ -320,13 +323,13 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
     options->addNormalizedPixelGaussianNoiseY=0.0;
 
     options->outputPath = (char*) outputPathStatic;
-    
+
     //Butterworth options..
     options->inputFramerate=30.0;
     options->filterCutoff=5.0;
-    
+
     options->regularNSRMMatrix=0;
-    
+
     options->visualize=1;
     options->doMultiThreadedIK=0;
     options->useOpenGLVisualization=0;
@@ -336,12 +339,12 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
     options->saveCSV3DFile=0;
     options->constrainPositionRotation=1;
     options->keepIntermediateFiles=0;
-    
+
     options->delay=0;
     options->prependTPose=0;
     options->serialLength=5;
     options->bvhCenter=0;
-    
+
     if (getCPUName(options->CPUName,512))
         {
             fprintf(stderr,"CPU : %s\n",options->CPUName);
@@ -350,14 +353,14 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
     if (getGPUName(options->GPUName,512))
         {
             fprintf(stderr,"GPU : %s\n",options->GPUName);
-        } 
-         
+        }
+
     options->gdpr=0;
     options->quality=1.0;
     options->mocapNETMode=1;
     options->doGestureDetection=0;
     options->doOutputFiltering=1;
-    options->useCPUOnlyForMocapNET=1; //Use CPU for MocapNET 
+    options->useCPUOnlyForMocapNET=1; //Use CPU for MocapNET
     options->useCPUOnlyFor2DEstimator=0; // Use GPU for 2D estimator
     options->brokenFrames=0;
     options->numberOfMissingJoints=0;
@@ -366,20 +369,20 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
     options->visHeight=1080;
     options->width=1920;
     options->height=1080;
-    
-    
+
+
     options->scale=1.0;
     options->scaleX=1.0;
     options->scaleY=1.0;
     options->fScaleX=1.0;
     options->fScaleY=1.0;
-    
+
     options->loopStartTime=0;
     options->loopEndTime=1000;
     options->totalLoopFPS=0.0;
     options->fpsMocapNET=0.0;
-    options->fps2DEstimator=0.0;         
-    
+    options->fps2DEstimator=0.0;
+
     options->frameSkip=0;
     options->frameLimit=0;
 }
@@ -415,63 +418,63 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
     //------------------------------------------------------
     for (int i=0; i<argc; i++)
         {
-             if ( 
+             if (
                   (strcmp(argv[i],"-h")==0) ||
                   (strcmp(argv[i],"--help")==0) ||
-                  (strcmp(argv[i],"?")==0) 
+                  (strcmp(argv[i],"?")==0)
                 )
                 {
                     printHelp();
-                } 
+                }
                 else
             if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_FORCEOUTPUTPOSITIONROTATION])==0) // "--forceOutputPositionRotation"
                 {
                     if (argc>i+1)
-                        {  
+                        {
                           options->forceOutputPositionRotation=1;
-                          options->outputPosRot[0]=atof(argv[i+1]); 
-                          options->outputPosRot[1]=atof(argv[i+2]); 
-                          options->outputPosRot[2]=atof(argv[i+3]); 
-                          options->outputPosRot[3]=atof(argv[i+4]); 
-                          options->outputPosRot[4]=atof(argv[i+5]); 
+                          options->outputPosRot[0]=atof(argv[i+1]);
+                          options->outputPosRot[1]=atof(argv[i+2]);
+                          options->outputPosRot[2]=atof(argv[i+3]);
+                          options->outputPosRot[3]=atof(argv[i+4]);
+                          options->outputPosRot[4]=atof(argv[i+5]);
                           options->outputPosRot[5]=atof(argv[i+6]);
                         }
                 }
-             else              
+             else
             if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_ROTATESKELETON])==0) // "--rotateSkeleton"
                 {
                     if (argc>i+1)
-                        { 
+                        {
                             if (strcmp(argv[i+1],"auto")==0)
                             {
-                              options->skeletonRotation=360.0;  
+                              options->skeletonRotation=360.0;
                             } else
                             {
-                              options->skeletonRotation=atof(argv[i+1]);                               
+                              options->skeletonRotation=atof(argv[i+1]);
                             }
                         }
                 }
-             else  
+             else
 
             if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_INPUTFRAMERATE])==0) //"--inputFramerate"
                 {
                     if (argc>i+1)
                         {
-                           options->inputFramerate = atof(argv[i+1]); 
+                           options->inputFramerate = atof(argv[i+1]);
                            fprintf(stderr,"Input Framerate set to %0.2f \n", options->inputFramerate);
                         }
                 }
-             else            
-            
+             else
+
             if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_MSG])==0) //"--msg"
                 {
                     if (argc>i+1)
                         {
                            fprintf(stderr,"Message set to %s \n",argv[i+1]);
-                           snprintf(options->message,512,"%s",argv[i+1]); 
+                           snprintf(options->message,512,"%s",argv[i+1]);
                         }
                 }
-             else            
+             else
             if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_MAP])==0) //"--map"
                 {
                     if (argc>i+1)
@@ -481,15 +484,15 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                           options->visualizationType=2;
                         }
                 }
-             else            
+             else
             if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_UNCONSTRAINED])==0) //"--unconstrained"
                 {
                     options->constrainPositionRotation=0;
                 }
             else if  (
-                        (strcmp(argv[i],"-o")==0) || 
-                        (strcmp(argv[i],"--o")==0) || 
-                        (strcmp(argv[i],"--output")==0) 
+                        (strcmp(argv[i],"-o")==0) ||
+                        (strcmp(argv[i],"--o")==0) ||
+                        (strcmp(argv[i],"--output")==0)
                      )
                 {
                   if (argc>i+1)
@@ -498,23 +501,23 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                         } else
                         { argumentError(i,1,argc,argv); }
                 }
-            else if  (strcmp(argv[i],mnetParamsNames[MNETPARAMS_DONTBEND])==0) // "--dontbend" 
+            else if  (strcmp(argv[i],mnetParamsNames[MNETPARAMS_DONTBEND])==0) // "--dontbend"
             {
                 options->dontBend=1;
             }
-            else if  (strcmp(argv[i],mnetParamsNames[MNETPARAMS_OPENGL])==0) //"--opengl" 
+            else if  (strcmp(argv[i],mnetParamsNames[MNETPARAMS_OPENGL])==0) //"--opengl"
             {
                 options->useOpenGLVisualization=1;
             }
-            else if  (strcmp(argv[i], mnetParamsNames[MNETPARAMS_GDPR])==0) //"--gdpr" 
+            else if  (strcmp(argv[i], mnetParamsNames[MNETPARAMS_GDPR])==0) //"--gdpr"
             {
                 options->gdpr=1;
             }
-            else if  (strcmp(argv[i],mnetParamsNames[MNETPARAMS_KEEP])==0) //"--keep" 
+            else if  (strcmp(argv[i],mnetParamsNames[MNETPARAMS_KEEP])==0) //"--keep"
                 {
                     options->keepIntermediateFiles=1;
-                } 
-            else if  (strcmp(argv[i],"--save")==0) 
+                }
+            else if  (strcmp(argv[i],"--save")==0)
                 {
                     options->saveVisualization=1;
                 }
@@ -552,7 +555,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                 {
                     fprintf(stderr,"Switched back to NSRM\n");
                     options->regularNSRMMatrix=1;
-                } 
+                }
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_NV])==0) //"--nv"
                 {
                     fprintf(stderr,"Visualization disabled\n");
@@ -563,7 +566,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                     fprintf(stderr,"Visualization disabled\n");
                     options->visualize=0;
                 }
-            else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_V])==0) //"-v" 
+            else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_V])==0) //"-v"
                 {
                     fprintf(stderr,"Visualization enabled\n");
                     options->visualize=1;
@@ -576,7 +579,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_FRAMESKIP])==0) //"--frameskip"
                 {
                    if (argc>i+1)
-                        { 
+                        {
                           options->frameSkip=atoi(argv[i+1]);
                         } else
                         { argumentError(i,1,argc,argv); }
@@ -589,13 +592,13 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_SCALE])==0) //"--scale"
                 {
                   if (argc>i+1)
-                        { 
+                        {
                          options->scale=atof(argv[i+1]);
                         } else
                         { argumentError(i,1,argc,argv); }
-                } 
+                }
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_SCALEX])==0) //"--scaleX"
-                {                  
+                {
                     if (argc>i+1)
                         {
                          options->scaleX=atof(argv[i+1]);
@@ -605,7 +608,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_SCALEY])==0) //"--scaleY"
                 {
                     if (argc>i+1)
-                        {  
+                        {
                           options->scaleY=atof(argv[i+1]);
                         } else
                         { argumentError(i,1,argc,argv); }
@@ -622,7 +625,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                          options->fScaleY=atof(argv[i+2]);
                         } else
                         { argumentError(i,2,argc,argv); }
-                } 
+                }
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_NOISE])==0) //"--noise"
                 {
                     if (argc>i+2)
@@ -699,7 +702,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                             }
                         } else
                         { argumentError(i,1,argc,argv); }
-                } 
+                }
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_QUALITY])==0) //"--quality"
                 {
                  if (argc>i+1)
@@ -712,20 +715,20 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                 if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_MT])==0) //"--mt"
                     {
                        options->doMultiThreadedIK=1;
-                    } 
+                    }
              else
                 if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_CPU])==0) //"--cpu"
                     {
                         options->useCPUOnlyForMocapNET=1;
                         options->useCPUOnlyFor2DEstimator=1;
-                    } 
+                    }
             else
                 //if (strcmp(argv[i],"--cpu")==0)        { setenv("CUDA_VISIBLE_DEVICES", "", 1); } else
                 if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_GPU])==0) //"--gpu"
                     {
                         options->useCPUOnlyForMocapNET=0;
                         options->useCPUOnlyFor2DEstimator=0;
-                    } 
+                    }
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_DELAY])==0) //"--delay"
                 {
                     //If you want to take some time to check the results that
@@ -740,17 +743,17 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                 {
                     //Allow skipping of frames in the neural network and using only the very fast IK module..
                     options->maximumNeuralNetworkSkipFrames=atoi(argv[i+1]);
-                    
+
                     if (options->maximumNeuralNetworkSkipFrames>0)
                     {
-                      options->skipNeuralNetworkIfItIsNotNeeded=1; 
+                      options->skipNeuralNetworkIfItIsNotNeeded=1;
                       if (options->maximumNeuralNetworkSkipFrames==1)
                       {
-                       fprintf(stderr,"Skipping 1 frame every one frame makes no sense, assuming user wants to skip 1 frame every 2 frames\n"); 
+                       fprintf(stderr,"Skipping 1 frame every one frame makes no sense, assuming user wants to skip 1 frame every 2 frames\n");
                        options->maximumNeuralNetworkSkipFrames=2;
-                      } 
+                      }
                     }
-                } 
+                }
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_TPOSE])==0) //"--tpose"
                 {
                    options-> prependTPose=1;
@@ -766,21 +769,21 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_NOHANDS])==0) //"--nohands"
                 {
                     options->doHands=0;
-                } 
+                }
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_HANDS])==0) //"--hands"
                 {
                     options->doHands=1;
-                }    
+                }
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_FACE])==0) //"--face"
                 {
                     options->doFace=1;
-                }    
+                }
             else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_NOFACE])==0) //"--noface"
                 {
                     options->doFace=0;
-                } 
+                }
                 else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_LABEL])==0) //"--label"
-                    {                  
+                    {
                       if (argc>i+1)
                         {
                          options->label = argv[i+1];
@@ -796,7 +799,7 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                         { argumentError(i,1,argc,argv); }
                     }
                     /*
-                else if  (  (strcmp(argv[i],"-o")==0) || 
+                else if  (  (strcmp(argv[i],"-o")==0) ||
                             (strcmp(argv[i],"--output")==0) )
                     {
                         if (argc>i+1)
@@ -830,11 +833,11 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                           options->visHeight = atoi(argv[i+2]);
                         }  else
                         { argumentError(i,2,argc,argv); }
-                    }     
+                    }
                 else if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_GESTURES])==0) //"--gestures"
                     {
                         options->doGestureDetection=1;
-                    }                  
+                    }
         }
 
 
@@ -861,10 +864,10 @@ int  loadOptionsAfterBVHLoadFromCommandlineOptions(struct MocapNET2Options * opt
                                     initializeBVHConverter(0,options->visWidth,options->visHeight,0);
                                     options->hasInit=1;
                                 }
-                                
-                            changeFeetDimensions( 
+
+                            changeFeetDimensions(
                                                   atof(argv[i+1]),
-                                                  atof(argv[i+2]) 
+                                                  atof(argv[i+2])
                                                 );
                         } else
                         { argumentError(i,2,argc,argv); }
@@ -880,6 +883,20 @@ int  loadOptionsAfterBVHLoadFromCommandlineOptions(struct MocapNET2Options * opt
                                     options->hasInit=1;
                                 }
                             scaleAllJoints(atof(argv[i+1]));
+                        } else
+                        { argumentError(i,1,argc,argv); }
+                }
+            else
+            if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_SCALEHEADDIMENSIONS])==0) // "--scaleHeadDimensions"
+                {
+                    if(argc>i+1)
+                        {
+                            if (!options->hasInit)
+                                {
+                                    initializeBVHConverter(0,options->visWidth,options->visHeight,0);
+                                    options->hasInit=1;
+                                }
+                            changeHeadScale(atof(argv[i+1]));
                         } else
                         { argumentError(i,1,argc,argv); }
                 }
@@ -905,14 +922,14 @@ int  loadOptionsAfterBVHLoadFromCommandlineOptions(struct MocapNET2Options * opt
                             );
                         }
                     else
-                        { 
-                            argumentError(i,9,argc,argv); 
+                        {
+                            argumentError(i,9,argc,argv);
                             fprintf(stderr,"Incorrect number of parameters given..\n");
                             return 0;
                         }
                 }
         }
-    
+
     return 1;
 }
 
@@ -961,6 +978,6 @@ int  takeCareOfScalingInputAndAddingNoiseAccordingToOptions(struct MocapNET2Opti
                                             options->height * options->addNormalizedPixelGaussianNoiseY
                                            );
                                     perturbSerializedSkeletonUsingGaussianNoise(skeleton,options->addNormalizedPixelGaussianNoiseX,options->addNormalizedPixelGaussianNoiseY);
-                                }  
-    return 1;   
+                                }
+    return 1;
 }

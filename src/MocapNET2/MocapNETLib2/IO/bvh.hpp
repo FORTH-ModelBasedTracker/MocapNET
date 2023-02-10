@@ -1060,8 +1060,8 @@ void convertStandaloneLHandSkeletonSerializedToBVHTransform(
                                                             struct skeletonSerialized * in,
                                                             int skeletonSerializedInputIsAlreadyNormalized
                                                            );
-                                                           
-                                                           
+
+
 void convertStandaloneRHandSkeletonSerializedToBVHTransform(
                                                             struct BVH_MotionCapture * bvhMotion,
                                                             struct simpleRenderer * renderer,
@@ -1090,9 +1090,9 @@ int writeBVHFile(
                 );
 
 /**
- * @brief This call loads a BVH file into a BVH_MotionCapture* structure that is casted in a void pointer 
- * to avoid all the include hassle 
- * @param Path to input file i.e. "input.bvh" 
+ * @brief This call loads a BVH file into a BVH_MotionCapture* structure that is casted in a void pointer
+ * to avoid all the include hassle
+ * @param Path to input file i.e. "input.bvh"
  * @retval BVH_MotionCapture pointer that holds all the BVH information
  */
 void * loadBVHFile(const char * filename);
@@ -1100,7 +1100,7 @@ void * loadBVHFile(const char * filename);
 
 /**
  * @brief This call frees all memory consumed by the BVH file loaded by a loadBVHFile call
- * @param Path to input file i.e. "input.bvh" 
+ * @param Path to input file i.e. "input.bvh"
  * @retval 1=Success/0=Failure
  */
 int freeBVHFile(void * bvhMemoryHandler);
@@ -1108,7 +1108,7 @@ int freeBVHFile(void * bvhMemoryHandler);
 
 /**
  * @brief This call opens a BVH file decodes it and returns a vector of bvh frames where each frame has all the motions in another vector
- * @param Path to input file i.e. "input.bvh" 
+ * @param Path to input file i.e. "input.bvh"
  * @retval Vector of Vectors that hold all the BVH motions
  */
 std::vector<std::vector<float> > loadBVHFileMotionFrames(const char * filename);
@@ -1116,9 +1116,11 @@ std::vector<std::vector<float> > loadBVHFileMotionFrames(const char * filename);
 
 int scaleAllJoints(float scaleRatio);
 
-int changeFeetDimensions( 
+int changeHeadScale(float newHeadScale);
+
+int changeFeetDimensions(
                           float hipToKneeLength,
-                          float kneeToFootLength 
+                          float kneeToFootLength
                          );
 
 
@@ -1193,10 +1195,10 @@ unsigned int getBVHParentJoint(unsigned int currentJoint);
 const char * getBVHJointName(unsigned int currentJoint);
 
 /**
- * @brief Return the name of a motion channel on the target C-String 
+ * @brief Return the name of a motion channel on the target C-String
  * @param Motion channel ID
- * @param Output C String that will contain the label 
- * @param Size of C String 
+ * @param Output C String that will contain the label
+ * @param Size of C String
  * @retval 1=Success/0=Failure
  */
 int getBVHMotionValueName(unsigned int currentMotionValue,char * target,unsigned int targetLength);
@@ -1216,7 +1218,7 @@ int transferVectorToMotionBufferArray(struct MotionBuffer * mb,const std::vector
 
 /**
  * @brief This function performs the Inverse Kinematics logic. You give it the previous BVH frame, the current BVH neural network estimation as well as a skeletonSerialized
- * structure that holds the observation, it will perform Hierarchical Coordinate Descent and return a BVH vector that is closer to the observation 
+ * structure that holds the observation, it will perform Hierarchical Coordinate Descent and return a BVH vector that is closer to the observation
  * https://github.com/AmmarkoV/RGBDAcquisition/tree/master/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/ik
  * @param  Vector holding the previous BVH frame
  * @param  Vector holding the current BVH frame
@@ -1227,7 +1229,7 @@ int transferVectorToMotionBufferArray(struct MotionBuffer * mb,const std::vector
  * @param  The number of iterations (i.e. total number of passes for each joint)
  * @param  The number of epochs per joint (i.e. total incremental improvements of each joint)
  * @param  The magnitude of the spring damping coefficient that keeps solutions from drifting away from previous solutions
- * @param  A flag that can cause the spring to ignore all incremental changes 
+ * @param  A flag that can cause the spring to ignore all incremental changes
  * @retval BVH Vector that is derived from bvhFrame argument and that more closely resembles inputPoints2D
  */
 std::vector<float> improveBVHFrameUsingInverseKinematics(
@@ -1238,7 +1240,7 @@ std::vector<float> improveBVHFrameUsingInverseKinematics(
                                                           unsigned int frameNumber,
                                                           //--------------
                                                           int doLeftHand,
-                                                          int doRightHand, 
+                                                          int doRightHand,
                                                           int doFace,
                                                           struct skeletonSerialized * inputPoints2D,
                                                           float learningRate,
@@ -1276,4 +1278,3 @@ std::vector<float> convertBVHFrameToFlat3DPoints(std::vector<float> bvhFrame);
 std::vector<float> convertStandaloneLHandBVHFrameToFlat3DPoints(const std::vector<float> bvhFrame);
 
 std::vector<float> convertStandaloneRHandBVHFrameToFlat3DPoints(const std::vector<float> bvhFrame);
- 
