@@ -94,6 +94,7 @@ static const char *mnetParamsNames[]={
 "--gestures",
 "--changeFeetDimensions",
 "--scaleHeadDimensions",
+"--scaleHandsDimensions",
 "--scaleAllJointDimensions",
 "--changeJointDimensions",
 "--nsrm",
@@ -172,6 +173,7 @@ MNETPARAMS_SIZE,
 MNETPARAMS_VISUALIZATIONSIZE,
 MNETPARAMS_GESTURES,
 MNETPARAMS_CHANGEFEETDIMENSIONS,
+MNETPARAMS_SCALEHANDSDIMENSIONS,
 MNETPARAMS_SCALEHEADDIMENSIONS,
 MNETPARAMS_SCALEALLJOINTDIMENSIONS,
 MNETPARAMS_CHANGEJOINTDIMENSIONS,
@@ -270,6 +272,7 @@ void printHelp()
          case MNETPARAMS_GESTURES :                    fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
          case MNETPARAMS_CHANGEFEETDIMENSIONS :        fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
          case MNETPARAMS_SCALEHEADDIMENSIONS :         fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
+         case MNETPARAMS_SCALEHANDSDIMENSIONS :         fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
          case MNETPARAMS_SCALEALLJOINTDIMENSIONS :     fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
          case MNETPARAMS_CHANGEJOINTDIMENSIONS :       fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
        };
@@ -883,6 +886,20 @@ int  loadOptionsAfterBVHLoadFromCommandlineOptions(struct MocapNET2Options * opt
                                     options->hasInit=1;
                                 }
                             scaleAllJoints(atof(argv[i+1]));
+                        } else
+                        { argumentError(i,1,argc,argv); }
+                }
+            else
+            if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_SCALEHANDSDIMENSIONS])==0) // "--scaleHandsDimensions"
+                {
+                    if(argc>i+1)
+                        {
+                            if (!options->hasInit)
+                                {
+                                    initializeBVHConverter(0,options->visWidth,options->visHeight,0);
+                                    options->hasInit=1;
+                                }
+                            changeHandsScale(atof(argv[i+1]));
                         } else
                         { argumentError(i,1,argc,argv); }
                 }

@@ -1070,9 +1070,7 @@ void convertStandaloneRHandSkeletonSerializedToBVHTransform(
                                                             int skeletonSerializedInputIsAlreadyNormalized
                                                            );
 
-int fixBVHHip(
-              std::vector<std::vector<float> > &bvhFrames
-             );
+int fixBVHHip(std::vector<std::vector<float> > &bvhFrames);
 
 /**
  * @brief After collecting a vector of BVH output vectors this call can write them to disk in BVH format
@@ -1116,6 +1114,8 @@ std::vector<std::vector<float> > loadBVHFileMotionFrames(const char * filename);
 
 int scaleAllJoints(float scaleRatio);
 
+
+int changeHandsScale(float newHandsScale);
 int changeHeadScale(float newHeadScale);
 
 int changeFeetDimensions(

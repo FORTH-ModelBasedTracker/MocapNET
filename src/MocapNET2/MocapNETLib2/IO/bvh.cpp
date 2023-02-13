@@ -591,6 +591,32 @@ int scaleAllJoints(float scaleRatio)
 }
 
 
+int changeHandsScale(float newHandsScale)
+{
+ #if USE_BVH
+    if ( 
+          (!bvh_scaleAllJointChildrenOffsets(&bvhMotion,"lhand",newHandsScale)) &&
+          (!bvh_scaleAllJointChildrenOffsets(&bvhMotion,"rhand",newHandsScale))
+       )
+    {
+       for (unsigned int jID=0; jID<bvhMotion.jointHierarchySize; jID++)
+       {
+        fprintf(stderr,"BVH Joint %u => %s \n",jID,bvhMotion.jointHierarchy[jID].jointName);
+       }
+       fprintf(stderr,"Error scaling head joints..\n");
+       exit(0);
+       return 0;
+    }
+
+    fprintf(stderr,"Hand dimensions have been scaled (newHandsScale=>%0.2f) \n",newHandsScale);
+    //exit(0);
+    return 1;
+
+ #endif // USE_BVH
+  return 0;
+}
+
+
 int changeHeadScale(float newHeadScale)
 {
  #if USE_BVH
