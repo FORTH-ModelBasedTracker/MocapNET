@@ -595,7 +595,7 @@ int changeHandsScale(float newHandsScale)
 {
  #if USE_BVH
     if ( 
-          (!bvh_scaleAllJointChildrenOffsets(&bvhMotion,"lhand",newHandsScale)) &&
+          (!bvh_scaleAllJointChildrenOffsets(&bvhMotion,"lhand",newHandsScale)) ||
           (!bvh_scaleAllJointChildrenOffsets(&bvhMotion,"rhand",newHandsScale))
        )
     {
