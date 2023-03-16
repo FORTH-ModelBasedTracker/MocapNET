@@ -357,6 +357,7 @@ std::vector<float> runMocapNET2(
                                  ( (doHands) && (mnet->leftHand.loadedModels>0) ),
                                  ( (doHands) && (mnet->rightHand.loadedModels>0)),
                                  doFace,
+                                 mnet->options->penalizeSymmetriesHeuristic,
                                  input,
                                  mnet->learningRate,
                                  mnet->iterations,

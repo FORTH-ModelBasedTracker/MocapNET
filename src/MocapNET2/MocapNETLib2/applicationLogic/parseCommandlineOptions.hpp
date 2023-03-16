@@ -60,7 +60,8 @@ struct MocapNET2Options
     int doGestureDetection;
     int doOutputFiltering;
     int doMultiThreadedIK;
-    
+    int penalizeSymmetriesHeuristic;
+
     unsigned int useCPUOnlyForMocapNET;
     unsigned int useCPUOnlyFor2DEstimator;
     unsigned int brokenFrames;

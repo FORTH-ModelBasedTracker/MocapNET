@@ -1603,6 +1603,8 @@ std::vector<float> improveBVHFrameUsingInverseKinematics(
                                                           int doRightHand,
                                                           int doFace,
                                                           //--------------
+                                                          int penalizeSymmetriesHeuristic,
+                                                          //--------------
                                                           struct skeletonSerialized * inputPoints2D,
                                                           //--------------
                                                           float learningRate,
@@ -1815,6 +1817,7 @@ if (
          ikConfig.gradientExplosionThreshold = 50;
          ikConfig.spring=spring;
          ikConfig.dumpScreenshots = 0; // Dont thrash disk
+         ikConfig.penalizeSymmetriesHeuristic = penalizeSymmetriesHeuristic;
          ikConfig.verbose = 0; //Dont spam console
          ikConfig.tryMaintainingLocalOptima=1; //Less Jittery but can be stuck at local optima
          ikConfig.dontUseSolutionHistory=dontUseHistory;

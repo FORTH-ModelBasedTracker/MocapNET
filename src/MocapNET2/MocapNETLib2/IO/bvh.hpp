@@ -1242,6 +1242,9 @@ std::vector<float> improveBVHFrameUsingInverseKinematics(
                                                           int doLeftHand,
                                                           int doRightHand,
                                                           int doFace,
+                                                          //--------------
+                                                          int penalizeSymmetriesHeuristic,
+                                                          //--------------
                                                           struct skeletonSerialized * inputPoints2D,
                                                           float learningRate,
                                                           unsigned int iterations,

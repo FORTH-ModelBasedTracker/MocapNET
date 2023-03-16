@@ -99,6 +99,7 @@ static const char *mnetParamsNames[]={
 "--changeJointDimensions",
 "--nsrm",
 "--forth",
+"--penalizeSymmetriesHeuristic",
 //-------------------------
 "GUARD_FOR_+1_ERROR"
 };
@@ -179,6 +180,7 @@ MNETPARAMS_SCALEALLJOINTDIMENSIONS,
 MNETPARAMS_CHANGEJOINTDIMENSIONS,
 MNETPARAMS_NSRM,
 MNETPARAMS_FORTH,
+MNETPARAMS_PENALIZESYMMETRIESHEURISTIC,
 //-------------------------
 MNETPARAMS_NUMBER
 };
@@ -272,9 +274,10 @@ void printHelp()
          case MNETPARAMS_GESTURES :                    fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
          case MNETPARAMS_CHANGEFEETDIMENSIONS :        fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
          case MNETPARAMS_SCALEHEADDIMENSIONS :         fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
-         case MNETPARAMS_SCALEHANDSDIMENSIONS :         fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
+         case MNETPARAMS_SCALEHANDSDIMENSIONS :        fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
          case MNETPARAMS_SCALEALLJOINTDIMENSIONS :     fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
          case MNETPARAMS_CHANGEJOINTDIMENSIONS :       fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
+         case MNETPARAMS_PENALIZESYMMETRIESHEURISTIC : fprintf(stderr,"%s \n",mnetParamsNames[i]); break;
        };
 
 
@@ -373,6 +376,7 @@ void  defaultMocapNET2Options(struct MocapNET2Options * options)
     options->width=1920;
     options->height=1080;
 
+    options->penalizeSymmetriesHeuristic = 0;
 
     options->scale=1.0;
     options->scaleX=1.0;
@@ -718,6 +722,11 @@ int loadOptionsFromCommandlineOptions(struct MocapNET2Options * options,int argc
                 if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_MT])==0) //"--mt"
                     {
                        options->doMultiThreadedIK=1;
+                    }
+             else
+                if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_PENALIZESYMMETRIESHEURISTIC])==0) //"--mt"
+                    {
+                       options->penalizeSymmetriesHeuristic=1;
                     }
              else
                 if (strcmp(argv[i],mnetParamsNames[MNETPARAMS_CPU])==0) //"--cpu"
