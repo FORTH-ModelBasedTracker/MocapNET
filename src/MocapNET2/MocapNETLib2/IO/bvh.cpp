@@ -27,6 +27,9 @@
 #include "../../../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Library/MotionCaptureLoader/ik/hardcodedProblems_inverseKinematics.h"
 
 
+#define FIX_SIGNGUIDE 0
+
+
 //Casting our solution/previous solution/penultimate solution in C arrays
 struct MotionBuffer solution={0};
 struct MotionBuffer previousSolution={0};
@@ -1685,6 +1688,109 @@ if (
    {
        fprintf(stderr,"Failed transfering vectors to MotionBuffers..\n");
    }
+
+#if FIX_SIGNGUIDE  
+  if (bvhFrame.size()!=0)            { 
+                                       if (solution.motion[MOCAPNET_OUTPUT_LELBOW_XROTATION]>0.0 ) { solution.motion[MOCAPNET_OUTPUT_LELBOW_XROTATION]=0.0; }
+                                       if (solution.motion[MOCAPNET_OUTPUT_RELBOW_XROTATION]>0.0 ) { solution.motion[MOCAPNET_OUTPUT_RELBOW_XROTATION]=0.0; }
+                                       if (solution.motion[MOCAPNET_OUTPUT_LELBOW_ZROTATION]>0.0 ) { solution.motion[MOCAPNET_OUTPUT_LELBOW_XROTATION]*=-1.0; }
+                                       if (solution.motion[MOCAPNET_OUTPUT_RELBOW_ZROTATION]>0.0 ) { solution.motion[MOCAPNET_OUTPUT_RELBOW_XROTATION]*=-1.0; }
+                                       //solution.motion[0]=4.4749;
+                                       //solution.motion[1]=-46.5558;
+                                       //solution.motion[2]=-130.9696;
+                                       solution.motion[MOCAPNET_OUTPUT_HIP_ZROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_HIP_YROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_HIP_XROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_NECK_ZROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_NECK_XROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_NECK_YROTATION]=0; 
+                                       solution.motion[MOCAPNET_OUTPUT_NECK1_ZROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_NECK1_XROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_NECK1_YROTATION]=0; 
+                                       solution.motion[MOCAPNET_OUTPUT_HEAD_ZROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_HEAD_XROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_HEAD_YROTATION]=0; 
+                                       solution.motion[MOCAPNET_OUTPUT_LHIP_ZROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_LHIP_XROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_LHIP_YROTATION]=0; 
+                                       solution.motion[MOCAPNET_OUTPUT_LKNEE_ZROTATION]=0; 
+                                       solution.motion[MOCAPNET_OUTPUT_LKNEE_XROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_LKNEE_YROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_RHIP_ZROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_RHIP_XROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_RHIP_YROTATION]=0; 
+                                       solution.motion[MOCAPNET_OUTPUT_RKNEE_ZROTATION]=0; 
+                                       solution.motion[MOCAPNET_OUTPUT_RKNEE_XROTATION]=0;
+                                       solution.motion[MOCAPNET_OUTPUT_RKNEE_YROTATION]=0;
+                                     }
+  if (bvhPreviousFrame.size()!=0)    { 
+                                       if (previousSolution.motion[MOCAPNET_OUTPUT_LELBOW_XROTATION]>0.0 ) { previousSolution.motion[MOCAPNET_OUTPUT_LELBOW_XROTATION]=0.0; }
+                                       if (previousSolution.motion[MOCAPNET_OUTPUT_RELBOW_XROTATION]>0.0 ) { previousSolution.motion[MOCAPNET_OUTPUT_RELBOW_XROTATION]=0.0; }
+                                       if (previousSolution.motion[MOCAPNET_OUTPUT_LELBOW_ZROTATION]>0.0 ) { previousSolution.motion[MOCAPNET_OUTPUT_LELBOW_XROTATION]*=-1.0; }
+                                       if (previousSolution.motion[MOCAPNET_OUTPUT_RELBOW_ZROTATION]>0.0 ) { previousSolution.motion[MOCAPNET_OUTPUT_RELBOW_XROTATION]*=-1.0; }
+                                       //solution.motion[0]=4.4749;
+                                       //solution.motion[1]=-46.5558;
+                                       //solution.motion[2]=-130.9696;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_HIP_ZROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_HIP_YROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_HIP_XROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_NECK_ZROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_NECK_XROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_NECK_YROTATION]=0; 
+                                       previousSolution.motion[MOCAPNET_OUTPUT_NECK1_ZROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_NECK1_XROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_NECK1_YROTATION]=0; 
+                                       previousSolution.motion[MOCAPNET_OUTPUT_HEAD_ZROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_HEAD_XROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_HEAD_YROTATION]=0; 
+                                       previousSolution.motion[MOCAPNET_OUTPUT_LHIP_ZROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_LHIP_XROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_LHIP_YROTATION]=0; 
+                                       previousSolution.motion[MOCAPNET_OUTPUT_LKNEE_ZROTATION]=0; 
+                                       previousSolution.motion[MOCAPNET_OUTPUT_LKNEE_XROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_LKNEE_YROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_RHIP_ZROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_RHIP_XROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_RHIP_YROTATION]=0; 
+                                       previousSolution.motion[MOCAPNET_OUTPUT_RKNEE_ZROTATION]=0; 
+                                       previousSolution.motion[MOCAPNET_OUTPUT_RKNEE_XROTATION]=0;
+                                       previousSolution.motion[MOCAPNET_OUTPUT_RKNEE_YROTATION]=0;
+                                     }
+  if (bvhPenultimateFrame.size()!=0) { 
+                                       if (penultimateSolution.motion[MOCAPNET_OUTPUT_LELBOW_XROTATION]>0.0 ) { penultimateSolution.motion[MOCAPNET_OUTPUT_LELBOW_XROTATION]=0.0; }
+                                       if (penultimateSolution.motion[MOCAPNET_OUTPUT_RELBOW_XROTATION]>0.0 ) { penultimateSolution.motion[MOCAPNET_OUTPUT_RELBOW_XROTATION]=0.0; }
+                                       if (penultimateSolution.motion[MOCAPNET_OUTPUT_LELBOW_ZROTATION]>0.0 ) { penultimateSolution.motion[MOCAPNET_OUTPUT_LELBOW_XROTATION]*=-1.0; }
+                                       if (penultimateSolution.motion[MOCAPNET_OUTPUT_RELBOW_ZROTATION]>0.0 ) { penultimateSolution.motion[MOCAPNET_OUTPUT_RELBOW_XROTATION]*=-1.0; }
+                                       //solution.motion[0]=4.4749;
+                                       //solution.motion[1]=-46.5558;
+                                       //solution.motion[2]=-130.9696;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_HIP_ZROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_HIP_YROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_HIP_XROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_NECK_ZROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_NECK_XROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_NECK_YROTATION]=0; 
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_NECK1_ZROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_NECK1_XROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_NECK1_YROTATION]=0; 
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_HEAD_ZROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_HEAD_XROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_HEAD_YROTATION]=0; 
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_LHIP_ZROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_LHIP_XROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_LHIP_YROTATION]=0; 
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_LKNEE_ZROTATION]=0; 
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_LKNEE_XROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_LKNEE_YROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_RHIP_ZROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_RHIP_XROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_RHIP_YROTATION]=0; 
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_RKNEE_ZROTATION]=0; 
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_RKNEE_XROTATION]=0;
+                                       penultimateSolution.motion[MOCAPNET_OUTPUT_RKNEE_YROTATION]=0;
+                                     }
+#endif
+
 
 
  if ( (solution.motion!=0) /*&& (previousSolution.motion!=0) && (penultimateSolution.motion!=0)*/ )
