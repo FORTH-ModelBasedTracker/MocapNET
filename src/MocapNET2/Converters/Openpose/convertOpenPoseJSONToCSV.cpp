@@ -102,7 +102,7 @@ int  findFirstJSONFileInDirectory(const char * path,const char * formatString, c
 int main(int argc, char *argv[])
 {
     unsigned int respectTrainingAspectRatio = 1;
-    unsigned int width=1920 , height=1080 , frameLimit=100000 , processed = 0 , serialLength = 5 ,forcedSize=0;
+    unsigned int width=1920 , height=1080 , frameLimit=1000000 , processed = 0 , serialLength = 5 ,forcedSize=0;
     const char * path=0;
     const char * label=0;
     char outputPathFull[2048]={0};
