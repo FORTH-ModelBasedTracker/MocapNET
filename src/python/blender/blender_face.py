@@ -3,6 +3,12 @@
 #the MakeHuman plugin for Blender ( http://static.makehumancommunity.org/mpfb.html )
 mnetPluginVersion=float(0.34)
 
+
+#upon loading the script don't forget to also load the 
+#useAsSourceBVHWithBlender_FaceAt0_01Scale.bvh file at a scale of 0.01
+#and link your MPFB2 armature to the BVH scale.. 
+#this is needed to make facial rigging happen in relation to the BVH file and thus portable :)
+
 import bpy
 from bpy.props import EnumProperty
 
