@@ -11,7 +11,7 @@ cd "$DIR"
 
 
 #Default Tensorflow to be downloaded is 2.x with CPU only stuff to improve compatibility
-TENSORFLOW_VERSION="2.3.1"
+TENSORFLOW_VERSION="2.12.0"
 ARCHITECTURE="cpu" #can be gpu or cpu
 #https://www.tensorflow.org/install/lang_c
 #https://github.com/tensorflow/tensorflow/tree/master/tensorflow/c
