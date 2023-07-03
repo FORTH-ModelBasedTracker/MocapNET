@@ -5,7 +5,7 @@ cd "$DIR"
 
 ORIG_DIR=`pwd`
   
-ASK_QUESTIONS=0
+ASK_QUESTIONS=1
 
 cd "$DIR"
 
