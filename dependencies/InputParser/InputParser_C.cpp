@@ -24,7 +24,7 @@
 int warningsAboutIncorrectlyAllocatedStackIssued = 0;
 
 
-char _ipc_ver[]=" 0.361\0";  //2/10/2018
+char _ipc_ver[]=" 0.362\0";  //17/7/2023
 
 
 /*
@@ -929,7 +929,7 @@ int InputParser_SeperateWords(struct InputParserC * ipc,char * inpt,char keepcop
      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
 
 
-    register unsigned int i,z;
+    unsigned int i,z;
     ipc->tokens_count = 0 , ipc->tokenlist[0].token_start=0;
     for (i=0; i<STRING_END; i++)
         {
