@@ -105,8 +105,23 @@ else
 fi
 
 
+USE_GOOGLE_HOSTING="1"
 
 
+if ["$USE_GOOGLE_HOSTING" -eq "1"]; then
+   #Since June 8 2023, FORTH NOC has firewalled cvrldemo.ics.forth.gr and ammar.gr, 
+   #as a result the old way to access files is not available..
+   #this is a workaround until they fix this..
+   #https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/96
+   cd "$DIR"
+   echo "Using Google Drive Hosting to retrieve required files.."
+   mkdir -p dataset/combinedModel/mocapnet2/mode5/1.0/
+   mkdir -p dataset/combinedModel/mocapnet2/mode1/1.0/
+   wget -O allInOneMNET2RedistMirrorICPR2020.zip "drive.google.com/u/3/uc?id=1GtmPWOpf3MzhqhqegaC8cS3_m3Drp6y3&export=download&confirm=yes"
+   unzip allInOneMNET2RedistMirrorICPR2020.zip 
+else
+
+echo "Using FORTH Hosting to retrieve required files.."
 cd "$DIR"
 #Force download of a Video sample
 if [ ! -f shuffle.webm ]; then
@@ -173,6 +188,9 @@ if [ ! -f mobnet2_tiny_vnect_sm_1.9k.pb ]; then
 fi
  
 cd "$DIR"
+
+#END OF FORTH HOSTING FILE RETRIEVAL
+fi
 
 
 
