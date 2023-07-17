@@ -117,7 +117,9 @@ if [ "$USE_GOOGLE_HOSTING" == "yes" ]; then
    echo "Using Google Drive Hosting to retrieve required files.."
    mkdir -p dataset/combinedModel/mocapnet2/mode5/1.0/
    mkdir -p dataset/combinedModel/mocapnet2/mode1/1.0/
-   wget -O allInOneMNET2RedistMirrorICPR2020.zip "drive.google.com/u/3/uc?id=1GtmPWOpf3MzhqhqegaC8cS3_m3Drp6y3&export=download&confirm=yes"
+   if [ ! -f allInOneMNET2RedistMirrorICPR2020.zip ]; then
+      wget -O allInOneMNET2RedistMirrorICPR2020.zip "drive.google.com/u/3/uc?id=1GtmPWOpf3MzhqhqegaC8cS3_m3Drp6y3&export=download&confirm=yes"
+   fi 
    unzip allInOneMNET2RedistMirrorICPR2020.zip 
 else
 
