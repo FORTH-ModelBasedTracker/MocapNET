@@ -105,10 +105,10 @@ else
 fi
 
 
-USE_GOOGLE_HOSTING="1"
+#SWITCH DOWNLOAD BEHAVIOR
+USE_GOOGLE_HOSTING="yes"
 
-
-if ["$USE_GOOGLE_HOSTING" -eq "1"]; then
+if [ "$USE_GOOGLE_HOSTING" == "yes" ]; then
    #Since June 8 2023, FORTH NOC has firewalled cvrldemo.ics.forth.gr and ammar.gr, 
    #as a result the old way to access files is not available..
    #this is a workaround until they fix this..
