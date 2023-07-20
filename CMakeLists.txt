@@ -1,5 +1,5 @@
 project( MocapNETProject ) 
-cmake_minimum_required( VERSION 2.8.7 )
+cmake_minimum_required( VERSION 2.8.13 )
 
 #Make fast, lean and platform independent binaries..
 #The -fuse-ld=gold flag solves issue https://github.com/FORTH-ModelBasedTracker/MocapNET/issues/34
