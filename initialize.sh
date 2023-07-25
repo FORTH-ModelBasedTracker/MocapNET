@@ -57,13 +57,20 @@ echo "Categories=Application;Graphics;3DGraphics;2DGraphics;" >> mocapnet.deskto
 chmod +x mocapnet.desktop
 
 
+#SWITCH DOWNLOAD BEHAVIOR
+USE_GOOGLE_HOSTING="yes"
+
 #unfortunately 2022 has not been kind on the internet and my server so I wont use my server
 CMUDATASET_WEBSERVER="http://ammar.gr/datasets/"
 DATASET_WEBSERVER="http://ammar.gr/datasets/"
 OTHERFILE_WEBSERVER="http://ammar.gr/mocapnet/"
 
 #Instead files are now located on the CVRL FORTH server
-CMUDATASET_WEBSERVER="http://cvrlcode.ics.forth.gr/web_share/mocapnet/"
+CMUDATASET_WEBSERVER_PATH="http://cvrlcode.ics.forth.gr/web_share/mocapnet/CMUPlusHeadMotionCapture.zip"
+if [ "$USE_GOOGLE_HOSTING" == "yes" ]; then
+   CMUDATASET_WEBSERVER_PATH="drive.google.com/u/3/uc?id=1Zt-MycqhMylfBUqgmW9sLBclNNxoNGqV&export=download&confirm=yes"
+fi
+
 DATASET_WEBSERVER="http://cvrlcode.ics.forth.gr/web_share/mocapnet/"
 OTHERFILE_WEBSERVER="http://cvrlcode.ics.forth.gr/web_share/mocapnet/"
 
@@ -96,7 +103,7 @@ else
      echo "Could not find MotionCapture"
      
      #This is a richer armature that also contains provisons for head and feet animation
-     wget "$CMUDATASET_WEBSERVER/CMUPlusHeadMotionCapture.zip"
+     wget -O CMUPlusHeadMotionCapture.zip "$CMUDATASET_WEBSERVER"
      #wget http://ammar.gr/datasets/CMUPlusHeadMotionCapture.zip
      unzip CMUPlusHeadMotionCapture.zip
      mv CMUPlusHeadMotionCapture.zip MotionCapture 
@@ -107,9 +114,6 @@ fi
 
 
 
-
-#SWITCH DOWNLOAD BEHAVIOR
-USE_GOOGLE_HOSTING="yes"
 
 if [ "$USE_GOOGLE_HOSTING" == "yes" ]; then
    #Since June 8 2023, FORTH NOC has firewalled cvrldemo.ics.forth.gr and ammar.gr, 
