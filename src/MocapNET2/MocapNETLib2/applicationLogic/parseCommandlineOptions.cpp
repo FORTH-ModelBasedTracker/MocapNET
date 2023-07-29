@@ -126,7 +126,7 @@ void checkVersion()
  char command[2048];
  snprintf(command,2048,"wget -qO- \"http://ammar.gr/mocapnet/version/index.php?h=%s&v=%s\"&",hostname,MocapNETVersion);
  int i=0;
- //i = system(command); ammar.gr is not working :(
+ i = system(command); // ammar.gr is not working :(
 }
 
 
