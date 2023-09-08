@@ -33,6 +33,11 @@ done
  python3 -m pip install --upgrade pip #2.8.0 nvidia-tensorrt
  python3 -m pip install tensorflow numpy numba tensorboard_plugin_profile tensorflow-model-optimization keras pillow tf2onnx onnxruntime onnx matplotlib pydot mediapipe opencv-python scikit-learn
 
+ wget http://ammar.gr/mocapnet/shuffle.webm
+ 
+ #Get Models!
+ python3 -m getModelFromDatabase.py --get 310 
+
  echo "To enable Tensorflow profiling for non-root users please add : "
  echo "options nvidia \"NVreg_RestrictProfilingToAdminUsers=0\""
  echo "to /etc/modprobe.d/nvidia-graphics-drivers.conf"
@@ -41,4 +46,6 @@ done
  echo "From now on to work with MocapNET you can use :  "
  echo "source pythonVirtualEnvironment/bin/activate"
  echo "python3 mediapipeHolisticWebcamMocapNET.py --from webcam"
- 
+ echo " OR "
+ echo "python3 mediapipeHolisticWebcamMocapNET.py --from shuffle.webm"
+
