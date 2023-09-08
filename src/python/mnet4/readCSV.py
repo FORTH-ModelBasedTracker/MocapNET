@@ -26,7 +26,8 @@ from dataDecomposition import EmptyDecomposition
 """
 def splitNumpyArray(data,column,columnsToTake,useHalfFloats):
     #---------------------------------------------------------------------------------------------
-    numberOfSamples=len(data)
+    numberOfSamples = len(data)
+    #numberOfColumns = len(data[0])
     #---------------------------------------------------------------------------------------------
     if (useHalfFloats):
        npOutput = np.full([numberOfSamples,columnsToTake],fill_value=0,dtype=np.float16,order='C')
@@ -1264,7 +1265,7 @@ def readCSVFile(filename,memPercentage=1.0,useHalfFloats=False):
            sampleNumber=sampleNumber+1
 
         if (numberOfSamples>0):
-           progress=sampleNumber/numberOfSamplesLimit 
+           progress=sampleNumber/numberOfSamplesLimit
 
         if (sampleNumber%1000==0) :
            progressString = "%0.2f"%float(100*progress)  

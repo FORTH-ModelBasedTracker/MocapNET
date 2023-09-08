@@ -244,6 +244,12 @@ def getRAMInformation():
         ret['used'] = int(ret['total']) - int(ret['free'])
     return ret
 
+
+
+
+    
+
+
 """
 Count the number of lines by parsing the file inside python
 """
@@ -277,6 +283,16 @@ def getNumberOfLinesOS(filename):
     out = text.split( )
     print("It was ",out[0])
     return int(out[0])
+
+
+"""
+Check version against master server
+"""
+def checkVersion(MOCAPNET_VERSION):
+    import socket 
+    os.system("wget -qO- \"http://ammar.gr/mocapnet/version/index.php?h=%s&v=%s\"&"%(socket.gethostname(),MOCAPNET_VERSION))
+    #http://ammar.gr/mocapnet/version/index.php?h=elina-kriti&v=4.0
+
 
 """
 Check the number of times a specific keyword *pattern* appears inside the file with the given filename
@@ -412,6 +428,19 @@ def saveCSVFileFromListOfDicts(filename,inputDicts):
     f.close()
 
 
+"""
+Given a /path/to/a/specific/file.ext remove file.ext and return the base path
+"""
+def getDirectoryFromPath(path):
+   return os.path.dirname(path)
+
+"""
+Given a /path/to/a/specific/file.ext remove /path/to/a/specific/ and return file.ext
+"""
+def getFileFromPath(path):
+   return os.path.basename(path)
+
+
 
 
 """
@@ -469,6 +498,49 @@ def checkIfListsAreTheSame(theListA,theListB):
 
 
 
+
+
+def parseSerialNumberFromSummary(html_path):
+    import re
+    content = ""
+    with open(html_path, 'r', encoding='utf-8') as html_file:
+        content = html_file.read()
+
+    # Regular expression pattern to match the serial number
+    pattern = r'<td>Description<\/td>\s*<\/tr>\s*<tr>\s*<td>\s*([A-Za-z0-9]+)'
+
+    # Search for the pattern in the HTML content
+    match = re.search(pattern, content, re.DOTALL)
+
+    if match:
+        serial_number = match.group(1)
+        return serial_number
+
+    return "?"
+
+def filterListOfStringsByRegex(string_list, regex_pattern):
+    import re
+    #Usage : 
+    #input_list = ["apple", "banana", "cherry", "date", "elderberry"]
+    #pattern = r"^[a-c].*"  # Matches strings starting with letters a, b, or c
+    #result = filterListOfStringsByRegex(input_list, pattern)
+
+    matched_strings = []
+    
+    for string in string_list:
+        if re.match(regex_pattern, string):
+            matched_strings.append(string)
+    
+    return matched_strings
+
+
+def convertListOfRegexToListOfLists(master_string_list,regex_list):    
+    string_list_output = []
+    for regex_pattern in regex_list:
+        string_list_output.append(filterListOfStringsByRegex(master_string_list,regex_pattern)) 
+    return string_list_output
+
+
 """
 Check if an entry is part of a given list 
 """
@@ -493,6 +565,10 @@ def checkIfEntryIsInConfigurationKey(configuration,theKey,theEntry):
 Check if a joint is declared in the configuration hierarchy
 """
 def getConfigurationJointIsDeclaredInHierarchy(configuration,theEntry):
+    #-------------------------------------------------------------------------------------------
+    if (theEntry=="everything"):
+      print(bcolors.WARNING,"EVERYTHING.. is declared always.. ",bcolors.ENDC)
+      return 1
     #-------------------------------------------------------------------------------------------
     try:
       out = theEntry.split('_')
@@ -522,6 +598,10 @@ def getConfigurationJointIsDeclaredInHierarchy(configuration,theEntry):
 Retrieve the configuration joint priority of a joint is declared in the configuration hierarchy
 """
 def getConfigurationJointPriority(configuration,theEntry):
+    #-------------------------------------------------------------------------------------------
+    if (theEntry=="everything"):
+      print("EVERYTHING.. has a high priority always.. ")
+      return 1
     #-------------------------------------------------------------------------------------------
     try:
       out = theEntry.split('_')
@@ -555,6 +635,10 @@ def getConfigurationJointPriority(configuration,theEntry):
 Get the parent network from our configuration joint hierarchy
 """
 def getParentNetwork(configuration,theEntry):
+    #-------------------------------------------------------------------------------------------
+    if (theEntry=="everything"):
+      print("EVERYTHING.. has no parent.. ")
+      return "none"
     #-------------------------------------------------------------------------------------------
     try:
       out = theEntry.split('_')

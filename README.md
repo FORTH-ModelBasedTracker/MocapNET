@@ -10,6 +10,12 @@ It will also be compatible with Raspberry Pi 4 and use Tensorflow /Tf-Lite / ONN
   
 This branch is still missing a lot of things so you can safely ignore it for now..!
 
+Click here for one click setup : 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/initialize.ipynb)
+
+
+
+
 ## License
 ------------------------------------------------------------------ 
 This library is provided under the [FORTH license](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/license.txt)

@@ -8,8 +8,7 @@ License : "FORTH"
 def getColor(i):
   if i>107:
        i = i % 108
-    
-
+  #---------------------
   if (i==0): 
     return (247,252,253)
   elif (i==1): 
@@ -248,7 +247,26 @@ def drawMissingInput(image):
     image = cv2.putText(image, message , org, font, fontScale, color, thickness, cv2.LINE_AA)
     return image
 
-def drawMocapNETInput(input2D,image,flipX=False):
+
+def resolveXY(input2D,joint,width,height,flipX=False): 
+   x2D=0
+   y2D=0
+   jointName2DX = "2dx_"+joint
+   jointName2DY = "2dy_"+joint 
+   if ( jointName2DX in input2D ) and ( jointName2DY in input2D ):
+           if (flipX):
+              x2D = int((1.0-input2D[jointName2DX])*width)
+           else:
+              x2D = int(input2D[jointName2DX]*width)
+           y2D = int(input2D[jointName2DY]*height)
+   else:
+           print("Cannot resolve ",joint)
+   #print(joint," resolved to ",x2D,",",y2D)
+   return x2D,y2D
+
+
+
+def drawMocapNETInput(input2D,image,flipX=False,doLines=True):
     import cv2
     if (type(image)==type(None)):
        print("Invalid Image given, can't do anything with it")
@@ -256,6 +274,49 @@ def drawMocapNETInput(input2D,image,flipX=False):
     width  = image.shape[1]
     height = image.shape[0]
     #print("Drawing output to ",width,"x",height," cvmat")
+
+    if (doLines):
+      #Draw lines
+      #====================================================================
+      t=8
+      x1,y1=resolveXY(input2D,"rshoulder",width,height,flipX=flipX)
+      x2,y2=resolveXY(input2D,"relbow",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,255,0), thickness=t)
+      x1,y1=resolveXY(input2D,"rhand",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,255,0), thickness=t)
+      x1,y1=resolveXY(input2D,"rshoulder",width,height,flipX=flipX)
+      x2,y2=resolveXY(input2D,"neck",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,255,0), thickness=t)
+      x2,y2=resolveXY(input2D,"hip",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,255,0), thickness=t)
+      x1,y1=resolveXY(input2D,"rhip",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,255,0), thickness=t)
+      x2,y2=resolveXY(input2D,"rknee",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,255,0), thickness=t)
+      x1,y1=resolveXY(input2D,"rfoot",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,255,0), thickness=t)
+
+      x1,y1=resolveXY(input2D,"lshoulder",width,height,flipX=flipX)
+      x2,y2=resolveXY(input2D,"lelbow",width,height,flipX=flipX) 
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,0,255), thickness=t)
+      x1,y1=resolveXY(input2D,"lhand",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,0,255), thickness=t)
+      x1,y1=resolveXY(input2D,"lshoulder",width,height,flipX=flipX)
+      x2,y2=resolveXY(input2D,"neck",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,0,255), thickness=t)
+      x2,y2=resolveXY(input2D,"hip",width,height,flipX=flipX) 
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,0,255), thickness=t)
+      x1,y1=resolveXY(input2D,"lhip",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,0,255), thickness=t)
+      x2,y2=resolveXY(input2D,"lknee",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,0,255), thickness=t)
+      x1,y1=resolveXY(input2D,"lfoot",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,0,255), thickness=t)
+
+      x1,y1=resolveXY(input2D,"neck",width,height,flipX=flipX)
+      x2,y2=resolveXY(input2D,"head",width,height,flipX=flipX)
+      cv2.line(image, pt1=(x1,y1), pt2=(x2,y2), color=(0,255,255), thickness=t)
+      #====================================================================
 
 
     font = cv2.FONT_HERSHEY_SIMPLEX 
@@ -312,8 +373,8 @@ def drawMocapNETInput(input2D,image,flipX=False):
               image = cv2.putText(image, "%s" % (joint) , (x2D+2,y2D), font, fontScale, color, thickness, cv2.LINE_AA)
            cv2.circle(image,(x2D,y2D),circleSize,color,cv2.FILLED)
 
-           if ('__' in joint):
-              image = cv2.putText(image, joint , (x2D+2,y2D), font, fontScale, color, thickness, cv2.LINE_AA)
+           #if ('__' in joint): #Print __temporalis joint
+           #   image = cv2.putText(image, joint , (x2D+2,y2D), font, fontScale, color, thickness, cv2.LINE_AA)
     return image
 
 def drawMocapNETOutput(mnet,image,xOffset=0): #set xOffset to -400 to make visualization more clean by seperating 2D/3D
@@ -726,14 +787,37 @@ def drawMocapNETFrequencyPlots(history):
 
 
 
-def visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=0,bvhAnglesForPlotting=list(),economic=False):
+
+
+
+def drawMNETSerials(mnet,image,x,y):
+    import cv2
+    #-----------------------------------------
+    font = cv2.FONT_HERSHEY_SIMPLEX 
+    fontScale = 0.4
+    thickness = 1
+    #-----------------------------------------
+    #print("MNET Serials ",mnet.getEnsembleSerials()) 
+    #-----------------------------------------
+    color = (0,0,0)
+    org = (x+2,y+2) 
+    image = cv2.putText(image, mnet.getEnsembleSerials() , org, font, fontScale, color, thickness, cv2.LINE_AA)
+    org = (x,y) 
+    color = (255,255,255)
+    image = cv2.putText(image, mnet.getEnsembleSerials() , org, font, fontScale, color, thickness, cv2.LINE_AA)
+    #-----------------------------------------
+
+
+
+def visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=0,bvhAnglesForPlotting=list(),economic=False,drawOutput=True):
  try: 
     #from MocapNETVisualization import drawMocapNETOutput,drawMocapNETAllPlots,drawMissingInput,drawDescriptor,drawNSRM,drawMAE2DError
     #------------------------------------------------------------------------------------
-    if ("upperbody" in mnet.ensemble):
+    if (drawOutput):
+      if ("upperbody" in mnet.ensemble):
         drawMocapNETOutput(mnet,annotated_image) #only draw 3D ouput if upperbody is loaded and working..
     
-    drawMocapNETInput(mnet.input2D,annotated_image)
+    drawMocapNETInput(mnet.input2D,annotated_image,doLines=(drawOutput==False))
     if (economic):
        return annotated_image,annotated_image
     #------------------------------------------------------------------------------------
@@ -791,6 +875,12 @@ def visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=0,bvhAnglesFo
 
     if (len(mnet.history_hz_HCD)>0):
       drawMocapNETSinglePlotValueList(mnet.history_hz_HCD,1,"HCD FPS",annotated_image,width-70,220,70,70,0.0,60.0)
+
+    if (len(mnet.history_hz_Vis)>0):
+      drawMocapNETSinglePlotValueList(mnet.history_hz_Vis,1,"Visualization",annotated_image,width-70,320,70,70,0.0,60.0)
+
+    drawMNETSerials(mnet,annotated_image,10,30)
+
 
     #if (mnet.incompleteUpperbodyInput and mnet.incompleteLowerbodyInput): 
     #  drawMissingInput(annotated_image)

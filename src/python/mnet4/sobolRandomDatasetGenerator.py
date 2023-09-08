@@ -58,9 +58,9 @@ def getUpperbodyList():
    joints.append("chest_Zrotation");     minima.append(-63.64);   maxima.append(59.23);  dof+=1 
    joints.append("chest_Xrotation");     minima.append(-59.62);   maxima.append(42.48);  dof+=1 
    joints.append("chest_Yrotation");     minima.append(-30.52);   maxima.append(34.27);  dof+=1 
-   joints.append("neck1_Zrotation");      minima.append(-74.41);   maxima.append(97.04);  dof+=1 
-   joints.append("neck1_Xrotation");      minima.append(-63.63);   maxima.append(81.78);  dof+=1 
-   joints.append("neck1_Yrotation");      minima.append(-63.31);   maxima.append(71.25);  dof+=1 
+   joints.append("neck1_Zrotation");     minima.append(-74.41);   maxima.append(97.04);  dof+=1 
+   joints.append("neck1_Xrotation");     minima.append(-63.63);   maxima.append(81.78);  dof+=1 
+   joints.append("neck1_Yrotation");     minima.append(-63.31);   maxima.append(71.25);  dof+=1 
    joints.append("head_Zrotation");      minima.append(minR);     maxima.append(maxR);   dof+=1 
    joints.append("head_Xrotation");      minima.append(-89.24);   maxima.append(86.77);  dof+=1 
    joints.append("head_Yrotation");      minima.append(-178.54);  maxima.append(maxR);   dof+=1 
@@ -120,7 +120,7 @@ def getLowerbodyList():
    #joints.append("neck1_Yrotation");    minima.append(-63.31);  maxima.append(71.64);   dof+=1 
    #-------------------------------------------------------------------------------
    joints.append("rhip_Zrotation");    minima.append(minR);    maxima.append(maxR);   dof+=1 
-   joints.append("rhip_Xrotation");    minima.append(-104.0); maxima.append(94.0);    dof+=1 #Default -104.11 .. 73.67
+   joints.append("rhip_Xrotation");    minima.append(-104.0);  maxima.append(94.0);   dof+=1 #Default -104.11 .. 73.67
    joints.append("rhip_Yrotation");    minima.append(minR);    maxima.append(maxR);   dof+=1 
    joints.append("rknee_Zrotation");   minima.append(minR);    maxima.append(maxR);   dof+=1 
    joints.append("rknee_Xrotation");   minima.append(-66.0);   maxima.append(94.0);   dof+=1 #Default -66.73 .. 94.07
@@ -130,7 +130,7 @@ def getLowerbodyList():
    joints.append("rfoot_Yrotation");   minima.append(minR);    maxima.append(maxR);   dof+=1 
    #-------------------------------------------------------------------------------
    joints.append("lhip_Zrotation");    minima.append(minR);    maxima.append(maxR);   dof+=1 
-   joints.append("lhip_Xrotation");    minima.append(-104.0); maxima.append(94.0);    dof+=1  #Default -104.23 .. 93.92
+   joints.append("lhip_Xrotation");    minima.append(-104.0);  maxima.append(94.0);   dof+=1  #Default -104.23 .. 93.92
    joints.append("lhip_Yrotation");    minima.append(minR);    maxima.append(maxR);   dof+=1 
    joints.append("lknee_Zrotation");   minima.append(minR);    maxima.append(maxR);   dof+=1 
    joints.append("lknee_Xrotation");   minima.append(-66.0);   maxima.append(94.0);   dof+=1  #Default -46.36 .. 94.34
@@ -154,14 +154,14 @@ def getFullFaceList():
    dof       = 0
    #/home/ammar/Programs/blender-3.4.1-linux-x64/3.4/scripts/addons/io_anim_bvh/import_bvh.py
    #-----------------------------------
-   joints.append("hip_Xposition");             minima.append(-0.24); maxima.append(0.24);  rootDofs.append(dof); dof+=1 
-   joints.append("hip_Yposition");             minima.append(-0.10); maxima.append(0.10);  rootDofs.append(dof); dof+=1 
-   joints.append("hip_Zposition");             minima.append(-2.4);  maxima.append(-1.0);  rootDofs.append(dof); dof+=1 
-   joints.append("neck1_Zrotation");            minima.append(-20.0); maxima.append(20.0);  rootDofs.append(dof); dof+=1 
-   joints.append("neck1_Xrotation");            minima.append(-20.0); maxima.append(20.0);  rootDofs.append(dof); dof+=1 
-   joints.append("neck1_Yrotation");            minima.append(-30.0); maxima.append(30.0);  rootDofs.append(dof); dof+=1 
-   joints.append("eye.R_Zrotation");           minima.append(-45.36); maxima.append(45.36);  dof+=1 
-   joints.append("eye.R_Xrotation");           minima.append(-10.0);  maxima.append(16.0); dof+=1 
+   joints.append("hip_Xposition");             minima.append(-0.24);  maxima.append(0.24);  rootDofs.append(dof); dof+=1 
+   joints.append("hip_Yposition");             minima.append(-0.10);  maxima.append(0.10);  rootDofs.append(dof); dof+=1 
+   joints.append("hip_Zposition");             minima.append(-2.4);   maxima.append(-1.0);  rootDofs.append(dof); dof+=1 
+   joints.append("neck1_Zrotation");           minima.append(-20.0);  maxima.append(20.0);  rootDofs.append(dof); dof+=1 
+   joints.append("neck1_Xrotation");           minima.append(-20.0);  maxima.append(20.0);  rootDofs.append(dof); dof+=1 
+   joints.append("neck1_Yrotation");           minima.append(-30.0);  maxima.append(30.0);  rootDofs.append(dof); dof+=1 
+   joints.append("eye.R_Zrotation");           minima.append(-45.36); maxima.append(45.36); dof+=1 
+   joints.append("eye.R_Xrotation");           minima.append(-10.0);  maxima.append(16.0);  dof+=1 
    #Let's assume eyes move together..
    #joints.append("eye.L_Zrotation"); minima.append(-20.0); maxima.append(20.0)
    #joints.append("eye.L_Xrotation"); minima.append(-7.0); maxima.append(20.0)
@@ -213,18 +213,18 @@ def getReyeList():
    rootDofs  = list()
    dof       = 0
    #-----------------------------------
-   joints.append("hip_Xposition");             minima.append(-0.24); maxima.append(0.24);  rootDofs.append(dof); dof+=1 
-   joints.append("hip_Yposition");             minima.append(-0.10); maxima.append(0.10);  rootDofs.append(dof); dof+=1 
-   joints.append("hip_Zposition");             minima.append(-2.3);  maxima.append(-1.0);  rootDofs.append(dof); dof+=1 
-   joints.append("neck1_Zrotation");            minima.append(-20.0); maxima.append(20.0);  rootDofs.append(dof); dof+=1 
-   joints.append("neck1_Xrotation");            minima.append(-20.0); maxima.append(20.0);  rootDofs.append(dof); dof+=1 
-   joints.append("neck1_Yrotation");            minima.append(-30.0); maxima.append(30.0);  rootDofs.append(dof); dof+=1 
-   joints.append("eye.R_Zrotation");           minima.append(-45.36); maxima.append(45.36);  dof+=1 
-   joints.append("eye.R_Xrotation");           minima.append(-10.0); maxima.append(16.0);  dof+=1 
-   joints.append("oculi01.R_Zrotation");       minima.append(-20.0); maxima.append(20.0);  dof+=1 
-   joints.append("orbicularis03.R_Xrotation"); minima.append(-15.0); maxima.append(15.0);  dof+=1 
-   joints.append("jaw_Xrotation");             minima.append(-4.0);  maxima.append(20.0);  dof+=1  #Reason being adding some robustness
-   joints.append("jaw_Yrotation");             minima.append(-15.0); maxima.append(15.0);  dof+=1  #Reason being adding some chin robustness
+   joints.append("hip_Xposition");             minima.append(-0.24);  maxima.append(0.24);  rootDofs.append(dof); dof+=1 
+   joints.append("hip_Yposition");             minima.append(-0.10);  maxima.append(0.10);  rootDofs.append(dof); dof+=1 
+   joints.append("hip_Zposition");             minima.append(-2.3);   maxima.append(-1.0);  rootDofs.append(dof); dof+=1 
+   joints.append("neck1_Zrotation");           minima.append(-20.0);  maxima.append(20.0);  rootDofs.append(dof); dof+=1 
+   joints.append("neck1_Xrotation");           minima.append(-20.0);  maxima.append(20.0);  rootDofs.append(dof); dof+=1 
+   joints.append("neck1_Yrotation");           minima.append(-30.0);  maxima.append(30.0);  rootDofs.append(dof); dof+=1 
+   joints.append("eye.R_Zrotation");           minima.append(-45.36); maxima.append(45.36); dof+=1 
+   joints.append("eye.R_Xrotation");           minima.append(-10.0);  maxima.append(16.0);  dof+=1 
+   joints.append("oculi01.R_Zrotation");       minima.append(-20.0);  maxima.append(20.0);  dof+=1 
+   joints.append("orbicularis03.R_Xrotation"); minima.append(-15.0);  maxima.append(15.0);  dof+=1 
+   joints.append("jaw_Xrotation");             minima.append(-4.0);   maxima.append(20.0);  dof+=1  #Reason being adding some robustness
+   joints.append("jaw_Yrotation");             minima.append(-15.0);  maxima.append(15.0);  dof+=1  #Reason being adding some chin robustness
    #-----------------------------------
    constants["orbicularis03.R_Yrotation"] = 172.0
    constants["orbicularis04.R_Yrotation"] = 172.0
@@ -244,13 +244,13 @@ def getMouthList():
    joints.append("hip_Xposition");             minima.append(-0.24); maxima.append(0.24);  rootDofs.append(dof); dof+=1 
    joints.append("hip_Yposition");             minima.append(-0.10); maxima.append(0.10);  rootDofs.append(dof); dof+=1
    joints.append("hip_Zposition");             minima.append(-2.4);  maxima.append(-1.0);  rootDofs.append(dof); dof+=1
-   joints.append("neck1_Zrotation");            minima.append(-20.0); maxima.append(20.0);  rootDofs.append(dof); dof+=1
-   joints.append("neck1_Xrotation");            minima.append(-20.0); maxima.append(20.0);  rootDofs.append(dof); dof+=1
-   joints.append("neck1_Yrotation");            minima.append(-30.0); maxima.append(30.0);  rootDofs.append(dof); dof+=1
+   joints.append("neck1_Zrotation");           minima.append(-20.0); maxima.append(20.0);  rootDofs.append(dof); dof+=1
+   joints.append("neck1_Xrotation");           minima.append(-20.0); maxima.append(20.0);  rootDofs.append(dof); dof+=1
+   joints.append("neck1_Yrotation");           minima.append(-30.0); maxima.append(30.0);  rootDofs.append(dof); dof+=1
    joints.append("levator06.L_Xrotation");     minima.append(-9.0);  maxima.append(9.0);   dof+=1
-   #joints.append("levator06.R_Xrotation");     minima.append(-9.0);  maxima.append(9.0);  dof+=1 #This is levator06.L_Xrotation
+   #joints.append("levator06.R_Xrotation");    minima.append(-9.0);  maxima.append(9.0);   dof+=1 #This is levator06.L_Xrotation
    joints.append("levator03.L_Zrotation");     minima.append(-8.0);  maxima.append(9.0);   dof+=1
-   #joints.append("levator03.R_Zrotation");     minima.append(-9.0);  maxima.append(8.0);  dof+=1 #This is flipped levator03.L_Zrotation
+   #joints.append("levator03.R_Zrotation");    minima.append(-9.0);  maxima.append(8.0);   dof+=1 #This is flipped levator03.L_Zrotation
    joints.append("oris03.L_Zrotation");        minima.append(-30.0); maxima.append(30.0);  dof+=1
    joints.append("oris03.R_Zrotation");        minima.append(-30.0); maxima.append(30.0);  dof+=1
    joints.append("oris07.L_Zrotation");        minima.append(-30.0); maxima.append(0.0);   dof+=1
@@ -287,48 +287,54 @@ def getLHandList():
    dof       = 0
    #--------------------------------------
    joints.append("lhand_Xposition");       minima.append(-120.0); maxima.append(120.0); rootDofs.append(dof); dof+=1  #230
-   joints.append("lhand_Yposition");       minima.append(-60.0);  maxima.append(60.0);  rootDofs.append(dof); dof+=1    #92
-   joints.append("lhand_Zposition");       minima.append(-250.0); maxima.append(-75.0); rootDofs.append(dof); dof+=1 
+   joints.append("lhand_Yposition");       minima.append(-60.0);  maxima.append(60.0);  rootDofs.append(dof); dof+=1  #92
+   joints.append("lhand_Zposition");       minima.append(-250.0); maxima.append(-75.0); rootDofs.append(dof); dof+=1
+   #joints.append("padding_1");             minima.append(0.0);    maxima.append(0.0);   rootDofs.append(dof); dof+=1 #<- Align to 4 elements
    #--------------------------------------
-   joints.append("lhand_Wrotation");       minima.append(-1.0);   maxima.append(1.0);   rootDofs.append(dof);  dof+=1 
-   joints.append("lhand_Xrotation");       minima.append(-1.0);   maxima.append(1.0);   rootDofs.append(dof);  dof+=1 
-   joints.append("lhand_Yrotation");       minima.append(-1.0);   maxima.append(1.0);   rootDofs.append(dof);  dof+=1 
-   joints.append("lhand_Zrotation");       minima.append(-1.0);   maxima.append(1.0);   rootDofs.append(dof);  dof+=1 
+   joints.append("lhand_Wrotation");       minima.append(-1.0);   maxima.append(1.0);   rootDofs.append(dof); dof+=1
+   joints.append("lhand_Xrotation");       minima.append(-1.0);   maxima.append(1.0);   rootDofs.append(dof); dof+=1
+   joints.append("lhand_Yrotation");       minima.append(-1.0);   maxima.append(1.0);   rootDofs.append(dof); dof+=1
+   joints.append("lhand_Zrotation");       minima.append(-1.0);   maxima.append(1.0);   rootDofs.append(dof); dof+=1
    #--------------------------------------
-   joints.append("finger2-1.l_Zrotation"); minima.append(-90.0);  maxima.append(10.0);  dof+=1 
-   joints.append("finger2-1.l_Yrotation"); minima.append(-20.0);  maxima.append(20.0);  dof+=1 
-   joints.append("finger2-2.l_Zrotation"); minima.append(-90.0);  maxima.append(0.0);   dof+=1 
-   joints.append("finger2-3.l_Zrotation"); minima.append(-45.0);  maxima.append(0.0);   dof+=1 
+   joints.append("finger2-1.l_Zrotation"); minima.append(-90.0);  maxima.append(10.0);  dof+=1
+   joints.append("finger2-1.l_Yrotation"); minima.append(-20.0);  maxima.append(20.0);  dof+=1
+   joints.append("finger2-2.l_Zrotation"); minima.append(-90.0);  maxima.append(0.0);   dof+=1
+   joints.append("finger2-3.l_Zrotation"); minima.append(-45.0);  maxima.append(0.0);   dof+=1
    #--------------------------------------
-   joints.append("finger3-1.l_Zrotation"); minima.append(-90.0);  maxima.append(10.0);  dof+=1 
-   joints.append("finger3-1.l_Yrotation"); minima.append(-10.0);  maxima.append(10.0);  dof+=1 
-   joints.append("finger3-2.l_Zrotation"); minima.append(-90.0);  maxima.append(0.0);   dof+=1 
-   joints.append("finger3-3.l_Zrotation"); minima.append(-45.0);  maxima.append(0.0);   dof+=1 
+   joints.append("finger3-1.l_Zrotation"); minima.append(-90.0);  maxima.append(10.0);  dof+=1
+   joints.append("finger3-1.l_Yrotation"); minima.append(-10.0);  maxima.append(10.0);  dof+=1
+   joints.append("finger3-2.l_Zrotation"); minima.append(-90.0);  maxima.append(0.0);   dof+=1
+   joints.append("finger3-3.l_Zrotation"); minima.append(-45.0);  maxima.append(0.0);   dof+=1
    #--------------------------------------
-   joints.append("finger4-1.l_Zrotation"); minima.append(-90.0);  maxima.append(10.0);  dof+=1 
-   joints.append("finger4-1.l_Yrotation"); minima.append(-10.0);  maxima.append(10.0);  dof+=1 
-   joints.append("finger4-2.l_Zrotation"); minima.append(-90.0);  maxima.append(0.0);   dof+=1 
-   joints.append("finger4-3.l_Zrotation"); minima.append(-45.0);  maxima.append(0.0);   dof+=1 
+   joints.append("finger4-1.l_Zrotation"); minima.append(-90.0);  maxima.append(10.0);  dof+=1
+   joints.append("finger4-1.l_Yrotation"); minima.append(-10.0);  maxima.append(10.0);  dof+=1
+   joints.append("finger4-2.l_Zrotation"); minima.append(-90.0);  maxima.append(0.0);   dof+=1
+   joints.append("finger4-3.l_Zrotation"); minima.append(-45.0);  maxima.append(0.0);   dof+=1
    #--------------------------------------
-   joints.append("finger5-1.l_Zrotation"); minima.append(-90.0);  maxima.append(10.0);  dof+=1 
-   joints.append("finger5-1.l_Yrotation"); minima.append(-8.0);   maxima.append(25.0);  dof+=1 
-   joints.append("finger5-2.l_Zrotation"); minima.append(-90.0);  maxima.append(0.0);   dof+=1 
-   joints.append("finger5-3.l_Zrotation"); minima.append(-45.0);  maxima.append(0.0);   dof+=1 
+   joints.append("finger5-1.l_Zrotation"); minima.append(-90.0);  maxima.append(10.0);  dof+=1
+   joints.append("finger5-1.l_Yrotation"); minima.append(-8.0);   maxima.append(25.0);  dof+=1
+   joints.append("finger5-2.l_Zrotation"); minima.append(-90.0);  maxima.append(0.0);   dof+=1
+   joints.append("finger5-3.l_Zrotation"); minima.append(-45.0);  maxima.append(0.0);   dof+=1
    #--------------------------------------
-   joints.append("lthumbBase_Zrotation");  minima.append(0.0);    maxima.append(60.0);  dof+=1 
-   joints.append("lthumbBase_Xrotation");  minima.append(-35.0);  maxima.append(0.0);   dof+=1 
-   joints.append("lthumbBase_Yrotation");  minima.append(0.0);    maxima.append(60.0);  dof+=1 
+   joints.append("lthumbBase_Zrotation");  minima.append(0.0);    maxima.append(60.0);  dof+=1
+   joints.append("lthumbBase_Xrotation");  minima.append(-35.0);  maxima.append(0.0);   dof+=1
+   joints.append("lthumbBase_Yrotation");  minima.append(0.0);    maxima.append(60.0);  dof+=1
+   #joints.append("padding_2");             minima.append(0.0);    maxima.append(0.0);   #<- Align to 4 elements
    #--------------------------------------
-   joints.append("lthumb_Zrotation");      minima.append(-85.0);  maxima.append(85.0);  dof+=1 
-   joints.append("lthumb_Xrotation");      minima.append(-30.0);  maxima.append(48.0);  dof+=1 
-   joints.append("lthumb_Yrotation");      minima.append(0.0);    maxima.append(85.0);  dof+=1 
+   joints.append("lthumb_Zrotation");      minima.append(-85.0);  maxima.append(85.0);  dof+=1
+   joints.append("lthumb_Xrotation");      minima.append(-30.0);  maxima.append(48.0);  dof+=1
+   joints.append("lthumb_Yrotation");      minima.append(0.0);    maxima.append(85.0);  dof+=1
+   #joints.append("padding_3");             minima.append(0.0);    maxima.append(0.0);   #<- Align to 4 elements
    #--------------------------------------
-   joints.append("finger1-2.l_Zrotation"); minima.append(-35.0);  maxima.append(0.0);   dof+=1 
-   joints.append("finger1-2.l_Xrotation"); minima.append(-40.0);  maxima.append(45.0);  dof+=1 
-   joints.append("finger1-2.l_Yrotation"); minima.append(-70.0);  maxima.append(35.0);  dof+=1 
+   joints.append("finger1-2.l_Zrotation"); minima.append(-35.0);  maxima.append(0.0);   dof+=1
+   joints.append("finger1-2.l_Xrotation"); minima.append(-40.0);  maxima.append(45.0);  dof+=1
+   joints.append("finger1-2.l_Yrotation"); minima.append(-70.0);  maxima.append(35.0);  dof+=1
+   #joints.append("padding_4");             minima.append(0.0);    maxima.append(0.0);   #<- Align to 4 elements
    #--------------------------------------
-   joints.append("finger1-3.l_Zrotation"); minima.append(-50.0);  maxima.append(0.0);   dof+=1 
-   joints.append("finger1-3.l_Xrotation"); minima.append(0.0);    maxima.append(50.0);  dof+=1 
+   joints.append("finger1-3.l_Zrotation"); minima.append(-50.0);  maxima.append(0.0);   dof+=1
+   joints.append("finger1-3.l_Xrotation"); minima.append(0.0);    maxima.append(50.0);  dof+=1
+   #joints.append("padding_5");             minima.append(0.0);    maxima.append(0.0);   #<- Align to 4 elements
+   #joints.append("padding_6");             minima.append(0.0);    maxima.append(0.0);   #<- Align to 4 elements
    #--------------------------------------
    return minima,maxima,joints,constants,dof,rootDofs
 
@@ -396,12 +402,14 @@ if (len(sys.argv)>1):
            elif (sys.argv[i]=="--mouth"):
               datasetPart = "Mouth"
               minima,maxima,joints,constants,dof,rootDofs = getMouthList()
+           elif (sys.argv[i]=="--face"):
+              datasetPart = "Face"
+              minima,maxima,joints,constants,dof,rootDofs = getFullFaceList()
 
 
 
 if (len(minima)==0) and (len(maxima)==0) and (len(joints)==0):
-       datasetPart = "Face"
-       minima,maxima,joints,constants,dof,rootDofs = getFullFaceList()
+       print("Please rerun using --face OR --mouth OR --reye OR --lhand OR --upperbody OR --lowerbody to select a target")
 
 
 numberOfDimensions = len(joints)
@@ -511,6 +519,7 @@ if (doPlots):
 #------------------------------
 command1 = ""
 command2 = ""
+command3 = ""
 havePayload = False
 minOrientation = -179.90
 maxOrientation =  179.90
@@ -518,6 +527,7 @@ maxOrientation =  179.90
 if (datasetPart == "LHand"):
    command1 = "rm dataset/generated/2d_lhand_all.csv dataset/generated/bvh_lhand_all.csv"
    command2 = "./GroundTruthDumper --from dataset/lhand.qbvh --importCSVPoses %s --randomize2D 200 2500 -179.0 -179.0 -179.0 179.0 179.0 179.0 --selectJoints 1 17 lHand finger5-1.l finger5-2.l finger5-3.l finger4-1.l finger4-2.l finger4-3.l finger3-1.l finger3-2.l finger3-3.l finger2-1.l finger2-2.l finger2-3.l lthumbBase lthumb finger1-2.l finger1-3.l --hide2DLocationOfJoints 0 1 lthumbBase --csv dataset/generated/ lhand_all.csv 2d+bvh " % (filename)
+   command3 = "python3 compressCSVFile.py dataset/generated/bvh_lhand_all.csv && mv dataset/generated/bvh_lhand_all.csv dataset/generated/bvh_lhand_all.csv.original && mv compressed.csv dataset/generated/bvh_lhand_all.csv "
    havePayload = True
 elif (datasetPart == "Upperbody"):
    command1 = "rm dataset/generated/2d_upperbody_all.csv dataset/generated/bvh_upperbody_all.csv"
@@ -532,10 +542,14 @@ if (havePayload):
    if (doFinalCopy):
      os.system(command1)
      os.system(command2)
+     if (command3!=""):
+       os.system(command3)
    else:
      print("To copy data, please execute : ")
      print(command1)
      print(command2)
+     if (command3!=""):
+       print(command3)
 #------------------------------
 
 

@@ -32,6 +32,15 @@ print("""
                                                                    
 """)
 
+print("""
+██████╗  ██████╗ ██████╗ ██╗   ██╗
+██╔══██╗██╔═══██╗██╔══██╗╚██╗ ██╔╝
+██████╔╝██║   ██║██║  ██║ ╚████╔╝ 
+██╔══██╗██║   ██║██║  ██║  ╚██╔╝  
+██████╔╝╚██████╔╝██████╔╝   ██║   
+╚═════╝  ╚═════╝ ╚═════╝    ╚═╝ 
+""")
+
 print("Ensuring the same seed for reproductible results always..\n")
 from numpy.random import seed
 seed(1)

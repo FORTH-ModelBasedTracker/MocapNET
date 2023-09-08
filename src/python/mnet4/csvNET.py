@@ -16,7 +16,8 @@ import os
 
 from readCSV  import parseConfiguration,zeroOutXYJointsThatAreInvisible,performNSRMAlignment,splitNumpyArray
 from NSDM     import NSDMLabels,createNSDMUsingRules
-from MocapNET import MocapNET
+from MocapNET import MocapNET,flipHorizontalInput
+from tools    import getDirectoryFromPath, checkIfFileExists, secondsToHz
 
 #------------------------------------------------
 #------------------------------------------------
@@ -176,7 +177,7 @@ class csvNET():
     return float("nan")
 
 
-  def getMocapNETInputForFrameID(self,fID):
+  def getMocapNETInputForFrameID(self,fID,img):
     count = 0
     mocapNETInput = dict()
     for label in self.data2D["label"]:
@@ -184,7 +185,7 @@ class csvNET():
           mocapNETInput[label] = self.data2D["body"][fID][count]
           count = count + 1  
     #--------------------------------------------------------------------------------------------------
-    annotated_image = np.zeros((self.height,self.width,3), np.uint8)
+    #annotated_image = np.zeros((self.height,self.width,3), np.uint8) #<- this is now provided to this function
     #from MocapNETVisualization import drawMocapNETInput
     #drawMocapNETInput(mocapNETInput,annotated_image)
     #--------------------------------------------------------------------------------------------------
@@ -194,7 +195,7 @@ class csvNET():
     #-------------------------------------------------------------------------------------------- 
     self.output = mocapNETInput
     #-------------------------------------------------------------------------------------------- 
-    return mocapNETInput,annotated_image
+    return mocapNETInput,img
 #------------------------------------------------
 #------------------------------------------------
 #------------------------------------------------
@@ -233,10 +234,13 @@ def getNSRMInterest(mnet,part=""):
 def streamPosesFromCameraToMocapNET():
   engine = "onnx"
   dataFile         = "face"
+  whiteBkg         = False
   doProfiling      = False
+  doMnetVisualization = True
   doVisualization  = True
   csvFilePath      = "" 
   saveVideo        = False
+  flipHorizontal   = False
   doBody           = True
   doUpperbody      = False, #<- These get auto activated if doBody=True
   doLowerbody      = False, #<- These get auto activated if doBody=True
@@ -250,14 +254,16 @@ def streamPosesFromCameraToMocapNET():
   mem              = 1.0
   windowDelay      = 1
   doHCDPostProcessing = 1
-  hcdLearningRate     = 0.1
-  hcdEpochs           = 20
+  hcdLearningRate     = 0.01
+  hcdEpochs           = 30
   hcdIterations       = 15
   plotBVHChannels  = False
   bvhAnglesForPlotting    = list()
   bvhAllAnglesForPlotting = list()
   study = ""
   calibrationFile = ""
+  keepColorImage = " && rm colorFrame_0_*.jpg "
+  keepPlotImage  = "&& rm plotFrame_0_*.jpg "
   #python3 mediapipeHolisticWebcamMocapNET.py --from damien.avi --face --nobody --plot --save
   #python3 -m csvNET --from ammarFaceFar.csv --study face --face --nobody
   # python3 -m csvNET --from ammarFaceFar.csv --mouth --reye --nobody --plot --save 
@@ -265,6 +271,8 @@ def streamPosesFromCameraToMocapNET():
   if (len(sys.argv)>1):
        #print('Argument List:', str(sys.argv))
        for i in range(0, len(sys.argv)):
+           if (sys.argv[i]=="--nomnetvisualization"):
+              doMnetVisualization = False
            if (sys.argv[i]=="--novisualization"):
               doVisualization = False
            if (sys.argv[i]=="--ik"):
@@ -283,8 +291,15 @@ def streamPosesFromCameraToMocapNET():
               calibrationFile = sys.argv[i+1]
            if (sys.argv[i]=="--study"):
               study = sys.argv[i+1]
+           if (sys.argv[i]=="--flipHorizontal"):
+              flipHorizontal = True
            if (sys.argv[i]=="--plot"):
               plotBVHChannels=True
+           if (sys.argv[i]=="--all"):
+              doBody=True
+              doREye=True
+              doMouth=True
+              doHands=True
            if (sys.argv[i]=="--nobody"):
               doBody      = False
               doUpperbody = False 
@@ -306,6 +321,11 @@ def streamPosesFromCameraToMocapNET():
               dataFile="mouth" #Use 2d_mouth_all.csv as input if not --from is activated
            if (sys.argv[i]=="--hands"):
               doHands=True
+           if (sys.argv[i]=="--white"):
+              whiteBkg = True
+           if (sys.argv[i]=="--keep"):
+              keepColorImage = " "
+              keepPlotImage  = " "
            if (sys.argv[i]=="--save"):
               saveVideo=True
            if (sys.argv[i]=="--engine"):
@@ -342,22 +362,45 @@ def streamPosesFromCameraToMocapNET():
                                  addNoise=addNoise
                                 )
 
-  if (calibrationFile!=""):
-        print("Enforcing Calibration file : ",calibrationFile)
-        mnet.bvh.configureRendererFromFile(calibrationFile)
-
   mnet.test()
   mnet.recordBVH(True) 
   #Body only
   mp = csvNET(mem=mem,dataFile=dataFile,fromCSV=csvFilePath)
+   
+  from folderStream import FolderStreamer
+  baseNameForFolderThatMayContainImages = getDirectoryFromPath(csvFilePath)
+  print("baseNameForFolderThatMayContainImages = ",baseNameForFolderThatMayContainImages)
+  imageStream = FolderStreamer(path=baseNameForFolderThatMayContainImages)
+  if (checkIfFileExists("%s/color.calib" % baseNameForFolderThatMayContainImages)):
+        mnet.bvh.configureRendererFromFile("%s/color.calib"%baseNameForFolderThatMayContainImages)
+
+
+  if (calibrationFile!=""):
+        print("Enforcing Calibration file : ",calibrationFile)
+        mnet.bvh.configureRendererFromFile(calibrationFile)
+  
 
   from MocapNETVisualization import visualizeMocapNETEnsemble
   #------------------------------------------------
   #------------------------------------------------
   #------------------------------------------------
   for frameNumber in range(0, mp.getNumberOfSamples() ):
+    #attempt to visualize (!)
     #--------------------------------------------------------------------------------------------------------------
-    mocapNETInput,annotated_image = mp.getMocapNETInputForFrameID(frameNumber) 
+    success,img = imageStream.read()
+    if (not success):
+        if (whiteBkg):
+            annotated_image = np.full((mp.height,mp.width,3), 255, dtype=np.uint8)
+        else: 
+            annotated_image = np.zeros((mp.height,mp.width,3), np.uint8)
+    else:
+        annotated_image = img
+    #--------------------------------------------------------------------------------------------------------------
+    start = time.time() # Time elapsed
+    mocapNETInput,annotated_image = mp.getMocapNETInputForFrameID(frameNumber,annotated_image) 
+    #--------------------------------------------------------------------------------------------------------------
+    if (flipHorizontal):
+        mocapNETInput = flipHorizontalInput(mocapNETInput)
     #--------------------------------------------------------------------------------------------------------------
     mocapNET3DOutput  = mnet.predict3DJoints(mocapNETInput) 
     mocapNETBVHOutput = mnet.outputBVH
@@ -375,14 +418,20 @@ def streamPosesFromCameraToMocapNET():
 
     if (doVisualization):
      #--------------------------------------------------------------------------------------------------------------
-     annotated_image,plotImage = visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting)
+     start = time.time() # Time elapsed
+     annotated_image,plotImage = visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting,drawOutput=doMnetVisualization)
+     end = time.time() # Time elapsed
+     mnet.hz_Vis = secondsToHz(end - start)
+     mnet.history_hz_Vis.append(mnet.hz_Vis)
+     if (len(mnet.history_hz_Vis)>mnet.perfHistorySize): 
+            mnet.history_hz_Vis.pop(0) #Keep mnet history on limits
      #--------------------------------------------------------------------------------------------------------------
      if (saveVideo): 
         cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)
         if (plotBVHChannels):
               cv2.imwrite('plotFrame_0_%05u.jpg'%(frameNumber), plotImage)    
      #--------------------------------------------------------------------------------------------------------------
-     cv2.imshow('MocapNET + MediaPipe Holistic', annotated_image)
+     cv2.imshow('MocapNET + MediaPipe CSV', annotated_image)
      if cv2.waitKey(windowDelay) & 0xFF == 27:
       break
      #--------------------------------------------------------------------------------------------------------------
@@ -400,9 +449,9 @@ def streamPosesFromCameraToMocapNET():
   mp.saveRSquared("rSquared.csv")
 
   if (doVisualization) and (saveVideo): 
-     os.system("ffmpeg -framerate 30 -i colorFrame_0_%05d.jpg  -s 1200x720  -y -r 30 -pix_fmt yuv420p -threads 8 livelastRun3DHiRes.mp4 && rm colorFrame_0_*.jpg")
+     os.system("ffmpeg -framerate 30 -i colorFrame_0_%%05d.jpg  -s 1200x720  -y -r 30 -pix_fmt yuv420p -threads 8 livelastRun3DHiRes.mp4 %s" % keepColorImage)
      if (plotBVHChannels):
-        os.system("ffmpeg -framerate 30 -i plotFrame_0_%05d.jpg  -s 1200x720  -y -r 30 -pix_fmt yuv420p -threads 8 livelastPlot3DHiRes.mp4 && rm plotFrame_0_*.jpg")
+        os.system("ffmpeg -framerate 30 -i plotFrame_0_%%05d.jpg  -s 1200x720  -y -r 30 -pix_fmt yuv420p -threads 8 livelastPlot3DHiRes.mp4 %s" % keepPlotImage)
       
    
   del mnet #So that the out.bvh file gets created..

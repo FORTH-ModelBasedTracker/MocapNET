@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 from readCSV import readGroundTruthFile,splitNumpyArray
 from readCSV import parseConfiguration
+from tools   import getFileFromPath
 
 def splitNumpyArray(model,column):
     numberOfSamples=len(model)
@@ -190,6 +191,17 @@ def plotTestOutputDistribution(csvfiletoplotIn,csvfiletoplotOut,mem):
 
 
 
+#Test Plots
+#./GroundTruthDumper --from dataset/yawTest.bvh --csv ./ yaw.csv 2d --svg .
+# python3 csvNET.py --from 2d_yaw.csv --save --keep --hands --white
+# convert colorFrame_0_00000.jpg -crop 234x500+0+90 nsrm_00000.jpg
+
+#./GroundTruthDumper --from dataset/pitchTest.bvh --csv ./ pitch.csv 2d --svg .
+# python3 csvNET.py --from 2d_pitch.csv --save --keep --hands --white
+
+#./GroundTruthDumper --from dataset/rollTest.bvh --csv ./ roll.csv 2d --svg .
+# python3 csvNET.py --from 2d_roll.csv --save --keep --hands --white
+
 
 def doRun():
     label = "nolabel"
@@ -218,7 +230,8 @@ def doRun():
           for z in range(0,len(data['label'])): 
               print("Plotting Column ",data['label'][z])
               specificData=splitNumpyArray(data['body'],z)
-              plotDistribution(z,'%s-%s' % (label,data['label'][z]),specificData)
+              filename = getFileFromPath('%s-%s' % (label,data['label'][z]))
+              plotDistribution(z,filename,specificData)
 
           sys.exit(0)
        #==========================================

@@ -17,7 +17,7 @@ import os
 
 from readCSV  import parseConfiguration,zeroOutXYJointsThatAreInvisible,performNSRMAlignment
 from NSDM     import NSDMLabels,createNSDMUsingRules
-
+from tools    import secondsToHz
 from MocapNET import MocapNET
 
 mp_drawing   = mp.solutions.drawing_utils
@@ -360,8 +360,8 @@ def streamPosesFromCameraToMocapNET():
   scale            = 1.0
   addNoise         = 0.0
   doHCDPostProcessing = 1
-  hcdLearningRate     = 0.1
-  hcdEpochs           = 20
+  hcdLearningRate     = 0.01
+  hcdEpochs           = 30
   hcdIterations       = 15
   plotBVHChannels  = False
   calibrationFile = ""
@@ -395,6 +395,11 @@ def streamPosesFromCameraToMocapNET():
               scale=float(sys.argv[i+1])
            if (sys.argv[i]=="--plot"):
               plotBVHChannels=True
+           if (sys.argv[i]=="--all"):
+              doBody=True
+              doREye=True
+              doMouth=True
+              doHands=True
            if (sys.argv[i]=="--nobody"):
               doBody=False
            if (sys.argv[i]=="--face"):
@@ -511,7 +516,13 @@ def streamPosesFromCameraToMocapNET():
        bvhAnglesForPlotting.pop(0)
     #--------------------------------------------------------------------------------------------------------------
     from MocapNETVisualization import visualizeMocapNETEnsemble
+    start = time.time() # Time elapsed
     image,plotImage = visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting)
+    end = time.time() # Time elapsed
+    mnet.hz_Vis = secondsToHz(end - start)
+    mnet.history_hz_Vis.append(mnet.hz_Vis)
+    if (len(mnet.history_hz_Vis)>mnet.perfHistorySize): 
+            mnet.history_hz_Vis.pop(0) #Keep mnet history on limits
     #--------------------------------------------------------------------------------------------------------------
     frameNumber = frameNumber + 1
     

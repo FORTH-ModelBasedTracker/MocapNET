@@ -19,6 +19,8 @@ from Smooth.smoothing import Smooth
 from principleComponentAnalysis import PCA
 #-------------------------------------------------------------------------------------------
 
+MOCAPNET_VERSION="4.0"
+
 #-------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------
@@ -52,6 +54,11 @@ def checkIfAnyListedElementsExistsInString(theList,theString):
            return True
   return False
 #-------------------------------------------------------------------------------------------
+def flipHorizontalInput(inputList):
+  for k in inputList.keys():
+      if ("2dx_" in k):
+           inputList[k]=1.0-inputList[k]
+  return inputList
 #-------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------
 def getSymmetricLEyeOutputs():
@@ -259,6 +266,7 @@ class SimulatedMirroredEnsemble():
       self.leftToRightNames       = symmetricNames
       self.mirroringName          = mirroringName
       self.outputOperationsNeeded = outputOperationsNeeded
+      self.serial                 = mirroredModel.serial
       self.outputBVH              = dict()
       self.outputBVHMinima        = dict()
       self.outputBVHMaxima        = dict()
@@ -380,8 +388,8 @@ class MocapNET():
                disableSmoothingCode    = 0,
                doPerformanceProfiling  = False,
                doHCDPostProcessing     = 1,
-               hcdLearningRate         = 0.1,
-               hcdEpochs               = 20,
+               hcdLearningRate         = 0.01,
+               hcdEpochs               = 30,
                hcdIterations           = 15,
                langevinDynamics        = 0.0,
                bvhScale                = 1.0,
@@ -511,10 +519,13 @@ class MocapNET():
                self.output3D           = dict()
                
                self.perfHistorySize    = 30
+               #-------------------------------------------------------------------------------
                self.history_hz_NN      = []
                self.hz_NN              = 0.0
                self.history_hz_HCD     = []
                self.hz_HCD             = 0.0
+               self.history_hz_Vis     = []
+               self.hz_Vis             = 0.0
                #-------------------------------------------------------------------------------
              
 
@@ -522,6 +533,9 @@ class MocapNET():
                print("Caching networks : ")
                self.test()
                print(bcolors.OKGREEN,"MocapNET ready for use! ",bcolors.ENDC)
+               #-------------------------------------------------------------------------------
+               from tools import checkVersion
+               checkVersion(MOCAPNET_VERSION)
 
   def recordBVH(self,val:bool):
         self.record=val
@@ -551,6 +565,16 @@ class MocapNET():
     for k in self.ensemble.keys():
       total = total + self.ensemble[k].getModelParameters() 
     return total
+
+  def getEnsembleSerials(self):
+    description = ""
+    from datetime import datetime, date, time, timezone
+    #description = datetime.now().strftime("%Y-%m-%d %H:%M:%S ")
+    description = datetime.now().strftime("%Y-%m-%d ")
+    for k in self.ensemble.keys():
+      description = description + k + ":" + self.ensemble[k].serial + " "
+    return description 
+
 
   def test(self):
         #-------------------------------------------
@@ -749,7 +773,8 @@ class MocapNET():
         else:
             rawBVHPrediction = self.previousPrediction
 
-
+  
+        print("Predictions from ensemble keys : ",rawBVHPrediction.keys())
 
         # Deal with 3D Mode
         #--------------------------------------------------------------------
@@ -882,8 +907,8 @@ def easyMocapNETConstructor(
                             engine="onnx",
                             doProfiling=False,
                             doHCDPostProcessing=1,
-                            hcdLearningRate = 0.1,
-                            hcdEpochs = 20,
+                            hcdLearningRate = 0.01,
+                            hcdEpochs = 30,
                             hcdIterations = 15,
                             multiThreaded=False,
                             bvhScale=1.0,

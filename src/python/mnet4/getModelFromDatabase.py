@@ -6,13 +6,15 @@ Copyright : "2022 Foundation of Research and Technology, Computer Science Depart
 License : "FORTH" 
 """
 
-import os 
+import os
 import sys
 import gc
 import time
 import numpy as np 
 #--------------------------------------------------
-from tools import bcolors,notification,checkIfFileExists,getRAMInformation
+from tools import bcolors,notification,checkIfPathExists,checkIfPathIsDirectory,checkIfFileExists,getRAMInformation
+
+ONNX_OPSET=17 # Was 14
 
 def downloadAndParseDatabase():
        file = "modelDatabase.json"
@@ -52,8 +54,16 @@ def downloadAndCompileSingle(file,part,step0,step1,json,pca,allowQuickCopy=True,
        else:
            print("Ensemble %s already exists locally" % (file))   
     #---------------------------------------------------------------------------------------
-    print(bcolors.OKBLUE,"Clean up ",step0," \n",bcolors.ENDC)
-    os.system('rm -rf %s/'% (step0))
+    if checkIfPathExists(step0) and checkIfPathIsDirectory(step0):
+       print(bcolors.OKBLUE,"Clean up ",step0," \n",bcolors.ENDC)
+       os.system('rm -rf %s/'% (step0))
+    else:
+       print("Do not need to clear step0 ",step0)
+    if checkIfPathExists(step1) and checkIfPathIsDirectory(step1):
+       print(bcolors.OKBLUE,"Clean up ",step1," \n",bcolors.ENDC)
+       os.system('rm -rf %s/'% (step1))
+    else:
+       print("Do not need to clear step1 ",step1)
     print(bcolors.OKBLUE,"Extracting models from ",file," \n",bcolors.ENDC)
     #print(bcolors.OKBLUE,'tar -xf %s' % (file),bcolors.ENDC)
     os.system('tar -xf %s' % (file))
@@ -73,10 +83,15 @@ def downloadAndCompileSingle(file,part,step0,step1,json,pca,allowQuickCopy=True,
           print(bcolors.FAIL,"Failed preparing ",part," stopping model database retrieval",bcolors.ENDC)
           raise IOError
         #---------------------------------------------------------------------------------------
+        gc.collect()
+        #---------------------------------------------------------------------------------------
         RAM = getRAMInformation()
-        if (RAM["total"]<9000000):
-            os.system('python3 -m tf2onnx.convert --saved-model %s --opset 14 --tag serve --output %s/model.onnx' % (step1,step1))
+        if (RAM["free"]>=2000000):
+            os.system('python3 -m tf2onnx.convert --saved-model %s --opset %u --tag serve --output %s/model.onnx' % (step1,ONNX_OPSET,step1))
             os.system('tflite_convert --saved_model_dir=%s --output_file=%s/model.tflite' % (step1,step1))
+        else:
+            print(bcolors.FAIL,"Not Enough RAM (we have ",RAM["free"],") to perform ONNX/TF-Lite conversions!",bcolors.ENDC)
+
     notification("MocapNET Database","Finished Compiling MocapNET %s ensemble" % part)
 
 def downloadAndCompileModel(fileUpper,fileLower,fileHand="",fileFace="",fileReye="",fileMouth="",allowQuickCopy=True,download=1):
@@ -436,6 +451,25 @@ def retrieveAndSetupBasedOnSerial(serial:int,allowQuickCopy:bool=True,download:i
     elif (serial==301):
        fileUpper = "301-A-Training-23-07-16_17-58-25-upperbody-ffe5156750f3-Ubuntu-20.04.tar.bz2"
        fileLower = "301-B-Training-23-07-16_22-45-49-lowerbody-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+    elif (serial==302):
+       fileUpper = "302-A-Training-23-07-17_06-32-23-upperbody-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+       fileLower = "302-B-Training-23-07-17_11-35-01-lowerbody-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+    elif (serial==304):
+       fileUpper = "302-A-Training-23-07-17_06-32-23-upperbody-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+       fileLower = "302-B-Training-23-07-17_11-35-01-lowerbody-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+       fileHand  = "290A-Training-23-06-28_10-31-52-lhand-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+       fileMouth = "299B-Training-23-07-17_08-29-17-mouth-ammar-forth-Ubuntu-20.04.tar.bz2"
+       fileReye  = "304A-Training-23-07-19_16-51-17-reye-ammar-forth-Ubuntu-20.04.tar.bz2"
+    elif (serial==305):
+       fileHand  = "305B-Training-23-07-29_09-52-21-lhand-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+    elif (serial==307):
+       fileHand  = "307A-Training-23-08-19_23-23-06-lhand-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+    elif (serial==310): #COMMON LOSS EXPERIMENTS
+       fileHand  = "307B-Training-23-09-08_13-54-22-lhand-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+       fileUpper = "309-A-Training-23-09-08_00-20-09-upperbody-ammar-forth-Ubuntu-22.04.tar.bz2"
+       fileLower = "310B.tar.bz2"
+       fileMouth = "299B-Training-23-07-17_08-29-17-mouth-ammar-forth-Ubuntu-20.04.tar.bz2"
+       fileReye  = "304A-Training-23-07-19_16-51-17-reye-ammar-forth-Ubuntu-20.04.tar.bz2"
     else:
        print(bcolors.WARNING,"Unknown serial ",serial,bcolors.ENDC)
        print(bcolors.WARNING,"Completely halting execution to avoid a wrong run!\n",bcolors.ENDC)
@@ -450,6 +484,13 @@ def retrieveAndSetupBasedOnSerial(serial:int,allowQuickCopy:bool=True,download:i
 if __name__ == '__main__':
 
     startEverythingAt = time.time()
+   
+    RAM = getRAMInformation()
+    print("RAM : ",RAM)
+    if (RAM["free"]<2000000):
+        print(bcolors.FAIL,"We do not have enough memory (we have ",RAM["free"],") for ONNX / TF-Lite model so stopping..",bcolors.ENDC)
+        raise MemoryError
+        
 
     db = downloadAndParseDatabase()
     print(db)
