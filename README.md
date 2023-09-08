@@ -1,7 +1,7 @@
 # MocapNET Project
 
 
-![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/mnet2.png)
+![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/mnet4/doc/method.png)
 
 Finishing my PhD this will probably be the *final* version of MocapNET!
 MocapNET 4 will deal with upperbody / lowerbody / hands / eye tracking and / facial capture
