@@ -45,7 +45,11 @@ done
  echo "Ready for use"
  echo "From now on to work with MocapNET you can use :  "
  echo "source pythonVirtualEnvironment/bin/activate"
- echo "python3 mediapipeHolisticWebcamMocapNET.py --from webcam"
+ echo "!python3 -m mediapipeHolisticWebcamMocapNET --from webcam"
  echo " OR "
- echo "python3 mediapipeHolisticWebcamMocapNET.py --from shuffle.webm"
+ echo "!python3 -m mediapipeHolisticWebcamMocapNET --from shuffle.webm"
+ echo " OR "
+ echo "!python3 -m csvNET --from ../../../dataset/sample.csv"
+
+
 
