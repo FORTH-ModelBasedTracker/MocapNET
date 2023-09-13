@@ -577,6 +577,7 @@ def runPoseNETSerial():
   import sys
   import cv2
   import time
+  headless             = False
   videoFilePath        = "webcam" 
   doProfiling          = False
   doFlipX              = False
@@ -593,6 +594,8 @@ def runPoseNETSerial():
   if (len(sys.argv)>1):
        #print('Argument List:', str(sys.argv))
        for i in range(0, len(sys.argv)):
+           if (sys.argv[i]=="--headless"):
+              headless = True
            if (sys.argv[i]=="--flipx"):
               doFlipX = True
            if (sys.argv[i]=="--nonn"):
@@ -682,7 +685,7 @@ def runPoseNETSerial():
        bvhAnglesForPlotting.pop(0)
     #------------------------------------------------------------------------------------
     from MocapNETVisualization import visualizeMocapNETEnsemble
-    visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting,economic=True)
+    image,plotImage = visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting,economic=True)
     #------------------------------------------------------------------------------------
 
 
@@ -706,9 +709,17 @@ def runPoseNETSerial():
     #cv2.imwrite('mediapipe_%05u.jpg'%frameNumber, annotated_image)
     frameNumber = frameNumber + 1
     
-    cv2.imshow('PoseNET + MocapNET', annotated_image) 
-    if cv2.waitKey(1) & 0xFF == 27:
-      break
+
+        
+    if not headless:
+      cv2.imshow('MocapNET 4 using PoseNET Holistic 2D Joints', annotated_image)
+        if (plotBVHChannels):
+           cv2.imshow('MocapNET 4 using PoseNET Holistic Motion History',plotImage) 
+ 
+      if cv2.waitKey(1) & 0xFF == 27:
+         break
+
+
   cap.release()
 
 
@@ -722,6 +733,7 @@ def runPoseNETParallel():
   import time
   import threading
 
+  headless         = False
   videoFilePath    = "webcam" 
   doProfiling      = False
   doFlipX          = False
@@ -735,6 +747,8 @@ def runPoseNETParallel():
   if (len(sys.argv)>1):
        #print('Argument List:', str(sys.argv))
        for i in range(0, len(sys.argv)):
+           if (sys.argv[i]=="--headless"):
+              headless = True
            if (sys.argv[i]=="--flipx"):
               doFlipX = True
            if (sys.argv[i]=="--scale"):
@@ -858,10 +872,17 @@ def runPoseNETParallel():
     previous_image = cv2.putText(previous_image, message , org, font, fontScale, color, thickness, cv2.LINE_AA)
     #------------------------------------------------------------------------------------------------------------
 
-    cv2.imshow('MoveNET + MocapNET', previous_image) 
-    previous_image = next_image 
-    if cv2.waitKey(1) & 0xFF == 27:
-      break
+
+    if not headless:
+      cv2.imshow('MocapNET 4 using MoveNET Holistic 2D Joints', previous_image)
+      if (plotBVHChannels):
+           cv2.imshow('MocapNET 4 using MoveNET Holistic Motion History',plotImage) 
+ 
+      if cv2.waitKey(1) & 0xFF == 27:
+         break
+
+ 
+    previous_image = next_image  
   cap.release()
 
 

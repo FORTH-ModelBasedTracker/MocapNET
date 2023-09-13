@@ -518,6 +518,8 @@ class MocapNET():
                
                self.perfHistorySize    = 30
                #-------------------------------------------------------------------------------
+               self.history_hz_2DEst   = []
+               self.hz_2DEst           = 0.0
                self.history_hz_NN      = []
                self.hz_NN              = 0.0
                self.history_hz_HCD     = []

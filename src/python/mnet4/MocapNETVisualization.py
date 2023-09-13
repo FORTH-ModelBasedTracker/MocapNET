@@ -757,7 +757,7 @@ def drawMocapNETAllPlots(history,width,height,minimumLimits=dict(),maximumLimits
           if (y + heightOfGraphs > height - heightOfGraphs):
             y = margin
             x = x + widthOfGraphs + margin
- cv2.imshow('Motion History',imageForPlot) 
+ #cv2.imshow('Motion History',imageForPlot) 
  return imageForPlot
 #-------------------------------------------------
 

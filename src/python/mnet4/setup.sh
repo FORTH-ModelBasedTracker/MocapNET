@@ -62,7 +62,7 @@ fi
  
  #Get Models!
  python3 -m getModelFromDatabase --get 314
- python3 -m mediapipeHolisticWebcamMocapNET --from shuffle.webm --save --plot
+ python3 -m mediapipeHolisticWebcamMocapNET --from shuffle.webm --save --plot --headless
 
  #Doing a test run!
 
@@ -79,6 +79,7 @@ fi
  echo " OR "
  echo "!python3 -m csvNET --from ../../../dataset/sample.csv  --save --plot"
  echo "  "
+ echo " if you are running on collab don't forget to append --headless to your command"
  echo " after the run is complete out.bvh will contain your results  "
 
 

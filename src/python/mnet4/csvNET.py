@@ -233,6 +233,7 @@ def getNSRMInterest(mnet,part=""):
 #------------------------------------------------
 def streamPosesFromCameraToMocapNET():
   engine = "onnx"
+  headless         = False
   dataFile         = "face"
   whiteBkg         = False
   doProfiling      = False
@@ -262,8 +263,8 @@ def streamPosesFromCameraToMocapNET():
   bvhAllAnglesForPlotting = list()
   study = ""
   calibrationFile = ""
-  keepColorImage = " && rm colorFrame_0_*.jpg "
-  keepPlotImage  = "&& rm plotFrame_0_*.jpg "
+  keepColorImage  = " && rm colorFrame_0_*.jpg "
+  keepPlotImage   = " && rm plotFrame_0_*.jpg "
   #python3 mediapipeHolisticWebcamMocapNET.py --from damien.avi --face --nobody --plot --save
   #python3 -m csvNET --from ammarFaceFar.csv --study face --face --nobody
   # python3 -m csvNET --from ammarFaceFar.csv --mouth --reye --nobody --plot --save 
@@ -271,6 +272,8 @@ def streamPosesFromCameraToMocapNET():
   if (len(sys.argv)>1):
        #print('Argument List:', str(sys.argv))
        for i in range(0, len(sys.argv)):
+           if (sys.argv[i]=="--headless"):
+              headless = True
            if (sys.argv[i]=="--nomnetvisualization"):
               doMnetVisualization = False
            if (sys.argv[i]=="--novisualization"):
@@ -431,9 +434,14 @@ def streamPosesFromCameraToMocapNET():
         if (plotBVHChannels):
               cv2.imwrite('plotFrame_0_%05u.jpg'%(frameNumber), plotImage)    
      #--------------------------------------------------------------------------------------------------------------
-     cv2.imshow('MocapNET + MediaPipe CSV', annotated_image)
-     if cv2.waitKey(windowDelay) & 0xFF == 27:
-      break
+     if not headless:
+        cv2.imshow('MocapNET 4 using CSV Data Holistic 2D Joints', annotated_image)
+        if (plotBVHChannels):
+            cv2.imshow('MocapNET 4 using CSV Data Holistic Motion History',plotImage) 
+ 
+        if cv2.waitKey(1) & 0xFF == 27:
+          break 
+
      #--------------------------------------------------------------------------------------------------------------
      if (csvFilePath == ""):
        #This uses MATPLOTLIB and is very slow
