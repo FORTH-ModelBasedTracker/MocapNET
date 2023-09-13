@@ -24,16 +24,22 @@ fi
 done
 #------------------------------------------------------------------------------
 
+HEADLESS=" --headless"
+OPENCV=" "
 
 if [[ $* == *--collab* ]]
 then 
  echo "Collab mode!"
  echo "Performing python package installation without a virtual environment"
+HEADLESS=" --headless"
+OPENCV="opencv-python-headless"
 else 
  echo "Using a python pythonVirtualEnvironment environment"
  echo "Activate it using : source pythonVirtualEnvironment/bin/activate"
  python3 -m venv pythonVirtualEnvironment
  source pythonVirtualEnvironment/bin/activate
+OPENCV="opencv-python"
+HEADLESS=" "
 fi
 
 
@@ -56,20 +62,20 @@ fi
 
  
  python3 -m pip install --upgrade pip #2.8.0 nvidia-tensorrt
- python3 -m pip install tensorflow numpy numba tensorboard_plugin_profile tensorflow-model-optimization keras pillow tf2onnx onnxruntime onnx matplotlib pydot mediapipe opencv-python scikit-learn
+ python3 -m pip install tensorflow numpy numba tensorboard_plugin_profile tensorflow-model-optimization keras pillow tf2onnx onnxruntime onnx matplotlib pydot mediapipe $OPENCV scikit-learn
 
  wget http://ammar.gr/mocapnet/shuffle.webm
  
  #Get Models!
  python3 -m getModelFromDatabase --get 314
- python3 -m mediapipeHolisticWebcamMocapNET --from shuffle.webm --save --plot --headless
+ python3 -m mediapipeHolisticWebcamMocapNET --from shuffle.webm --save --plot $HEADLESS
 
  #Doing a test run!
 
- echo "To enable Tensorflow profiling for non-root users please add : "
- echo "options nvidia \"NVreg_RestrictProfilingToAdminUsers=0\""
- echo "to /etc/modprobe.d/nvidia-graphics-drivers.conf"
- echo " "
+# echo "To enable Tensorflow profiling for non-root users please add : "
+# echo "options nvidia \"NVreg_RestrictProfilingToAdminUsers=0\""
+# echo "to /etc/modprobe.d/nvidia-graphics-drivers.conf"
+# echo " "
  echo "Ready for use"
  echo "From now on to work with MocapNET you can use :  "
  echo "source pythonVirtualEnvironment/bin/activate"
