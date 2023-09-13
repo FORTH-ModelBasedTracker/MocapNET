@@ -50,10 +50,18 @@ echo "RGBDAcquisition appears to already exist .."
 else
  git clone https://github.com/AmmarkoV/RGBDAcquisition
  cd RGBDAcquisition
+ #----------------------------------------------------------------------------------------------------------------------
  mkdir build
  cd build
  cmake ..
+ cd ..
+ #----------------------------------------------------------------------------------------------------------------------
+ cd opengl_acquisition_shared_library/opengl_depth_and_color_renderer/
+ mkdir build 
+ cd build
+ cmake ..
  make BVHTester
+ #----------------------------------------------------------------------------------------------------------------------
  cd "$DIR"
  ln -s RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Applications/BVHTester BVH
  ln -s RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/BVHTester GroundTruthDumper
@@ -64,7 +72,6 @@ fi
  python3 -m pip install --upgrade pip #2.8.0 nvidia-tensorrt
  python3 -m pip install tensorflow numpy numba tensorboard_plugin_profile tensorflow-model-optimization keras pillow tf2onnx onnxruntime onnx matplotlib pydot mediapipe $OPENCV scikit-learn
 
- wget http://ammar.gr/mocapnet/shuffle.webm
  
  #Get Models!
  python3 -m getModelFromDatabase --get 314
