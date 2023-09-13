@@ -1,12 +1,22 @@
 # MocapNET Project
 
 
-![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/mnet2.png)
-
+![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/mnet4/doc/method.png)
 
 
 ## News
 ------------------------------------------------------------------ 
+
+
+13-9-2023
+
+MocapNET v4 has been accepted in the [AMFG 2023 ICCV workshop](https://web.northeastern.edu/smilelab/amfg2023/) with an Oral and Poster presentation. It can now also retrieve 3D gaze and BVH facial configurations.
+The whole codebase has been written from scratch in Python to hopefully make it more useful for the community! This is a very big change including handling all of [3D rendering using Blender python scripts](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet4/src/python/blender). In order to keep this repository manageable the new version lives in its own [mnet4 branch](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet4/)
+
+We have also implemented a one click Google Collab setup, which you can use to quickly and easily test the method : [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/mocapnet4.ipynb)
+
+Hope that you find it useful and hopefully see you at ICCV 2023!
+ 
 
 30-12-2022
 
