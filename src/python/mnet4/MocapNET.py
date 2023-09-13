@@ -773,8 +773,8 @@ class MocapNET():
         else:
             rawBVHPrediction = self.previousPrediction
 
-  
-        print("Predictions from ensemble keys : ",rawBVHPrediction.keys())
+        #This spams a lot..
+        #print("Predictions from ensemble keys : ",rawBVHPrediction.keys())
 
         # Deal with 3D Mode
         #--------------------------------------------------------------------
