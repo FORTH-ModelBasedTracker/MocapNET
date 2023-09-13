@@ -4,7 +4,7 @@ cd "$DIR"
 
 #Simple dependency checker that will apt-get stuff if something is missing
 # sudo apt-get install python3-venv python3-pip
-SYSTEM_DEPENDENCIES="build-essential python3-venv python3-pip freeglut3-dev libjpeg-dev libpng12-dev libglew-dev protobuf-compiler libprotobuf-dev libavdevice-dev"
+SYSTEM_DEPENDENCIES="build-essential python3-venv python3-pip freeglut3-dev libglew-dev protobuf-compiler libprotobuf-dev libavdevice-dev"
 
 for REQUIRED_PKG in $SYSTEM_DEPENDENCIES
 do
