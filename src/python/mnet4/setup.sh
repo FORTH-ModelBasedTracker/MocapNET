@@ -68,7 +68,7 @@ fi
  
  #Get Models!
  python3 -m getModelFromDatabase --get 314
- python3 -m mediapipeHolisticWebcamMocapNET --from shuffle.webm --save --plot $HEADLESS
+ #python3 -m mediapipeHolisticWebcamMocapNET --from shuffle.webm --save --plot $HEADLESS
 
  #Doing a test run!
 
