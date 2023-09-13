@@ -8,7 +8,8 @@ MocapNET 4 will deal with upperbody / lowerbody / hands / eye tracking and / fac
 It has a written from scratch python interface, but maintain the same compatible BVH output format.
 It will also be compatible with Raspberry Pi 4 and use Tensorflow /Tf-Lite / ONNX backends
   
-This branch is still missing a lot of things so you can safely ignore it for now..!
+This branch is still under construction, and has been ported to Python to boost usability
+so if you want the older C/C++ version of MocapNET you ignore it for now..!
 
 Click here for one click setup : [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/mocapnet4.ipynb)
 
