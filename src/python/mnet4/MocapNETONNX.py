@@ -36,7 +36,7 @@ from tools    import bcolors,checkIfFileExists,readListFromFile,convertListToLow
 #-------------------------------------------------------------------------------------------
 from BVH.bvhConverter import BVH
 #-------------------------------------------------------------------------------------------
-from Smooth.smoothing import Smooth
+#from Smooth.smoothing import Smooth
 #-------------------------------------------------------------------------------------------
 from principleComponentAnalysis import PCA
 #-------------------------------------------------------------------------------------------
