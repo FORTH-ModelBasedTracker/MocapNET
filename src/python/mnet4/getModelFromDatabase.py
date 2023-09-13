@@ -77,8 +77,8 @@ def downloadAndCompileSingle(file,part,step0,step1,json,pca,allowQuickCopy=True,
         #os.system('cp %s/%s %s/'%(step0,json,step1))#We dont need to do this it will be done automatically from step1_DNNCombine.py
         #os.system('cp %s/%s %s/'%(step0,pca,step1))#We dont need to do this it will be done automatically from step1_DNNCombine.py
         print(bcolors.OKBLUE,"Combining %s \n"%part,bcolors.ENDC)
-        print(bcolors.OKBLUE,'python3 step1_DNNCombine.py --config %s/%s --all %s'%(step0,json,part),bcolors.ENDC)
-        return_value = os.system('python3 step1_DNNCombine.py --config %s/%s --all %s'%(step0,json,part))
+        print(bcolors.OKBLUE,'python3 -m step1_DNNCombine --config %s/%s --all %s'%(step0,json,part),bcolors.ENDC)
+        return_value = os.system('python3 -m step1_DNNCombine --config %s/%s --all %s'%(step0,json,part))
         if (return_value!=0):
           print(bcolors.FAIL,"Failed preparing ",part," stopping model database retrieval",bcolors.ENDC)
           raise IOError
