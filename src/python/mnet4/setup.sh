@@ -18,7 +18,7 @@ if [ "" = "$PKG_OK" ]; then
   #sudo apt-get --yes install $REQUIRED_PKG
 
   #if this is uncommented then if one package is missing then all missing packages are immediately installed..
-  sudo apt-get install $SYSTEM_DEPENDENCIES  
+  sudo apt-get  --yes install $SYSTEM_DEPENDENCIES  
   break
 fi
 done
