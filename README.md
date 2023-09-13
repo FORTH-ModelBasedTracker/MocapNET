@@ -4,6 +4,10 @@
 ![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/mnet4/doc/method.png)
 
 
+[![Open MocapNET v4 In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/mocapnet4.ipynb)
+
+
+
 ## News
 ------------------------------------------------------------------ 
 
