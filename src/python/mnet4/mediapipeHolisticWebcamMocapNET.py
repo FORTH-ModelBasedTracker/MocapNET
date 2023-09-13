@@ -345,6 +345,7 @@ class MediaPipeHolistic():
 #------------------------------------------------
 def streamPosesFromCameraToMocapNET():
   engine = "onnx"
+  headless         = False
   doProfiling      = False
   multiThreaded    = False
   videoFilePath    = "webcam"
@@ -374,6 +375,8 @@ def streamPosesFromCameraToMocapNET():
   if (len(sys.argv)>1):
        #print('Argument List:', str(sys.argv))
        for i in range(0, len(sys.argv)):
+           if (sys.argv[i]=="--headless"):
+              headless = True
            if (sys.argv[i]=="--mt"):
               multiThreaded = True
            if (sys.argv[i]=="--calib"):
@@ -506,7 +509,14 @@ def streamPosesFromCameraToMocapNET():
        image  = cv2.resize(image, (width,height))
 
     #--------------------------------------------------------------------------------------------------------------
+    start = time.time() # Time elapsed
     mocapNETInput,annotated_image = mp.convertImageToMocapNETInput(image) 
+    end = time.time() # Time elapsed
+    mnet.hz_2DEst = secondsToHz(end - start)
+    mnet.history_hz_2DEst.append(mnet.hz_2DEst)
+    if (len(mnet.history_hz_2DEst)>mnet.perfHistorySize): 
+            mnet.history_hz_2DEst.pop(0) #Keep mnet history on limits
+
     #--------------------------------------------------------------------------------------------------------------
     mocapNET3DOutput  = mnet.predict3DJoints(mocapNETInput) 
     mocapNETBVHOutput = mnet.outputBVH
@@ -531,9 +541,13 @@ def streamPosesFromCameraToMocapNET():
         if (plotBVHChannels):
               cv2.imwrite('plotFrame_0_%05u.jpg'%(frameNumber), plotImage)
         
-    cv2.imshow('MocapNET 4 using MediaPipe Holistic 2D Joints', annotated_image)
-    if cv2.waitKey(1) & 0xFF == 27:
-      break
+    if not headless:
+      cv2.imshow('MocapNET 4 using MediaPipe Holistic 2D Joints', annotated_image)
+      if (plotBVHChannels):
+           cv2.imshow('MocapNET 4 using MediaPipe Holistic Motion History',plotImage) 
+ 
+      if cv2.waitKey(1) & 0xFF == 27:
+         break
  
 
   if (saveVideo): #                                              1280x720 by default
