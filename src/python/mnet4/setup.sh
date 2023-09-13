@@ -73,9 +73,13 @@ fi
  python3 -m pip install tensorflow numpy numba tensorboard_plugin_profile tensorflow-model-optimization keras pillow tf2onnx onnxruntime onnx matplotlib pydot mediapipe $OPENCV scikit-learn
 
  
- #Get Models!
- python3 -m getModelFromDatabase --get 314
- #python3 -m mediapipeHolisticWebcamMocapNET --from shuffle.webm --save --plot $HEADLESS
+ #Two ways to get Models!
+ #One through the database and compile them yourself (commented out to save Google Collab CPU time)..
+ #python3 -m getModelFromDatabase --get 314
+
+ #Another just take the precompiled ensembles ready to run
+ wget http://ammar.gr/mocapnet/mnet4/mnet4_314.zip -O mnet4_314.zip
+ unzip -o mnet4_314.zip
 
  #Doing a test run!
 
