@@ -76,6 +76,8 @@ fi
  #Two ways to get Models!
  #One through the database and compile them yourself (commented out to save Google Collab CPU time)..
  #python3 -m getModelFromDatabase --get 314
+ #To generate the archive in the next lines do :
+ #   zip mnet4_314.zip step1_*/*
 
  #Another just take the precompiled ensembles ready to run
  wget http://ammar.gr/mocapnet/mnet4/mnet4_314.zip -O mnet4_314.zip
