@@ -61,7 +61,7 @@ fi
  wget http://ammar.gr/mocapnet/shuffle.webm
  
  #Get Models!
- python3 -m getModelFromDatabase --get 310
+ python3 -m getModelFromDatabase --get 314
  python3 -m mediapipeHolisticWebcamMocapNET --from shuffle.webm --save --plot
 
  #Doing a test run!
