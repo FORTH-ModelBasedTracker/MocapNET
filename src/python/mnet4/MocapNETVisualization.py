@@ -870,14 +870,17 @@ def visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=0,bvhAnglesFo
     drawMAE2DError("2D M.A.E.",mnet.lastMAEErrorInPixels,annotated_image,width-70,height-120,width-10,height-90)
     #--------------------------------------------------------------------------------------------------------------
 
+    if (len(mnet.history_hz_2DEst)>0):
+      drawMocapNETSinglePlotValueList(mnet.history_hz_2DEst,1,"RGB->2D FPS",annotated_image,width-70,120,70,70,0.0,60.0)
+
     if (len(mnet.history_hz_NN)>0):
-      drawMocapNETSinglePlotValueList(mnet.history_hz_NN,1,"NN FPS",annotated_image,width-70,120,70,70,0.0,60.0)
+      drawMocapNETSinglePlotValueList(mnet.history_hz_NN,1,"NN FPS",annotated_image,width-70,220,70,70,0.0,60.0)
 
     if (len(mnet.history_hz_HCD)>0):
-      drawMocapNETSinglePlotValueList(mnet.history_hz_HCD,1,"HCD FPS",annotated_image,width-70,220,70,70,0.0,60.0)
+      drawMocapNETSinglePlotValueList(mnet.history_hz_HCD,1,"HCD FPS",annotated_image,width-70,320,70,70,0.0,60.0)
 
     if (len(mnet.history_hz_Vis)>0):
-      drawMocapNETSinglePlotValueList(mnet.history_hz_Vis,1,"Visualization",annotated_image,width-70,320,70,70,0.0,60.0)
+      drawMocapNETSinglePlotValueList(mnet.history_hz_Vis,1,"Visualization",annotated_image,width-70,420,70,70,0.0,60.0)
 
     drawMNETSerials(mnet,annotated_image,10,30)
 
