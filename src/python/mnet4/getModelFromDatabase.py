@@ -476,6 +476,12 @@ def retrieveAndSetupBasedOnSerial(serial:int,allowQuickCopy:bool=True,download:i
        fileLower = "314-B-Training-23-09-11_17-55-38-lowerbody-ammar-forth-Ubuntu-22.04.tar.bz2"
        fileMouth = "299B-Training-23-07-17_08-29-17-mouth-ammar-forth-Ubuntu-20.04.tar.bz2"
        fileReye  = "304A-Training-23-07-19_16-51-17-reye-ammar-forth-Ubuntu-20.04.tar.bz2"
+    elif (serial==315): #COMMON LOSS EXPERIMENTS
+       fileHand  = "314D-Training-23-09-14_02-14-17-lhand-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+       fileUpper = "315-A-Training-23-09-14_00-34-56-upperbody-ammar-forth-Ubuntu-22.04.tar.bz2"
+       fileLower = "315-B-Training-23-09-14_09-00-31-lowerbody-ammar-forth-Ubuntu-22.04.tar.bz2"
+       fileMouth = "299B-Training-23-07-17_08-29-17-mouth-ammar-forth-Ubuntu-20.04.tar.bz2"
+       fileReye  = "304A-Training-23-07-19_16-51-17-reye-ammar-forth-Ubuntu-20.04.tar.bz2"
     else:
        print(bcolors.WARNING,"Unknown serial ",serial,bcolors.ENDC)
        print(bcolors.WARNING,"Completely halting execution to avoid a wrong run!\n",bcolors.ENDC)
