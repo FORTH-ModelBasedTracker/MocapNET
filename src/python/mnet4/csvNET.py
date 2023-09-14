@@ -465,7 +465,7 @@ def streamPosesFromCameraToMocapNET():
   del mnet #So that the out.bvh file gets created..
   if (csvFilePath != ""):
         os.system("rm 2d_out.csv 3d_out.csv bvh_out.csv map_out.csv")
-        os.system("./GroundTruthDumper --from out.bvh --setPositionRotation -2.6 0 2000 0 0 0  --csv ./ out.csv 2d+bvh ") # Remove noise offsetPositionRotation
+        os.system("./GroundTruthDumper --from out.bvh --setPositionRotation -2.6 0 2000 0 0 0  --csv ./ out.csv 2d+3d+bvh ") # Remove noise offsetPositionRotation
 
 #------------------------------------------------
 #------------------------------------------------
