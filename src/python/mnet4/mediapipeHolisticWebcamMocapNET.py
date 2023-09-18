@@ -344,7 +344,7 @@ class MediaPipeHolistic():
 #------------------------------------------------
 #------------------------------------------------
 def streamPosesFromCameraToMocapNET():
-  engine = "onnx"
+  engine           = "onnx"
   headless         = False
   doProfiling      = False
   multiThreaded    = False
@@ -361,7 +361,7 @@ def streamPosesFromCameraToMocapNET():
   scale            = 1.0
   addNoise         = 0.0
   doHCDPostProcessing = 1
-  hcdLearningRate     = 0.01
+  hcdLearningRate     = 0.001
   hcdEpochs           = 30
   hcdIterations       = 15
   plotBVHChannels  = False

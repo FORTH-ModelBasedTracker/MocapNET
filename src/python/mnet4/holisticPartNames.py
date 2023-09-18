@@ -93,6 +93,10 @@ def processPoseLandmarks(mnetPose2D,correctLabels,holisticPose,currentAspectRati
           labelY = "2dy_"+thisLandmarkName
           mnetPose2D[labelY] = y2D
           labelV = "visible_"+thisLandmarkName
+
+          if (x2D<0) or (x2D>1.0) or (y2D<0) or (y2D>1.0):
+              vis=0.0 #Update visibility on the fly
+
           mnetPose2D[labelV] = vis
           #--------------------------------------- 
           #DEBUG WHAT IS HAPPENING HERE
