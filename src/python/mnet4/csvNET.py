@@ -255,7 +255,7 @@ def streamPosesFromCameraToMocapNET():
   mem              = 1.0
   windowDelay      = 1
   doHCDPostProcessing = 1
-  hcdLearningRate     = 0.01
+  hcdLearningRate     = 0.001
   hcdEpochs           = 30
   hcdIterations       = 15
   plotBVHChannels  = False
