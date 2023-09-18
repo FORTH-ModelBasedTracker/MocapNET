@@ -33,6 +33,8 @@ then
  echo "Performing python package installation without a virtual environment"
 HEADLESS=" --headless"
 OPENCV="opencv-python-headless"
+rm -rf /content/sample_data/ #remove sample data
+ln -s ../mnet4 /content/mnet4
 else 
  echo "Using a python pythonVirtualEnvironment environment"
  echo "Activate it using : source pythonVirtualEnvironment/bin/activate"
