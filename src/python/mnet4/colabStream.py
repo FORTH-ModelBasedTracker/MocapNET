@@ -6,6 +6,7 @@ from IPython.display import display, Javascript
 from google.colab.output import eval_js
 from base64 import b64decode, b64encode
 import numpy as np
+import cv2
 
 def init_camera():
   """Create objects and functions in HTML/JavaScript to access local web camera"""
