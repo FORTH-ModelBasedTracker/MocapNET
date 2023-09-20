@@ -82,10 +82,9 @@ fi
  #   zip mnet4_318.zip step1_*/*
 
  #Another just take the precompiled ensembles ready to run
- wget http://ammar.gr/mocapnet/mnet4/mnet4_314.zip -O mnet4_314.zip
- unzip -o mnet4_314.zip
+ wget http://ammar.gr/mocapnet/mnet4/mnet4_318.zip -O mnet4_318.zip
+ unzip -o mnet4_318.zip
 
- 
  #To get :
  # python3 -m evaluateMocapNET --config dataset/body_configuration.json --all body --engine onnx 
  #  to work
