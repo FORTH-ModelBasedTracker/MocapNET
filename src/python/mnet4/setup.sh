@@ -77,13 +77,23 @@ fi
  
  #Two ways to get Models!
  #One through the database and compile them yourself (commented out to save Google Collab CPU time)..
- #python3 -m getModelFromDatabase --get 314
+ #python3 -m getModelFromDatabase --get 318
  #To generate the archive in the next lines do :
- #   zip mnet4_314.zip step1_*/*
+ #   zip mnet4_318.zip step1_*/*
 
  #Another just take the precompiled ensembles ready to run
  wget http://ammar.gr/mocapnet/mnet4/mnet4_314.zip -O mnet4_314.zip
  unzip -o mnet4_314.zip
+
+ 
+ #To get :
+ # python3 -m evaluateMocapNET --config dataset/body_configuration.json --all body --engine onnx 
+ #  to work
+
+ #wget http://cvrlcode.ics.forth.gr/web_share/mocapnet/bodyValidationSet.zip
+ #unzip bodyValidationSet.zip
+
+
 
  #Doing a test run!
 

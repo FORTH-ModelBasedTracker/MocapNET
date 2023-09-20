@@ -183,8 +183,14 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
     hierarchyPartName               = "body"
     outputMode                      = "bvh" 
     
-    useTestData                     = True    
+    useTestData                     = True
+
+    
+    doNNEveryNFrames                = 1
     doHCDPostProcessing             = 0
+    hcdLearningRate                 = 0.001
+    hcdEpochs                       = 30
+    hcdIterations                   = 15
 
     #This needs to be populated using the --config argument otherwise session will fail..
     configuration = []
@@ -211,7 +217,14 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
        print('Argument List:', str(sys.argv))
        for i in range(0, len(sys.argv)):
            if (sys.argv[i]=="--hcd"):
-              doHCDPostProcessing=1
+              doHCDPostProcessing  = 1
+           if (sys.argv[i]=="--ik"):
+               doHCDPostProcessing = 1
+               hcdLearningRate     = float(sys.argv[i+1])
+               hcdEpochs           = int(sys.argv[i+2])
+               hcdIterations       = int(sys.argv[i+3])
+           if (sys.argv[i]=="--nnsubsample"):
+               doNNEveryNFrames    = float(sys.argv[i+1])
            if (sys.argv[i]=="--noprocrustes"):
               doProcrustes=0
            if (sys.argv[i]=="--3d"):
@@ -438,7 +451,13 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
 
     #Select a MocapNET class from tensorflow/tensorrt/onnx/tf-lite engines
     from MocapNET import easyMocapNETConstructor
-    mnet = easyMocapNETConstructor(engine,doProfiling=doProfiling,doHCDPostProcessing=doHCDPostProcessing) #<- do not use post processing to actually evaluate MocapNET NN
+    mnet = easyMocapNETConstructor(engine,
+                                   doProfiling=doProfiling,
+                                   doHCDPostProcessing = doHCDPostProcessing,
+                                   hcdLearningRate     = hcdLearningRate,
+                                   hcdEpochs           = hcdEpochs,
+                                   hcdIterations       = hcdIterations
+                                  ) #<- do not use post processing to actually evaluate MocapNET NN
     mnet.test()
 
     from align3DPoints import compareGroundTruthToPrediction
@@ -497,9 +516,10 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
     #Append CSV Log
     f.write("mae_from_%u_to_%u_step_%u\n" % (0,numberOfSamples,step))
 
-    framerates = list()
-    beginTime  = time.time()
+    framerates     = list()
+    beginTime      = time.time()
     evaluationMode = "?"
+    frameNumber    = 0
     for thisSample in range(0,numberOfSamples,step) : 
             thisInputRaw     = groundTruthTest['in'][thisSample]
             correctOutputRaw = groundTruthTest['out'][thisSample] 
@@ -534,7 +554,11 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
             startTime = time.time()
             #================================================
             #================================================
-            regressedResult = mnet.predict3DJoints(thisInput)
+            doNN = 1
+            if (doHCDPostProcessing) and (doNNEveryNFrames>1):
+                doNN = (frameNumber%doNNEveryNFrames)==0
+            #print("Frame ",frameNumber," doNN = ",doNN)
+            regressedResult = mnet.predict3DJoints(thisInput,runNN=doNN)
             #================================================
             #================================================
             endTime = time.time()
@@ -583,6 +607,7 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
                    print("Could not find ",jointName)
 
             averageErrorDistances.append(float(stats["meanAverageError"]))
+            frameNumber = frameNumber + 1
 
     endTime = time.time()
     print("Finished in ",(endTime-beginTime)/60," minutes")

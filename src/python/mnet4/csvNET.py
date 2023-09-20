@@ -269,6 +269,11 @@ def streamPosesFromCameraToMocapNET():
   #python3 -m csvNET --from ammarFaceFar.csv --study face --face --nobody
   # python3 -m csvNET --from ammarFaceFar.csv --mouth --reye --nobody --plot --save 
 
+  #Visually inspect validation set :
+  #python3 -m csvNET --from dataset/generated/2d_body_all_test.csv --noik 
+  #python3 -m csvNET --from dataset/generated/2d_body_all_test.csv 
+
+
   if (len(sys.argv)>1):
        #print('Argument List:', str(sys.argv))
        for i in range(0, len(sys.argv)):
