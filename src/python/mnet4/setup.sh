@@ -90,6 +90,7 @@ fi
  #  to work
 
  #wget http://cvrlcode.ics.forth.gr/web_share/mocapnet/MocapNETBodyValidationSet.zip
+ #wget http://ammar.gr/datasets/MocapNETBodyValidationSet.zip
  #unzip MocapNETBodyValidationSet.zip
 
 
