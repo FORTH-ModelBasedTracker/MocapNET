@@ -579,13 +579,19 @@ def runPoseNETSerial():
   import time
   headless             = False
   videoFilePath        = "webcam" 
+  videoWidth           = 1280
+  videoHeight          = 720
   doProfiling          = False
   doFlipX              = False
   engine               = "onnx"
-  doNNEveryNFrames     = 3 # 3 
+  doNNEveryNFrames     = 4 # 3 
   bvhScale             = 1.0
-  doHCDPostProcessing  = 1
+  doHCDPostProcessing  = 1 
+  hcdLearningRate      = 0.001
+  hcdEpochs            = 99
+  hcdIterations        = 99
   threshold            = 0.25
+  calibrationFile      = ""
   plotBVHChannels      = False
   bvhAnglesForPlotting = list()
   bvhAllAnglesForPlotting = list()
@@ -594,12 +600,20 @@ def runPoseNETSerial():
   if (len(sys.argv)>1):
        #print('Argument List:', str(sys.argv))
        for i in range(0, len(sys.argv)):
+           if (sys.argv[i]=="--nnsubsample"):
+               doNNEveryNFrames    = int(sys.argv[i+1])
            if (sys.argv[i]=="--headless"):
               headless = True
            if (sys.argv[i]=="--flipx"):
               doFlipX = True
            if (sys.argv[i]=="--nonn"):
               doNNEveryNFrames = 1000
+           if (sys.argv[i]=="--calib"):
+              calibrationFile = sys.argv[i+1]
+           if (sys.argv[i]=="--ik"):
+               hcdLearningRate     = float(sys.argv[i+1])
+               hcdEpochs           = int(sys.argv[i+2])
+               hcdIterations       = int(sys.argv[i+3])
            if (sys.argv[i]=="--noik"):
               doHCDPostProcessing = 0
               doNNEveryNFrames = 1
@@ -613,17 +627,35 @@ def runPoseNETSerial():
               plotBVHChannels=True
 
   # For webcam input:
-  #-----------------------------------------
   frameNumber = 0
+  #------------------------------------------
   if (videoFilePath=="esp"):
      from espStream import ESP32CamStreamer
      cap = ESP32CamStreamer()
   elif (videoFilePath=="webcam"):
      cap = cv2.VideoCapture(0)
-     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
+  elif (videoFilePath=="/dev/video0"):
+     cap = cv2.VideoCapture(0)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
+  elif (videoFilePath=="/dev/video1"):
+     cap = cv2.VideoCapture(1)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
+  elif (videoFilePath=="/dev/video2"):
+     cap = cv2.VideoCapture(2)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
   else:
-     cap = cv2.VideoCapture(videoFilePath)
+     from tools import checkIfPathIsDirectory
+     if (checkIfPathIsDirectory(videoFilePath) and (not "/dev/" in videoFilePath) ):
+        from folderStream import FolderStreamer
+        cap = FolderStreamer(path=videoFilePath,width=videoWidth,height=videoHeight)
+        mnet.bvh.configureRendererFromFile("%s/color.calib"%videoFilePath)
+     else:
+        cap = cv2.VideoCapture(videoFilePath)
   #-----------------------------------------
   #python3 -m tf2onnx.convert --saved-model movenet --opset 14 --output movenet/model.onnx
   #zip movenet.zip movenet/* movenet/*/*
@@ -647,13 +679,26 @@ def runPoseNETSerial():
   from MocapNET import easyMocapNETConstructor
   mnet = easyMocapNETConstructor( 
                                  engine,
-                                 doProfiling=doProfiling,
-                                 doBody = False, #<- override whole body
-                                 doUpperbody = True,
-                                 doLowerbody = True,
-                                 doHCDPostProcessing=doHCDPostProcessing,
+                                 doProfiling         = doProfiling,
+                                 doBody              = False, #<- override whole body
+                                 doUpperbody         = True,
+                                 doLowerbody         = True,
+                                 doHCDPostProcessing = doHCDPostProcessing, 
+                                 hcdLearningRate     = hcdLearningRate,
+                                 hcdEpochs           = hcdEpochs,
+                                 hcdIterations       = hcdIterations,
+                                 doFace              = False,
+                                 doREye              = False,
+                                 doMouth             = False,
+                                 doHands             = False,
                                  bvhScale=bvhScale
                                )
+
+
+  if (calibrationFile!=""):
+        print("Enforcing Calibration file : ",calibrationFile)
+        mnet.bvh.configureRendererFromFile(calibrationFile)
+
   mnet.test()
 
  
@@ -713,7 +758,7 @@ def runPoseNETSerial():
         
     if not headless:
       cv2.imshow('MocapNET 4 using PoseNET Holistic 2D Joints', annotated_image)
-        if (plotBVHChannels):
+      if (plotBVHChannels):
            cv2.imshow('MocapNET 4 using PoseNET Holistic Motion History',plotImage) 
  
       if cv2.waitKey(1) & 0xFF == 27:
