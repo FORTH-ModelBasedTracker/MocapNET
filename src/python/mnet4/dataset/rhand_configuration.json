@@ -1,0 +1,377 @@
+{
+ "version": "4.0",
+ "backend": "mnet3",
+ "precision": "fp32",
+ "outputMode": "bvh",
+ "BVH": "headerWithHeadAndOneMotion.bvh",
+ "OutputDirectory": "rhand",
+ "veryHighNumberOfEpochs": 72,
+ "highNumberOfEpochs": 48,
+ "defaultNumberOfEpochs": 32,
+ "defaultBatchSize": 64,
+ "learningRate": 0.00017,
+ "minEarlyStoppingDelta": 0.01,
+ "setConstantSeedForReproducibleTraining": 1,
+ "activationFunction": "swish",
+ "weightRandomizationFunction": "auto",
+ "optimizer": "adam",
+ "dropoutRate": 0.15,
+ "lamda": 1.8, 
+ "useQuadLoss": 0,
+ "useSquaredLoss": 1,
+ "earlyStoppingPatience": 8, 
+ "rememberWeights": 1,
+ "rememberConsecutiveWeights": 0,
+ "useOnlineHardExampleMining": 0,
+ "hardMiningEpochs": 5,
+ "normalMiningEpochs": 2,
+ "groupOutputs": 1,  
+ "ignoreOcclusions": 1,
+ "neuralNetworkDepth": 12,
+ "EDM" : 0,
+ "eNSRM": 1,
+ "NSRMNormalizeAngles": 1,
+ "NSDMAlsoUseAlignmentAngles": 1,
+ "NSDMNormalizationMasterSwitch": 0,
+ "eigenPoses": 0,
+ "autobuilder": 0,
+ "skipConnections": 1,
+ "decompositionType": "", 
+ "doPCA": "dataset/$.pca",
+ "balanced2DInputs": 0,
+ "include2DInputVisibilityFlags": 0,
+ "PCADimensionsKept": 160,
+ "PCAAlsoKeepRawData": 1,
+ "padEnsembleInput": 0,
+ "probabilisticOutput": 0,
+ "filterOutEmptySamples": 1,
+ "outputValueDistribution": "balanced",
+ "outputNormalizationStrategy": "normalize",
+ "outputMultiplier": 3.5,
+ "useRadians": 0,
+ "rootJoint":  "rhand",
+
+"NormalizeNSDMBasedOn": 
+[
+    {
+      "jointStart": "rhand",
+      "jointEnd": "finger5-1.r"
+    },
+    {
+      "jointStart": "rhand",
+      "jointEnd": "finger4-1.r"
+    },
+    {
+      "jointStart": "rhand",
+      "jointEnd": "finger3-1.r"
+    },
+    {
+      "jointStart": "rhand",
+      "jointEnd": "finger2-1.r"
+    },
+    {
+      "jointStart": "rhand",
+      "jointEnd": "rthumb"
+    }
+ ],
+
+"Alignment": 
+[
+    {
+      "jointStart": "rhand",
+      "jointEnd": "finger3-1.r"
+    } 
+ ],
+
+"NSDM": [
+    {
+      "joint": "rhand",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger5-1.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger5-2.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger5-3.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger4-1.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger4-2.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger4-3.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger3-1.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger3-2.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger3-3.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger2-1.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger2-2.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger2-3.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "rthumb",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger1-2.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "finger1-3.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    }
+   ],
+  "hierarchy": [
+    {
+      "joint": "rhand",
+      "inheritNetwork": "none",
+      "parent": "rhand",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger2-1.r",
+      "inheritNetwork": "rhand",
+      "parent": "rhand",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger2-2.r",
+      "inheritNetwork": "finger2-1.r",
+      "parent": "finger2-1.r",
+      "importance": 2,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger2-3.r",
+      "inheritNetwork": "finger2-2.r",
+      "parent": "finger2-2.r",
+      "importance": 2,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "EndSite_finger2-3.r",
+      "inheritNetwork": "finger2-3.r",
+      "parent": "finger2-3.r",
+      "importance": 3,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger3-1.r",
+      "inheritNetwork": "rhand",
+      "parent": "rhand",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger3-2.r",
+      "inheritNetwork": "finger3-1.r",
+      "parent": "finger3-1.r",
+      "importance": 2,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger3-3.r",
+      "inheritNetwork": "finger3-2.r",
+      "parent": "finger3-2.r",
+      "importance": 2,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "EndSite_finger3-3.r",
+      "inheritNetwork": "finger3-3.r",
+      "parent": "finger3-3.r",
+      "importance": 3,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger4-1.r",
+      "inheritNetwork": "rhand",
+      "parent": "rhand",
+      "importance": 2,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger4-2.r",
+      "inheritNetwork": "finger4-1.r",
+      "parent": "finger4-1.r",
+      "importance": 2,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger4-3.r",
+      "inheritNetwork": "finger4-2.r",
+      "parent": "finger4-2.r",
+      "importance": 2,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "EndSite_finger4-3.r",
+      "inheritNetwork": "finger4-3.r",
+      "parent": "finger4-3.r",
+      "importance": 3,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger5-1.r",
+      "inheritNetwork": "rhand",
+      "parent": "rhand",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger5-2.r",
+      "inheritNetwork": "finger5-1.r",
+      "parent": "finger5-1.r",
+      "importance": 2,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger5-3.r",
+      "inheritNetwork": "finger5-2.r",
+      "parent": "finger5-2.r",
+      "importance": 2,
+      "immuneToSelfOcclusions": 1
+    }, 
+    {
+      "joint": "EndSite_finger5-3.r",
+      "inheritNetwork": "finger5-3.r",
+      "parent": "finger5-3.r",
+      "importance": 3,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "rthumb",
+      "inheritNetwork": "rhand",
+      "parent": "rhand",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "rthumbBase",
+      "inheritNetwork": "rhand",
+      "parent": "rhand",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger1-2.r",
+      "inheritNetwork": "rthumb",
+      "parent": "rthumb",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "finger1-3.r",
+      "inheritNetwork": "finger1-2.r",
+      "parent": "finger1-2.r",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "EndSite_finger1-3.r",
+      "inheritNetwork": "finger1-3.r",
+      "parent": "finger1-3.r",
+      "importance": 3,
+      "immuneToSelfOcclusions": 1
+    }
+  ],
+  "banned": [
+    {
+      "output": "foo"
+    }
+  ]
+}

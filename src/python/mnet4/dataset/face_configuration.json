@@ -1,0 +1,395 @@
+{
+ "version": "4.0",
+ "backend": "mnet3",
+ "precision": "fp32",
+ "outputMode": "bvh",
+ "BVH": "headerWithHeadAndOneMotion.bvh",
+ "OutputDirectory": "face",
+ "veryHighNumberOfEpochs": 32,
+ "highNumberOfEpochs": 32,
+ "defaultNumberOfEpochs": 32,
+ "defaultBatchSize": 64,
+ "learningRate": 0.00017,
+ "minEarlyStoppingDelta": 0.01,
+ "setConstantSeedForReproducibleTraining": 1,
+ "activationFunction": "swish",
+ "weightRandomizationFunction": "auto",
+ "optimizer": "adam",
+ "dropoutRate": 0.30,
+ "lamda": 1.9,
+ "useQuadLoss": 0,
+ "useSquaredLoss": 1,
+ "earlyStoppingPatience": 5,
+ "rememberWeights": 0,
+ "rememberConsecutiveWeights": 1,
+ "useOnlineHardExampleMining": 0,
+ "hardMiningEpochs": 5,
+ "normalMiningEpochs": 2,
+ "groupOutputs": 1,
+ "ignoreOcclusions": 1,
+ "NSDMNormalizationMasterSwitch": 0,
+ "NSDMAlsoUseAlignmentAngles": 1,
+ "neuralNetworkDepth": 7,
+ "EDM" : 0,
+ "eNSRM": 1,
+ "NSRMNormalizeAngles": 0,
+ "eigenPoses": 0,
+ "autobuilder": 0,
+ "skipConnections": 1,
+ "decompositionType": "pca",
+ "doPCA": "dataset/$.pca",
+ "balanced2DInputs": 0,
+ "include2DInputVisibilityFlags": 0,
+ "PCADimensionsKept": 200,
+ "PCAAlsoKeepRawData": 1,
+ "padEnsembleInput": 0,
+ "probabilisticOutput": 0,
+ "filterOutEmptySamples": 1,
+ "outputValueDistribution": "balanced",
+ "outputNormalizationStrategy": "normalize",
+ "outputMultiplier": 30.0,
+ "useRadians": 0,
+ "rootJoint":  "neck",
+
+"NormalizeNSDMBasedOn":
+[
+    {
+      "jointStart": "head_chin",
+      "jointEnd": "head_leye"
+    },
+    {
+      "jointStart": "head_chin",
+      "jointEnd": "head_reye"
+    }
+ ],
+"Alignment": 
+[
+    {
+      "jointStart": "head_chin",
+      "jointEnd": "head_nostrills_2"
+    } 
+ ],
+"NSDM": 
+[
+    {
+      "joint": "head_reyebrow_2",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_leyebrow_2",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_chin",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_outmouth_0",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_outmouth_6",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_outmouth_3",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_outmouth_9",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_nostrills_2",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_reye",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_reye",
+      "isVirtual": 1,
+      "xOffset": -0.15, 
+      "yOffset": -0.15,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_leye",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_leye",
+      "isVirtual": 1,
+      "xOffset": 0.15, 
+      "yOffset": -0.15,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_reye_2",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_reye_5",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_leye_1",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_leye_4",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_reyebrow_4",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "head_leyebrow_4",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    }
+   ],
+"hierarchy": 
+[
+    {
+      "joint": "neck1",
+      "inheritNetwork": "none",
+      "parent": "neck1",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "jaw",
+      "inheritNetwork": "neck1",
+      "parent": "neck1",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "eye.R",
+      "inheritNetwork": "neck1",
+      "parent": "eye.R",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "eye.L",
+      "inheritNetwork": "neck1",
+      "parent": "eye.L",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "oculi01.R",
+      "inheritNetwork": "eye.R",
+      "parent": "eye.R",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "oculi01.L",
+      "inheritNetwork": "eye.L",
+      "parent": "eye.L",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "orbicularis03.R",
+      "inheritNetwork": "eye.R",
+      "parent": "eye.R",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "orbicularis04.R",
+      "inheritNetwork": "orbicularis03.R",
+      "parent": "orbicularis03.R",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "orbicularis03.L",
+      "inheritNetwork": "eye.L",
+      "parent": "eye.L",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "orbicularis04.L",
+      "inheritNetwork": "orbicularis03.L",
+      "parent": "orbicularis03.L",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "oris03.R",
+      "inheritNetwork": "neck1",
+      "parent": "jaw",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "oris04.R",
+      "inheritNetwork": "neck1",
+      "parent": "jaw",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "oris03.L",
+      "inheritNetwork": "neck1",
+      "parent": "jaw",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "oris04.L",
+      "inheritNetwork": "neck1",
+      "parent": "jaw",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "oris05",
+      "inheritNetwork": "neck1",
+      "parent": "jaw",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "oris06.R",
+      "inheritNetwork": "neck1",
+      "parent": "jaw",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "oris06.L",
+      "inheritNetwork": "neck1",
+      "parent": "jaw",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "oris07.R",
+      "inheritNetwork": "neck1",
+      "parent": "jaw",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "oris07.L",
+      "inheritNetwork": "neck1",
+      "parent": "jaw",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "levator03.R",
+      "inheritNetwork": "orbicularis03.R",
+      "parent": "orbicularis03.R",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "levator06.R",
+      "inheritNetwork": "orbicularis03.R",
+      "parent": "orbicularis03.R",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "levator03.L",
+      "inheritNetwork": "orbicularis03.L",
+      "parent": "orbicularis03.L",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "levator06.L",
+      "inheritNetwork": "orbicularis03.L",
+      "parent": "orbicularis03.L",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    }, 
+    {
+      "joint": "hip",
+      "inheritNetwork": "none",
+      "parent": "hip",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    }
+],
+  "banned": [
+    {
+      "output": "foo"
+    }
+  ]
+}

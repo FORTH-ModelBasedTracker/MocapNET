@@ -1,0 +1,373 @@
+{
+ "version": "3.0",
+ "backend": "mnet3",
+ "precision": "fp32",
+ "outputMode": "bvh",
+ "BVH": "headerWithHeadAndOneMotion.bvh",
+ "OutputDirectory": "body",
+ "veryHighNumberOfEpochs": 60,
+ "highNumberOfEpochs": 45,
+ "defaultNumberOfEpochs": 30,
+ "defaultBatchSize": 128,
+ "learningRate": 0.00025,
+ "minEarlyStoppingDelta": 0.01,
+ "setConstantSeedForReproducibleTraining": 0,
+ "activationFunction": "swish",
+ "weightRandomizationFunction": "glorot_uniform",
+ "optimizer": "rmsprop",
+ "dropoutRate": 0.20,
+ "lamda": 2.0, 
+ "useQuadLoss": 0,
+ "useSquaredLoss": 1,
+ "earlyStoppingPatience": 4, 
+ "rememberWeights": 1,
+ "rememberConsecutiveWeights": 0,
+ "useOnlineHardExampleMining": 0,
+ "hardMiningEpochs": 5,
+ "normalMiningEpochs": 2,
+ "groupOutputs": 1,  
+ "ignoreOcclusions": 0,
+ "NSDMNormalizationMasterSwitch": 0,
+ "NSDMAlsoUseAlignmentAngles": 1,
+ "neuralNetworkDepth": 12,
+ "EDM" : 0,
+ "eNSRM": 1,
+ "eigenPoses": 0,
+ "autobuilder": 0,
+ "skipConnections": 1,
+ "decompositionType": "", 
+ "doPCA": "",
+ "balanced2DInputs": 0,
+ "include2DInputVisibilityFlags": 0,
+ "PCADimensionsKept": 210,
+ "PCAAlsoKeepRawData": 0,
+ "padEnsembleInput": 0,
+ "probabilisticOutput": 0,
+ "filterOutEmptySamples": 1,
+ "outputValueDistribution": "balanced",
+ "outputNormalizationStrategy": "normalize",
+ "outputMultiplier": 1.0,
+ "useRadians": 0,
+ "rootJoint":  "hip",
+
+"NormalizeNSDMBasedOn": 
+[
+    {
+      "jointStart": "hip",
+      "jointEnd": "rshoulder"
+    },
+    {
+      "jointStart": "hip",
+      "jointEnd": "lshoulder"
+    }
+ ],
+
+"Alignment": 
+[
+    {
+      "jointStart": "hip",
+      "jointEnd": "neck"
+    } 
+ ],
+
+"NSDM": [
+    {
+      "joint": "hip",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "EndSite_eye.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "EndSite_eye.l",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "neck",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "hip",
+      "isVirtual": 1,
+      "xOffset": 0.3, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "rshoulder",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "relbow",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "rhand",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "hip",
+      "isVirtual": 1,
+      "xOffset": -0.3, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "lshoulder",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "lelbow",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "lhand",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "rhip",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "rknee",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "rfoot",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "lhip",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "lknee",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "lfoot",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    }
+   ],
+  "hierarchy": [
+    {
+      "joint": "hip",
+      "inheritNetwork": "none",
+      "parent": "hip",
+      "importance": 1,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "neck",
+      "inheritNetwork": "hip",
+      "parent": "chest",
+      "importance": 2,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "head",
+      "inheritNetwork": "hip",
+      "parent": "neck",
+      "importance": 2,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "EndSite_eye.l",
+      "inheritNetwork": "head",
+      "parent": "head",
+      "importance": 3,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "EndSite_eye.r",
+      "inheritNetwork": "head",
+      "parent": "head",
+      "importance": 3,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "rshoulder",
+      "inheritNetwork": "hip",
+      "parent": "rcollar",
+      "importance": 1,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "relbow",
+      "inheritNetwork": "rshoulder",
+      "parent": "rshoulder",
+      "importance": 2,
+      "immuneToSelfOcclusions": 0
+    }, 
+    {
+      "joint": "rhand",
+      "inheritNetwork": "relbow",
+      "parent": "relbow",
+      "importance": 2,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "lshoulder",
+      "inheritNetwork": "hip",
+      "parent": "lcollar",
+      "importance": 1,
+      "immuneToSelfOcclusions": 0
+    }, 
+    {
+      "joint": "lelbow",
+      "inheritNetwork": "lshoulder",
+      "parent": "lshoulder",
+      "importance": 2,
+      "immuneToSelfOcclusions": 0
+    }, 
+    {
+      "joint": "lhand",
+      "inheritNetwork": "lelbow",
+      "parent": "lelbow",
+      "importance": 2,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "rhip",
+      "inheritNetwork": "hip",
+      "parent": "hip",
+      "importance": 1,
+      "immuneToSelfOcclusions": 0
+    }, 
+    {
+      "joint": "rknee",
+      "inheritNetwork": "rhip",
+      "parent": "rhip",
+      "importance": 2,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "rfoot",
+      "inheritNetwork": "rknee",
+      "parent": "rknee",
+      "importance": 3,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "EndSite_toe1-2.r",
+      "inheritNetwork": "none",
+      "parent": "rfoot",
+      "importance": 3,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "EndSite_toe5-3.r",
+      "inheritNetwork": "none",
+      "parent": "rfoot",
+      "importance": 3,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "lhip",
+      "inheritNetwork": "hip",
+      "parent": "hip",
+      "importance": 1,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "lknee",
+      "inheritNetwork": "lhip",
+      "parent": "lhip",
+      "importance": 2,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "lfoot",
+      "inheritNetwork": "lknee",
+      "parent": "lknee",
+      "importance": 3,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "EndSite_toe1-2.l",
+      "inheritNetwork": "none",
+      "parent": "lfoot",
+      "importance": 3,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "EndSite_toe5-3.l",
+      "inheritNetwork": "none",
+      "parent": "lfoot",
+      "importance": 3,
+      "immuneToSelfOcclusions": 0
+    }
+  ],
+  "banned": [
+    {
+      "output": "foo"
+    }
+  ]
+}

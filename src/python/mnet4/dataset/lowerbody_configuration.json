@@ -1,0 +1,328 @@
+{
+ "version": "4.0",
+ "backend": "mnet3",
+ "precision": "fp32",
+ "outputMode": "bvh",
+ "BVH": "headerWithHeadAndOneMotion.bvh",
+ "OutputDirectory": "lowerbody",
+ "veryHighNumberOfEpochs": 512,
+ "highNumberOfEpochs": 256,
+ "defaultNumberOfEpochs": 128,
+ "defaultBatchSize": 64,
+ "learningRate": 0.00005,
+ "minEarlyStoppingDelta": 0.01,
+ "setConstantSeedForReproducibleTraining": 1,
+ "activationFunction": "swish",
+ "weightRandomizationFunction": "auto",
+ "optimizer": "adam",
+ "dropoutRate": 0.10,
+ "lamda": 0.25,
+ "useQuadLoss": 0,
+ "useSquaredLoss": 1,
+ "earlyStoppingPatience": 5,
+ "rememberWeights": 0,
+ "rememberConsecutiveWeights": 1,
+ "useOnlineHardExampleMining": 0,
+ "hardMiningEpochs": 5,
+ "normalMiningEpochs": 2,
+ "groupOutputs": 0,
+ "ignoreOcclusions": 1,
+ "NSRMNormalizeAngles": 2,
+ "NSDMNormalizationMasterSwitch": 0,
+ "NSDMAlsoUseAlignmentAngles": 1,
+ "neuralNetworkDepth": 12,
+ "EDM" : 0,
+ "eNSRM": 1,
+ "eigenPoses": 0,
+ "autobuilder": 0,
+ "skipConnections": 1,
+ "decompositionType": "",
+ "doPCA": "dataset/$.pca",
+ "balanced2DInputs": 0,
+ "include2DInputVisibilityFlags": 0,
+ "PCADimensionsKept": 230,
+ "PCAAlsoKeepRawData": 1,
+ "padEnsembleInput": 0,
+ "probabilisticOutput": 0,
+ "filterOutEmptySamples": 1,
+ "outputValueDistribution": "balanced",
+ "outputNormalizationStrategy": "normalize",
+ "outputMultiplier": 1.5,
+ "useRadians": 0,
+ "rootJoint":  "hip",
+
+"NormalizeNSDMBasedOn":
+[
+    {
+      "jointStart": "hip",
+      "jointEnd": "rhip"
+    },
+    {
+      "jointStart": "hip",
+      "jointEnd": "lhip"
+    }
+ ],
+
+"Alignment": 
+[
+    {
+      "jointStart": "rknee",
+      "jointEnd": "rhip"
+    } 
+ ],
+
+"NSDM": 
+[ 
+    {
+      "joint": "hip",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "rhip",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "rhip",
+      "isVirtual": 2,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "rknee",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "rknee",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "rknee",
+      "isVirtual": 2,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "rfoot",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "rfoot",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "EndSite_toe1-2.r",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "hip",
+      "isVirtual": 1,
+      "xOffset": 0.3, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    }, 
+    {
+      "joint": "hip",
+      "isVirtual": 1,
+      "xOffset": -0.3, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "lhip",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "lhip",
+      "isVirtual": 2,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "lknee",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "lknee",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "lknee",
+      "isVirtual": 2,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "lfoot",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "lfoot",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "EndSite_toe1-2.l",
+      "isVirtual": 0,
+      "xOffset": 0, 
+      "yOffset": 0,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "hip",
+      "isVirtual": 1,
+      "xOffset": 0.0, 
+      "yOffset": 0.15,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    },
+    {
+      "joint": "hip",
+      "isVirtual": 1,
+      "xOffset": 0.0, 
+      "yOffset": 0.3,
+      "halfWayFromThisAnd": "",
+      "secondTargetJointID": 0
+    }
+],
+  "hierarchy": [
+    {
+      "joint": "hip",
+      "inheritNetwork": "none",
+      "parent": "hip",
+      "importance": 0,
+      "immuneToSelfOcclusions": 1
+    },
+    {
+      "joint": "rhip",
+      "inheritNetwork": "hip",
+      "parent": "hip",
+      "importance": 1,
+      "immuneToSelfOcclusions": 0
+    }, 
+    {
+      "joint": "rknee",
+      "inheritNetwork": "rhip",
+      "parent": "rhip",
+      "importance": 2,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "rfoot",
+      "inheritNetwork": "rknee",
+      "parent": "rknee",
+      "importance": 2,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "toe1-2.r",
+      "inheritNetwork": "none",
+      "parent": "rfoot",
+      "importance": 0,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "EndSite_toe1-2.r",
+      "inheritNetwork": "none",
+      "parent": "rfoot",
+      "importance": 0,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "toe5-3.r",
+      "inheritNetwork": "none",
+      "parent": "rfoot",
+      "importance": 0,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "EndSite_toe5-3.r",
+      "inheritNetwork": "none",
+      "parent": "rfoot",
+      "importance": 0,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "lhip",
+      "inheritNetwork": "hip",
+      "parent": "hip",
+      "importance": 1,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "lknee",
+      "inheritNetwork": "lhip",
+      "parent": "lhip",
+      "importance": 2,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "lfoot",
+      "inheritNetwork": "lknee",
+      "parent": "lknee",
+      "importance": 2,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "toe1-2.l",
+      "inheritNetwork": "none",
+      "parent": "rfoot",
+      "importance": 0,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "EndSite_toe1-2.l",
+      "inheritNetwork": "none",
+      "parent": "lfoot",
+      "importance": 0,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "toe5-3.l",
+      "inheritNetwork": "none",
+      "parent": "rfoot",
+      "importance": 0,
+      "immuneToSelfOcclusions": 0
+    },
+    {
+      "joint": "EndSite_toe5-3.l",
+      "inheritNetwork": "none",
+      "parent": "lfoot",
+      "importance": 0,
+      "immuneToSelfOcclusions": 0
+    }
+  ],
+  "banned": [
+    {
+      "output": "abdomen"
+    },
+    {
+      "output": "chest"
+    }
+  ]
+}

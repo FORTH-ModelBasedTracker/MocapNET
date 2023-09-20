@@ -90,8 +90,8 @@ fi
  # python3 -m evaluateMocapNET --config dataset/body_configuration.json --all body --engine onnx 
  #  to work
 
- #wget http://cvrlcode.ics.forth.gr/web_share/mocapnet/bodyValidationSet.zip
- #unzip bodyValidationSet.zip
+ #wget http://cvrlcode.ics.forth.gr/web_share/mocapnet/MocapNETBodyValidationSet.zip
+ #unzip MocapNETBodyValidationSet.zip
 
 
 
