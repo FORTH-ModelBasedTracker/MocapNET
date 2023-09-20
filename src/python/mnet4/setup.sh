@@ -53,10 +53,10 @@ else
  git clone https://github.com/AmmarkoV/RGBDAcquisition
  cd RGBDAcquisition
  #----------------------------------------------------------------------------------------------------------------------
- mkdir build
- cd build
- cmake ..
- cd ..
+ #mkdir build
+ #cd build
+ #cmake ..
+ #cd ..
  #----------------------------------------------------------------------------------------------------------------------
  cd opengl_acquisition_shared_library/opengl_depth_and_color_renderer/
  mkdir build 
