@@ -1,3 +1,4 @@
+import matplotlib as mp
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -240,8 +241,20 @@ if __name__== "__main__":
  yCol=6
  zCol=8
  target1Col=11
- target2Col=12
+ target2Col=12 
 
+ xs  = None
+ ys  = None
+ zs  = None
+ vs  = None 
+ v2s = None
+
+
+ xOk       = False
+ yOk       = False
+ zOk       = False
+ target1Ok = False
+ target2Ok = False
 
  if (len(sys.argv)>1):
        print('Argument List:', str(sys.argv))
@@ -276,19 +289,36 @@ if __name__== "__main__":
  
  fig = plt.figure()
  ax  = fig.add_subplot(projection='3d')
- xs  = splitNumpyArray(data["body"],xCol,1) # 1 = learning rate
- ys  = splitNumpyArray(data["body"],yCol,1) # 6 = iteration
- zs  = splitNumpyArray(data["body"],zCol,1) # 8 = langevin
- vs  = splitNumpyArray(data["body"],target1Col,1) # 10 = mae 
- v2s = splitNumpyArray(data["body"],target2Col,1) # 10 = mae 
  
- v2sMean = np.mean(v2s)
- v2s = v2s * (100.0/v2sMean)
+ if xOk:
+    xs  = splitNumpyArray(data["body"],xCol,1) # 1 = learning rate
+ if yOk:
+    ys  = splitNumpyArray(data["body"],yCol,1) # 6 = iteration
+ if zOk:
+    zs  = splitNumpyArray(data["body"],zCol,1) # 8 = langevin
+ if target1Ok:
+    vs  = splitNumpyArray(data["body"],target1Col,1) # 10 = mae 
+ if target2Ok:
+    v2s = splitNumpyArray(data["body"],target2Col,1) # 10 = mae 
+    v2sMean = np.mean(v2s)
+    v2s = v2s * (100.0/v2sMean)
 
  ax.view_init(viewAzimuth,viewElevation) 
 
- cm = plt.cm.get_cmap('RdYlBu')
- sc = ax.scatter(xs, ys, zs, c=vs, s=v2s , cmap=cm, alpha=transparency)
+ #cm = plt.cm.get_cmap('RdYlBu')
+ #cm = plt.cm.get_cmap('hot')
+ cm = mp.colormaps.get_cmap('Greens_r') 
+#https://matplotlib.org/stable/gallery/color/colormap_reference.html
+#supported values are 'Accent', 'Accent_r', 'Blues', 'Blues_r', 'BrBG', 'BrBG_r', 'BuGn', 'BuGn_r', 'BuPu', 'BuPu_r', 'CMRmap', 'CMRmap_r', 'Dark2', 'Dark2_r', 'GnBu', 'GnBu_r', 'Greens', 'Greens_r', 'Greys', 'Greys_r', 'OrRd', 'OrRd_r', 'Oranges', 'Oranges_r', 'PRGn', 'PRGn_r', 'Paired', 'Paired_r', 'Pastel1', 'Pastel1_r', 'Pastel2', 'Pastel2_r', 'PiYG', 'PiYG_r', 'PuBu', 'PuBuGn', 'PuBuGn_r', 'PuBu_r', 'PuOr', 'PuOr_r', 'PuRd', 'PuRd_r', 'Purples', 'Purples_r', 'RdBu', 'RdBu_r', 'RdGy', 'RdGy_r', 'RdPu', 'RdPu_r', 'RdYlBu', 'RdYlBu_r', 'RdYlGn', 'RdYlGn_r', 'Reds', 'Reds_r', 'Set1', 'Set1_r', 'Set2', 'Set2_r', 'Set3', 'Set3_r', 'Spectral', 'Spectral_r', 'Wistia', 'Wistia_r', 'YlGn', 'YlGnBu', 'YlGnBu_r', 'YlGn_r', 'YlOrBr', 'YlOrBr_r', 'YlOrRd', 'YlOrRd_r', 'afmhot', 'afmhot_r', 'autumn', 'autumn_r', 'binary', 'binary_r', 'bone', 'bone_r', 'brg', 'brg_r', 'bwr', 'bwr_r', 'cividis', 'cividis_r', 'cool', 'cool_r', 'coolwarm', 'coolwarm_r', 'copper', 'copper_r', 'cubehelix', 'cubehelix_r', 'flag', 'flag_r', 'gist_earth', 'gist_earth_r', 'gist_gray', 'gist_gray_r', 'gist_heat', 'gist_heat_r', 'gist_ncar', 'gist_ncar_r', 'gist_rainbow', 'gist_rainbow_r', 'gist_stern', 'gist_stern_r', 'gist_yarg', 'gist_yarg_r', 'gnuplot', 'gnuplot2', 'gnuplot2_r', 'gnuplot_r', 'gray', 'gray_r', 'hot', 'hot_r', 'hsv', 'hsv_r', 'inferno', 'inferno_r', 'jet', 'jet_r', 'magma', 'magma_r', 'nipy_spectral', 'nipy_spectral_r', 'ocean', 'ocean_r', 'pink', 'pink_r', 'plasma', 'plasma_r', 'prism', 'prism_r', 'rainbow', 'rainbow_r', 'seismic', 'seismic_r', 'spring', 'spring_r', 'summer', 'summer_r', 'tab10', 'tab10_r', 'tab20', 'tab20_r', 'tab20b', 'tab20b_r', 'tab20c', 'tab20c_r', 'terrain', 'terrain_r', 'turbo', 'turbo_r', 'twilight', 'twilight_r', 'twilight_shifted', 'twilight_shifted_r', 'viridis', 'viridis_r', 'winter', 'winter_r'
+
+
+ if target1Ok and target2Ok: 
+   sc = ax.scatter(xs, ys, zs, c=vs, s=v2s , cmap=cm, alpha=transparency)
+ else:
+   sc = ax.scatter(xs, ys, zs, alpha=transparency)
+
+
+
  plt.colorbar(sc) 
 
  ax.set_title(jointName) # Title of the plot

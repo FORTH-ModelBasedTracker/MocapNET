@@ -174,7 +174,8 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
     #AutoStart Tensorboard, disabled by default!
     autostartTensorboard=0
    
-    doProfiling=False
+    doDebugVisualization = False
+    doProfiling          = False
     doOnlyIdentification = False
 
     #I/O settings
@@ -218,13 +219,15 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
        for i in range(0, len(sys.argv)):
            if (sys.argv[i]=="--hcd"):
               doHCDPostProcessing  = 1
+           if (sys.argv[i]=="--visualize"): 
+              doDebugVisualization = True 
            if (sys.argv[i]=="--ik"):
                doHCDPostProcessing = 1
                hcdLearningRate     = float(sys.argv[i+1])
                hcdEpochs           = int(sys.argv[i+2])
                hcdIterations       = int(sys.argv[i+3])
            if (sys.argv[i]=="--nnsubsample"):
-               doNNEveryNFrames    = float(sys.argv[i+1])
+               doNNEveryNFrames    = int(sys.argv[i+1])
            if (sys.argv[i]=="--noprocrustes"):
               doProcrustes=0
            if (sys.argv[i]=="--3d"):
@@ -238,6 +241,8 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
               print("Selecting engine : ",engine)
            if (sys.argv[i]=="--profile"):
               doProfiling=True
+           if (sys.argv[i]=="--label"):
+              label=sys.argv[i+1]
            if (sys.argv[i]=="--get"):
               serial =int(sys.argv[i+1]) 
               retrieveAndSetupBasedOnSerial(serial,download=1)
@@ -519,7 +524,7 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
     framerates     = list()
     beginTime      = time.time()
     evaluationMode = "?"
-    frameNumber    = 0
+    frameNumber    = 0 #<- simpler counter for nn subsampling
     for thisSample in range(0,numberOfSamples,step) : 
             thisInputRaw     = groundTruthTest['in'][thisSample]
             correctOutputRaw = groundTruthTest['out'][thisSample] 
@@ -568,7 +573,26 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
                         processing_time=1
             #------------------------------------------------------------------------------------------------------
 
-            
+            #------------------------------------------------------------------------------------------------------
+            #------------------------------------------------------------------------------------------------------
+            #------------------------------------------------------------------------------------------------------
+            # Debug visualization (we shouldn't be doing a visualization in evaluateMocapNET.py)
+            #------------------------------------------------------------------------------------------------------
+            if (doDebugVisualization):
+                import cv2
+                import numpy as np
+                bgcolor = 30
+                annotated_image = np.full((1080,1920,3), bgcolor , dtype=np.uint8) #<-- 
+                from MocapNETVisualization import visualizeMocapNETEnsemble
+                image,plotImage = visualizeMocapNETEnsemble(mnet,annotated_image)
+
+                cv2.imshow('MocapNET 4 Evaluation', image)
+                if cv2.waitKey(1) & 0xFF == 27:
+                      break            
+            #------------------------------------------------------------------------------------------------------
+            #------------------------------------------------------------------------------------------------------
+            #------------------------------------------------------------------------------------------------------
+
             #print("\n\n\n\nthisInput ",thisInput)
             #print("\n\n\n\ncorrectOutput ",correctOutput)
             #print("\n\n\n\regressedResult ",regressedResult)
@@ -607,7 +631,7 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
                    print("Could not find ",jointName)
 
             averageErrorDistances.append(float(stats["meanAverageError"]))
-            frameNumber = frameNumber + 1
+            frameNumber = frameNumber + 1 #<- simpler counter for nn subsampling
 
     endTime = time.time()
     print("Finished in ",(endTime-beginTime)/60," minutes")
@@ -617,18 +641,19 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
 
     import numpy as np
     appendRAWResultsForGNUplot("alldistance.raw",averageErrorDistances)
-
+    #------------------------------------------
     for jID in range (0,numberOfJoints):
             jointName = JOINTS_TO_COMPARE[jID]
             appendRAWResultsForGNUplot("joint_%s.raw"%jointName,errorSamplesPerJoint[jointName])
-    
+    #------------------------------------------
     meanProcessingTime = np.mean(framerates)
-    minimum=np.min(averageErrorDistances)
-    maximum=np.max(averageErrorDistances)
-    median=np.median(averageErrorDistances)
-    mean=np.mean(averageErrorDistances)
-    std=np.std(averageErrorDistances)
-    var=np.var(averageErrorDistances)
+    minimum            = np.min(averageErrorDistances)
+    maximum            = np.max(averageErrorDistances)
+    median             = np.median(averageErrorDistances)
+    mean               = np.mean(averageErrorDistances)
+    std                = np.std(averageErrorDistances)
+    var                = np.var(averageErrorDistances)
+    #------------------------------------------
     title_string=" Min/Max=%0.1f/%0.1f,Mean=%0.1f,Median=%0.1f,Std=%0.1f,Var=%0.1f" % (minimum,maximum,mean,median,std,var)
     
     #Show a summary 
@@ -644,11 +669,16 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
     print("Procrustes : %u"%doProcrustes) 
     print("Mean Framerate : %0.2f fps"%(1/meanProcessingTime))
     print("doHCDPostProcessing = ",doHCDPostProcessing)
+    print("doNNEveryNFrames    = ",doNNEveryNFrames)
+    print("hcdLearningRate     = ",hcdLearningRate)
+    print("hcdEpochs           = ",hcdEpochs)
+    print("hcdIterations       = ",hcdIterations)
+
     print("Result : %s "%title_string)
     notification("MocapNET Network Evaluation","Done evaluating -> %s " % (title_string))
     
     f = open(label+"_results.csv", "w")
-    f.write("Params,PCA,FPS,Min,Max,Median,Mean,Std,Var\n")
+    f.write("Params,PCA,FPS,Min,Max,Median,Mean,Std,Var,HCD,NNSubsample,HCD_LR,HCD_Epochs,HCD_Iterations\n")
     f.write("%0.2f"%(mnet.getModelParameters()/1000.0))
     f.write(",")
     f.write(str(mnet.ensemble["upperbody"].configuration["PCADimensionsKept"]))
@@ -666,6 +696,16 @@ def evaluateMocapNET(useCSVBackend,groundTruthTrain,groundTruthTest):
     f.write(str(std))
     f.write(",")
     f.write(str(var))
+    f.write(",")
+    f.write(str(doHCDPostProcessing))
+    f.write(",")
+    f.write(str(doNNEveryNFrames))
+    f.write(",")
+    f.write(str(hcdLearningRate))
+    f.write(",")
+    f.write(str(hcdEpochs))
+    f.write(",")
+    f.write(str(hcdIterations))
     f.write("\n")
     f.close()
 
