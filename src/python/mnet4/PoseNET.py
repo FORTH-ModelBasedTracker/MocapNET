@@ -6,6 +6,8 @@ Copyright : "2022 Foundation of Research and Technology, Computer Science Depart
 License : "FORTH" 
 """
 
+import os 
+
 #https://tfhub.dev/google/movenet/singlepose/lightning/4
 #https://tfhub.dev/google/lite-model/movenet/singlepose/lightning/tflite/int8/4
 #wget -q -O lite-model_movenet_singlepose_lightning_tflite_int8_4.tflite https://storage.googleapis.com/tfhub-lite-models/google/lite-model/movenet/singlepose/lightning/tflite/int8/4.tflite
@@ -586,18 +588,19 @@ def runPoseNETSerial():
   import time
   headless             = False
   economicVisualization= False
+  saveVideo            = False
   videoFilePath        = "webcam" 
   videoWidth           = 1280
   videoHeight          = 720
   doProfiling          = False
   doFlipX              = False
   engine               = "onnx"
-  doNNEveryNFrames     = 4 # 3 
+  doNNEveryNFrames     = 2 # 3 
   bvhScale             = 1.0
   doHCDPostProcessing  = 1 
   hcdLearningRate      = 0.001
-  hcdEpochs            = 99
-  hcdIterations        = 99
+  hcdEpochs            = 15
+  hcdIterations        = 30
   threshold            = 0.25
   calibrationFile      = ""
   plotBVHChannels      = False
@@ -608,12 +611,16 @@ def runPoseNETSerial():
   if (len(sys.argv)>1):
        #print('Argument List:', str(sys.argv))
        for i in range(0, len(sys.argv)):
+           if (sys.argv[i]=="--save"):
+              saveVideo=True
            if (sys.argv[i]=="--nnsubsample"):
-               doNNEveryNFrames    = int(sys.argv[i+1])
+              doNNEveryNFrames    = int(sys.argv[i+1])
            if (sys.argv[i]=="--headless"):
               headless = True
            if (sys.argv[i]=="--flipx"):
               doFlipX = True
+           if (sys.argv[i]=="--plot"):
+              plotBVHChannels=True
            if (sys.argv[i]=="--nonn"):
               doNNEveryNFrames = 1000
            if (sys.argv[i]=="--calib"):
@@ -764,6 +771,10 @@ def runPoseNETSerial():
     frameNumber = frameNumber + 1
     
 
+    if (saveVideo): 
+        cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)
+        if (plotBVHChannels):
+              cv2.imwrite('plotFrame_0_%05u.jpg'%(frameNumber), plotImage)
         
     if not headless:
       cv2.imshow('MocapNET 4 using PoseNET Holistic 2D Joints', annotated_image)
@@ -774,7 +785,14 @@ def runPoseNETSerial():
          break
 
 
+
   cap.release()
+
+  if (saveVideo): #                                              1280x720 by default
+     os.system("ffmpeg -framerate 30 -i colorFrame_0_%%05d.jpg -s %ux%u  -y -r 30 -pix_fmt yuv420p -threads 8 livelastRun3DHiRes.mp4 && rm colorFrame_0_*.jpg " % (videoWidth,videoHeight)) # 
+     if (plotBVHChannels):
+        os.system("ffmpeg -framerate 30 -i plotFrame_0_%05d.jpg -s 1200x720  -y -r 30 -pix_fmt yuv420p -threads 8 livelastPlot3DHiRes.mp4 && rm plotFrame_0_*.jpg")
+     
 
 
 
@@ -926,7 +944,11 @@ def runPoseNETParallel():
     previous_image = cv2.putText(previous_image, message , org, font, fontScale, color, thickness, cv2.LINE_AA)
     #------------------------------------------------------------------------------------------------------------
 
-
+    if (saveVideo): 
+        cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)
+        if (plotBVHChannels):
+              cv2.imwrite('plotFrame_0_%05u.jpg'%(frameNumber), plotImage)
+        
     if not headless:
       cv2.imshow('MocapNET 4 using MoveNET Holistic 2D Joints', previous_image)
       if (plotBVHChannels):
@@ -934,10 +956,18 @@ def runPoseNETParallel():
  
       if cv2.waitKey(1) & 0xFF == 27:
          break
-
  
     previous_image = next_image  
+
   cap.release()
+
+  if (saveVideo): #            
+                                    #  1280x720 by default
+     os.system("ffmpeg -framerate 30 -i colorFrame_0_%%05d.jpg -s %ux%u  -y -r 30 -pix_fmt yuv420p -threads 8 livelastRun3DHiRes.mp4 && rm colorFrame_0_*.jpg " % (videoWidth,videoHeight)) # 
+     if (plotBVHChannels):
+        os.system("ffmpeg -framerate 30 -i plotFrame_0_%05d.jpg -s 1200x720  -y -r 30 -pix_fmt yuv420p -threads 8 livelastPlot3DHiRes.mp4 && rm plotFrame_0_*.jpg")
+     
+
 
 
 
