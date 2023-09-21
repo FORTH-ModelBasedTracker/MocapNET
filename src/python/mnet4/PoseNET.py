@@ -592,12 +592,12 @@ def runPoseNETSerial():
   doProfiling          = False
   doFlipX              = False
   engine               = "onnx"
-  doNNEveryNFrames     = 2 # 3 
+  doNNEveryNFrames     = 4 # 3 
   bvhScale             = 1.0
   doHCDPostProcessing  = 1 
   hcdLearningRate      = 0.001
-  hcdEpochs            = 15
-  hcdIterations        = 30
+  hcdEpochs            = 99
+  hcdIterations        = 99
   threshold            = 0.25
   calibrationFile      = ""
   plotBVHChannels      = False
