@@ -456,6 +456,7 @@ def streamPosesFromCameraToMocapNET():
 
   # For webcam input:
   frameNumber = 0
+  #------------------------------------------
   if (videoFilePath=="esp"):
      from espStream import ESP32CamStreamer
      cap = ESP32CamStreamer()
@@ -526,13 +527,7 @@ def streamPosesFromCameraToMocapNET():
        bvhAnglesForPlotting.pop(0)
     #--------------------------------------------------------------------------------------------------------------
     from MocapNETVisualization import visualizeMocapNETEnsemble
-    start = time.time() # Time elapsed
     image,plotImage = visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting)
-    end = time.time() # Time elapsed
-    mnet.hz_Vis = secondsToHz(end - start)
-    mnet.history_hz_Vis.append(mnet.hz_Vis)
-    if (len(mnet.history_hz_Vis)>mnet.perfHistorySize): 
-            mnet.history_hz_Vis.pop(0) #Keep mnet history on limits
     #--------------------------------------------------------------------------------------------------------------
     frameNumber = frameNumber + 1
     

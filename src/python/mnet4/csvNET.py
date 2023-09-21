@@ -426,13 +426,7 @@ def streamPosesFromCameraToMocapNET():
 
     if (doVisualization):
      #--------------------------------------------------------------------------------------------------------------
-     start = time.time() # Time elapsed
      annotated_image,plotImage = visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting,drawOutput=doMnetVisualization)
-     end = time.time() # Time elapsed
-     mnet.hz_Vis = secondsToHz(end - start)
-     mnet.history_hz_Vis.append(mnet.hz_Vis)
-     if (len(mnet.history_hz_Vis)>mnet.perfHistorySize): 
-            mnet.history_hz_Vis.pop(0) #Keep mnet history on limits
      #--------------------------------------------------------------------------------------------------------------
      if (saveVideo): 
         cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)

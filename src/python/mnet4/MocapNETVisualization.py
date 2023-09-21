@@ -682,10 +682,16 @@ def drawMocapNETSinglePlot(history,plotNumber,itemName,image,x,y,w,h,minimumValu
 
 def drawMocapNETSinglePlotValueList(valueList,plotNumber,itemName,image,x,y,w,h,minimumValue,maximumValue):
     import cv2
+    import numpy as np
     color=getColor(plotNumber)
     if (minimumValue==maximumValue):
       color = (40,40,40) #Dead plot
 
+    listMaxValue = np.max(valueList)
+    if (listMaxValue>maximumValue):
+          maximumValue=listMaxValue*2 #Adapt to maximum
+
+    #------------------------------------------------------------------
     cv2.line(image, pt1=(x,y+h), pt2=(x+w,y+h), color=color, thickness=1)
     cv2.line(image, pt1=(x,y),   pt2=(x,y+h),   color=color, thickness=1)
 
@@ -808,8 +814,19 @@ def drawMNETSerials(mnet,image,x,y):
     #-----------------------------------------
 
 
+def registerVisualizationTime(mnet,startTime):
+    import time
+    end = time.time() # Time elapsed
+    from tools import secondsToHz
+    mnet.hz_Vis = secondsToHz(end - startTime)
+    mnet.history_hz_Vis.append(mnet.hz_Vis)
+    if (len(mnet.history_hz_Vis)>mnet.perfHistorySize): 
+            mnet.history_hz_Vis.pop(0) #Keep mnet history on limits
+
 
 def visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=0,bvhAnglesForPlotting=list(),economic=False,drawOutput=True):
+ import time
+ start = time.time() # Time elapsed 
  try: 
     #from MocapNETVisualization import drawMocapNETOutput,drawMocapNETAllPlots,drawMissingInput,drawDescriptor,drawNSRM,drawMAE2DError
     #------------------------------------------------------------------------------------
@@ -819,6 +836,7 @@ def visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=0,bvhAnglesFo
     
     drawMocapNETInput(mnet.input2D,annotated_image,doLines=(drawOutput==False))
     if (economic):
+       registerVisualizationTime(mnet,start)
        return annotated_image,annotated_image
     #------------------------------------------------------------------------------------
 
@@ -870,17 +888,22 @@ def visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=0,bvhAnglesFo
     drawMAE2DError("2D M.A.E.",mnet.lastMAEErrorInPixels,annotated_image,width-70,height-120,width-10,height-90)
     #--------------------------------------------------------------------------------------------------------------
 
+    perfWidgetY = 120
     if (len(mnet.history_hz_2DEst)>0):
-      drawMocapNETSinglePlotValueList(mnet.history_hz_2DEst,1,"RGB->2D FPS",annotated_image,width-70,120,70,70,0.0,60.0)
+      drawMocapNETSinglePlotValueList(mnet.history_hz_2DEst,1,"RGB->2D FPS",annotated_image,width-70,perfWidgetY,70,70,0.0,30.0)
+      perfWidgetY += 100
 
     if (len(mnet.history_hz_NN)>0):
-      drawMocapNETSinglePlotValueList(mnet.history_hz_NN,1,"NN FPS",annotated_image,width-70,220,70,70,0.0,60.0)
+      drawMocapNETSinglePlotValueList(mnet.history_hz_NN,1,"NN FPS",annotated_image,width-70,perfWidgetY,70,70,0.0,30.0)
+      perfWidgetY += 100
 
     if (len(mnet.history_hz_HCD)>0):
-      drawMocapNETSinglePlotValueList(mnet.history_hz_HCD,1,"HCD FPS",annotated_image,width-70,320,70,70,0.0,60.0)
+      drawMocapNETSinglePlotValueList(mnet.history_hz_HCD,1,"HCD FPS",annotated_image,width-70,perfWidgetY,70,70,0.0,30.0)
+      perfWidgetY += 100
 
     if (len(mnet.history_hz_Vis)>0):
-      drawMocapNETSinglePlotValueList(mnet.history_hz_Vis,1,"Visualization",annotated_image,width-70,420,70,70,0.0,60.0)
+      drawMocapNETSinglePlotValueList(mnet.history_hz_Vis,1,"Visualization",annotated_image,width-70,perfWidgetY,70,70,0.0,30.0)
+      perfWidgetY += 100
 
     drawMNETSerials(mnet,annotated_image,10,30)
 
@@ -889,9 +912,12 @@ def visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=0,bvhAnglesFo
     #  drawMissingInput(annotated_image)
     if (plotBVHChannels==1):
         plotImage = drawMocapNETAllPlots(bvhAnglesForPlotting,1920,920,minimumLimits=mnet.outputBVHMinima,maximumLimits=mnet.outputBVHMaxima)
+        registerVisualizationTime(mnet,start)
         return annotated_image,plotImage
  except:
     print("Failed visualizing")  
+ #Fall-through
+ registerVisualizationTime(mnet,start)
  return annotated_image,annotated_image
 
 

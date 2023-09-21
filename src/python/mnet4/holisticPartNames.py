@@ -5,6 +5,7 @@ Copyright : "2022 Foundation of Research and Technology, Computer Science Depart
 License : "FORTH" 
 """
 
+from tools import bcolors 
 
 def normalize2DPointWhileAlsoMatchingTrainingAspectRatio(x, y, currentAspectRatio, trainingAspectRatio=float(1920/1080)):
     if x == 0 and y == 0:
@@ -48,7 +49,7 @@ def normalize2DPointWhileAlsoMatchingTrainingAspectRatioSimple(x, y, currentAspe
 
 
 #-------------------------------------------------------------------------------------------------------------------
-def processPoseLandmarks(mnetPose2D,correctLabels,holisticPose,currentAspectRatio,trainedAspectRatio,flipX=False,useVisibility=True,visibilityThreshold=0.3):
+def processPoseLandmarks(mnetPose2D,correctLabels,holisticPose,currentAspectRatio,trainedAspectRatio,flipX=False,useVisibility=True,visibilityThreshold=0.3,label="mediapipe"):
    itemNumber     = 0
    aspectRatioFix = float(trainedAspectRatio/currentAspectRatio)
    #------------------------------------------------------------
@@ -104,7 +105,7 @@ def processPoseLandmarks(mnetPose2D,correctLabels,holisticPose,currentAspectRati
           #print("Joint ",thisLandmarkName,"(",itemNumber,") x=",x," y=",y," z=",z," vis=",vis)
         itemNumber = itemNumber +1
    else:
-        print("processPoseLandmarks without Pose")
+        print(bcolors.FAIL,"processPoseLandmarks without a Mediapipe Pose(?)",bcolors.ENDC)
    return mnetPose2D
 #-------------------------------------------------------------------------------------------------------------------
 def guessLandmarks(mnetPose2D):

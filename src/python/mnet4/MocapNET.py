@@ -788,6 +788,8 @@ class MocapNET():
                  return self.output3D
         #--------------------------------------------------------------------
 
+
+
         #Modify our BVH armature with the new BVH values
         if (self.bvh.modify(rawBVHPrediction)): 
            
@@ -861,6 +863,24 @@ class MocapNET():
                 if (fineTuningPasses>0):
                    print("MocapNET HCD Fine tuning Framerate : ",round(self.hz_HCD,2)," fps           \n", end="", flush=True)
 
+
+
+           #This block prevents(?) an endless loop of zeros..
+           if ( self.bvh.lastMAEErrorInPixels<0.001 ):
+                  print(bcolors.FAIL,"RESET SKELETON (",self.bvh.lastMAEErrorInPixels,") ",bcolors.ENDC)
+                  #rawBVHPrediction["hip_XPosition"]=0.0
+                  #rawBVHPrediction["hip_YPosition"]=0.0
+                  #rawBVHPrediction["hip_ZPosition"]=-200.0
+                  #self.bvh.modify(rawBVHPrediction)
+                  self.bvh.setMotionValueOfFrame(0,2,-200.0)
+                  self.bvh.processFrame(0) #only have 1 frame ID <- we load our raw prediction
+                  self.bvh.lastMAEErrorInPixels = 1000.0
+                  #print("input2D:",input2D)
+                  #print("rawBVHPrediction:",rawBVHPrediction)
+
+
+
+
            #If we want record the file
            if (self.record): 
                self.history.append(self.bvh.getAllMotionValuesOfFrame(0)) 
@@ -904,23 +924,23 @@ class MocapNET():
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 def easyMocapNETConstructor(
-                            engine="onnx",
-                            doProfiling=False,
-                            doHCDPostProcessing=1,
-                            hcdLearningRate = 0.01,
-                            hcdEpochs = 30,
-                            hcdIterations = 15,
-                            multiThreaded=False,
-                            bvhScale=1.0,
-                            doBody=True,
-                            doUpperbody=False, #<- These get auto activated if doBody=True
-                            doLowerbody=False, #<- These get auto activated if doBody=True
-                            doFace=False,
-                            doREye=False,
-                            doMouth=False,
-                            doHands=False,
-                            doSymmetries=True,
-                            addNoise=0.0
+                            engine              = "onnx",
+                            doProfiling         = False,
+                            doHCDPostProcessing = 1,
+                            hcdLearningRate     = 0.01,
+                            hcdEpochs           = 30,
+                            hcdIterations       = 15,
+                            multiThreaded       = False,
+                            bvhScale            = 1.0,
+                            doBody              = True,
+                            doUpperbody         = False, #<- These get auto activated if doBody=True
+                            doLowerbody         = False, #<- These get auto activated if doBody=True
+                            doFace              = False,
+                            doREye              = False,
+                            doMouth             = False,
+                            doHands             = False,
+                            doSymmetries        = True,
+                            addNoise            = 0.0
                            ):
     combo = MocapNETEnsembleCombination()
     #--------------------------------------------------------------

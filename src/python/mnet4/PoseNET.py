@@ -83,8 +83,8 @@ def getPoseNETBodyNameList():
  bn=list()
  #---------------------------------------------------
  bn.append("head")              #0  - nose
- bn.append("endsite_eye.l")             #1  - left_eye  eye.l endsite_eye.l
- bn.append("endsite_eye.r")             #2  - right_eye eye.r endsite_eye.r
+ bn.append("endsite_eye.l")     #1  - left_eye  eye.l endsite_eye.l
+ bn.append("endsite_eye.r")     #2  - right_eye eye.r endsite_eye.r
  bn.append("lear")              #3  - __temporalis02.l - left_ear ear.l
  bn.append("rear")              #4  - __temporalis02.r  right_ear ear.r
  bn.append("lshoulder")         #5  - left_shoulder
@@ -194,7 +194,7 @@ def drawPoseNETLandmarks(predictions,image,threshold=0.25):
         return image
 
 
-def processPoseNETLandmarks(correctLabels,poseNETPose,currentAspectRatio,trainedAspectRatio,threshold=0.25,doFlipX=False):
+def processPoseNETLandmarks(correctLabels,poseNETPose,currentAspectRatio,trainedAspectRatio,threshold=0.15,doFlipX=False):
    itemNumber     = 0
    mnetPose2D     = dict()
    aspectRatioFix = trainedAspectRatio / currentAspectRatio
@@ -223,6 +223,13 @@ def processPoseNETLandmarks(correctLabels,poseNETPose,currentAspectRatio,trained
                visible=0.0
              else:
                visible=1.0
+
+          #------------------------------- 
+
+
+          if (x2D<0) or (x2D>1.0) or (y2D<0) or (y2D>1.0):
+              vis=0.0 #Update visibility on the fly
+
           #------------------------------- 
           labelX = "2dx_"+thisLandmarkName
           mnetPose2D[labelX]=x2D # <- we store the corrected 2D point
@@ -245,9 +252,9 @@ def processPoseNETLandmarks(correctLabels,poseNETPose,currentAspectRatio,trained
               lV = float(mnetPose2D["visible_lshoulder"])
               #---------------------------------------------
               if (rV>0.0) and (lV>0.0):
-                 mnetPose2D["2dx_neck"]     = (rX+lX)/2
-                 mnetPose2D["2dy_neck"]     = (rY+lY)/2
-                 mnetPose2D["visible_neck"] = 1.0
+                 mnetPose2D["2dx_neck1"]     = (rX+lX)/2
+                 mnetPose2D["2dy_neck1"]     = (rY+lY)/2
+                 mnetPose2D["visible_neck1"] = 1.0
 
    if (('visible_rhip' in mnetPose2D) and ('visible_lhip' in mnetPose2D)):
      if (float(mnetPose2D["visible_rhip"])>0.0 and float(mnetPose2D["visible_lhip"])>0.0):
@@ -578,14 +585,21 @@ def runPoseNETSerial():
   import cv2
   import time
   headless             = False
+  economicVisualization= False
   videoFilePath        = "webcam" 
+  videoWidth           = 1280
+  videoHeight          = 720
   doProfiling          = False
   doFlipX              = False
   engine               = "onnx"
-  doNNEveryNFrames     = 3 # 3 
+  doNNEveryNFrames     = 2 # 3 
   bvhScale             = 1.0
-  doHCDPostProcessing  = 1
+  doHCDPostProcessing  = 1 
+  hcdLearningRate      = 0.001
+  hcdEpochs            = 15
+  hcdIterations        = 30
   threshold            = 0.25
+  calibrationFile      = ""
   plotBVHChannels      = False
   bvhAnglesForPlotting = list()
   bvhAllAnglesForPlotting = list()
@@ -594,12 +608,20 @@ def runPoseNETSerial():
   if (len(sys.argv)>1):
        #print('Argument List:', str(sys.argv))
        for i in range(0, len(sys.argv)):
+           if (sys.argv[i]=="--nnsubsample"):
+               doNNEveryNFrames    = int(sys.argv[i+1])
            if (sys.argv[i]=="--headless"):
               headless = True
            if (sys.argv[i]=="--flipx"):
               doFlipX = True
            if (sys.argv[i]=="--nonn"):
               doNNEveryNFrames = 1000
+           if (sys.argv[i]=="--calib"):
+              calibrationFile = sys.argv[i+1]
+           if (sys.argv[i]=="--ik"):
+               hcdLearningRate     = float(sys.argv[i+1])
+               hcdEpochs           = int(sys.argv[i+2])
+               hcdIterations       = int(sys.argv[i+3])
            if (sys.argv[i]=="--noik"):
               doHCDPostProcessing = 0
               doNNEveryNFrames = 1
@@ -613,17 +635,35 @@ def runPoseNETSerial():
               plotBVHChannels=True
 
   # For webcam input:
-  #-----------------------------------------
   frameNumber = 0
+  #------------------------------------------
   if (videoFilePath=="esp"):
      from espStream import ESP32CamStreamer
      cap = ESP32CamStreamer()
   elif (videoFilePath=="webcam"):
      cap = cv2.VideoCapture(0)
-     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
+  elif (videoFilePath=="/dev/video0"):
+     cap = cv2.VideoCapture(0)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
+  elif (videoFilePath=="/dev/video1"):
+     cap = cv2.VideoCapture(1)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
+  elif (videoFilePath=="/dev/video2"):
+     cap = cv2.VideoCapture(2)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
   else:
-     cap = cv2.VideoCapture(videoFilePath)
+     from tools import checkIfPathIsDirectory
+     if (checkIfPathIsDirectory(videoFilePath) and (not "/dev/" in videoFilePath) ):
+        from folderStream import FolderStreamer
+        cap = FolderStreamer(path=videoFilePath,width=videoWidth,height=videoHeight)
+        mnet.bvh.configureRendererFromFile("%s/color.calib"%videoFilePath)
+     else:
+        cap = cv2.VideoCapture(videoFilePath)
   #-----------------------------------------
   #python3 -m tf2onnx.convert --saved-model movenet --opset 14 --output movenet/model.onnx
   #zip movenet.zip movenet/* movenet/*/*
@@ -647,13 +687,26 @@ def runPoseNETSerial():
   from MocapNET import easyMocapNETConstructor
   mnet = easyMocapNETConstructor( 
                                  engine,
-                                 doProfiling=doProfiling,
-                                 doBody = False, #<- override whole body
-                                 doUpperbody = True,
-                                 doLowerbody = True,
-                                 doHCDPostProcessing=doHCDPostProcessing,
+                                 doProfiling         = doProfiling,
+                                 doBody              = False, #<- override whole body
+                                 doUpperbody         = True,
+                                 doLowerbody         = True,
+                                 doHCDPostProcessing = doHCDPostProcessing, 
+                                 hcdLearningRate     = hcdLearningRate,
+                                 hcdEpochs           = hcdEpochs,
+                                 hcdIterations       = hcdIterations,
+                                 doFace              = False,
+                                 doREye              = False,
+                                 doMouth             = False,
+                                 doHands             = False,
                                  bvhScale=bvhScale
                                )
+
+
+  if (calibrationFile!=""):
+        print("Enforcing Calibration file : ",calibrationFile)
+        mnet.bvh.configureRendererFromFile(calibrationFile)
+
   mnet.test()
 
  
@@ -679,13 +732,14 @@ def runPoseNETSerial():
     #------------------------------------------------------------------------------------
     doNN = (frameNumber%doNNEveryNFrames)==0
     mocapNET3DOutput = mnet.predict3DJoints(mocapNETInput,runNN=doNN,runHCD=True)
-    bvhAnglesForPlotting.append(mnet.outputBVH)
-    bvhAllAnglesForPlotting.append(mnet.outputBVH)
+    mocapNETBVHOutput = mnet.outputBVH
+    bvhAnglesForPlotting.append(mocapNETBVHOutput)
+    bvhAllAnglesForPlotting.append(mocapNETBVHOutput)
     if (len(bvhAnglesForPlotting)>100):
        bvhAnglesForPlotting.pop(0)
     #------------------------------------------------------------------------------------
     from MocapNETVisualization import visualizeMocapNETEnsemble
-    image,plotImage = visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting,economic=True)
+    image,plotImage = visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting,economic=economicVisualization)
     #------------------------------------------------------------------------------------
 
 
@@ -713,7 +767,7 @@ def runPoseNETSerial():
         
     if not headless:
       cv2.imshow('MocapNET 4 using PoseNET Holistic 2D Joints', annotated_image)
-        if (plotBVHChannels):
+      if (plotBVHChannels):
            cv2.imshow('MocapNET 4 using PoseNET Holistic Motion History',plotImage) 
  
       if cv2.waitKey(1) & 0xFF == 27:
