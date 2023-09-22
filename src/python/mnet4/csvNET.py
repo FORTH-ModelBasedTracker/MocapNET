@@ -17,7 +17,7 @@ import os
 from readCSV  import parseConfiguration,zeroOutXYJointsThatAreInvisible,performNSRMAlignment,splitNumpyArray
 from NSDM     import NSDMLabels,createNSDMUsingRules
 from MocapNET import MocapNET,flipHorizontalInput
-from tools    import getDirectoryFromPath, checkIfFileExists, secondsToHz
+from tools    import getDirectoryFromPath, checkIfFileExists, secondsToHz, eprint
 
 #------------------------------------------------
 #------------------------------------------------
@@ -392,7 +392,8 @@ def streamPosesFromCameraToMocapNET():
   #------------------------------------------------
   #------------------------------------------------
   #------------------------------------------------
-  print("Starting MocapNET using CSV 2D Input")
+  print("\n\n\n\nStarting MocapNET using CSV 2D Input")
+  print("Please wait until input processing finishes!")
   for frameNumber in range(0, mp.getNumberOfSamples() ):
     #attempt to visualize (!)
     #--------------------------------------------------------------------------------------------------------------

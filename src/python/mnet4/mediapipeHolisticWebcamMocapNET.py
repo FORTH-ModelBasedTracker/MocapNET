@@ -490,7 +490,8 @@ def streamPosesFromCameraToMocapNET():
   #------------------------------------------------
   #------------------------------------------------
   #------------------------------------------------
-  print("Starting MocapNET using MediaPipe 2D Joint Estimator Input")
+  print("\n\n\n\nStarting MocapNET using MediaPipe 2D Joint Estimator Input")
+  print("Please wait until input processing finishes!")
   maxBrokenFrames = 100
   brokenFrames = 0
   while cap.isOpened():

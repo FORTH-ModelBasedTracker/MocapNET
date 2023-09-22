@@ -361,7 +361,7 @@ class PoseNETTFLite():
         #-------------------------------------------------------------------
         seconds = time.time() - start
         self.hz  = 1 / (seconds+0.0001)
-        print("MoveNET TFLite Framerate : ",round(self.hz,2)," fps          ")
+        #print("MoveNET TFLite Framerate : ",round(self.hz,2)," fps          ")
 
         
         currentAspectRatio=sourceWidth/sourceHeight #We "change" aspect ratio by restoring points
@@ -537,7 +537,7 @@ class PoseNET():
         #-------------------------------------------------------------------
         seconds = time.time() - start
         self.hz  = 1 / (seconds+0.0001)
-        print("MoveNET Framerate : ",round(self.hz,2)," fps          ")
+        #print("MoveNET Framerate : ",round(self.hz,2)," fps          ")
 
 
         currentAspectRatio=sourceWidth/sourceHeight #We "change" aspect ratio by restoring points
@@ -720,7 +720,8 @@ def runPoseNETSerial():
   #------------------------------------------------
   #------------------------------------------------
   #------------------------------------------------
-  print("Starting MocapNET in Singlethreaded mode using BlazePose 2D Input")
+  print("\n\n\n\nStarting MocapNET in Singlethreaded mode using BlazePose 2D Input")
+  print("Please wait until input processing finishes!")
   while cap.isOpened():
     success, annotated_image = cap.read()
     if not success:
