@@ -672,10 +672,17 @@ class MocapNET():
         if (self.record):
                self.outputHistory.append(self.output) #This does not have HCD improvement.. 
 
-        print("\r MocapNET Wrapper NeuralNetwork Framerate : ",round(self.hz_NN,2)," fps           \r", end="", flush=True)
-        print("\n", end="", flush=True)
+        #print("\r MocapNET Wrapper NeuralNetwork Framerate : ",round(self.hz_NN,2)," fps           \r", end="", flush=True)
+        #print("\n", end="", flush=True)
 
         return self.output
+
+  
+  def printStatus(self): 
+           #if (self.hz_HCD>0):
+           #    print("MocapNET HCD Fine tuning Framerate : ",round(self.hz_HCD,2)," fps           \n", end="", flush=True)
+           print("\rFrame ",self.framesProcessed,"| 2D NN:",round(self.hz_2DEst,2),"Hz | MocapNET:",round(self.hz_NN,2),"Hz | HCD:",round(self.hz_HCD,2),"Hz           \r", end="", flush=True)
+           #print("\n", end="", flush=True)
 
 
   """
@@ -739,8 +746,8 @@ class MocapNET():
                self.outputHistory.append(self.output) #This does not have HCD improvement.. 
 
 
-           print("\r MocapNET MultiThreaded NeuralNetwork Framerate : ",round(self.hz_NN,2)," fps           \r", end="", flush=True)
-           print("\n", end="", flush=True)
+           #print("\r MocapNET MultiThreaded NeuralNetwork Framerate : ",round(self.hz_NN,2)," fps           \r", end="", flush=True)
+           #print("\n", end="", flush=True)
         else:
            print("Fallback to single threaded code..")
            self.predict(input2D)
@@ -757,7 +764,7 @@ class MocapNET():
            self.bvh.processFrame(0) #only have 1 frame ID
 
         if (self.hcdIterations>0) and (self.doFineTuning==1):
-                print(bcolors.OKGREEN,"Running HCD..",bcolors.ENDC)
+                #print(bcolors.OKGREEN,"Running HCD..",bcolors.ENDC)
                 self.bvh.fineTuneToMatch("body",input2D,frameID=0,iterations=self.hcdIterations,epochs=self.hcdEpochs,lr=self.hcdLearningRate)
                 self.bvh.processFrame(0) #This should now be updated with the IK fine tuned prediction..!
 
@@ -801,7 +808,7 @@ class MocapNET():
            
            fineTuningPasses = 0 
            if (self.hcdIterations>0) and (self.doFineTuning==1) and (runHCD):
-                print(bcolors.OKGREEN,"Running HCD..",bcolors.ENDC)
+                #print(bcolors.OKGREEN,"Running HCD..",bcolors.ENDC)
                 start = time.time()
                 if ("upperbody" in self.ensemble) or ("lowerbody" in self.ensemble):
                    self.bvh.fineTuneToMatch(
@@ -860,8 +867,8 @@ class MocapNET():
                 if (len(self.history_hz_HCD)>self.perfHistorySize): 
                     self.history_hz_HCD.pop(0) #Keep mnet history on limits
                 #-------------------------------------------------------------
-                if (fineTuningPasses>0):
-                   print("MocapNET HCD Fine tuning Framerate : ",round(self.hz_HCD,2)," fps           \n", end="", flush=True)
+                #if (fineTuningPasses>0):
+                #   print("MocapNET HCD Fine tuning Framerate : ",round(self.hz_HCD,2)," fps           \n", end="", flush=True)
 
 
 

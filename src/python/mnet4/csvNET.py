@@ -392,6 +392,7 @@ def streamPosesFromCameraToMocapNET():
   #------------------------------------------------
   #------------------------------------------------
   #------------------------------------------------
+  print("Starting MocapNET using CSV 2D Input")
   for frameNumber in range(0, mp.getNumberOfSamples() ):
     #attempt to visualize (!)
     #--------------------------------------------------------------------------------------------------------------
@@ -417,7 +418,7 @@ def streamPosesFromCameraToMocapNET():
 
     difference = mp.compareToGroundTruth(frameNumber,mocapNETBVHOutput)
     #print("Frame ",frameNumber," difference ~=> ",difference)
-    print("Frame ",frameNumber,"/",mp.getNumberOfSamples())
+    #print("Frame ",frameNumber,"/",mp.getNumberOfSamples())
 
     bvhAnglesForPlotting.append(mocapNETBVHOutput)
     bvhAllAnglesForPlotting.append(mocapNETBVHOutput)
@@ -428,6 +429,11 @@ def streamPosesFromCameraToMocapNET():
      #--------------------------------------------------------------------------------------------------------------
      annotated_image,plotImage = visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting,drawOutput=doMnetVisualization)
      #--------------------------------------------------------------------------------------------------------------
+
+
+     mnet.printStatus()
+
+
      if (saveVideo): 
         cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)
         if (plotBVHChannels):

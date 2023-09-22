@@ -105,7 +105,8 @@ def processPoseLandmarks(mnetPose2D,correctLabels,holisticPose,currentAspectRati
           #print("Joint ",thisLandmarkName,"(",itemNumber,") x=",x," y=",y," z=",z," vis=",vis)
         itemNumber = itemNumber +1
    else:
-        print(bcolors.FAIL,"processPoseLandmarks without a Mediapipe Pose(?)",bcolors.ENDC)
+        #print(bcolors.FAIL,"processPoseLandmarks without a Mediapipe Pose(?)",bcolors.ENDC)
+        pass
    return mnetPose2D
 #-------------------------------------------------------------------------------------------------------------------
 def guessLandmarks(mnetPose2D):

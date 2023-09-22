@@ -144,7 +144,7 @@ class MediaPipePose():
                        seconds=1.0
               # Calculate frames per second
               fps  = 1 / seconds
-              print("Mediapipe Pose Only 2D Joint Estimation Framerate : ",round(fps,2)," fps \n", end="", flush=True)
+              #print("Mediapipe Pose Only 2D Joint Estimation Framerate : ",round(fps,2)," fps \n", end="", flush=True)
 
 
     self.output = mocapNETInput
@@ -238,7 +238,7 @@ class MediaPipeHolistic():
              seconds=1.0
     # Calculate frames per second
     fps  = 1 / seconds
-    print("Mediapipe Holistic 2D Joint Estimation Framerate : ",round(fps,2)," fps \n", end="", flush=True)
+    #print("Mediapipe Holistic 2D Joint Estimation Framerate : ",round(fps,2)," fps \n", end="", flush=True)
 
     #annotated_image = image.copy()
     annotated_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR) #Our annotated image must be BGR to show correctly
@@ -310,7 +310,8 @@ class MediaPipeHolistic():
                       mocapNETInput["visible_endsite_eye.r"] = rEyeVis
                       #-------------------------------------------------------- 
     else:
-                      print("UNABLE TO GET EYES")
+                      #print("UNABLE TO GET EYES")
+                      pass
                       #don't populate them at all..
                       #mocapNETInput["2dx_head_leye"]     = 0.0
                       #mocapNETInput["2dy_head_leye"]     = 0.0
@@ -489,6 +490,7 @@ def streamPosesFromCameraToMocapNET():
   #------------------------------------------------
   #------------------------------------------------
   #------------------------------------------------
+  print("Starting MocapNET using MediaPipe 2D Joint Estimator Input")
   maxBrokenFrames = 100
   brokenFrames = 0
   while cap.isOpened():
@@ -531,6 +533,8 @@ def streamPosesFromCameraToMocapNET():
     #--------------------------------------------------------------------------------------------------------------
     frameNumber = frameNumber + 1
     
+    mnet.printStatus()
+
     if (saveVideo): 
         cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)
         if (plotBVHChannels):

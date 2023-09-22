@@ -455,7 +455,7 @@ class PoseNETONNX():
         #-------------------------------------------------------------------
         seconds = time.time() - start
         self.hz  = 1 / (seconds+0.0001)
-        print("MoveNET ONNX Framerate : ",round(self.hz,2)," fps          ")
+        #print("MoveNET ONNX Framerate : ",round(self.hz,2)," fps          ")
         
 
         currentAspectRatio=sourceWidth/sourceHeight #We "change" aspect ratio by restoring points
@@ -720,6 +720,7 @@ def runPoseNETSerial():
   #------------------------------------------------
   #------------------------------------------------
   #------------------------------------------------
+  print("Starting MocapNET in Singlethreaded mode using BlazePose 2D Input")
   while cap.isOpened():
     success, annotated_image = cap.read()
     if not success:
@@ -752,8 +753,8 @@ def runPoseNETSerial():
 
     seconds = time.time() - start
     fps  = 1 / (seconds+0.0001)
-    print("\r PoseNET+MocepNET aggregate Framerate : ",round(fps,2)," fps           \r", end="", flush=True)
-    print("\n", end="", flush=True)
+    #print("\r PoseNET+MocepNET aggregate Framerate : ",round(fps,2)," fps           \r", end="", flush=True)
+    #print("\n", end="", flush=True)
   
     font = cv2.FONT_HERSHEY_SIMPLEX 
     org = (50, 50) 
@@ -884,6 +885,7 @@ def runPoseNETParallel():
   #------------------------------------------------
   #------------------------------------------------
   #------------------------------------------------
+  print("Starting MocapNET in Multithreaded mode using BlazePose 2D Input")
   while cap.isOpened():
     success, next_image = cap.read()
     if not success:
@@ -923,8 +925,8 @@ def runPoseNETParallel():
     #------------------------------------------------------------------------------------
     seconds = time.time() - start
     fps  = 1 / (seconds+0.0001)
-    print("\r MoveNET+MocepNET MT aggregate Framerate : ",round(fps,2)," fps           \r", end="", flush=True)
-    print("\n", end="", flush=True)
+    #print("\r MoveNET+MocepNET MT aggregate Framerate : ",round(fps,2)," fps           \r", end="", flush=True)
+    #print("\n", end="", flush=True)
   
 
     frameNumber = frameNumber + 1
