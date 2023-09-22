@@ -5,6 +5,7 @@ import os
 import sys
 import cv2
 
+from tools import eprint
 
 """
 Check if a file exists
@@ -73,7 +74,7 @@ class FolderStreamer():
             elif (checkIfFileExists(filenamePNG)):  
                    self.img = cv2.imread(filenamePNG)
             else: 
-                   print("Could not find ",filenameJPG," or ",filenamePNG)
+                   eprint("Could not find ",filenameJPG," or ",filenamePNG)
                    self.img = None
             #----------------------------------------------------------------------
 
@@ -82,13 +83,13 @@ class FolderStreamer():
                   #-------------------------- 
                   width  = self.img.shape[1]
                   height = self.img.shape[0]
-                  print("Received Image size was ",width,"x",height, end = "")
+                  eprint("Received Image size was ",width,"x",height, end = "")
                   #-------------------------- 
                   self.img = resize_with_padding(self.img, self.width, self.height)
                   #-------------------------- 
                   width  = self.img.shape[1]
                   height = self.img.shape[0]
-                  print(" Rescaled Image size is ",width,"x",height)
+                  eprint(" Rescaled Image size is ",width,"x",height)
                   #-------------------------- 
 
                 success = True

@@ -17,7 +17,7 @@ import os
 
 from readCSV  import parseConfiguration,zeroOutXYJointsThatAreInvisible,performNSRMAlignment
 from NSDM     import NSDMLabels,createNSDMUsingRules
-from tools    import secondsToHz
+from tools    import secondsToHz,eprint
 from MocapNET import MocapNET
 
 mp_drawing   = mp.solutions.drawing_utils
@@ -497,7 +497,7 @@ def streamPosesFromCameraToMocapNET():
     success, image = cap.read()
     plotImage = image
     if not success:
-      print("Ignoring empty camera frame : ",brokenFrames,"/",maxBrokenFrames)
+      eprint("Ignoring empty camera frame : ",brokenFrames,"/",maxBrokenFrames)
       brokenFrames = brokenFrames + 1
       if (brokenFrames>maxBrokenFrames):
         break
