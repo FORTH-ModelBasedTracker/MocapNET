@@ -10,7 +10,7 @@ License : "FORTH"
 from readCSV  import parseConfiguration,parseConfigurationInputJointMap,transformNetworkInput,initializeDecompositionForExecutionEngine,readGroundTruthFile,readCSVFile,parseOutputNormalization
 from NSDM     import NSDMLabels,createNSDMUsingRules,inputIsEnoughToCreateNSDM,performNSRMAlignment
 from EDM      import EDMLabels,createEDMUsingRules
-from tools    import bcolors,checkIfFileExists,readListFromFile,convertListToLowerCase,secondsToHz,getEntryIndexInList
+from tools    import bcolors,checkIfFileExists,readListFromFile,convertListToLowerCase,secondsToHz,getEntryIndexInList,eprint
 #-------------------------------------------------------------------------------------------
 from BVH.bvhConverter import BVH
 #-------------------------------------------------------------------------------------------
@@ -361,7 +361,7 @@ class SimulatedMirroredEnsemble():
                     #   print("IGNORED ",flippedKey) #Debug
 
                  else:
-                    print("SYMMETRY: THIS SHOULD NOT HAPPEN / NO RULE FOR ",originalKey,flippedKey)
+                    eprint("SYMMETRY: THIS SHOULD NOT HAPPEN / NO RULE FOR ",originalKey,flippedKey)
         #------------------------------------------------------------
         #Restore left hand 
         self.mirroredModel.inputReadyForTF = copy.deepcopy(leftHandinputReadyForTF)
@@ -679,10 +679,7 @@ class MocapNET():
 
   
   def printStatus(self): 
-           #if (self.hz_HCD>0):
-           #    print("MocapNET HCD Fine tuning Framerate : ",round(self.hz_HCD,2)," fps           \n", end="", flush=True)
            print("\rFrame ",self.framesProcessed,"| 2D NN:",round(self.hz_2DEst,2),"Hz | MocapNET:",round(self.hz_NN,2),"Hz | HCD:",round(self.hz_HCD,2),"Hz           \r", end="", flush=True)
-           #print("\n", end="", flush=True)
 
 
   """

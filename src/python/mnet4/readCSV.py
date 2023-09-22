@@ -16,7 +16,7 @@ import sys
 
 from NSDM  import NSDMLabels,createNSDMUsingRules,performNSRMAlignment,getJoint2DXYV
 from EDM   import EDMLabels,createEDMUsingRules
-from tools import bcolors,checkIfFileExists,getNumberOfLines,getNumberOfLinesOS,convert_bytes
+from tools import bcolors,checkIfFileExists,getNumberOfLines,getNumberOfLinesOS,convert_bytes,eprint
 from dataDecomposition import EmptyDecomposition
 
 
@@ -525,14 +525,14 @@ def prepareInputG(input2D :dict,configuration : dict, expectedInputList,dummyUnn
                existingJoints = existingJoints + 1
             else:
                #If it does not we append a zero, to maintain the vector dimensions
-               print(bcolors.FAIL,"prepareInputG: NSRM Input Element `",element,"` is missing",bcolors.ENDC)
+               eprint(bcolors.FAIL,"prepareInputG: NSRM Input Element `",element,"` is missing",bcolors.ENDC)
                thisInput.append(np.float32(0.0))
          
         #After trying all elements in our input dictionary we now know how much data is missing  
         missingRatio = float ( 1.0 - (existingJoints/totalJoints) ) 
         if (missingRatio>0.3):
            #print("Input : ",input2D)
-           print(bcolors.FAIL,"Too many elements missing for ",part," missingRatio : ",missingRatio,"..",bcolors.ENDC)
+           eprint(bcolors.FAIL,"Too many elements missing for ",part," missingRatio : ",missingRatio,"..",bcolors.ENDC)
         
         #thisInput now holds all of our data, lets transform it!
         #-----------------------------------------------------------------------------------------------------------------------------------------------
