@@ -915,8 +915,8 @@ class MocapNET():
         return self.output3D
 
   def __del__(self):
+        print(' ')
         if (self.record):
-               print("Done") 
                print("Write BVH Output!") 
                self.bvh.saveBVHFileFromList("out.bvh",self.history)
 
@@ -925,7 +925,8 @@ class MocapNET():
                saveCSVFileFromListOfDicts("out.csv",self.outputHistory)
                print("Write 2D Input!")
                saveCSVFileFromListOfDicts("in.csv",self.inputHistory)
-        print('MocapNET stopped.')
+        print('Thank you for using MocapNET!')
+        print('https://github.com/FORTH-ModelBasedTracker/MocapNET')
  
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
