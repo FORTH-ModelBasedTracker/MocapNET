@@ -410,6 +410,7 @@ class MocapNET():
                self.ensemble           = dict()
                #-------------------------------------------------------------------------------
                #First initialize the engine..
+               self.engine = engine
                if (engine=="tensorflow") or (engine=="tf"):
                  from MocapNETTensorflow import MocapNETTensorflow
                  self.engineContext = MocapNETTensorflow()
@@ -680,7 +681,7 @@ class MocapNET():
   
   def printStatus(self): 
         import sys
-        sys.stdout.write("\rFrame "+str(self.framesProcessed)+" | 2D NN:"+str(round(self.hz_2DEst,2))+"Hz | MocapNET:"+str(round(self.hz_NN,2))+"Hz | HCD:"+str(round(self.hz_HCD,2))+"Hz           ")
+        sys.stdout.write("\rFrame "+str(self.framesProcessed)+"|"+self.engine+"|MPJPE "+str(round(self.bvh.lastMAEErrorInPixels,1))+" px|2D NN:"+str(round(self.hz_2DEst,1))+"Hz|MocapNET:"+str(round(self.hz_NN,1))+"Hz|HCD:"+str(round(self.hz_HCD,1))+"Hz     ")
         sys.stdout.flush()
 
 
