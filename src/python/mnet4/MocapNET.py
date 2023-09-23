@@ -679,7 +679,9 @@ class MocapNET():
 
   
   def printStatus(self): 
-           print("\rFrame ",self.framesProcessed,"| 2D NN:",round(self.hz_2DEst,2),"Hz | MocapNET:",round(self.hz_NN,2),"Hz | HCD:",round(self.hz_HCD,2),"Hz           \r", end="", flush=True)
+        import sys
+        sys.stdout.write("\rFrame "+str(self.framesProcessed)+" | 2D NN:"+str(round(self.hz_2DEst,2))+"Hz | MocapNET:"+str(round(self.hz_NN,2))+"Hz | HCD:"+str(round(self.hz_HCD,2))+"Hz           ")
+        sys.stdout.flush()
 
 
   """
