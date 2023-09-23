@@ -916,6 +916,7 @@ class MocapNET():
 
   def __del__(self):
         if (self.record):
+               print("Done") 
                print("Write BVH Output!") 
                self.bvh.saveBVHFileFromList("out.bvh",self.history)
 
