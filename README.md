@@ -16,6 +16,15 @@ Click here for one click setup : [![Open In Colab](https://colab.research.google
 
 
 
+
+
+
+![Our Poster in the Analysis and Modeling of Faces and Gestures Workshop @ ICCV 2023 ](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/doc/ICCV2023_MocapNET4_poster.png?raw=true)
+
+
+
+
+
 ## License
 ------------------------------------------------------------------ 
 This library is provided under the [FORTH license](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/master/license.txt)
