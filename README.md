@@ -18,7 +18,7 @@ so if you want the older C/C++ version of MocapNET you ignore it for now..!
 
 
 
-## Run it now on Google Colab with a few clicks!
+## Deploy it now on Google Colab with a single click!
 ------------------------------------------------------------------ 
 
 Click here for one click setup : [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/mocapnet4.ipynb)
