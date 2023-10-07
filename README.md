@@ -13,6 +13,11 @@ so if you want the older C/C++ version of MocapNET you ignore it for now..!
 
 
 
+
+![MocapNET](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/mnet4/doc/ICCV2023_Presentation_Slide18.png)
+
+
+
 ## Run it now on Google Colab with a few clicks!
 ------------------------------------------------------------------ 
 
