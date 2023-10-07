@@ -17,10 +17,56 @@ Click here for one click setup : [![Open In Colab](https://colab.research.google
 
 
 
+[![A Unified Approach for Occlusion Tolerant 3D Facial Pose Capture and Gaze Estimation using MocapNETs](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/doc/pdf.png?raw=true)](http://users.ics.forth.gr/~argyros/mypapers/2023_10_AMFG_Qammaz.pdf)
+
+
+[![ompacting MocapNET-based 3D Human Pose Estimation via Dimensionality Reduction](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/doc/pdf.png?raw=true)](http://users.ics.forth.gr/~argyros/mypapers/2023_07_PETRA_Qammaz.pdf)
+
+
+[![Towards Holistic Real-time Human 3D Pose Estimation using MocapNETs](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/doc/pdf.png?raw=true)](http://users.ics.forth.gr/~argyros/mypapers/2021_11_BMVC_Qammaz.pdf)
+
+
+[![Occlusion-tolerant and personalized 3D human pose estimation in RGB images](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/doc/pdf.png?raw=true)](http://users.ics.forth.gr/~argyros/mypapers/2021_01_ICPR_Qammaz.pdf)
+
+[![MocapNET: Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/doc/pdf.png?raw=true)](http://users.ics.forth.gr/~argyros/mypapers/2019_09_BMVC_mocapnet.pdf)
 
 
 ![Our Poster in the Analysis and Modeling of Faces and Gestures Workshop @ ICCV 2023 ](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/doc/ICCV2023_MocapNET4_poster.png?raw=true)
 
+
+
+
+
+
+
+## Citation
+------------------------------------------------------------------ 
+
+Please cite the following papers if this work helps your research : 
+``` 
+@inproceedings{Qammaz2023b,
+  author = {Qammaz, Ammar and Argyros, Antonis},
+  title = {A Unified Approach for Occlusion Tolerant 3D Facial Pose Capture and Gaze Estimation using MocapNETs},
+  booktitle = {International Conference on Computer Vision Workshops (AMFG 2023 - ICCVW 2023), (to appear)},
+  publisher = {IEEE},
+  year = {2023},
+  month = {October},
+  address = {Paris, France},
+  projects =  {VMWARE,I.C.HUMANS},
+  pdflink = {http://users.ics.forth.gr/ argyros/mypapers/2023_10_AMFG_Qammaz.pdf}
+}
+
+@inproceedings{Qammaz2021,
+  author = {Qammaz, Ammar and Argyros, Antonis A},
+  title = {Towards Holistic Real-time Human 3D Pose Estimation using MocapNETs},
+  booktitle = {British Machine Vision Conference (BMVC 2021)},
+  publisher = {BMVA},
+  year = {2021},
+  month = {November},
+  projects =  {I.C.HUMANS},
+  videolink = {https://www.youtube.com/watch?v=aaLOSY_p6Zc}
+}
+```
 
 
 
