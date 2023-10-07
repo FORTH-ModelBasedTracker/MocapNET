@@ -11,9 +11,18 @@ It will also be compatible with Raspberry Pi 4 and use Tensorflow /Tf-Lite / ONN
 This branch is still under construction, and has been ported to Python to boost usability
 so if you want the older C/C++ version of MocapNET you ignore it for now..!
 
+
+
+## Run it now on Google Colab with a few clicks!
+------------------------------------------------------------------ 
+
 Click here for one click setup : [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/mocapnet4.ipynb)
 
 
+
+
+## Relevant publications!
+------------------------------------------------------------------ 
 
 
 | Download Paper | Year            |    Conference |     Title     | 
@@ -31,9 +40,8 @@ Click here for one click setup : [![Open In Colab](https://colab.research.google
 
 
 
-
-
-
+## AMFG@ICCV 2023 Poster
+------------------------------------------------------------------ 
 
 ![Our Poster in the Analysis and Modeling of Faces and Gestures Workshop @ ICCV 2023 ](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/doc/ICCV2023_MocapNET4_poster.png?raw=true)
 
