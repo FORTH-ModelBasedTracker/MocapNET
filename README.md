@@ -16,8 +16,8 @@ Click here for one click setup : [![Open In Colab](https://colab.research.google
 
 
 
-| Download Paper | Year/Conference | Title | | 
-| ------------- | ------------- | ------------- |
+| Download Paper | Year/Conference | Title | 
+| -------------  | -------------   | ------------- |
 | [![A Unified Approach for Occlusion Tolerant 3D Facial Pose Capture and Gaze Estimation using MocapNETs](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/doc/pdf.png?raw=true)](http://users.ics.forth.gr/~argyros/mypapers/2023_10_AMFG_Qammaz.pdf) | 2023/AMFG@ICCV | A Unified Approach for Occlusion Tolerant 3D Facial Pose Capture and Gaze Estimation using MocapNETs | 
 | [![Compacting MocapNET-based 3D Human Pose Estimation via Dimensionality Reduction](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/doc/pdf.png?raw=true)](http://users.ics.forth.gr/~argyros/mypapers/2023_07_PETRA_Qammaz.pdf) | 2023/PeTRA | Compacting MocapNET-based 3D Human Pose Estimation via Dimensionality Reduction | 
 | [![Towards Holistic Real-time Human 3D Pose Estimation using MocapNETs](https://github.com/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/doc/pdf.png?raw=true)](http://users.ics.forth.gr/~argyros/mypapers/2021_11_BMVC_Qammaz.pdf) | 2021/BMVC | Towards Holistic Real-time Human 3D Pose Estimation using MocapNETs | 
