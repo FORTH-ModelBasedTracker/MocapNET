@@ -489,13 +489,13 @@ def retrieveAndSetupBasedOnSerial(serial:int,allowQuickCopy:bool=True,download:i
        fileMouth = "299B-Training-23-07-17_08-29-17-mouth-ammar-forth-Ubuntu-20.04.tar.bz2"
        fileReye  = "304A-Training-23-07-19_16-51-17-reye-ammar-forth-Ubuntu-20.04.tar.bz2"
     elif (serial==318): #COMMON LOSS EXPERIMENTS
-       fileHand  = "315C-Training-23-09-16_09-40-44-lhand-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+       fileHand  = "318C-Training-23-09-28_13-58-59-lhand-ffe5156750f3-Ubuntu-20.04.tar.bz2"
        fileUpper = "318-A-Training-23-09-19_23-26-18-upperbody-ammar-forth-Ubuntu-22.04.tar.bz2"
        fileLower = "318-B-Training-23-09-20_08-16-26-lowerbody-ammar-forth-Ubuntu-22.04.tar.bz2"
        fileMouth = "299B-Training-23-07-17_08-29-17-mouth-ammar-forth-Ubuntu-20.04.tar.bz2"
        fileReye  = "304A-Training-23-07-19_16-51-17-reye-ammar-forth-Ubuntu-20.04.tar.bz2"
     elif (serial==319): #COMMON LOSS EXPERIMENTS
-       fileHand  = "315C-Training-23-09-16_09-40-44-lhand-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+       fileHand  = "318C-Training-23-09-28_13-58-59-lhand-ffe5156750f3-Ubuntu-20.04.tar.bz2"
        fileUpper = "319-A-Training-23-09-21_11-34-19-upperbody-ammar-forth-Ubuntu-22.04.tar.bz2"
        fileLower = "319-B-Training-23-09-21_18-59-56-lowerbody-ammar-forth-Ubuntu-22.04.tar.bz2"
        fileMouth = "318D-Training-23-09-25_17-06-26-mouth-ammar-forth-Ubuntu-22.04.tar.bz2"
