@@ -500,6 +500,12 @@ def retrieveAndSetupBasedOnSerial(serial:int,allowQuickCopy:bool=True,download:i
        fileLower = "319-B-Training-23-09-21_18-59-56-lowerbody-ammar-forth-Ubuntu-22.04.tar.bz2"
        fileMouth = "318D-Training-23-09-25_17-06-26-mouth-ammar-forth-Ubuntu-22.04.tar.bz2"
        fileReye  = "320B-Training-23-09-24_23-08-19-reye-ammar-forth-Ubuntu-22.04.tar.bz2"
+    elif (serial==324): #COMMON LOSS EXPERIMENTS
+       fileHand  = "323A-Training-23-10-11_21-40-44-lhand-ffe5156750f3-Ubuntu-20.04.tar.bz2"
+       fileUpper = "324-A-Training-23-10-11_07-49-40-upperbody-ammar-forth-Ubuntu-22.04.tar.bz2"
+       fileLower = "324-B-Training-23-10-11_17-24-31-lowerbody-ammar-forth-Ubuntu-22.04.tar.bz2"
+       fileMouth = "318D-Training-23-09-25_17-06-26-mouth-ammar-forth-Ubuntu-22.04.tar.bz2"
+       fileReye  = "320B-Training-23-09-24_23-08-19-reye-ammar-forth-Ubuntu-22.04.tar.bz2"
     else:
        print(bcolors.WARNING,"Unknown serial ",serial,bcolors.ENDC)
        print(bcolors.WARNING,"Completely halting execution to avoid a wrong run!\n",bcolors.ENDC)
@@ -525,7 +531,9 @@ if __name__ == '__main__':
     db = downloadAndParseDatabase()
     print(db)
     #sys.exit(0)
-   
+    
+
+    serial=0
     allowQuickCopy = False
     #When working standalone assume simple csv backend
     if (len(sys.argv)>1):
@@ -544,7 +552,13 @@ if __name__ == '__main__':
            if (sys.argv[i]=="--get"):
               serial =int(sys.argv[i+1]) 
               retrieveAndSetupBasedOnSerial(serial,allowQuickCopy=allowQuickCopy,download=1)
-
+       #--------------------------------------
+       for i in range(0, len(sys.argv)): 
+           if (sys.argv[i]=="--pack"):
+              print(bcolors.WARNING,"Packaging to -> mnet4_%u.zip "%(serial),bcolors.ENDC)
+              os.system('zip mnet4_%u.zip step1_*/*' % (serial))
+               
+       
 
     endAt = time.time()
     finalMessage="getModelFromDatabase run took %0.2f mins"%((endAt-startEverythingAt)/60)
