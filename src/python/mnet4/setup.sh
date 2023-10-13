@@ -83,7 +83,7 @@ fi
 
  #Another just take the precompiled ensembles ready to run
  wget http://ammar.gr/mocapnet/mnet4/mnet4_318.zip -O mnet4_318.zip
- unzip -o mnet4_318.zip
+ unzip -o mnet4_324.zip #<- upgrade to 324 mnet4_318.zip
 
  #Unzip models for PoseNET.py operation..
  wget http://ammar.gr/mocapnet/mnet4/mediapipe.zip -O mediapipe.zip
