@@ -601,6 +601,8 @@ def runPoseNETSerial():
   hcdLearningRate      = 0.001
   hcdEpochs            = 15
   hcdIterations        = 30
+  smoothingSampling    = 30.0
+  smoothingCutoff      = 5.0
   threshold            = 0.25
   calibrationFile      = ""
   plotBVHChannels      = False
@@ -629,6 +631,9 @@ def runPoseNETSerial():
                hcdLearningRate     = float(sys.argv[i+1])
                hcdEpochs           = int(sys.argv[i+2])
                hcdIterations       = int(sys.argv[i+3])
+           if (sys.argv[i]=="--smooth"):
+               smoothingSampling   = float(sys.argv[i+1])
+               smoothingCutoff     = float(sys.argv[i+2])
            if (sys.argv[i]=="--noik"):
               doHCDPostProcessing = 0
               doNNEveryNFrames = 1
@@ -702,6 +707,8 @@ def runPoseNETSerial():
                                  hcdLearningRate     = hcdLearningRate,
                                  hcdEpochs           = hcdEpochs,
                                  hcdIterations       = hcdIterations,
+                                 smoothingSampling   = smoothingSampling,
+                                 smoothingCutoff     = smoothingCutoff,   
                                  doFace              = False,
                                  doREye              = False,
                                  doMouth             = False,

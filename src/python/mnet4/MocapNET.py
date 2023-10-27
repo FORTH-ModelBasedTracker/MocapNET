@@ -393,6 +393,9 @@ class MocapNET():
                bvhScale                = 1.0,
                addNoise                = 0.0,
                multiThreaded           = False,
+               smoothingSampling       = 30.0,
+               smoothingCutoff         = 5.0,
+
                bvhLibraryPath:str      = "BVH/libBVHConverter.so",
                smootherLibraryPath:str = "Smooth/libSmoothing.so",
                #-------------------------------------------------
@@ -486,8 +489,8 @@ class MocapNET():
                self.multiThreaded      = multiThreaded
                self.doFineTuning       = doHCDPostProcessing
                self.addNoise           = addNoise
-               self.smoothingSampling  = 15.0
-               self.smoothingCutoff    = 5.0
+               self.smoothingSampling  = smoothingSampling
+               self.smoothingCutoff    = smoothingCutoff
                self.bvhScale           = bvhScale
                self.lastMAEErrorInPixels = 0.0
                if (disableSmoothingCode==1):
@@ -495,7 +498,8 @@ class MocapNET():
                   self.smoothingCutoff    = 0.0
                self.hcdLearningRate    = hcdLearningRate
                self.hcdEpochs          = hcdEpochs
-               self.hcdIterations      = hcdIterations
+               self.hcdIterations      = hcdIterations 
+               #-------------------------------------------------------------------------------
                self.langevinDynamics   = langevinDynamics
                self.bvhFilePath        = bvhFilePath
                self.bvh                = BVH(bvhPath = bvhFilePath,libraryPath = bvhLibraryPath)
@@ -765,7 +769,14 @@ class MocapNET():
 
         if (self.hcdIterations>0) and (self.doFineTuning==1):
                 #print(bcolors.OKGREEN,"Running HCD..",bcolors.ENDC)
-                self.bvh.fineTuneToMatch("body",input2D,frameID=0,iterations=self.hcdIterations,epochs=self.hcdEpochs,lr=self.hcdLearningRate)
+                self.bvh.fineTuneToMatch("body",
+                                          input2D,
+                                          frameID          = 0,
+                                          iterations       = self.hcdIterations,
+                                          epochs           = self.hcdEpochs,
+                                          lr               = self.hcdLearningRate, 
+                                          fSampling        = self.smoothingSampling,
+                                          fCutoff          = self.smoothingCutoff)
                 self.bvh.processFrame(0) #This should now be updated with the IK fine tuned prediction..!
 
 
@@ -814,13 +825,13 @@ class MocapNET():
                    self.bvh.fineTuneToMatch(
                                           "body",
                                           input2D,
-                                          frameID=0,
-                                          iterations=self.hcdIterations,
-                                          epochs=self.hcdEpochs,
-                                          lr=self.hcdLearningRate,
-                                          fSampling=self.smoothingSampling,
-                                          fCutoff=self.smoothingCutoff,
-                                          langevinDynamics=self.langevinDynamics
+                                          frameID          = 0,
+                                          iterations       = self.hcdIterations,
+                                          epochs           = self.hcdEpochs,
+                                          lr               = self.hcdLearningRate,
+                                          fSampling        = self.smoothingSampling,
+                                          fCutoff          = self.smoothingCutoff,
+                                          langevinDynamics = self.langevinDynamics
                                         )
                    fineTuningPasses = fineTuningPasses + 1
                    self.lastMAEErrorInPixels = self.bvh.lastMAEErrorInPixels
@@ -939,6 +950,8 @@ def easyMocapNETConstructor(
                             hcdLearningRate     = 0.01,
                             hcdEpochs           = 30,
                             hcdIterations       = 15,
+                            smoothingSampling   = 30.0,
+                            smoothingCutoff     = 5.0, 
                             multiThreaded       = False,
                             bvhScale            = 1.0,
                             doBody              = True,
@@ -980,7 +993,9 @@ def easyMocapNETConstructor(
                     bvhScale               = bvhScale, 
                     engine                 = engine,
                     ensembleToLoad         = combo,
-                    addNoise               = addNoise
+                    addNoise               = addNoise,
+                    smoothingSampling      = smoothingSampling,
+                    smoothingCutoff        = smoothingCutoff 
                    )
     return mnet
 #-------------------------------------------------------------------------------------------------------------------------------------------------------

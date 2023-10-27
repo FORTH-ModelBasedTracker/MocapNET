@@ -365,7 +365,9 @@ def streamPosesFromCameraToMocapNET():
   hcdLearningRate     = 0.001
   hcdEpochs           = 30
   hcdIterations       = 15
-  plotBVHChannels  = False
+  smoothingSampling   = 30.0
+  smoothingCutoff     = 5.0
+  plotBVHChannels     = False
   calibrationFile = ""
   bvhAnglesForPlotting    = list()
   bvhAllAnglesForPlotting = list()
@@ -386,6 +388,9 @@ def streamPosesFromCameraToMocapNET():
                hcdLearningRate     = float(sys.argv[i+1])
                hcdEpochs           = int(sys.argv[i+2])
                hcdIterations       = int(sys.argv[i+3])
+           if (sys.argv[i]=="--smooth"):
+               smoothingSampling   = float(sys.argv[i+1])
+               smoothingCutoff     = float(sys.argv[i+2])
            if (sys.argv[i]=="--noik"):
               doHCDPostProcessing = 0
            if (sys.argv[i]=="--aspectCorrection"):
@@ -436,6 +441,8 @@ def streamPosesFromCameraToMocapNET():
                                  hcdLearningRate     = hcdLearningRate,
                                  hcdEpochs           = hcdEpochs,
                                  hcdIterations       = hcdIterations,
+                                 smoothingSampling   = smoothingSampling,
+                                 smoothingCutoff     = smoothingCutoff,   
                                  bvhScale            = scale,
                                  doBody              = doBody,
                                  doFace              = doFace,
@@ -448,6 +455,11 @@ def streamPosesFromCameraToMocapNET():
   if (calibrationFile!=""):
         print("Enforcing Calibration file : ",calibrationFile)
         mnet.bvh.configureRendererFromFile(calibrationFile)
+
+#To scale the intrinsic camera parameters (focal length and principal point) when changing the resolution of the image from 640x480 to 1280x720, you can use the following formula:
+#New Focal Length (fx_new, fy_new) = (New Image Width / Original Image Width) * Original Focal Length
+#New Principal Point (cx_new, cy_new) = (New Image Width / Original Image Width) * Original Principal Point
+
 
   mnet.test()
   mnet.recordBVH(True) 
