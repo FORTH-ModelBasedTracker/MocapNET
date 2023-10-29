@@ -793,6 +793,46 @@ def drawMocapNETFrequencyPlots(history):
 
 
 
+def drawValueLineInRange(history, minimumValues, maximumValues, label, result_img, x, y, w, h):
+ # Calculate the position of the value within the specified range
+  
+ if (h>20) and (len(history)>0):
+  h = h-20
+  lastItem = len(history)-1
+  if (label in history[lastItem]) and (label in minimumValues) and (label in maximumValues) :
+    minimumValue = minimumValues[label]
+    maximumValue = maximumValues[label] 
+    import cv2
+    #print("Items to select ",history[lastItem].keys())
+    #print("Items to select ",len(history[lastItem]))
+    value = history[lastItem][label]
+    #print("DRAW ",value," between ",minimumValue," and ",maximumValue)
+    normalized_value = (value - minimumValue) / (maximumValue - minimumValue)
+    x_pos = int(x + normalized_value * w) 
+
+    # Draw a horizontal line to represent the value
+    #print("cv2.line")
+    color = (255,255,255)
+    colorB = (123,123,123)
+
+    cv2.putText(result_img, label, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+    cv2.putText(result_img, "%0.2f"%value, (x, y + 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+
+    cv2.line(result_img, (x, y+h), (x+w,y+h),  colorB, 2) #Horizontal line
+    cv2.line(result_img, (x, y+5), (x,y+h),    colorB, 2) #Vertical line start
+    cv2.line(result_img, (x+w,y+5), (x+w,y+h), colorB, 2) #Vertical line end
+
+    #Draw labels l/r
+    cv2.putText(result_img, "%0.1f"% minimumValue , (x,y+h+20),   cv2.FONT_HERSHEY_SIMPLEX, 0.3, color, 1)
+    cv2.putText(result_img, "%0.1f"% maximumValue , (x+w,y+h+20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, color, 1)
+
+    #Draw Arrow
+    cv2.line(result_img, (x_pos, y), (x_pos, y + h), color, 2)
+    cv2.line(result_img, (x_pos-10, y+h-10), (x_pos, y + h), color, 2)
+    cv2.line(result_img, (x_pos+10, y+h-10), (x_pos, y + h), color, 2)
+    #return result_img
+
+  print("Failed visualizing ",label," in range [",minimumValue,",",maximumValue,"]") 
 
 
 
@@ -884,6 +924,13 @@ def visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=0,bvhAnglesFo
     if ("lhand" in mnet.ensemble):
       drawNSRM("NSRM LHand",mnet.ensemble["lhand"].NSRM,annotated_image,10,NSRM_Y,100,100); 
       drawNSRM("NSRM RHand",mnet.ensemble["rhand"].NSRM,annotated_image,120,NSRM_Y,100,100); NSRM_Y+=130
+
+
+    #drawValueLineInRange(value, minimumValue, maximumValue, label, result_img, x, y, w, h):
+    drawValueLineInRange(bvhAnglesForPlotting,mnet.outputBVHMinima,mnet.outputBVHMaxima,"hip_xposition",annotated_image,10,NSRM_Y,100,50); NSRM_Y+=90
+    drawValueLineInRange(bvhAnglesForPlotting,mnet.outputBVHMinima,mnet.outputBVHMaxima,"hip_yposition",annotated_image,10,NSRM_Y,100,50); NSRM_Y+=90
+    drawValueLineInRange(bvhAnglesForPlotting,mnet.outputBVHMinima,mnet.outputBVHMaxima,"hip_zposition",annotated_image,10,NSRM_Y,100,50)
+    
     #--------------------------------------------------------------------------------------------------------------
     drawMAE2DError("2D M.A.E.",mnet.lastMAEErrorInPixels,annotated_image,width-70,height-120,width-10,height-90)
     #--------------------------------------------------------------------------------------------------------------
@@ -906,6 +953,7 @@ def visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=0,bvhAnglesFo
       perfWidgetY += 100
 
     drawMNETSerials(mnet,annotated_image,10,30)
+    
 
 
     #if (mnet.incompleteUpperbodyInput and mnet.incompleteLowerbodyInput): 
@@ -914,8 +962,8 @@ def visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=0,bvhAnglesFo
         plotImage = drawMocapNETAllPlots(bvhAnglesForPlotting,1920,920,minimumLimits=mnet.outputBVHMinima,maximumLimits=mnet.outputBVHMaxima)
         registerVisualizationTime(mnet,start)
         return annotated_image,plotImage
- except:
-    print("Failed visualizing")  
+ except Exception as e:
+    print("\n\n\n\nFAILED: Exception while visualizing : ",e,"\n\n\n\n")  
  #Fall-through
  registerVisualizationTime(mnet,start)
  return annotated_image,annotated_image
