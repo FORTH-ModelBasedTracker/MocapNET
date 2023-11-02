@@ -11,6 +11,14 @@ One click deployment in Google Collab : [![Open MocapNET v4 In Colab](https://co
 ## News
 ------------------------------------------------------------------ 
 
+2-11-2023
+I am currently finalizing my PhD thesis and preparing my defence, for this reason repository maintenance is subpar at this time.
+However, hopefully soon, I will be able to share my ~316 page thesis that clearly and in detail goes through all of the development effort and research behind MocapNET and this repository.
+
+2-10-2023
+MocapNET v4 was successfully presented in the [AMFG 2023 ICCV workshop](https://web.northeastern.edu/smilelab/amfg2023/)
+[![MocapNET 4](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/iccv23.jpg)](https://colab.research.google.com/github/FORTH-ModelBasedTracker/MocapNET/blob/mnet4/mocapnet4.ipynb)
+
 
 13-9-2023
 
