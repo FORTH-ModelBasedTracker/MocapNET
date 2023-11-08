@@ -361,10 +361,12 @@ def streamPosesFromCameraToMocapNET():
   aspectCorrection = 1.0
   scale            = 1.0
   addNoise         = 0.0
+  doNNEveryNFrames = 0
+  frameSkip        = 0
   doHCDPostProcessing = 1
   hcdLearningRate     = 0.001
   hcdEpochs           = 30
-  hcdIterations       = 15
+  hcdIterations       = 10
   smoothingSampling   = 30.0
   smoothingCutoff     = 5.0
   plotBVHChannels     = False
@@ -384,6 +386,10 @@ def streamPosesFromCameraToMocapNET():
               multiThreaded = True
            if (sys.argv[i]=="--calib"):
               calibrationFile = sys.argv[i+1]
+           if (sys.argv[i]=="--frameskip"):
+              frameSkip    = int(sys.argv[i+1])
+           if (sys.argv[i]=="--nnsubsample"):
+              doNNEveryNFrames    = int(sys.argv[i+1])
            if (sys.argv[i]=="--ik"):
                hcdLearningRate     = float(sys.argv[i+1])
                hcdEpochs           = int(sys.argv[i+2])
@@ -428,6 +434,14 @@ def streamPosesFromCameraToMocapNET():
               videoFilePath=sys.argv[i+1]
            if (sys.argv[i]=="--profile"):
               doProfiling=True
+
+
+  if "/dev/video" in videoFilePath:
+     smoothingSampling   = 20.0
+     smoothingCutoff     = 8.0
+     print("Special Low Smoothing setup") 
+       
+
 
   from MocapNETVisualization import drawMocapNETOutput,drawDescriptor,drawNSRM,drawMAE2DError,drawMocapNETAllPlots
 
@@ -508,6 +522,14 @@ def streamPosesFromCameraToMocapNET():
   brokenFrames = 0
   while cap.isOpened():
     success, image = cap.read()
+
+    #Frame skipping..!
+    if (frameSkip>0):
+       for i in range(0,frameSkip):
+          frameNumber = frameNumber + 1
+          success, image = cap.read()
+          
+
     plotImage = image
     if not success:
       eprint("Ignoring empty camera frame : ",brokenFrames,"/",maxBrokenFrames)
@@ -534,7 +556,11 @@ def streamPosesFromCameraToMocapNET():
             mnet.history_hz_2DEst.pop(0) #Keep mnet history on limits
 
     #--------------------------------------------------------------------------------------------------------------
-    mocapNET3DOutput  = mnet.predict3DJoints(mocapNETInput) 
+    doNN = 1 
+    if (doNNEveryNFrames>0):
+        doNN = (frameNumber%doNNEveryNFrames)==0
+    #--------------------------------------------------------------------------------------------------------------
+    mocapNET3DOutput  = mnet.predict3DJoints(mocapNETInput,runNN=doNN,runHCD=True) 
     mocapNETBVHOutput = mnet.outputBVH
     bvhAnglesForPlotting.append(mocapNETBVHOutput)
     bvhAllAnglesForPlotting.append(mocapNETBVHOutput)

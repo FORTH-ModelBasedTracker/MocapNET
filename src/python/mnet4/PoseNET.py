@@ -816,11 +816,12 @@ def runPoseNETParallel():
 
   headless         = False
   videoFilePath    = "webcam" 
+  saveVideo        = False
+  plotBVHChannels  = False
   doProfiling      = False
   doFlipX          = False
   engine           = "onnx"
-  doNNEveryNFrames = 3
-  plotBVHChannels  = 1
+  doNNEveryNFrames = 3 
   bvhScale         = 1.0
   threshold        = 0.25
 
@@ -832,6 +833,8 @@ def runPoseNETParallel():
               headless = True
            if (sys.argv[i]=="--flipx"):
               doFlipX = True
+           if (sys.argv[i]=="--plot"):
+              plotBVHChannels=True
            if (sys.argv[i]=="--scale"):
               bvhScale=float(sys.argv[i+1])
            if (sys.argv[i]=="--noplot"):
@@ -925,7 +928,7 @@ def runPoseNETParallel():
 
     #------------------------------------------------------------------------------------
     from MocapNETVisualization import visualizeMocapNETEnsemble
-    visualizeMocapNETEnsemble(mnet,previous_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting,economic=True)
+    image,plotImage = visualizeMocapNETEnsemble(mnet,previous_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting,economic=True)
     #------------------------------------------------------------------------------------
 
     mocapNETInput    = poseNET.output

@@ -25,7 +25,7 @@ import math
 import numpy as np
 
 #Defaults, will get overridden by setupDNNModelsUsingJSONConfiguration
-useLambdas       = 0 
+useLambdas       = 0
 numberOfLayers   = 12
 dropoutRate      = 0.15     #Global dropout rate
 learningRate     = 0.00025 #0.00045 #0.00025=MocapNET2019
@@ -978,7 +978,7 @@ def visualizeLayer(layerNumber,layerSize,hasSkip=False,dropout=0.3):
 #=================================================================================================================================================================================== 
 #=================================================================================================================================================================================== 
 #=================================================================================================================================================================================== 
-def autobuilderBB(inputSize,outputSize,modelName="mnet",outputArrayIndex=0,depth=12,lambdaF=1.0,skip=True,dropOutStart=0.3):
+def autobuilderBB(inputSize,outputSize,modelName="mnet",outputArrayIndex=0,depth=12,lambdaF=1.0,skip=True,dropOutStart=0.3,dropoutStopNLayersBeforeEnd=4):
     print("Auto Builder for ",label," Input ",inputSize," and Output ",outputSize)
     print("Depth=",depth," λ=",lambdaF," skip=",skip)
     step = int((inputSize*lambdaF)/depth)
@@ -986,8 +986,11 @@ def autobuilderBB(inputSize,outputSize,modelName="mnet",outputArrayIndex=0,depth
     dropStep = dropOutStart/depth
     currentSize = inputSize
     for layer in range(0,depth):
-        if (dropout<0.1):
+        if (dropout<0.01):
             dropout=0
+        elif (layer <= depth-dropoutStopNLayersBeforeEnd):
+            dropout=0
+
         visualizeLayer(layer,currentSize,skip!=0,dropout=dropout)
         dropout = dropout - dropStep
         currentSize = currentSize - step
@@ -997,17 +1000,13 @@ def autobuilderBB(inputSize,outputSize,modelName="mnet",outputArrayIndex=0,depth
 #=================================================================================================================================================================================== 
 #=================================================================================================================================================================================== 
 #=================================================================================================================================================================================== 
-def autobuilder(inputSize,outputSize,modelName="mnet",outputArrayIndex=0,depth=12,lambdaF=1.0,skip=True,dropOutStart=0.3,probabilisticMode=0,quantize=False,optimizer="rmsprop"):
+def autobuilder(inputSize,outputSize,modelName="mnet",outputArrayIndex=0,depth=12,lambdaF=1.0,skip=True,dropOutStart=0.3,dropoutStopNLayersBeforeEnd=4,probabilisticMode=0,quantize=False,optimizer="rmsprop"):
     #------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------
     print("Auto Builder for ",modelName," Input ",inputSize," and Output ",outputSize)
     print("Depth=",depth," λ=",lambdaF," skip=",skip)
     modelName = tensorflowFriendlyModelName(modelName)
     print("Model renamed to ",modelName," to make sure it doesn't call tensorflow problems ")
-    #print('newXYZROTModel with skip connections has input ',inputDimension,' elements , compression λ=',networkCompression,' and output of ',outputSize,' elements')
-    #print('Learning Rate is ',learningRate,', Dropout Rate is ',dropOutStart,' ')
-    #print('Use Quad Loss is ',useQuadMetric,', Use Modulo Loss is ',useModuloMetric,' ')
-    #print('Use Squared Loss is ',useSquaredMetric)
     #------------------------------------------------------------------------------------
     #------------------------------------------------------------------------------------
     inputs      = Input(shape=(inputSize,))
@@ -1036,14 +1035,14 @@ def autobuilder(inputSize,outputSize,modelName="mnet",outputArrayIndex=0,depth=1
             stop        = True
             currentSize = outputSize
             print("λ compression is too aggressive network max depth will be ",layerNumber)
-        if (dropout<0.1):
+        if (dropout<0.01):
             dropout=0
         visualizeLayer(layerNumber,currentSize,skip,dropout=dropout)
         #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         layers.append(Dense(int(currentSize),input_shape=(previousSize,), kernel_initializer=kinit, activation=act, name=tag("layer",modelName,outputArrayIndex,layerNumber))(previousLayer))
         layerSizes.append(int(currentSize)) 
         previousLayer = layers[len(layers)-1]
-        if (dropout!=0) and (layerNumber<8):
+        if (dropout!=0) and (layerNumber <= depth-dropoutStopNLayersBeforeEnd):
            Dropout(dropout,name=tag("dropout",modelName,outputArrayIndex,layerNumber))(layers[len(layers)-1])
         #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         if (skip):
@@ -1058,7 +1057,7 @@ def autobuilder(inputSize,outputSize,modelName="mnet",outputArrayIndex=0,depth=1
                 fromSize = layerSizes[fromLayer]
                 skipLayers.append(Dense(int(toSize),kernel_initializer=kinit, activation=act, name=tag("skip_%u_to_%u"%(fromLayer,toLayer),modelName,outputArrayIndex,fromLayer))(layers[fromLayer]))
              #-----------------------------------------------------------------------------------------------------   
-             if (dropout!=0) and (layerNumber<8):
+             if (dropout!=0) and (layerNumber<= depth - dropoutStopNLayersBeforeEnd):
                 Dropout(dropout,name=tag("skip_dropout_to_%u"%(toLayer),modelName,outputArrayIndex,layerNumber))(layers[len(layers)-1])
              #-----------------------------------------------------------------------------------------------------   
              #print("Add Skip ",fromLayer,"->",toLayer)

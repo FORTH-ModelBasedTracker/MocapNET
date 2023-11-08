@@ -701,12 +701,15 @@ def drawMocapNETSinglePlotValueList(valueList,plotNumber,itemName,image,x,y,w,h,
     tColor = (123,123,123)
     thickness = 1
     message =  '%s #%u  ' % (itemName,plotNumber) 
+    image = cv2.putText(image, message , (x-1,y-1), font, fontScale, (0,0,0) , thickness, cv2.LINE_AA)
     image = cv2.putText(image, message , org, font, fontScale, color, thickness, cv2.LINE_AA)
     message =  'Max %0.2f ' % (maximumValue) 
     org = (x,y+10) 
+    image = cv2.putText(image, message , (x-1,y+10-1), font, fontScale, (0,0,0) , thickness, cv2.LINE_AA)
     image = cv2.putText(image, message , org, font, fontScale, color, thickness, cv2.LINE_AA)
     message =  'Min %0.2f ' % (minimumValue) 
     org = (x,y+h+10) 
+    image = cv2.putText(image, message , (x-1,y+h+10-1), font, fontScale, (0,0,0) , thickness, cv2.LINE_AA)
     image = cv2.putText(image, message , org, font, fontScale, color, thickness, cv2.LINE_AA)
     
 
@@ -730,7 +733,11 @@ def drawMocapNETSinglePlotValueList(valueList,plotNumber,itemName,image,x,y,w,h,
     #org = (int(x+len(valueList)),int(y+valueList[len(valueList)-1] + h/2)) 
     org = (int(x+len(valueList)), calculateRelativeValue(y,h,valueList[len(valueList)-1],minimumValue,maximumValue) ) 
     message =  '%0.2f' % (valueList[len(valueList)-1]) 
+    image = cv2.putText(image, message , org, font, fontScale, (0,0,0), thickness, cv2.LINE_AA)
+
+    org = (1+int(x+len(valueList)), 1+calculateRelativeValue(y,h,valueList[len(valueList)-1],minimumValue,maximumValue) ) 
     image = cv2.putText(image, message , org, font, fontScale, color, thickness, cv2.LINE_AA)
+
 #---------------------------------------------------------------------------------------------
 
 
