@@ -40,11 +40,12 @@ MEDIAPIPE_RHAND_LANDMARK_NAMES = getHolisticRHandNameList()
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 class MediaPipePose():
-  def __init__(self):
+  def __init__(self,doMediapipeVisualization = False):
                #Tensorflow attempt to be reasonable
                #------------------------------------------
                self.mp         = mp_holistic.Holistic(static_image_mode=True)
                #------------------------------------------
+               self.doMediapipeVisualization = doMediapipeVisualization
                self.output     = dict()
                #------------------------------------------
   def get2DOutput(self):
@@ -88,10 +89,10 @@ class MediaPipePose():
        return dict() , image    
 
     #Try to speed up by scaling down image
-    if ( (width>1024) or (height>720) ):
-       width  = int(image.shape[1]/2)
-       height = int(image.shape[0]/2)
-       image  = cv2.resize(image, (width,height))
+    #if ( (width>1024) or (height>720) ):
+    #   width  = int(image.shape[1]/2)
+    #   height = int(image.shape[0]/2)
+    #   image  = cv2.resize(image, (width,height))
 
     #The aspect ratios involved
     currentAspectRatio = width/height
@@ -117,14 +118,16 @@ class MediaPipePose():
               image.flags.writeable = True
               image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-              try:
+              if (self.doMediapipeVisualization):
+             
+                try:
                      mp_drawing.draw_landmarks(annotated_image, results.face_landmarks      , mp_holistic.FACEMESH_TESSELATION) #This used to be called FACE_CONNECTIONS
-              except:
+                except:
                      mp_drawing.draw_landmarks(annotated_image, results.face_landmarks      , mp_holistic.FACE_CONNECTIONS) #This used to be called FACE_CONNECTIONS
 
-              mp_drawing.draw_landmarks(image, results.left_hand_landmarks,  mp_holistic.HAND_CONNECTIONS)
-              mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
-              mp_drawing.draw_landmarks(
+                mp_drawing.draw_landmarks(image, results.left_hand_landmarks,  mp_holistic.HAND_CONNECTIONS)
+                mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+                mp_drawing.draw_landmarks(
                                          image,
                                          results.pose_landmarks,
                                          mp_pose.POSE_CONNECTIONS,
@@ -478,8 +481,11 @@ def streamPosesFromCameraToMocapNET():
   mnet.test()
   mnet.recordBVH(True) 
   #Body only
-  #mp = MediaPipePose()
-  mp = MediaPipeHolistic(doMediapipeVisualization = False)
+  mp = None
+  if (doFace or doMouth or doMouth or doHands):
+     mp = MediaPipeHolistic(doMediapipeVisualization = False)
+  else:
+     mp = MediaPipePose(doMediapipeVisualization = False)
 
   # For webcam input:
   frameNumber = 0
