@@ -186,7 +186,7 @@ class MocapNETTensorflowSubProblem():
 
   def prepareInput(self,input2D :dict,configuration : dict):
         from readCSV import prepareInputG
-        thisFullInput, self.NSRM, thisInput, angleToRotate = prepareInputG(input2D,configuration,self.inputs,self.inputsWithNSRM,self.part,self.decompositionEngine,self.disablePCACode)
+        thisFullInput, self.NSRM, thisInput, angleToRotate, missingRatio = prepareInputG(input2D,configuration,self.inputs,self.inputsWithNSRM,self.part,self.decompositionEngine,self.disablePCACode)
 
         #i=0
         #for value in thisFullInput: 
@@ -195,7 +195,7 @@ class MocapNETTensorflowSubProblem():
         #import tensorflow as tf
         #self.networkInput = tf.convert_to_tensor(self.networkInputNumpy)
         self.networkInput = np.asarray([thisFullInput],dtype=np.float32)
-        return self.networkInput
+        return self.networkInput,missingRatio
         #-----------------------------  
         #inputReadyForTF = np.asarray([thisFullInput],dtype=np.float32)
         #return inputReadyForTF
@@ -209,7 +209,11 @@ class MocapNETTensorflowSubProblem():
 
         #This call works @ 400Hz
         #--------------------------------------------------------------------------------------
-        self.inputReadyForTF = self.prepareInput(input2D,self.configuration)
+        self.inputReadyForTF,missingRatio = self.prepareInput(input2D,self.configuration)
+
+
+        if (missingRatio>0.3):
+           return self.output
 
         #Turns out on some decompositions like FastICA there are a lot of zeros!
         #-----------------------------------------------

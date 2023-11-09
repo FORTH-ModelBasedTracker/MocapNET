@@ -132,7 +132,7 @@ def getBody25NameList():
  bn.append("endsite_toe1-2.r")  #22
  bn.append("endsite_toe5-3.r")  #23
  bn.append("rheel")             #24
- bn.append("bkg")               #25 
+# bn.append("bkg")               #25 
  return bn
 #---------------------------------------------------
 
@@ -196,7 +196,7 @@ def drawPoseNETLandmarks(predictions,image,threshold=0.25):
         return image
 
 
-def processPoseNETLandmarks(correctLabels,poseNETPose,currentAspectRatio,trainedAspectRatio,threshold=0.15,doFlipX=False):
+def processPoseNETLandmarks(correctLabels,poseNETPose,currentAspectRatio,trainedAspectRatio,threshold=0.01,doFlipX=False):
    itemNumber     = 0
    mnetPose2D     = dict()
    aspectRatioFix = trainedAspectRatio / currentAspectRatio
@@ -301,6 +301,7 @@ class PoseNETTFLite():
   def __init__(
                self,
                modelPath:str="movenet/lite-model_movenet_singlepose_lightning_tflite_int8_4.tflite",
+               numberOfThreads = 4,
               ):
                #Tensorflow attempt to be reasonable
                #------------------------------------------
@@ -308,7 +309,7 @@ class PoseNETTFLite():
                #------------------------------------------
                import tensorflow as tf
                # Initialize the TFLite interpreter
-               self.interpreter = tf.lite.Interpreter(model_path=modelPath)
+               self.interpreter = tf.lite.Interpreter(model_path=modelPath,num_threads=numberOfThreads)
                self.interpreter.allocate_tensors()
                #------------------------------------------
                self.output     = dict()
@@ -318,7 +319,7 @@ class PoseNETTFLite():
   def get2DOutput(self):
         return self.output
 
-  def convertImageToMocapNETInput(self,image,doFlipX=False,threshold=0.25):
+  def convertImageToMocapNETInput(self,image,doFlipX=False,threshold=0.05):
         import tensorflow as tf
         import numpy as np
         import time
@@ -419,7 +420,7 @@ class PoseNETONNX():
   def get2DOutput(self):
         return self.output
 
-  def convertImageToMocapNETInput(self,image,doFlipX=False,threshold=0.25):
+  def convertImageToMocapNETInput(self,image,doFlipX=False,threshold=0.05):
         import tensorflow as tf
         import numpy as np
         import time
@@ -501,7 +502,7 @@ class PoseNET():
   def get2DOutput(self):
         return self.output
 
-  def convertImageToMocapNETInput(self,image,doFlipX=False,threshold=0.25):
+  def convertImageToMocapNETInput(self,image,doFlipX=False,threshold=0.05):
         import tensorflow as tf
         import numpy as np
         import time
@@ -603,7 +604,7 @@ def runPoseNETSerial():
   hcdIterations        = 30
   smoothingSampling    = 30.0
   smoothingCutoff      = 5.0
-  threshold            = 0.25
+  threshold            = 0.05
   calibrationFile      = ""
   plotBVHChannels      = False
   bvhAnglesForPlotting = list()
@@ -823,7 +824,7 @@ def runPoseNETParallel():
   engine           = "onnx"
   doNNEveryNFrames = 3 
   bvhScale         = 1.0
-  threshold        = 0.25
+  threshold        = 0.05
 
 
   if (len(sys.argv)>1):

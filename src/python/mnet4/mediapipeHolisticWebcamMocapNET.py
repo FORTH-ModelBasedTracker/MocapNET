@@ -164,6 +164,7 @@ class MediaPipeHolistic():
                #------------------------------------------
                self.mp         = mp_holistic.Holistic(
                                                         static_image_mode=False,
+                                                        model_complexity=2,
                                                         min_detection_confidence=0.3,
                                                         min_tracking_confidence=0.3
                                                      )
@@ -373,6 +374,7 @@ def streamPosesFromCameraToMocapNET():
   smoothingSampling   = 30.0
   smoothingCutoff     = 5.0
   plotBVHChannels     = False
+  liveDemo            = False
   calibrationFile = ""
   bvhAnglesForPlotting    = list()
   bvhAllAnglesForPlotting = list()
@@ -385,6 +387,8 @@ def streamPosesFromCameraToMocapNET():
        for i in range(0, len(sys.argv)):
            if (sys.argv[i]=="--headless"):
               headless = True
+           if (sys.argv[i]=="--live"):
+              liveDemo = True
            if (sys.argv[i]=="--mt"):
               multiThreaded = True
            if (sys.argv[i]=="--calib"):
@@ -479,7 +483,8 @@ def streamPosesFromCameraToMocapNET():
 
 
   mnet.test()
-  mnet.recordBVH(True) 
+  mnet.recordBVH(not liveDemo) 
+
   #Body only
   mp = None
   if (doFace or doMouth or doMouth or doHands):
@@ -601,8 +606,9 @@ def streamPosesFromCameraToMocapNET():
      
 
   del mnet #So that the out.bvh file gets created..
-  os.system("rm 2d_out.csv 3d_out.csv bvh_out.csv map_out.csv")
-  os.system("./GroundTruthDumper --from out.bvh --setPositionRotation -2.6 0 2000 0 0 0  --csv ./ out.csv 2d+3d+bvh ") # Remove noise offsetPositionRotation
+  if (not liveDemo):
+    os.system("rm 2d_out.csv 3d_out.csv bvh_out.csv map_out.csv")
+    os.system("./GroundTruthDumper --from out.bvh --setPositionRotation -2.6 0 2000 0 0 0  --csv ./ out.csv 2d+3d+bvh ") # Remove noise offsetPositionRotation
 
 
   cap.release()

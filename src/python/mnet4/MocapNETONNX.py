@@ -170,10 +170,10 @@ class MocapNETONNXSubProblem():
 
   def prepareInput(self,input2D :dict,configuration : dict):
         from readCSV import prepareInputG
-        thisFullInput, self.NSRM, thisInput, angleToRotate = prepareInputG(input2D,configuration,self.inputs,self.inputsWithNSRM,self.part,self.decompositionEngine,self.disablePCACode)
+        thisFullInput, self.NSRM, thisInput, angleToRotate, missingRatio = prepareInputG(input2D,configuration,self.inputs,self.inputsWithNSRM,self.part,self.decompositionEngine,self.disablePCACode)
         #appendCSVToFile(self.inputName+".csv",thisFullInput,fID=self.frameNumber) # <-----------------
         inputReadyForTF = np.asarray([thisFullInput],dtype=np.float32)
-        return inputReadyForTF
+        return inputReadyForTF,missingRatio
 
   def logProbabilisticOutput(self,outputFromNN,resolution=60,increment=6.0,numberOfJoints=30):
         xs=list()
@@ -271,7 +271,11 @@ class MocapNETONNXSubProblem():
   """
   def predict(self, input2D:dict):
         #print("Predict ",self.partName)
-        self.inputReadyForTF = self.prepareInput(input2D,self.configuration)
+        self.inputReadyForTF,missingRatio = self.prepareInput(input2D,self.configuration)
+
+        if (missingRatio>0.3):
+           return self.output
+
 
         #Turns out on some decompositions like FastICA there are a lot of zeros!
         #-----------------------------------------------

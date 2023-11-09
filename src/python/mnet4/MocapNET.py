@@ -608,6 +608,8 @@ class MocapNET():
         return output
 
 
+  def countMissingItemsPercentage(self, inputReadyForMocapNET ):
+      return 0.0
 
 
   def perturbInput(self,input2D :dict):
@@ -936,6 +938,9 @@ class MocapNET():
                saveCSVFileFromListOfDicts("out.csv",self.outputHistory)
                print("Write 2D Input!")
                saveCSVFileFromListOfDicts("in.csv",self.inputHistory)
+        else:
+               print("Did not record output due to --live mode")
+
         print('Thank you for using MocapNET!')
         print('https://github.com/FORTH-ModelBasedTracker/MocapNET')
  
@@ -995,7 +1000,7 @@ def easyMocapNETConstructor(
                     ensembleToLoad         = combo,
                     addNoise               = addNoise,
                     smoothingSampling      = smoothingSampling,
-                    smoothingCutoff        = smoothingCutoff 
+                    smoothingCutoff        = smoothingCutoff
                    )
     return mnet
 #-------------------------------------------------------------------------------------------------------------------------------------------------------

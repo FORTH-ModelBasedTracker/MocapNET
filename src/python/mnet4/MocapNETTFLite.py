@@ -50,6 +50,7 @@ class MocapNETTFLiteSubProblem():
                configPath:str,
                modelPath:str,
                partName:str,
+               numberOfThreads = 4,
                completelyDisablePCACode = 0
               ):
                #-------------------------------------------------------------------------------
@@ -81,10 +82,10 @@ class MocapNETTFLiteSubProblem():
                                                                 0,#useHalfFloats
                                                                 externalDecomposition=self.decompositionEngine
                                                                )
-               #------------------------------------------------------------------------------- 
+               #-------------------------------------------------------------------------------
                self.model         =  tf.lite.Interpreter(
                                                           model_path=self.modelPath, 
-                                                          num_threads=8
+                                                          num_threads=numberOfThreads
                                                         )
 
                self.model.allocate_tensors() 
@@ -193,10 +194,10 @@ class MocapNETTFLiteSubProblem():
 
   def prepareInput(self,input2D :dict,configuration : dict):
         from readCSV import prepareInputG
-        thisFullInput, self.NSRM,  thisInput, angleToRotate = prepareInputG(input2D,configuration,self.inputs,self.inputsWithNSRM,self.part,self.decompositionEngine,self.disablePCACode)
+        thisFullInput, self.NSRM,  thisInput, angleToRotate, missingRatio = prepareInputG(input2D,configuration,self.inputs,self.inputsWithNSRM,self.part,self.decompositionEngine,self.disablePCACode)
 
         inputReadyForTF = np.asarray([thisFullInput],dtype=np.float32)
-        return inputReadyForTF
+        return inputReadyForTF,missingRatio
 
 
   """
@@ -205,7 +206,11 @@ class MocapNETTFLiteSubProblem():
   """
   def predict(self,input2D :dict):
 
-        self.inputReadyForTF  = self.prepareInput(input2D,self.configuration)
+        self.inputReadyForTF,missingRatio  = self.prepareInput(input2D,self.configuration)
+
+        if (missingRatio>0.3):
+           return self.output
+
         
         #Turns out on some decompositions like FastICA there are a lot of zeros!
         #-----------------------------------------------
@@ -322,6 +327,6 @@ class MocapNETTFLite():
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-    mnet = MocapNETONNX()
+    mnet = MocapNETTFLite()
     print("Survived Test!")
 #-------------------------------------------------------------------------------------------------------------------------------------------------------

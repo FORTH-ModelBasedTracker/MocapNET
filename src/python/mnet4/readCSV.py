@@ -539,7 +539,7 @@ def prepareInputG(input2D :dict,configuration : dict, expectedInputList,dummyUnn
         thisFullInput, thisNSDM, thisInput, angleToRotate = transformNetworkInput(configuration,decompositionEngine,thisInput,np.float32,disablePCACode)
         #-----------------------------------------------------------------------------------------------------------------------------------------------
         #print(bcolors.WARNING,"prepareInputG: transformed ",input2D," to ",thisFullInput,bcolors.ENDC)
-        return thisFullInput, thisNSDM, thisInput, angleToRotate
+        return thisFullInput, thisNSDM, thisInput, angleToRotate, missingRatio
 
 
 
