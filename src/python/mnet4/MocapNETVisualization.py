@@ -837,9 +837,8 @@ def drawValueLineInRange(history, minimumValues, maximumValues, label, result_im
     cv2.line(result_img, (x_pos, y), (x_pos, y + h), color, 2)
     cv2.line(result_img, (x_pos-10, y+h-10), (x_pos, y + h), color, 2)
     cv2.line(result_img, (x_pos+10, y+h-10), (x_pos, y + h), color, 2)
-    #return result_img
-
-  print("Failed visualizing ",label," in range [",minimumValue,",",maximumValue,"]") 
+  else: 
+    print("Failed visualizing ",label," in range [",minimumValue,",",maximumValue,"]") 
 
 
 
@@ -934,6 +933,7 @@ def visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=0,bvhAnglesFo
 
 
     #drawValueLineInRange(value, minimumValue, maximumValue, label, result_img, x, y, w, h):
+    #These cause the "failed visualizing" error to be emitted from drawValueLineInRange in google collab (why though?)
     drawValueLineInRange(bvhAnglesForPlotting,mnet.outputBVHMinima,mnet.outputBVHMaxima,"hip_xposition",annotated_image,10,NSRM_Y,100,50); NSRM_Y+=90
     drawValueLineInRange(bvhAnglesForPlotting,mnet.outputBVHMinima,mnet.outputBVHMaxima,"hip_yposition",annotated_image,10,NSRM_Y,100,50); NSRM_Y+=90
     drawValueLineInRange(bvhAnglesForPlotting,mnet.outputBVHMinima,mnet.outputBVHMaxima,"hip_zposition",annotated_image,10,NSRM_Y,100,50)
