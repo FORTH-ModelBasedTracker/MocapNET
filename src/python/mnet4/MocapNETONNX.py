@@ -12,27 +12,11 @@ import os
 import sys
 import time
 
-#Depending on where the scripts get run 
-#attempt to import from the correct directory
-checkPaths = [ "./" , "../" , "../../" ]
-for potentialPath in checkPaths:
-  if os.path.exists(potentialPath+"bonseyes_aiasset_automnet/"):
-    print("We appear to be running from the `",potentialPath,"` path ")
-    sys.path.append(os.path.abspath(potentialPath+'bonseyes_aiasset_automnet/train/'))
-    sys.path.append(potentialPath+'bonseyes_aiasset_automnet/data/datatool_api')
-    sys.path.append(potentialPath+'bonseyes_aiasset_automnet/data')
-    sys.path.append(potentialPath+'bonseyes_aiasset_automnet/utils')
-    sys.path.append(potentialPath+'bonseyes_aiasset_automnet/algorithm')
-    print("We cd `",potentialPath,"` to run from root directory ")
-    os.chdir(potentialPath)
-    break
-
-
 #-------------------------------------------------------------------------------------------
 from readCSV  import parseConfiguration,parseConfigurationInputJointMap,transformNetworkInput,initializeDecompositionForExecutionEngine,readGroundTruthFile,readCSVFile,parseOutputNormalization
 from NSDM     import NSDMLabels,createNSDMUsingRules,inputIsEnoughToCreateNSDM,performNSRMAlignment
 from EDM      import EDMLabels,createEDMUsingRules
-from tools    import bcolors,checkIfFileExists,readListFromFile,convertListToLowerCase,secondsToHz,capitalizeCoordinateTags,getEntryIndexInList,parseSerialNumberFromSummary
+from tools    import bcolors,eprint,checkIfFileExists,readListFromFile,convertListToLowerCase,secondsToHz,capitalizeCoordinateTags,getEntryIndexInList,parseSerialNumberFromSummary
 #-------------------------------------------------------------------------------------------
 from BVH.bvhConverter import BVH
 #-------------------------------------------------------------------------------------------
@@ -274,6 +258,7 @@ class MocapNETONNXSubProblem():
         self.inputReadyForTF,missingRatio = self.prepareInput(input2D,self.configuration)
 
         if (missingRatio>0.3):
+           eprint("Not running ",self.partName," due to missing joints : ",input2D)
            return self.output
 
 
@@ -347,6 +332,100 @@ class MocapNETONNXSubProblem():
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+class PoseNETONNX():
+  def __init__(
+               self,
+               modelPath:str="movenet/model.onnx",
+               targetWidth  = 192,
+               targetHeight = 192,
+               trainingWidth  = 1920,
+               trainingHeight = 1080,
+              ):
+               #Tensorflow attempt to be reasonable
+               #------------------------------------------
+               from holisticPartNames import getPoseNETBodyNameList
+               self.jointNames = getPoseNETBodyNameList()
+               #------------------------------------------
+               import onnxruntime as ort
+               import onnx
+               onnxModelForCheck  = onnx.load(modelPath)
+               onnx.checker.check_model(onnxModelForCheck)
+               print("ONNX devices available : ", ort.get_device()) 
+               providers               = ['CPUExecutionProvider']
+               #providers               = ['CUDAExecutionProvider']
+               self.options = ort.SessionOptions()
+               self.model              = ort.InferenceSession(modelPath, providers=providers, sess_options=self.options)
+               for i in range(0,len(self.model.get_inputs())): 
+                  print("ONNX INPUTS ",self.model.get_inputs()[i].name)
+                  self.inputName = self.model.get_inputs()[i].name
+
+               self.model_input_name   = self.model.get_inputs()
+               #------------------------------------------
+               self.output         = dict()
+               self.hz             = 0.0
+               self.targetWidth    = targetWidth
+               self.targetHeight   = targetHeight
+               self.trainingWidth  = trainingWidth
+               self.trainingHeight = trainingHeight
+               #------------------------------------------
+
+  def get2DOutput(self):
+        return self.output
+
+  def convertImageToMocapNETInput(self,image,doFlipX=False,threshold=0.05):
+        import tensorflow as tf
+        import numpy as np
+        import time
+        import cv2
+        sourceWidth  = image.shape[1]
+        sourceHeight = image.shape[0]
+        currentAspectRatio=self.targetWidth/self.targetHeight
+        trainedAspectRatio=self.trainingWidth/self.trainingHeight
+        #Do resize on OpenCV end
+        #----------------------------------------------------------------
+        from tools import img_resizeWithCrop,normalizedCoordinatesAdaptForVerticalImage,normalizedCoordinatesAdaptToResizedCrop
+        imageTransformed = img_resizeWithCrop(image,self.targetWidth,self.targetHeight)
+        #imageTransformed = img_resizeWithPadding(image,self.targetWidth,self.targetHeight)
+        imageTransformed = cv2.cvtColor(imageTransformed,cv2.COLOR_BGR2RGB)
+        #----------------------------------------------------------------
+
+        #Hand image to Tensorflow
+        #----------------------------------------------------------------
+        imageONNX = np.expand_dims(imageTransformed, axis=0)
+        #-------------------------------------------------------------------
+
+
+        start = time.time()
+        #-------------------------------------------------------------------
+        #-------------------------------------------------------------------
+        thisInputONNX = { self.inputName : imageONNX.astype('int32')}
+        #Run input through MocapNET
+        output_names_onnx = [otp.name for otp in self.model.get_outputs()]
+        keypoints_with_scores = self.model.run(output_names_onnx,thisInputONNX)[0][0]
+        predictions = keypoints_with_scores[0]
+        #-------------------------------------------------------------------
+        #-------------------------------------------------------------------
+        seconds = time.time() - start
+        self.hz  = 1 / (seconds+0.0001)
+        #print("MoveNET ONNX Framerate : ",round(self.hz,2)," fps          ")
+        
+
+        currentAspectRatio=sourceWidth/sourceHeight #We "change" aspect ratio by restoring points
+        for pointID in range(0,len(predictions)):
+           #Joints have y,x,acc order
+           nX,nY = normalizedCoordinatesAdaptToResizedCrop(sourceWidth,sourceHeight,self.targetWidth,self.targetHeight,predictions[pointID][1],predictions[pointID][0])
+           nX,nY = normalizedCoordinatesAdaptForVerticalImage(sourceWidth,sourceHeight,self.trainingWidth,self.trainingHeight,nX,nY)
+           predictions[pointID][1]=nX
+           predictions[pointID][0]=nY
+
+        from holisticPartNames import processPoseNETLandmarks
+        self.output = processPoseNETLandmarks(self.jointNames,predictions,currentAspectRatio,trainedAspectRatio,threshold=threshold,doFlipX=doFlipX)
+        #----------------------------------------------------------------
+        from MocapNETVisualization import drawPoseNETLandmarks
+        self.image = drawPoseNETLandmarks(predictions,image,threshold=threshold,jointLabels=self.jointNames)
+        #----------------------------------------------------------------
+
+        return self.output,image
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------

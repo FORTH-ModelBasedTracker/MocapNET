@@ -248,6 +248,37 @@ def drawMissingInput(image):
     return image
 
 
+
+def drawPoseNETLandmarks(predictions,image,threshold=0.25,jointLabels=dict()):
+        import cv2
+        sourceWidth  = image.shape[1]
+        sourceHeight = image.shape[0]
+        width  = image.shape[1]
+        height = image.shape[0]
+        #jointLabels = getPoseNETBodyNameList() # getBody25NameList()
+        jID = 0
+        for joint in predictions:
+            #print("Joint ",joint) 
+            y2D = int(joint[0]*sourceHeight) 
+            x2D = int(joint[1]*sourceWidth)
+            vis2D = float(joint[2])
+            color=(0,255,255)
+            if (threshold>vis2D):
+                color=(0,0,255)
+  
+            cv2.circle(image,(x2D,y2D),2,color)
+
+            font = cv2.FONT_HERSHEY_SIMPLEX 
+            org = (x2D,y2D)
+            fontScale = 0.4
+            thickness = 1
+            message =  '%s|%0.4f' % (jointLabels[jID],vis2D) 
+            image = cv2.putText(image, message , org, font, fontScale, color, thickness, cv2.LINE_AA)
+            jID += 1
+        return image
+
+
+
 def resolveXY(input2D,joint,width,height,flipX=False): 
    x2D=0
    y2D=0
@@ -372,6 +403,10 @@ def drawMocapNETInput(input2D,image,flipX=False,doLines=True):
               circleSize = 4
               image = cv2.putText(image, "%s" % (joint) , (x2D+2,y2D), font, fontScale, color, thickness, cv2.LINE_AA)
            cv2.circle(image,(x2D,y2D),circleSize,color,cv2.FILLED)
+
+           #Post Visualization score
+           #jointNameVis = "visible_"+joint 
+           #image = cv2.putText(image, "%0.2f" % (input2D[jointNameVis]) , (x2D+2,y2D), font, fontScale, color, thickness, cv2.LINE_AA)
 
            #if ('__' in joint): #Print __temporalis joint
            #   image = cv2.putText(image, joint , (x2D+2,y2D), font, fontScale, color, thickness, cv2.LINE_AA)

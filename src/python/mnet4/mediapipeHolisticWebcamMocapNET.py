@@ -68,8 +68,8 @@ class MediaPipePose():
     mnetPose2D = dict()
     #------------------------------------------------------------------------------------
     processPoseLandmarks(mnetPose2D,MEDIAPIPE_BODY_LANDMARK_NAMES ,landmarks.pose_landmarks,currentAspectRatio,trainedAspectRatio)
-    processPoseLandmarks(mnetPose2D,MEDIAPIPE_LHAND_LANDMARK_NAMES,landmarks.left_hand_landmarks,currentAspectRatio,trainedAspectRatio)
-    processPoseLandmarks(mnetPose2D,MEDIAPIPE_RHAND_LANDMARK_NAMES,landmarks.right_hand_landmarks,currentAspectRatio,trainedAspectRatio)
+    processPoseLandmarks(mnetPose2D,MEDIAPIPE_LHAND_LANDMARK_NAMES,landmarks.left_hand_landmarks,currentAspectRatio,trainedAspectRatio,threshold=0.001)
+    processPoseLandmarks(mnetPose2D,MEDIAPIPE_RHAND_LANDMARK_NAMES,landmarks.right_hand_landmarks,currentAspectRatio,trainedAspectRatio,threshold=0.001)
     processPoseLandmarks(mnetPose2D,MEDIAPIPE_FACE_LANDMARK_NAMES ,landmarks.face_landmarks,currentAspectRatio,trainedAspectRatio)
     #------------------------------------------------------------------------------------
     guessLandmarks(mnetPose2D) #Some landmarks ( neck, hip need to be guessed by others )

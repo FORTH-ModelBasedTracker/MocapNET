@@ -67,9 +67,9 @@ def getSymmetricLEyeOutputs():
  bn["hip_xposition"]               =  (0.0,"")     #0 #ignored
  bn["hip_yposition"]               =  (0.0,"")     #1 #ignored
  bn["hip_zposition"]               =  (0.0,"")     #2 #ignored
- bn["neck_zrotation"]              =  (0.0,"")     #3 #ignored
- bn["neck_xrotation"]              =  (0.0,"")     #4 #ignored
- bn["neck_yrotation"]              =  (0.0,"")     #5 #ignored
+ bn["neck1_zrotation"]              =  (0.0,"")     #3 #ignored
+ bn["neck1_xrotation"]              =  (0.0,"")     #4 #ignored
+ bn["neck1_yrotation"]              =  (0.0,"")     #5 #ignored
  bn["eye.r_zrotation"]             =  (1.0,"eye.l_zrotation")               #
  bn["eye.r_xrotation"]             =  (1.0,"eye.l_xrotation")               #
  bn["oculi01.r_zrotation"]         =  (1.0,"oculi01.l_zrotation")           #
@@ -275,7 +275,26 @@ class SimulatedMirroredEnsemble():
       self.outputMinimumValue     = dict()
       self.outputMaximumValue     = dict()
       #-------------------------------
+      self.directInputFlips  = dict()
+      self.flippedInputFlips = dict()
+
+      for key in self.mirroredModel.inputs:
+           s = key.split("_",1)
+           if (len(s)>0):
+                 originalName = s[1]
+                 if originalName in self.leftToRightNames:
+                      flippedName       = self.leftToRightNames[originalName]
+                      flippedXKey       = "2dx_%s"     % flippedName
+                      flippedYKey       = "2dy_%s"     % flippedName
+                      flippedVisibleKey = "visible_%s" % flippedName
+                      self.flippedInputFlips["2dx_%s"  % originalName]     = flippedXKey       #<- this needs flip 
+                      self.directInputFlips["2dy_%s"  % originalName]      = flippedYKey       #<- this we copy directly
+                      self.directInputFlips["visible_%s"  % originalName]  = flippedVisibleKey #<- this we copy directly
  
+      print("\n\n\nInputs that need to be subtracted from one : ",self.flippedInputFlips) 
+      print("\n\n\nInputs that need to be just copied  : ",self.directInputFlips) 
+
+
   def getModel(self):
     return self.mirroredModel.model
 
@@ -303,51 +322,44 @@ class SimulatedMirroredEnsemble():
         import copy
         flippedInput2D   = dict()
         #------------------------------------------------------------
-        doFlips = True # Debug switch should alawys be set to True
+        doInputFlips = True # Debug switch should alawys be set to True
+        doOutputFlips = True # Debug switch should alawys be set to True
         #------------------------------------------------------------
-        if (doFlips): #Do Input flips!
-          for key in input2D.keys():
-              if ("2dx_" in key.lower()):
-               s = key.split("_",1)
-               if (len(s)>0):
-                 originalName = s[1]
-                 xKey         = "2dx_%s"     % originalName
-                 yKey         = "2dy_%s"     % originalName
-                 visibleKey   = "visible_%s" % originalName
-                 #-----------------------------------------------------
-                 #-----------------------------------------------------
-                 if originalName in self.leftToRightNames:
-                   #print("INPUT 2D FOUND ",originalName," ",end="") #Debug
-                   flippedName       = self.leftToRightNames[originalName]
-                   flippedXKey       = "2dx_%s"     % flippedName
-                   flippedYKey       = "2dy_%s"     % flippedName
-                   flippedVisibleKey = "visible_%s" % flippedName
-                   if (flippedName == originalName):
-                     #print("KEPT ",flippedName) #Debug
-                     #There is no flip..  Just Copy..
-                     flippedInput2D[xKey]       = float(input2D[flippedXKey])
-                     flippedInput2D[yKey]       = float(input2D[flippedYKey])
-                     flippedInput2D[visibleKey] = float(input2D[flippedVisibleKey])
-                   else:
-                     #print("FLIPPED ",flippedName) #Debug
-                     if (flippedXKey in input2D) and (flippedYKey in input2D) and (flippedVisibleKey in input2D):
-                      if (float(input2D[visibleKey])>0.0):
-                       flippedInput2D[xKey]     = 1.0 - float(input2D[flippedXKey])
-                      else:
-                       flippedInput2D[xKey]     = float(input2D[flippedXKey])
-                      flippedInput2D[yKey]       = float(input2D[flippedYKey])
-                      flippedInput2D[visibleKey] = float(input2D[flippedVisibleKey])
+        if (doInputFlips): #Do Input flips!
+          #for key in input2D.keys():
+          for key in self.mirroredModel.inputs: #<- fix right hand working only if left hand is visible
+              if (key in self.directInputFlips):
+                  originalName = key
+                  flippedName  = self.directInputFlips[originalName]
+                  if (flippedName in input2D):
+                      flippedInput2D[originalName] = float(input2D[flippedName])
+                  else:
+                      print("This should never happen, Cant flip ",flippedName)
+              elif (key in self.flippedInputFlips):
+                  originalName = key
+                  flippedName  = self.flippedInputFlips[originalName]
+                  if (flippedName in input2D):
+                      if (float(input2D[flippedName])!=0.0): #<- This should be a check on the visibility channel 
+                        flippedInput2D[originalName]    = 1.0 - float(input2D[flippedName])
+                  else:
+                      print("This should never happen, Cant flip ",flippedName)
+              
         #----------------------------------------------------------------------------
         leftHandinputReadyForTF = copy.deepcopy(self.mirroredModel.inputReadyForTF)
         leftHandinputNSRM       = copy.deepcopy(self.mirroredModel.NSRM)
         # ===========================================================================
+        originalName    = self.mirroredModel.partName
+        self.mirroredModel.partName = self.partName
+        #---
         self.mirroredOutput     = self.mirroredModel.predict(input2D=flippedInput2D) 
+        #---
+        self.mirroredModel.partName = originalName 
         #print("flipped yield ",self.mirroredOutput) #Debug
         # ===========================================================================
         self.inputReadyForTF    = copy.deepcopy(self.mirroredModel.inputReadyForTF)
         self.NSRM               = copy.deepcopy(self.mirroredModel.NSRM)
         #----------------------------------------------------------------------------
-        if (doFlips): #Do Output Flips!
+        if (doOutputFlips): #Do Output Flips!
            for originalKeyRaw in self.mirroredOutput:
                  originalKey = originalKeyRaw.lower()
                  #print("OUTPUT 3D FOUND ",originalKey," ",end="") #Debug
@@ -371,7 +383,6 @@ class SimulatedMirroredEnsemble():
 #-------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------
-
 
 
 

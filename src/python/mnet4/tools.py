@@ -98,6 +98,71 @@ def transform_coordinate_wrt_target(x, y, width, height, targetWidth = 1920, tar
 
 
 
+def img_resizeWithPadding(img,targetWidth,targetHeight):
+    import cv2
+    width  = targetWidth
+    height = targetHeight 
+    h, w = img.shape[:2]
+    pad_bottom, pad_right = 0, 0
+    ratio = w / h
+
+    if h > height or w > width:
+        # shrinking image algorithm
+        interp = cv2.INTER_AREA
+    else:
+        # stretching image algorithm
+        interp = cv2.INTER_CUBIC
+
+    w = width
+    h = round(w / ratio)
+    if h > height:
+        h = height
+        w = round(h * ratio)
+    pad_top    = int(abs(height - h)/2)
+    pad_bottom = int(abs(height - h)/2)
+    pad_left   = int(abs(width - w)/2)
+    pad_right  = int(abs(width - w)/2)
+
+    scaled_img = cv2.resize(img, (w, h), interpolation=interp)
+    padded_img = cv2.copyMakeBorder(scaled_img,pad_top,pad_bottom,pad_left,pad_right,borderType=cv2.BORDER_CONSTANT,value=[0,0,0])
+    return padded_img
+
+
+def img_resizeWithCrop(img, targetWidth,targetHeight):
+    import cv2
+    import numpy as np
+    interpolation=cv2.INTER_AREA
+    h, w = img.shape[:2]
+    min_size = np.amin([h,w])
+
+    # Centralize and crop
+    crop_img = img[int(h/2-min_size/2):int(h/2+min_size/2), int(w/2-min_size/2):int(w/2+min_size/2)]
+    resized = cv2.resize(crop_img, (targetWidth,targetHeight), interpolation=interpolation)
+    return resized
+
+
+
+def normalizedCoordinatesAdaptForVerticalImage(sourceWidth,sourceHeight,targetWidth,targetHeight,nX,nY): 
+    import numpy as np
+    h = sourceHeight
+    w = sourceWidth
+    min_size = np.amin([h,w])
+    
+    nY = int(h/2-min_size/2) + int(nY*min_size)
+    nX = int(w/2-min_size/2) + int(nX*min_size)
+
+    return float(nX/sourceWidth),float(nY/sourceHeight)
+
+
+
+def normalizedCoordinatesAdaptToResizedCrop(sourceWidth,sourceHeight,trainingWidth,trainingHeight,nX,nY):
+    if (sourceHeight>sourceWidth):
+        print("PoseNET.py normalizedCoordinatesAdaptToResizedCrop: FIX VERTICAL IMAGE")
+        import numpy as np
+    
+    return nX,nY
+
+
 
 """
 Split joint names based on configuration

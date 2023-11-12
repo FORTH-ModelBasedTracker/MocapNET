@@ -213,6 +213,7 @@ class MocapNETTensorflowSubProblem():
 
 
         if (missingRatio>0.3):
+           print("Not running ",self.partName," due to missing joints ")
            return self.output
 
         #Turns out on some decompositions like FastICA there are a lot of zeros!
@@ -318,6 +319,93 @@ class MocapNETTensorflowSubProblem():
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
+class PoseNET():
+  def __init__(
+               self,
+               modelPath:str="movenet/",
+               targetWidth  = 192,
+               targetHeight = 192,
+               trainingWidth  = 1920,
+               trainingHeight = 1080,
+              ):
+               #Tensorflow attempt to be reasonable
+               #------------------------------------------
+               from holisticPartNames import getPoseNETBodyNameList
+               self.jointNames = getPoseNETBodyNameList()
+               import tensorflow as tf
+               self.model      = tf.saved_model.load(modelPath)
+               self.movenet    = self.model.signatures['serving_default']
+               #------------------------------------------
+               self.output         = dict()
+               self.hz             = 0.0
+               self.targetWidth    = targetWidth
+               self.targetHeight   = targetHeight
+               self.trainingWidth  = trainingWidth
+               self.trainingHeight = trainingHeight
+               #------------------------------------------
+  def get2DOutput(self):
+        return self.output
+
+  def convertImageToMocapNETInput(self,image,doFlipX=False,threshold=0.05):
+        import tensorflow as tf
+        import numpy as np
+        import time
+        import cv2
+        sourceWidth  = image.shape[1]
+        sourceHeight = image.shape[0]
+        currentAspectRatio=self.targetWidth/self.targetHeight
+        trainedAspectRatio=self.trainingWidth/self.trainingHeight
+        #Do resize on OpenCV end
+        #----------------------------------------------------------------
+        from tools import img_resizeWithCrop,normalizedCoordinatesAdaptForVerticalImage,normalizedCoordinatesAdaptToResizedCrop
+        imageTransformed = img_resizeWithCrop(image,self.targetWidth,self.targetHeight)
+        #imageTransformed = img_resizeWithPadding(image,self.targetWidth,self.targetHeight)
+        imageTransformed = cv2.cvtColor(imageTransformed,cv2.COLOR_BGR2RGB)
+        #----------------------------------------------------------------
+
+        #Prepare image for Tensorflow
+        #----------------------------------------------------------------
+        imageTF     = np.expand_dims(imageTransformed, axis=0).astype('int32')
+        #----------------------------------------------------------------
+
+
+        start = time.time()
+        # TF Lite format expects tensor type of float32.
+        #-------------------------------------------------------------------
+        #-------------------------------------------------------------------
+        outputs = self.movenet(tf.cast(imageTF, dtype=tf.int32)) 
+        keypoints_with_scores = outputs['output_0']
+        predictionsRaw = keypoints_with_scores[0][0]
+        #-------------------------------------------------------------------
+        #-------------------------------------------------------------------
+        seconds = time.time() - start
+        self.hz  = 1 / (seconds+0.0001)
+        #print("MoveNET Framerate : ",round(self.hz,2)," fps          ")
+
+
+        currentAspectRatio=sourceWidth/sourceHeight #We "change" aspect ratio by restoring points
+        predictions=list()
+        for pointID in range(0,len(predictionsRaw)):
+           #Joints have y,x,acc order
+           thisPoint = list()
+           thisPoint.append(float(predictionsRaw[pointID][0])) #y
+           thisPoint.append(float(predictionsRaw[pointID][1])) #x
+           thisPoint.append(float(predictionsRaw[pointID][2])) #score
+           nX,nY = normalizedCoordinatesAdaptToResizedCrop(sourceWidth,sourceHeight,self.targetWidth,self.targetHeight,thisPoint[1],thisPoint[0])
+           nX,nY = normalizedCoordinatesAdaptForVerticalImage(sourceWidth,sourceHeight,self.trainingWidth,self.trainingHeight,nX,nY)
+           thisPoint[0]= nY #Just update coords
+           thisPoint[1]= nX #Just update coords
+           predictions.append(thisPoint)
+        #-------------------------------------------------------------------
+
+        from holisticPartNames import processPoseNETLandmarks
+        self.output = processPoseNETLandmarks(self.jointNames,predictions,currentAspectRatio,trainedAspectRatio,threshold=threshold,doFlipX=doFlipX)
+
+        from MocapNETVisualization import drawPoseNETLandmarks
+        self.image = drawPoseNETLandmarks(predictions,image,threshold=threshold,jointLabels=self.jointNames)        
+        #------------------------------------------------
+
+        return self.output,image
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------------------------------------------

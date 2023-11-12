@@ -7,6 +7,9 @@ License : "FORTH"
 
 from tools import bcolors 
 
+dumpedFrameForTiles=0
+
+
 def normalize2DPointWhileAlsoMatchingTrainingAspectRatio(x, y, currentAspectRatio, trainingAspectRatio=float(1920/1080)):
     if x == 0 and y == 0:
         # Only Fix Aspect Ratio on visible points to preserve 0,0,0 that are
@@ -263,6 +266,146 @@ def guessLandmarks(mnetPose2D):
 
 
 
+
+def dumpPoseNETInputTile(pose2D):
+  global dumpedFrameForTiles
+  jointLabels = getBody25BodyNameList() #getBody25NameList()
+  f = open("Input2DTile_%u.json" % dumpedFrameForTiles, "w")
+  f.write("{\n")
+  f.write("\"data\":[\n")
+  
+  i=0
+  for joint in jointLabels:
+    if (i!=0): 
+       f.write(",")
+    #------------------------
+    if (('2dx_'+joint in pose2D) and ('2dy_'+joint in pose2D)  and ('visible_'+joint in pose2D)):    
+       f.write(str(pose2D['2dx_'+joint]))
+       f.write(",")
+       f.write(str(pose2D['2dy_'+joint]))
+       f.write(",")
+       f.write(str(pose2D['visible_'+joint]))
+    else:
+       f.write("0,0,0")
+    #------------------------
+    i=i+1
+  f.write("\n] }\n")
+
+
+  f.close()
+  dumpedFrameForTiles=dumpedFrameForTiles+1
+
+
+
+
+
+def processPoseNETLandmarks(correctLabels,poseNETPose,currentAspectRatio,trainedAspectRatio,threshold=0.01,doFlipX=False,doFrameDumpingForTiles=False):
+   itemNumber     = 0
+   mnetPose2D     = dict()
+   aspectRatioFix = trainedAspectRatio / currentAspectRatio
+   if poseNETPose is not None:
+     for item in poseNETPose:
+        thisLandmarkName = correctLabels[itemNumber].lower() 
+        if (thisLandmarkName!=''):
+          confidence = float(item[2])          
+          #------------------------------- 
+          x2D     = 0.0
+          y2D     = 0.0
+          visible = 0.0
+          #------------------------------- 
+          if (confidence>threshold):
+             #print("Confidence ",confidence," > ",threshold)
+             #First of all for some reason mediapipe images get flipped so we undo this
+             if (doFlipX):
+                x2D = float(1.0-item[1]) #Do Flip X
+             else:
+                x2D = float(item[1]) #Dont Flip X
+             #second the camera used is different that the trained one so we need to fix the aspect ratio
+             #x2D = trainedAspectRatio * ( x2D / currentAspectRatio)
+             x2D = aspectRatioFix * x2D
+             y2D = float(item[0])
+             if (x2D==0) and (y2D==0):
+               visible=0.0
+             else:
+               visible=1.0
+
+          #------------------------------- 
+
+
+          if (x2D<0) or (x2D>1.0) or (y2D<0) or (y2D>1.0):
+              vis=0.0 #Update visibility on the fly
+
+          #------------------------------- 
+          labelX = "2dx_"+thisLandmarkName
+          mnetPose2D[labelX]=x2D # <- we store the corrected 2D point
+          labelY = "2dy_"+thisLandmarkName
+          mnetPose2D[labelY]=y2D
+          labelV = "visible_"+thisLandmarkName
+          mnetPose2D[labelV]=visible
+          if (x2D>1.0):
+             print("Normalization Error(!) | Joint ",thisLandmarkName,"(",itemNumber,") x=",x2D," y=",y2D," v=",visible)
+        itemNumber = itemNumber +1
+
+   if ("2dx_rshoulder" in mnetPose2D) and ("2dy_rshoulder" in mnetPose2D) and ("visible_rshoulder" in mnetPose2D) and ("2dx_lshoulder" in mnetPose2D) and ("2dy_lshoulder" in mnetPose2D) and ("visible_lshoulder" in mnetPose2D) :
+              #---------------------------------------------
+              rX = float(mnetPose2D["2dx_rshoulder"])
+              rY = float(mnetPose2D["2dy_rshoulder"])
+              rV = float(mnetPose2D["visible_rshoulder"])
+              #---------------------------------------------
+              lX = float(mnetPose2D["2dx_lshoulder"])
+              lY = float(mnetPose2D["2dy_lshoulder"])
+              lV = float(mnetPose2D["visible_lshoulder"])
+              #---------------------------------------------
+              if (rV>0.0) and (lV>0.0):
+                 mnetPose2D["2dx_neck1"]     = (rX+lX)/2
+                 mnetPose2D["2dy_neck1"]     = (rY+lY)/2
+                 mnetPose2D["visible_neck1"] = 1.0
+
+   if (('visible_rhip' in mnetPose2D) and ('visible_lhip' in mnetPose2D)):
+     if (float(mnetPose2D["visible_rhip"])>0.0 and float(mnetPose2D["visible_lhip"])>0.0):
+        mnetPose2D["2dx_hip"]=(float(mnetPose2D["2dx_rhip"])+float(mnetPose2D["2dx_lhip"]))/2.0
+        mnetPose2D["2dy_hip"]=(float(mnetPose2D["2dy_rhip"])+float(mnetPose2D["2dy_lhip"]))/2.0
+        mnetPose2D["visible_hip"]=1.0
+
+   if (('visible_rshoulder' in mnetPose2D) and ('visible_lshoulder' in mnetPose2D)):
+     if (float(mnetPose2D["visible_rshoulder"])>0.0 and float(mnetPose2D["visible_lshoulder"])>0.0):
+        mnetPose2D["2dx_neck"]=(float(mnetPose2D["2dx_rshoulder"])+float(mnetPose2D["2dx_lshoulder"]))/2.0
+        mnetPose2D["2dy_neck"]=(float(mnetPose2D["2dy_rshoulder"])+float(mnetPose2D["2dy_lshoulder"]))/2.0
+        mnetPose2D["visible_neck"]=1.0
+
+   #-----------------------------------------------------------------
+   if ('visible_rfoot' in mnetPose2D)  :
+     mnetPose2D["2dx_endsite_toe1-2.r"]=mnetPose2D["2dx_rfoot"]
+     mnetPose2D["2dy_endsite_toe1-2.r"]=mnetPose2D["2dy_rfoot"]
+     mnetPose2D["visible_endsite_toe1-2.r"]=mnetPose2D["visible_rfoot"]
+     mnetPose2D["2dx_endsite_toe5-3.r"]=mnetPose2D["2dx_rfoot"]
+     mnetPose2D["2dy_endsite_toe5-3.r"]=mnetPose2D["2dy_rfoot"]
+     mnetPose2D["visible_endsite_toe5-3.r"]=mnetPose2D["visible_rfoot"]
+   #-----------------------------------------------------------------
+   if ('visible_lfoot' in mnetPose2D)  :
+     mnetPose2D["2dx_endsite_toe1-2.l"]=mnetPose2D["2dx_lfoot"]
+     mnetPose2D["2dy_endsite_toe1-2.l"]=mnetPose2D["2dy_lfoot"]
+     mnetPose2D["visible_endsite_toe1-2.l"]=mnetPose2D["visible_lfoot"]
+     mnetPose2D["2dx_endsite_toe5-3.l"]=mnetPose2D["2dx_lfoot"]
+     mnetPose2D["2dy_endsite_toe5-3.l"]=mnetPose2D["2dy_lfoot"]
+     mnetPose2D["visible_endsite_toe5-3.l"]=mnetPose2D["visible_lfoot"]
+    
+   #Deactivate to stop dumping tiles
+   if (doFrameDumpingForTiles):
+     dumpPoseNETInputTile(mnetPose2D)
+
+   return mnetPose2D
+#---------------------------------------------------
+
+
+
+
+
+
+
+
+
+
 #MocapNET list of expected inputs
 #frameNumber,skeletonID,totalSkeletons,2DX_head,2DY_head,visible_head,2DX_neck,2DY_neck,visible_neck,2DX_rshoulder,2DY_rshoulder,visible_rshoulder,2DX_relbow,2DY_relbow,visible_relbow,2DX_rhand,2DY_rhand,visible_rhand,2DX_lshoulder,2DY_lshoulder,visible_lshoulder,2DX_lelbow,2DY_lelbow,visible_lelbow,2DX_lhand,2DY_lhand,visible_lhand,2DX_hip,2DY_hip,visible_hip,2DX_rhip,2DY_rhip,visible_rhip,2DX_rknee,2DY_rknee,visible_rknee,2DX_rfoot,2DY_rfoot,visible_rfoot,2DX_lhip,2DY_lhip,visible_lhip,2DX_lknee,2DY_lknee,visible_lknee,2DX_lfoot,2DY_lfoot,visible_lfoot,2DX_endsite_eye.r,2DY_endsite_eye.r,visible_endsite_eye.r,2DX_endsite_eye.l,2DY_endsite_eye.l,visible_endsite_eye.l,2DX_rear,2DY_rear,visible_rear,2DX_lear,2DY_lear,visible_lear,2DX_endsite_toe1-2.l,2DY_endsite_toe1-2.l,visible_endsite_toe1-2.l,2DX_endsite_toe5-3.l,2DY_endsite_toe5-3.l,visible_endsite_toe5-3.l,2DX_lheel,2DY_lheel,visible_lheel,2DX_endsite_toe1-2.r,2DY_endsite_toe1-2.r,visible_endsite_toe1-2.r,2DX_endsite_toe5-3.r,2DY_endsite_toe5-3.r,visible_endsite_toe5-3.r,2DX_rheel,2DY_rheel,visible_rheel,2DX_bkg,2DY_bkg,visible_bkg,
 
@@ -307,6 +450,29 @@ def getHolisticBodyNameList():
 #---------------------------------------------------
 
 
+def getPoseNETBodyNameList():
+ #nose, left eye, right eye, left ear, right ear, left shoulder, right shoulder, left elbow, right elbow, left wrist, right wrist, left hip, right hip, left knee, right knee, left ankle, right ankle
+ bn=list()
+ #---------------------------------------------------
+ bn.append("head")              #0  - nose
+ bn.append("endsite_eye.l")     #1  - left_eye  eye.l endsite_eye.l
+ bn.append("endsite_eye.r")     #2  - right_eye eye.r endsite_eye.r
+ bn.append("lear")              #3  - __temporalis02.l - left_ear ear.l
+ bn.append("rear")              #4  - __temporalis02.r  right_ear ear.r
+ bn.append("lshoulder")         #5  - left_shoulder
+ bn.append("rshoulder")         #6  - right_shoulder
+ bn.append("lelbow")            #7  - left_elbow
+ bn.append("relbow")            #8  - right_elbow
+ bn.append("lhand")             #9  - left_wrist
+ bn.append("rhand")             #10 - right_wrist
+ bn.append("lhip")              #11 - left_hip
+ bn.append("rhip")              #12 - right_hip
+ bn.append("lknee")             #13 - left_knee
+ bn.append("rknee")             #14 - right_knee
+ bn.append("lfoot")             #15 - left_ankle
+ bn.append("rfoot")             #16 - right_ankle
+ return bn
+#---------------------------------------------------
 
 def getBody25BodyNameList():
  bn=list()
