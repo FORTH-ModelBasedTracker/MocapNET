@@ -18,6 +18,39 @@ from tools    import secondsToHz,eprint
 trainingWidth  = 1920
 trainingHeight = 1080
 
+def getCaptureDeviceFromPath(videoFilePath,videoWidth,videoHeight):
+  import cv2
+  #------------------------------------------
+  if (videoFilePath=="esp"):
+     from espStream import ESP32CamStreamer
+     cap = ESP32CamStreamer()
+  elif (videoFilePath=="webcam"):
+     cap = cv2.VideoCapture(0)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
+  elif (videoFilePath=="/dev/video0"):
+     cap = cv2.VideoCapture(0)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
+  elif (videoFilePath=="/dev/video1"):
+     cap = cv2.VideoCapture(1)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
+  elif (videoFilePath=="/dev/video2"):
+     cap = cv2.VideoCapture(2)
+     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
+     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
+  else:
+     from tools import checkIfPathIsDirectory
+     if (checkIfPathIsDirectory(videoFilePath) and (not "/dev/" in videoFilePath) ):
+        from folderStream import FolderStreamer
+        cap = FolderStreamer(path=videoFilePath,width=videoWidth,height=videoHeight)
+        mnet.bvh.configureRendererFromFile("%s/color.calib"%videoFilePath)
+     else:
+        cap = cv2.VideoCapture(videoFilePath)
+  return cap 
+
+
 
 def runPoseNETSerial(): 
   #Parse command line arguments
@@ -34,7 +67,7 @@ def runPoseNETSerial():
   doProfiling          = False
   doFlipX              = False
   engine               = "onnx"
-  doNNEveryNFrames     = 2 # 3 
+  doNNEveryNFrames     = 1 # 3 
   bvhScale             = 1.0
   doHCDPostProcessing  = 1 
   hcdLearningRate      = 0.001
@@ -87,34 +120,9 @@ def runPoseNETSerial():
 
   # For webcam input:
   frameNumber = 0
-  #------------------------------------------
-  if (videoFilePath=="esp"):
-     from espStream import ESP32CamStreamer
-     cap = ESP32CamStreamer()
-  elif (videoFilePath=="webcam"):
-     cap = cv2.VideoCapture(0)
-     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
-     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
-  elif (videoFilePath=="/dev/video0"):
-     cap = cv2.VideoCapture(0)
-     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
-     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
-  elif (videoFilePath=="/dev/video1"):
-     cap = cv2.VideoCapture(1)
-     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
-     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
-  elif (videoFilePath=="/dev/video2"):
-     cap = cv2.VideoCapture(2)
-     cap.set(cv2.CAP_PROP_FRAME_WIDTH, videoWidth)
-     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, videoHeight)
-  else:
-     from tools import checkIfPathIsDirectory
-     if (checkIfPathIsDirectory(videoFilePath) and (not "/dev/" in videoFilePath) ):
-        from folderStream import FolderStreamer
-        cap = FolderStreamer(path=videoFilePath,width=videoWidth,height=videoHeight)
-        mnet.bvh.configureRendererFromFile("%s/color.calib"%videoFilePath)
-     else:
-        cap = cv2.VideoCapture(videoFilePath)
+  #------------------------------------------ 
+  cap = getCaptureDeviceFromPath(videoFilePath,videoWidth,videoHeight)
+
   #-----------------------------------------
   #python3 -m tf2onnx.convert --saved-model movenet --opset 14 --output movenet/model.onnx
   #zip movenet.zip movenet/* movenet/*/*
@@ -265,12 +273,14 @@ def runPoseNETParallel():
 
   headless         = False
   videoFilePath    = "webcam" 
+  videoWidth           = 1280
+  videoHeight          = 720
   saveVideo        = False
   plotBVHChannels  = False
   doProfiling      = False
   doFlipX          = False
   engine           = "onnx"
-  doNNEveryNFrames = 3 
+  doNNEveryNFrames = 1 
   bvhScale         = 1.0
   threshold        = 0.05
 
@@ -300,15 +310,7 @@ def runPoseNETParallel():
   # For webcam input:
   #-----------------------------------------
   frameNumber = 0
-  if (videoFilePath=="esp"):
-     from espStream import ESP32CamStreamer
-     cap = ESP32CamStreamer()
-  elif (videoFilePath=="webcam"):
-     cap = cv2.VideoCapture(0)
-     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-  else:
-     cap = cv2.VideoCapture(videoFilePath)
+  cap = getCaptureDeviceFromPath(videoFilePath,videoWidth,videoHeight)
   #-----------------------------------------
   #python3 -m tf2onnx.convert --saved-model movenet --opset 14 --output movenet/model.onnx
   #zip movenet.zip movenet/* movenet/*/*
