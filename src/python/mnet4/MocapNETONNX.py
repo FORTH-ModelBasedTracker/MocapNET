@@ -258,7 +258,7 @@ class MocapNETONNXSubProblem():
         self.inputReadyForTF,missingRatio = self.prepareInput(input2D,self.configuration)
 
         if (missingRatio>0.3):
-           eprint("Not running ",self.partName," due to missing joints : ",input2D)
+           eprint("Not running ",self.partName," due to missing joints ")#,input2D)
            return self.output
 
 

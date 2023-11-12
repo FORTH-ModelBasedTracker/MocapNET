@@ -327,22 +327,19 @@ class SimulatedMirroredEnsemble():
         #------------------------------------------------------------
         if (doInputFlips): #Do Input flips!
           #for key in input2D.keys():
-          for key in self.mirroredModel.inputs: #<- fix right hand working only if left hand is visible
+          for keyR in self.mirroredModel.inputs: #<- fix right hand working only if left hand is visible
+              key = keyR.lower()
               if (key in self.directInputFlips):
                   originalName = key
                   flippedName  = self.directInputFlips[originalName]
                   if (flippedName in input2D):
                       flippedInput2D[originalName] = float(input2D[flippedName])
-                  else:
-                      print("This should never happen, Cant flip ",flippedName)
               elif (key in self.flippedInputFlips):
                   originalName = key
                   flippedName  = self.flippedInputFlips[originalName]
                   if (flippedName in input2D):
                       if (float(input2D[flippedName])!=0.0): #<- This should be a check on the visibility channel 
                         flippedInput2D[originalName]    = 1.0 - float(input2D[flippedName])
-                  else:
-                      print("This should never happen, Cant flip ",flippedName)
               
         #----------------------------------------------------------------------------
         leftHandinputReadyForTF = copy.deepcopy(self.mirroredModel.inputReadyForTF)
