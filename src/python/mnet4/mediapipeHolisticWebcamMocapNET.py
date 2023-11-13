@@ -164,9 +164,9 @@ class MediaPipeHolistic():
                #------------------------------------------
                self.mp         = mp_holistic.Holistic(
                                                         static_image_mode=False,
-                                                        model_complexity=2,
-                                                        min_detection_confidence=0.3,
-                                                        min_tracking_confidence=0.3
+                                                        model_complexity=1, #1 = default complexity, 2 = high complexity
+                                                        min_detection_confidence=0.2,
+                                                        min_tracking_confidence=0.2
                                                      )
                #------------------------------------------
                #self.mpHands    = mp.solutions.hands.Hands( 
