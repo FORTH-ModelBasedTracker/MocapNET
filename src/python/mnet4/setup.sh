@@ -18,7 +18,7 @@ if [ "" = "$PKG_OK" ]; then
   #sudo apt-get --yes install $REQUIRED_PKG
 
   #if this is uncommented then if one package is missing then all missing packages are immediately installed..
-  sudo apt-get  --yes install $SYSTEM_DEPENDENCIES  
+  sudo apt-get --yes install $SYSTEM_DEPENDENCIES  
   break
 fi
 done
@@ -35,6 +35,8 @@ HEADLESS=" --headless"
 OPENCV="opencv-python-headless"
 rm -rf /content/sample_data/ #remove sample data
 ln -s $DIR /content/mnet4
+sudo apt-get --yes install build-essential freeglut3-dev libglew-dev #For some reason collab has some errors on previous check so just double-make sure we have these libraries
+
 else 
  echo "Using a python pythonVirtualEnvironment environment"
  echo "Activate it using : source pythonVirtualEnvironment/bin/activate"
@@ -117,5 +119,6 @@ fi
  echo " if you are running on collab don't forget to append --headless to your command"
  echo " after the run is complete out.bvh will contain your results  "
 
-
+#Force making of library during last-stage of setup..
+BVH/makeLibrary.sh
 
