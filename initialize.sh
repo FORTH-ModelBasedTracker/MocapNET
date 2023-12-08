@@ -58,21 +58,23 @@ chmod +x mocapnet.desktop
 
 
 #SWITCH DOWNLOAD BEHAVIOR
-USE_GOOGLE_HOSTING="yes"
+USE_GOOGLE_HOSTING="no"
 
 #unfortunately 2022 has not been kind on the internet and my server so I wont use my server
 CMUDATASET_WEBSERVER="http://ammar.gr/datasets/"
 DATASET_WEBSERVER="http://ammar.gr/datasets/"
 OTHERFILE_WEBSERVER="http://ammar.gr/mocapnet/"
 
+#cvrlcode.ics.forth.gr is firewalled
+#CMUDATASET_WEBSERVER_PATH="http://cvrlcode.ics.forth.gr/web_share/mocapnet/CMUPlusHeadMotionCapture.zip"
+#DATASET_WEBSERVER="http://cvrlcode.ics.forth.gr/web_share/mocapnet/"
+#OTHERFILE_WEBSERVER="http://cvrlcode.ics.forth.gr/web_share/mocapnet/"
+
 #Instead files are now located on the CVRL FORTH server
-CMUDATASET_WEBSERVER_PATH="http://cvrlcode.ics.forth.gr/web_share/mocapnet/CMUPlusHeadMotionCapture.zip"
 if [ "$USE_GOOGLE_HOSTING" == "yes" ]; then
    CMUDATASET_WEBSERVER_PATH="drive.google.com/u/3/uc?id=1Zt-MycqhMylfBUqgmW9sLBclNNxoNGqV&export=download&confirm=yes"
 fi
 
-DATASET_WEBSERVER="http://cvrlcode.ics.forth.gr/web_share/mocapnet/"
-OTHERFILE_WEBSERVER="http://cvrlcode.ics.forth.gr/web_share/mocapnet/"
 
 
 clear
