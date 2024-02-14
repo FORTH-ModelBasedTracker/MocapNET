@@ -11,6 +11,13 @@ One click deployment in Google Collab : [![Open MocapNET v4 In Colab](https://co
 ## News
 ------------------------------------------------------------------ 
 
+
+14-2-2024
+Last Wednesday (8-2-2024) I successfully defended the MocapNET Ph.D. thesis! I am currently at the process of finalizing the MocapNET PhD thesis, however there are some good news in regards to continuation of development and funding of the MocapNET project in the context of the [Greece4.0 project](https://www.greece40.gr/). Thank you for your patience in regards with the recent repository inactivity.. 
+[MocapNET PhD Thesis photo](https://raw.githubusercontent.com/FORTH-ModelBasedTracker/MocapNET/master/doc/thesisdefence.jpg)
+
+
+
 2-11-2023
 I am currently finalizing my PhD thesis and preparing my defence, for this reason repository maintenance is subpar at this time.
 However, hopefully soon, I will be able to share my ~316 page thesis that clearly and in detail goes through all of the development effort and research behind MocapNET and this repository.
