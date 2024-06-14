@@ -83,8 +83,41 @@ Please cite the following papers if this work helps your research :
   projects =  {I.C.HUMANS},
   videolink = {https://www.youtube.com/watch?v=aaLOSY_p6Zc}
 }
+
+```
+For the BMVC21 version of MocapNET please [switch to the MNET3 branch](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet3) 
+
+```
+@inproceedings{Qammaz2020,
+  author = {Ammar Qammaz and Antonis A. Argyros},
+  title = {Occlusion-tolerant and personalized 3D human pose estimation in RGB images},
+  booktitle = {IEEE International Conference on Pattern Recognition (ICPR 2020), (to appear)},
+  year = {2021},
+  month = {January},
+  url = {http://users.ics.forth.gr/argyros/res_mocapnet_II.html},
+  projects =  {Co4Robots},
+  pdflink = {http://users.ics.forth.gr/argyros/mypapers/2021_01_ICPR_Qammaz.pdf},
+  videolink = {https://youtu.be/Jgz1MRq-I-k}
+}
 ```
 
+
+For the original BMVC19 version of MocapNET please [switch to the MNET1 branch](https://github.com/FORTH-ModelBasedTracker/MocapNET/tree/mnet1), unfortunately Tensorflow 1 is not well supported in recent environments so it is difficult to set it up 
+```
+@inproceedings{Qammaz2019,
+  author = {Qammaz, Ammar and Argyros, Antonis A},
+  title = {MocapNET: Ensemble of SNN Encoders for 3D Human Pose Estimation in RGB Images},
+  booktitle = {British Machine Vision Conference (BMVC 2019)},
+  publisher = {BMVA},
+  year = {2019},
+  month = {September},
+  address = {Cardiff, UK},
+  url = {http://users.ics.forth.gr/argyros/res_mocapnet.html},
+  projects =  {CO4ROBOTS,MINGEI},
+  pdflink = {http://users.ics.forth.gr/argyros/mypapers/2019_09_BMVC_mocapnet.pdf},
+  videolink = {https://youtu.be/fH5e-KMBvM0}
+}
+```
 
 
 
