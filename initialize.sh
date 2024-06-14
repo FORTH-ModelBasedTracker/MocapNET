@@ -75,8 +75,7 @@ fi
 cd "$DIR"
 cd src/python/mnet4
 rm -rf BVH/
-ln -s ../../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_re
-nderer/src/Applications/BVHTester/ BVH
+ln -s ../../../dependencies/RGBDAcquisition/opengl_acquisition_shared_library/opengl_depth_and_color_renderer/src/Applications/BVHTester/ BVH
 cd BVH
 ./makeLibrary.sh
 
