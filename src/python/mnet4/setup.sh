@@ -47,7 +47,6 @@ HEADLESS=" "
 fi
 
 
-
 cd "$DIR"
 if [ -f RGBDAcquisition/README.md ]; then
 echo "RGBDAcquisition appears to already exist .."
@@ -72,52 +71,53 @@ else
 fi
 
 
- 
- python3 -m pip install --upgrade pip #2.8.0 nvidia-tensorrt
- python3 -m pip install tensorflow numpy numba tensorboard_plugin_profile tensorflow-model-optimization keras pillow tf2onnx onnxruntime onnx matplotlib pydot mediapipe $OPENCV scikit-learn
+
+python3 -m pip install --upgrade pip
+#python3 -m pip install tensorflow numpy numba tensorboard_plugin_profile tensorflow-model-optimization keras pillow tf2onnx onnxruntime onnx matplotlib pydot mediapipe $OPENCV scikit-learn #More stuff
+python3 -m pip install tensorflow tf_keras numpy numba pillow onnxruntime onnx matplotlib pydot mediapipe $OPENCV scikit-learn #Less stuff
 
  
- #Two ways to get Models!
- #One through the database and compile them yourself (commented out to save Google Collab CPU time)..
- #python3 -m getModelFromDatabase --get 318
- #To generate the archive in the next lines do :
- #   zip mnet4_318.zip step1_*/*
+#Two ways to get Models!
+#One through the database and compile them yourself (commented out to save Google Collab CPU time)..
+#python3 -m getModelFromDatabase --get 318
+#To generate the archive in the next lines do :
+#   zip mnet4_318.zip step1_*/*
 
- #Another just take the precompiled ensembles ready to run
- wget http://ammar.gr/mocapnet/mnet4/mnet4_-314.zip -O mnet4_-314.zip
- unzip -o mnet4_-314.zip #<- upgrade to 324 mnet4_318.zip
+#Another just take the precompiled ensembles ready to run
+wget http://ammar.gr/mocapnet/mnet4/mnet4_-314.zip -O mnet4_-314.zip
+unzip -o mnet4_-314.zip #<- upgrade to 324 mnet4_318.zip
 
- #Unzip models for PoseNET.py operation..
- wget http://ammar.gr/mocapnet/mnet4/mediapipe.zip -O mediapipe.zip
- unzip -o mediapipe.zip
+#Unzip models for PoseNET.py operation..
+wget http://ammar.gr/mocapnet/mnet4/mediapipe.zip -O mediapipe.zip
+unzip -o mediapipe.zip
 
- #To get :
- # python3 -m evaluateMocapNET --config dataset/body_configuration.json --all body --engine onnx 
- #  to work
+#To get :
+# python3 -m evaluateMocapNET --config dataset/body_configuration.json --all body --engine onnx 
+#  to work
 
- #wget http://cvrlcode.ics.forth.gr/web_share/mocapnet/MocapNETBodyValidationSet.zip
- #wget http://ammar.gr/datasets/MocapNETBodyValidationSet.zip
- #unzip MocapNETBodyValidationSet.zip
+#wget http://cvrlcode.ics.forth.gr/web_share/mocapnet/MocapNETBodyValidationSet.zip
+#wget http://ammar.gr/datasets/MocapNETBodyValidationSet.zip
+#unzip MocapNETBodyValidationSet.zip
 
 
 
- #Doing a test run!
+#Doing a test run!
 
 # echo "To enable Tensorflow profiling for non-root users please add : "
 # echo "options nvidia \"NVreg_RestrictProfilingToAdminUsers=0\""
 # echo "to /etc/modprobe.d/nvidia-graphics-drivers.conf"
 # echo " "
- echo "Ready for use"
- echo "From now on to work with MocapNET you can use :  "
- echo "source pythonVirtualEnvironment/bin/activate"
- echo "!python3 -m mediapipeHolisticWebcamMocapNET --from webcam  --save --plot"
- echo " OR "
- echo "!python3 -m mediapipeHolisticWebcamMocapNET --from shuffle.webm --save --plot"
- echo " OR "
- echo "!python3 -m csvNET --from ../../../dataset/sample.csv  --save --plot"
- echo "  "
- echo " if you are running on collab don't forget to append --headless to your command"
- echo " after the run is complete out.bvh will contain your results  "
+echo "Ready for use"
+echo "From now on to work with MocapNET you can use :  "
+echo "source pythonVirtualEnvironment/bin/activate"
+echo "!python3 -m mediapipeHolisticWebcamMocapNET --from webcam  --save --plot"
+echo " OR "
+echo "!python3 -m mediapipeHolisticWebcamMocapNET --from shuffle.webm --save --plot"
+echo " OR "
+echo "!python3 -m csvNET --from ../../../dataset/sample.csv  --save --plot"
+echo "  "
+echo " if you are running on collab don't forget to append --headless to your command"
+echo " after the run is complete out.bvh will contain your results  "
 
 #Force making of library during last-stage of setup..
 BVH/makeLibrary.sh
