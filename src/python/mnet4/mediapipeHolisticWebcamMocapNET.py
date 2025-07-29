@@ -17,7 +17,7 @@ import os
 
 from readCSV  import parseConfiguration,zeroOutXYJointsThatAreInvisible,performNSRMAlignment
 from NSDM     import NSDMLabels,createNSDMUsingRules
-from tools    import secondsToHz,eprint
+from tools    import secondsToHz,eprint,getFilenameWithoutExtension
 from MocapNET import MocapNET
 
 mp_drawing   = mp.solutions.drawing_utils
@@ -39,6 +39,7 @@ MEDIAPIPE_LHAND_LANDMARK_NAMES = getHolisticLHandNameList()
 MEDIAPIPE_RHAND_LANDMARK_NAMES = getHolisticRHandNameList()
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+
 class MediaPipePose():
   def __init__(self,doMediapipeVisualization = False):
                #Tensorflow attempt to be reasonable
@@ -47,6 +48,10 @@ class MediaPipePose():
                #------------------------------------------
                self.doMediapipeVisualization = doMediapipeVisualization
                self.output     = dict()
+               self.mp_drawing = mp.solutions.drawing_utils
+               self.mp_drawing_styles = mp.solutions.drawing_styles
+               self.mp_pose = mp.solutions.pose
+               self.pose = self.mp_pose.Pose(static_image_mode=True,smooth_landmarks=True,model_complexity=0,enable_segmentation=True,min_detection_confidence=0.5)
                #------------------------------------------
   def get2DOutput(self):
         return self.output
@@ -98,21 +103,18 @@ class MediaPipePose():
     currentAspectRatio = width/height
     trainedAspectRatio = 1920/1080
     #-----------------------------------------------
-    mp_drawing = mp.solutions.drawing_utils
-    mp_drawing_styles = mp.solutions.drawing_styles
-    mp_pose = mp.solutions.pose
 
     # To improve performance, optionally mark the image as not writeable to
     # pass by reference.
     image.flags.writeable = False
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-    mocapNETInput = dict()
-    with mp_pose.Pose(static_image_mode=True,smooth_landmarks=True,model_complexity=0,enable_segmentation=True,min_detection_confidence=0.5) as pose:
+    mocapNETInput = dict() 
+    if (True):
     # with mp_holistic.Holistic(static_image_mode=True) as holistic:
               start = time.time()
               #-----------------------------------------------
-              results = pose.process(image)
+              results = self.pose.process(image)
               #results = holistic.process(image)
               #Draw the pose annotation on the image.
               image.flags.writeable = True
@@ -121,17 +123,17 @@ class MediaPipePose():
               if (self.doMediapipeVisualization):
              
                 try:
-                     mp_drawing.draw_landmarks(annotated_image, results.face_landmarks      , mp_holistic.FACEMESH_TESSELATION) #This used to be called FACE_CONNECTIONS
+                     self.mp_drawing.draw_landmarks(annotated_image, results.face_landmarks      , mp_holistic.FACEMESH_TESSELATION) #This used to be called FACE_CONNECTIONS
                 except:
-                     mp_drawing.draw_landmarks(annotated_image, results.face_landmarks      , mp_holistic.FACE_CONNECTIONS) #This used to be called FACE_CONNECTIONS
+                     self.mp_drawing.draw_landmarks(annotated_image, results.face_landmarks      , mp_holistic.FACE_CONNECTIONS) #This used to be called FACE_CONNECTIONS
 
-                mp_drawing.draw_landmarks(image, results.left_hand_landmarks,  mp_holistic.HAND_CONNECTIONS)
-                mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
-                mp_drawing.draw_landmarks(
+                self.mp_drawing.draw_landmarks(image, results.left_hand_landmarks,  mp_holistic.HAND_CONNECTIONS)
+                self.mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+                self.mp_drawing.draw_landmarks(
                                          image,
                                          results.pose_landmarks,
-                                         mp_pose.POSE_CONNECTIONS,
-                                         landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
+                                         self.mp_pose.POSE_CONNECTIONS,
+                                         landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style()
                                        )
 
               #Body only
@@ -152,6 +154,7 @@ class MediaPipePose():
 
     self.output = mocapNETInput
     return mocapNETInput,image
+
 
 
 
@@ -375,6 +378,8 @@ def streamPosesFromCameraToMocapNET():
   smoothingCutoff     = 5.0
   plotBVHChannels     = False
   liveDemo            = False
+  alterFocalLength    = False
+  dumpData            = False
   calibrationFile = ""
   bvhAnglesForPlotting    = list()
   bvhAllAnglesForPlotting = list()
@@ -393,6 +398,10 @@ def streamPosesFromCameraToMocapNET():
               multiThreaded = True
            if (sys.argv[i]=="--calib"):
               calibrationFile = sys.argv[i+1]
+           if (sys.argv[i]=="--focalLength"):
+              fX = float(sys.argv[i+1])
+              fY = float(sys.argv[i+2])
+              alterFocalLength = True
            if (sys.argv[i]=="--frameskip"):
               frameSkip    = int(sys.argv[i+1])
            if (sys.argv[i]=="--nnsubsample"):
@@ -422,6 +431,9 @@ def streamPosesFromCameraToMocapNET():
               doREye=True
               doMouth=True
               doHands=True
+           if (sys.argv[i]=="--dump"):
+              dumpData=True
+              saveVideo=True
            if (sys.argv[i]=="--nobody"):
               doBody=False
            if (sys.argv[i]=="--face"):
@@ -476,6 +488,11 @@ def streamPosesFromCameraToMocapNET():
   if (calibrationFile!=""):
         print("Enforcing Calibration file : ",calibrationFile)
         mnet.bvh.configureRendererFromFile(calibrationFile)
+  if (alterFocalLength):
+              commands = dict()
+              commands["fX"] = fX
+              commands["fY"] = fY
+              mnet.bvh.configureRenderer(commands)
 
 #To scale the intrinsic camera parameters (focal length and principal point) when changing the resolution of the image from 640x480 to 1280x720, you can use the following formula:
 #New Focal Length (fx_new, fy_new) = (New Image Width / Original Image Width) * Original Focal Length
@@ -585,6 +602,25 @@ def streamPosesFromCameraToMocapNET():
     
     mnet.printStatus()
 
+    if (dumpData):
+         import json
+         print("Dumping..")
+            
+         dumped_data = dict()
+         for k in mnet.ensemble.keys():
+              thisEnsemble = mnet.ensemble[k]
+              print("NSRM ",k," ",thisEnsemble.NSRM.tolist())
+              dumped_data["NSRM_%s"%k]  = thisEnsemble.NSRM.tolist()
+         
+         dumped_data["2DInput"]   = mocapNETInput
+         dumped_data["3DOutput"]  = mocapNET3DOutput
+         dumped_data["BVHOutput"] = mocapNETBVHOutput
+
+         print("Dumping descriptors_%05u.json" % (frameNumber))
+         with open("descriptors_%05u.json" % (frameNumber), "w") as fp:
+              json.dump(str(dumped_data) , fp)
+
+
     if (saveVideo): 
         cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)
         if (plotBVHChannels):
@@ -610,6 +646,13 @@ def streamPosesFromCameraToMocapNET():
     os.system("rm 2d_out.csv 3d_out.csv bvh_out.csv map_out.csv")
     os.system("./GroundTruthDumper --from out.bvh --setPositionRotation -2.6 0 2000 0 0 0  --csv ./ out.csv 2d+3d+bvh ") # Remove noise offsetPositionRotation
 
+
+
+  if (dumpData):
+       print("Package everything!")
+       packageName = getFilenameWithoutExtension(videoFilePath) 
+       os.system("zip %s.zip descriptors_0*.json in.csv out.csv out.bvh livelastRun3DHiRes.mp4 2d_out.csv  3d_out.csv bvh_out.csv map_out.csv " % packageName)
+       os.system("rm descriptors_0*.json in.csv out.csv out.bvh livelastRun3DHiRes.mp4 2d_out.csv 3d_out.csv bvh_out.csv map_out.csv")
 
   cap.release()
 #------------------------------------------------
