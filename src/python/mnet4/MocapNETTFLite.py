@@ -17,7 +17,10 @@ from NSDM     import NSDMLabels,createNSDMUsingRules,inputIsEnoughToCreateNSDM,p
 from EDM      import EDMLabels,createEDMUsingRules
 from tools    import bcolors,checkIfFileExists,readListFromFile,convertListToLowerCase,secondsToHz,getEntryIndexInList,parseSerialNumberFromSummary
 #-------------------------------------------------------------------------------------------
-from BVH.bvhConverter import BVH
+import sys
+sys.path.append("BVH")
+from bvhConverter import BVH
+#from BVH.bvhConverter import BVH
 #-------------------------------------------------------------------------------------------
 #from Smooth.smoothing import Smooth
 #-------------------------------------------------------------------------------------------

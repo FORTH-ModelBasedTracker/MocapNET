@@ -12,7 +12,10 @@ from NSDM     import NSDMLabels,createNSDMUsingRules,inputIsEnoughToCreateNSDM,p
 from EDM      import EDMLabels,createEDMUsingRules
 from tools    import bcolors,checkIfFileExists,readListFromFile,convertListToLowerCase,secondsToHz,getEntryIndexInList,eprint
 #-------------------------------------------------------------------------------------------
-from BVH.bvhConverter import BVH
+import sys
+sys.path.append("BVH")
+from bvhConverter import BVH
+#from BVH.bvhConverter import BVH
 #-------------------------------------------------------------------------------------------
 from principleComponentAnalysis import PCA
 #-------------------------------------------------------------------------------------------
@@ -804,6 +807,7 @@ class MocapNET():
         #This spams a lot..
         #print("Predictions from ensemble keys : ",rawBVHPrediction.keys())
 
+
         # Deal with 3D Mode
         #--------------------------------------------------------------------
         if ("upperbody" in self.ensemble) and ("lowerbody" in self.ensemble):
@@ -815,9 +819,6 @@ class MocapNET():
                  #print(self.output3D)
                  return self.output3D
         #--------------------------------------------------------------------
-
-
-
         #Modify our BVH armature with the new BVH values
         if (self.bvh.modify(rawBVHPrediction)): 
            
@@ -873,7 +874,10 @@ class MocapNET():
                    fineTuningPasses = fineTuningPasses + 1
 
                 #--------------------------------------------------------------------------------------
-                self.bvh.smooth(frameID=0,fSampling = self.smoothingSampling,fCutoff = self.smoothingCutoff)
+                if (self.smoothingSampling!=0) or (self.smoothingCutoff!=0):
+                    self.bvh.smooth(frameID=0,fSampling = self.smoothingSampling,fCutoff = self.smoothingCutoff)
+                else:
+                    print("Smoothing explicitly disabled")
                 #self.bvh.processFrame(0) # <- this is now done internally to simplify code.. This should now be updated with the IK fine tuned prediction..!
                 #--------------------------------------------------------------------------------------
                 end = time.time()
@@ -891,6 +895,8 @@ class MocapNET():
                 #if (fineTuningPasses>0):
                 #   print("MocapNET HCD Fine tuning Framerate : ",round(self.hz_HCD,2)," fps           \n", end="", flush=True)
 
+           else:
+               print(bcolors.FAIL,"Did not run HCD (",self.hcdIterations,",",self.doFineTuning,",",runHCD,")",bcolors.ENDC)
 
 
            #This block prevents(?) an endless loop of zeros..

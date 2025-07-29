@@ -512,6 +512,13 @@ def getFileFromPath(path):
 
 
 
+def getFilenameWithoutExtension(path):
+    # Get the base name of the file
+    base_name = os.path.basename(path)
+    # Split the name and extension
+    file_name, _ = os.path.splitext(base_name)
+    return file_name
+
 
 """
 Create a new directory if it does not exist
