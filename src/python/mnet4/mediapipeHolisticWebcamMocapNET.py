@@ -340,6 +340,39 @@ class MediaPipeHolistic():
 
 
 
+def crop_image_around_landmarks(image, annotated_image, mocapNETInput, padding=20):
+    h, w = image.shape[:2]
+    xs, ys = [], []
+
+    # Extract all 2D visible coordinates
+    for key in mocapNETInput:
+        if key.startswith("2dx_"):
+            part_name = key.replace("2dx_", "")
+            x = mocapNETInput[key]
+            y_key = f"2dy_{part_name}"
+            vis_key = f"visible_{part_name}"
+
+            if y_key in mocapNETInput and vis_key in mocapNETInput:
+                y = mocapNETInput[y_key]
+                visible = mocapNETInput[vis_key]
+                if visible > 0.5:
+                    xs.append(int(x * w))
+                    ys.append(int(y * h))
+
+    if not xs or not ys:
+        # No valid landmarks
+        return image, annotated_image
+
+    min_x = max(min(xs) - padding, 0)
+    max_x = min(max(xs) + padding, w)
+    min_y = max(min(ys) - padding, 0)
+    max_y = min(max(ys) + padding, h)
+
+    # Crop both images
+    cropped_image = image[min_y:max_y, min_x:max_x]
+    cropped_annotated = annotated_image[min_y:max_y, min_x:max_x]
+
+    return cropped_image, cropped_annotated
 
 
 
@@ -358,6 +391,7 @@ def streamPosesFromCameraToMocapNET():
   videoWidth       = 1280
   videoHeight      = 720
   saveVideo        = False
+  illustrate       = False
   dumpData         = False
   doBody           = True
   doFace           = False
@@ -443,6 +477,9 @@ def streamPosesFromCameraToMocapNET():
            if (sys.argv[i]=="--hands"):
               doHands=True
            if (sys.argv[i]=="--save"):
+              saveVideo=True
+           if (sys.argv[i]=="--illustrate"):
+              illustrate=True
               saveVideo=True
            if (sys.argv[i]=="--engine"):
               engine=sys.argv[i+1]
@@ -575,6 +612,7 @@ def streamPosesFromCameraToMocapNET():
        width  = int(image.shape[1]*aspectCorrection)
        height = int(image.shape[0])
        image  = cv2.resize(image, (width,height))
+    imageClean = image.copy()
 
     #--------------------------------------------------------------------------------------------------------------
     start = time.time() # Time elapsed
@@ -627,6 +665,10 @@ def streamPosesFromCameraToMocapNET():
               json.dump(str(dumped_data) , fp)
 
     if (saveVideo): 
+        if (illustrate):
+          rgb,mn = crop_image_around_landmarks(imageClean, annotated_image, mocapNETInput, padding=50)
+          cv2.imwrite('%05u_rgb.jpg'%(frameNumber), rgb)
+          cv2.imwrite('%05u_mnet.jpg'%(frameNumber), mn)
         cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)
         if (plotBVHChannels):
               cv2.imwrite('plotFrame_0_%05u.jpg'%(frameNumber), plotImage)
@@ -655,7 +697,7 @@ def streamPosesFromCameraToMocapNET():
     
 
   if (saveVideo): #                                              1280x720 by default
-     os.system("ffmpeg -framerate 30 -i colorFrame_0_%%05d.jpg -s %ux%u  -y -r 30 -pix_fmt yuv420p -threads 8 livelastRun3DHiRes.mp4 && rm colorFrame_0_*.jpg " % (videoWidth,videoHeight)) # 
+     os.system("ffmpeg -framerate 30 -i colorFrame_0_%%05d.jpg -s %ux%u  -y -r 30 -pix_fmt yuv420p -threads 8 livelastRun3DHiRes.mp4  " % (videoWidth,videoHeight)) # && rm colorFrame_0_*.jpg
      if (plotBVHChannels):
         os.system("ffmpeg -framerate 30 -i plotFrame_0_%05d.jpg -s 1200x720  -y -r 30 -pix_fmt yuv420p -threads 8 livelastPlot3DHiRes.mp4 && rm plotFrame_0_*.jpg")
      
