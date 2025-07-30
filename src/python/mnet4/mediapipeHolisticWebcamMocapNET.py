@@ -358,6 +358,7 @@ def streamPosesFromCameraToMocapNET():
   videoWidth       = 1280
   videoHeight      = 720
   saveVideo        = False
+  dumpData         = False
   doBody           = True
   doFace           = False
   doREye           = False
@@ -428,6 +429,9 @@ def streamPosesFromCameraToMocapNET():
               doREye=True
               doMouth=True
               doHands=True
+           if (sys.argv[i]=="--dump"):
+              dumpData=True
+              saveVideo=True
            if (sys.argv[i]=="--nobody"):
               doBody=False
            if (sys.argv[i]=="--face"):
@@ -600,10 +604,28 @@ def streamPosesFromCameraToMocapNET():
     image,plotImage = visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting)
     #--------------------------------------------------------------------------------------------------------------
     frameNumber = frameNumber + 1
-    
 
     mnet.printStatus()
- 
+
+    if (dumpData):
+         import json
+         print("Dumping All Output Data..")
+         dumped_data = dict()
+
+         for k in mnet.ensemble.keys():
+              thisEnsemble = mnet.ensemble[k]
+              print("NSRM ",k," ",thisEnsemble.NSRM.tolist())
+              dumped_data["NSRM_%s"%k]  = thisEnsemble.NSRM.tolist()
+
+         dumped_data["2DInput"]   = mocapNETInput
+         dumped_data["3DOutput"]  = mocapNET3DOutput
+         dumped_data["BVHOutput"] = mocapNETBVHOutput
+
+         print("Dumping descriptors_%05u.json" % (frameNumber))
+
+         with open("descriptors_%05u.json" % (frameNumber), "w") as fp:
+              json.dump(str(dumped_data) , fp) 
+
     if (saveVideo): 
         cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)
         if (plotBVHChannels):
