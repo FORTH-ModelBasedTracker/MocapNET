@@ -607,28 +607,7 @@ def streamPosesFromCameraToMocapNET():
 
     mnet.printStatus()
 
-    if (saveVideo): 
-        cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)
-        if (plotBVHChannels):
-              cv2.imwrite('plotFrame_0_%05u.jpg'%(frameNumber), plotImage)
-        
-    if not headless:
-      cv2.imshow('MocapNET 4 using MediaPipe Holistic 2D Joints', annotated_image)
-      if (plotBVHChannels):
-           cv2.imshow('MocapNET 4 using MediaPipe Holistic Motion History',plotImage) 
- 
-      if cv2.waitKey(1) & 0xFF == 27:
-         break
- 
-
-  if (totalProcessingTimeSamples>0):
-          print("Average processing time for ",totalProcessingTimeSamples," frames : ",end="")
-          print(" %0.1f milliseconds "%(1000 * (totalProcessingTime/totalProcessingTimeSamples)),end="")
-          print(secondsToHz(totalProcessingTime/totalProcessingTimeSamples)," Hz")
-  else:
-          print("No average processing time statistics..")
-    
-  if (dumpData):
+    if (dumpData):
          import json
          print("Dumping All Output Data..")
          dumped_data = dict()
@@ -646,6 +625,34 @@ def streamPosesFromCameraToMocapNET():
 
          with open("descriptors_%05u.json" % (frameNumber), "w") as fp:
               json.dump(str(dumped_data) , fp)
+
+    if (saveVideo): 
+        cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)
+        if (plotBVHChannels):
+              cv2.imwrite('plotFrame_0_%05u.jpg'%(frameNumber), plotImage)
+        
+    if not headless:
+      cv2.imshow('MocapNET 4 using MediaPipe Holistic 2D Joints', annotated_image)
+      if (plotBVHChannels):
+           cv2.imshow('MocapNET 4 using MediaPipe Holistic Motion History',plotImage) 
+ 
+      if cv2.waitKey(1) & 0xFF == 27:
+         break
+ 
+  if (dumpData):
+       print("Package everything!")
+       packageName = getFilenameWithoutExtension(videoFilePath)
+       os.system("zip %s.zip descriptors_0*.json in.csv out.csv out.bvh livelastRun3DHiRes.mp4 2d_out.csv  3d_out.csv bvh_out.csv map_out.csv " % packageName) 
+       os.system("rm descriptors_0*.json in.csv out.csv out.bvh livelastRun3DHiRes.mp4 2d_out.csv 3d_out.csv bvh_out.csv map_out.csv")
+
+  if (totalProcessingTimeSamples>0):
+          print("Average processing time for ",totalProcessingTimeSamples," frames : ",end="")
+          print(" %0.1f milliseconds "%(1000 * (totalProcessingTime/totalProcessingTimeSamples)),end="")
+          print(secondsToHz(totalProcessingTime/totalProcessingTimeSamples)," Hz")
+  else:
+          print("No average processing time statistics..")
+    
+
   if (saveVideo): #                                              1280x720 by default
      os.system("ffmpeg -framerate 30 -i colorFrame_0_%%05d.jpg -s %ux%u  -y -r 30 -pix_fmt yuv420p -threads 8 livelastRun3DHiRes.mp4 && rm colorFrame_0_*.jpg " % (videoWidth,videoHeight)) # 
      if (plotBVHChannels):
