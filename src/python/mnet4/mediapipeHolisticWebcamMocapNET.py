@@ -641,6 +641,7 @@ def streamPosesFromCameraToMocapNET():
  
   if (dumpData):
        print("Package everything!")
+       from tools import getFilenameWithoutExtension
        packageName = getFilenameWithoutExtension(videoFilePath)
        os.system("zip %s.zip descriptors_0*.json in.csv out.csv out.bvh livelastRun3DHiRes.mp4 2d_out.csv  3d_out.csv bvh_out.csv map_out.csv " % packageName) 
        os.system("rm descriptors_0*.json in.csv out.csv out.bvh livelastRun3DHiRes.mp4 2d_out.csv 3d_out.csv bvh_out.csv map_out.csv")
