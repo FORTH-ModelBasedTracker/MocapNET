@@ -607,25 +607,6 @@ def streamPosesFromCameraToMocapNET():
 
     mnet.printStatus()
 
-    if (dumpData):
-         import json
-         print("Dumping All Output Data..")
-         dumped_data = dict()
-
-         for k in mnet.ensemble.keys():
-              thisEnsemble = mnet.ensemble[k]
-              print("NSRM ",k," ",thisEnsemble.NSRM.tolist())
-              dumped_data["NSRM_%s"%k]  = thisEnsemble.NSRM.tolist()
-
-         dumped_data["2DInput"]   = mocapNETInput
-         dumped_data["3DOutput"]  = mocapNET3DOutput
-         dumped_data["BVHOutput"] = mocapNETBVHOutput
-
-         print("Dumping descriptors_%05u.json" % (frameNumber))
-
-         with open("descriptors_%05u.json" % (frameNumber), "w") as fp:
-              json.dump(str(dumped_data) , fp) 
-
     if (saveVideo): 
         cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)
         if (plotBVHChannels):
@@ -647,7 +628,24 @@ def streamPosesFromCameraToMocapNET():
   else:
           print("No average processing time statistics..")
     
+  if (dumpData):
+         import json
+         print("Dumping All Output Data..")
+         dumped_data = dict()
 
+         for k in mnet.ensemble.keys():
+              thisEnsemble = mnet.ensemble[k]
+              print("NSRM ",k," ",thisEnsemble.NSRM.tolist())
+              dumped_data["NSRM_%s"%k]  = thisEnsemble.NSRM.tolist()
+
+         dumped_data["2DInput"]   = mocapNETInput
+         dumped_data["3DOutput"]  = mocapNET3DOutput
+         dumped_data["BVHOutput"] = mocapNETBVHOutput
+
+         print("Dumping descriptors_%05u.json" % (frameNumber))
+
+         with open("descriptors_%05u.json" % (frameNumber), "w") as fp:
+              json.dump(str(dumped_data) , fp)
   if (saveVideo): #                                              1280x720 by default
      os.system("ffmpeg -framerate 30 -i colorFrame_0_%%05d.jpg -s %ux%u  -y -r 30 -pix_fmt yuv420p -threads 8 livelastRun3DHiRes.mp4 && rm colorFrame_0_*.jpg " % (videoWidth,videoHeight)) # 
      if (plotBVHChannels):
