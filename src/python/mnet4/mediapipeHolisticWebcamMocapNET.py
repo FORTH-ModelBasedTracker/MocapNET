@@ -17,7 +17,7 @@ import os
 
 from readCSV  import parseConfiguration,zeroOutXYJointsThatAreInvisible,performNSRMAlignment
 from NSDM     import NSDMLabels,createNSDMUsingRules
-from tools    import secondsToHz,eprint,getFilenameWithoutExtension
+from tools    import secondsToHz,eprint
 from MocapNET import MocapNET
 
 mp_drawing   = mp.solutions.drawing_utils
@@ -38,7 +38,6 @@ MEDIAPIPE_FACE_LANDMARK_NAMES  = getHolisticFaceNameList()
 MEDIAPIPE_LHAND_LANDMARK_NAMES = getHolisticLHandNameList()
 MEDIAPIPE_RHAND_LANDMARK_NAMES = getHolisticRHandNameList()
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 class MediaPipePose():
   def __init__(self,doMediapipeVisualization = False):
@@ -154,7 +153,6 @@ class MediaPipePose():
 
     self.output = mocapNETInput
     return mocapNETInput,image
-
 
 
 
@@ -379,7 +377,6 @@ def streamPosesFromCameraToMocapNET():
   plotBVHChannels     = False
   liveDemo            = False
   alterFocalLength    = False
-  dumpData            = False
   calibrationFile = ""
   bvhAnglesForPlotting    = list()
   bvhAllAnglesForPlotting = list()
@@ -431,9 +428,6 @@ def streamPosesFromCameraToMocapNET():
               doREye=True
               doMouth=True
               doHands=True
-           if (sys.argv[i]=="--dump"):
-              dumpData=True
-              saveVideo=True
            if (sys.argv[i]=="--nobody"):
               doBody=False
            if (sys.argv[i]=="--face"):
@@ -548,6 +542,8 @@ def streamPosesFromCameraToMocapNET():
   print("Please wait until input processing finishes!")
   maxBrokenFrames = 100
   brokenFrames = 0
+  totalProcessingTime = 0
+  totalProcessingTimeSamples = 0
   while cap.isOpened():
     success, image = cap.read()
 
@@ -559,7 +555,9 @@ def streamPosesFromCameraToMocapNET():
           
 
     plotImage = image
+    thisFrameIsBroken = False
     if not success:
+      thisFrameIsBroken = True
       eprint("Ignoring empty camera frame : ",brokenFrames,"/",maxBrokenFrames)
       brokenFrames = brokenFrames + 1
       if (brokenFrames>maxBrokenFrames):
@@ -582,7 +580,6 @@ def streamPosesFromCameraToMocapNET():
     mnet.history_hz_2DEst.append(mnet.hz_2DEst)
     if (len(mnet.history_hz_2DEst)>mnet.perfHistorySize): 
             mnet.history_hz_2DEst.pop(0) #Keep mnet history on limits
-
     #--------------------------------------------------------------------------------------------------------------
     doNN = 1 
     if (doNNEveryNFrames>0):
@@ -595,32 +592,18 @@ def streamPosesFromCameraToMocapNET():
     if (len(bvhAnglesForPlotting)>100):
        bvhAnglesForPlotting.pop(0)
     #--------------------------------------------------------------------------------------------------------------
+    if (not thisFrameIsBroken):
+          totalProcessingTime        = totalProcessingTime + (time.time() - start)
+          totalProcessingTimeSamples = totalProcessingTimeSamples + 1
+    #--------------------------------------------------------------------------------------------------------------
     from MocapNETVisualization import visualizeMocapNETEnsemble
     image,plotImage = visualizeMocapNETEnsemble(mnet,annotated_image,plotBVHChannels=plotBVHChannels,bvhAnglesForPlotting=bvhAnglesForPlotting)
     #--------------------------------------------------------------------------------------------------------------
     frameNumber = frameNumber + 1
     
+
     mnet.printStatus()
-
-    if (dumpData):
-         import json
-         print("Dumping..")
-            
-         dumped_data = dict()
-         for k in mnet.ensemble.keys():
-              thisEnsemble = mnet.ensemble[k]
-              print("NSRM ",k," ",thisEnsemble.NSRM.tolist())
-              dumped_data["NSRM_%s"%k]  = thisEnsemble.NSRM.tolist()
-         
-         dumped_data["2DInput"]   = mocapNETInput
-         dumped_data["3DOutput"]  = mocapNET3DOutput
-         dumped_data["BVHOutput"] = mocapNETBVHOutput
-
-         print("Dumping descriptors_%05u.json" % (frameNumber))
-         with open("descriptors_%05u.json" % (frameNumber), "w") as fp:
-              json.dump(str(dumped_data) , fp)
-
-
+ 
     if (saveVideo): 
         cv2.imwrite('colorFrame_0_%05u.jpg'%(frameNumber), annotated_image)
         if (plotBVHChannels):
@@ -635,6 +618,14 @@ def streamPosesFromCameraToMocapNET():
          break
  
 
+  if (totalProcessingTimeSamples>0):
+          print("Average processing time for ",totalProcessingTimeSamples," frames : ",end="")
+          print(" %0.1f milliseconds "%(1000 * (totalProcessingTime/totalProcessingTimeSamples)),end="")
+          print(secondsToHz(totalProcessingTime/totalProcessingTimeSamples)," Hz")
+  else:
+          print("No average processing time statistics..")
+    
+
   if (saveVideo): #                                              1280x720 by default
      os.system("ffmpeg -framerate 30 -i colorFrame_0_%%05d.jpg -s %ux%u  -y -r 30 -pix_fmt yuv420p -threads 8 livelastRun3DHiRes.mp4 && rm colorFrame_0_*.jpg " % (videoWidth,videoHeight)) # 
      if (plotBVHChannels):
@@ -646,13 +637,6 @@ def streamPosesFromCameraToMocapNET():
     os.system("rm 2d_out.csv 3d_out.csv bvh_out.csv map_out.csv")
     os.system("./GroundTruthDumper --from out.bvh --setPositionRotation -2.6 0 2000 0 0 0  --csv ./ out.csv 2d+3d+bvh ") # Remove noise offsetPositionRotation
 
-
-
-  if (dumpData):
-       print("Package everything!")
-       packageName = getFilenameWithoutExtension(videoFilePath) 
-       os.system("zip %s.zip descriptors_0*.json in.csv out.csv out.bvh livelastRun3DHiRes.mp4 2d_out.csv  3d_out.csv bvh_out.csv map_out.csv " % packageName)
-       os.system("rm descriptors_0*.json in.csv out.csv out.bvh livelastRun3DHiRes.mp4 2d_out.csv 3d_out.csv bvh_out.csv map_out.csv")
 
   cap.release()
 #------------------------------------------------
