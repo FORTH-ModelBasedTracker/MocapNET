@@ -1589,6 +1589,9 @@ if __name__ == "__main__":
        if (addon=="mpfb"):
            haveMPFB = True
            print("We already have MPFB!")
+       elif (addon=="bl_ext.user_default.mpfb"):
+           haveMPFB = True
+           print("We already have MPFB!")
     
     if (not haveMPFB):
          import os
