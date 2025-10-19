@@ -80,6 +80,50 @@ def setup_camera_from_intrinsics(
 
 
 
+def set_eevee_background(scene=None,R=1.0,G=1.0,B=1.0):
+    """
+    Set the render background to pure white in Eevee, handling world nodes.
+    """
+    if scene is None:
+        scene = bpy.context.scene
+
+    if scene.world is None:
+        world = bpy.data.worlds.new("World")
+        scene.world = world
+
+    world = scene.world
+
+    if not world.use_nodes:
+        world.use_nodes = True
+
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+
+    # Find or create Background node
+    bg_node = next((n for n in nodes if n.type == 'BACKGROUND'), None)
+    if bg_node is None:
+        bg_node = nodes.new('ShaderNodeBackground')
+
+    # Set color to white
+    bg_node.inputs['Color'].default_value = (R, G, B, 1.0)
+
+    # Find or create World Output node
+    output_node = next((n for n in nodes if n.type == 'OUTPUT_WORLD'), None)
+    if output_node is None:
+        output_node = nodes.new('ShaderNodeOutputWorld')
+
+    # Connect Background node to World Output if not already connected
+    if not any(link.to_node == output_node for link in bg_node.outputs['Background'].links):
+        links.new(bg_node.outputs['Background'], output_node.inputs['Surface'])
+
+    # Optional: disable ambient lighting to prevent gray tint in Eevee
+    #scene.eevee.use_gtao = False
+    #scene.eevee.use_bloom = False
+    #scene.eevee.use_ssr = False
+    #scene.eevee.use_ssr_refraction = False
+    
+    
+
 class MocapNETSetupCameraOperator(bpy.types.Operator):
     """Set up Blender Camera from Intrinsics"""
     bl_label = "Set Camera From Intrinsics"
@@ -103,6 +147,13 @@ class MocapNETSetupCameraOperator(bpy.types.Operator):
             camera_location=(0.0, -4.0, 1.7),
             camera_rotation=(math.radians(90), 0.0, 0.0)
         )
+
+        
+        # Set Eevee background to white
+        set_eevee_background(scene,0.01,0.01,0.01)
+
+        self.report({'INFO'}, f"Scene color set to {scene.world.color}")
+
 
         self.report({'INFO'}, f"Camera set with fx={fx}, fy={fy}, cx={cx}, cy={cy}, res={width}x{height}")
         return {'FINISHED'}
