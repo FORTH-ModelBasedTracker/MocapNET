@@ -11,6 +11,7 @@ from bpy.props import EnumProperty
 def setup_camera_from_intrinsics(
     fx, fy, cx, cy,
     width, height,
+    camera_name="RenderCamera",
     camera_location=(0.0, -3.0, 1.5),
     camera_rotation=(math.radians(90), 0.0, 0.0),
     clip_start=0.01,
@@ -30,12 +31,12 @@ def setup_camera_from_intrinsics(
         sensor_fit: 'HORIZONTAL' or 'VERTICAL' (how Blender fits the sensor)
     """
     # Ensure there is a camera in the scene
-    if "RenderCamera" in bpy.data.objects:
-        cam_obj = bpy.data.objects["RenderCamera"]
+    if camera_name in bpy.data.objects:
+        cam_obj = bpy.data.objects[camera_name]
         cam = cam_obj.data
     else:
-        cam_data = bpy.data.cameras.new("RenderCamera")
-        cam_obj = bpy.data.objects.new("RenderCamera", cam_data)
+        cam_data = bpy.data.cameras.new(camera_name)
+        cam_obj = bpy.data.objects.new(camera_name, cam_data)
         bpy.context.collection.objects.link(cam_obj)
         cam = cam_data
 
@@ -78,6 +79,53 @@ def setup_camera_from_intrinsics(
 
     return cam_obj
 
+
+
+def place_light_near_camera(scene=None, camera_name="RenderCamera", light_name="RenderLight", 
+                            distance=1.0, height=1.5, energy=1000, light_type='AREA'):
+    """
+    Place or create a light near the camera to illuminate the scene.
+    
+    Args:
+        scene: Blender scene (default = bpy.context.scene)
+        camera_name: Name of the camera to follow
+        light_name: Name of the light to create or move
+        distance: Distance in meters in front of camera
+        energy: Light intensity
+        light_type: 'POINT', 'SUN', 'SPOT', 'AREA'
+    """
+    
+    import mathutils
+
+    if scene is None:
+        scene = bpy.context.scene
+
+    # Get the camera object
+    cam = scene.objects.get(camera_name)
+    if cam is None:
+        print(f"[WARN] Camera '{camera_name}' not found. Cannot place light.")
+        return None
+
+    # Check if light exists
+    light_obj = scene.objects.get(light_name)
+    if light_obj is None:
+        # Create a new light
+        light_data = bpy.data.lights.new(name=light_name, type=light_type)
+        light_obj = bpy.data.objects.new(light_name, light_data)
+        scene.collection.objects.link(light_obj)
+
+    # Place light in front of camera
+    forward = cam.matrix_world.to_quaternion() @ mathutils.Vector((0.0, 0.0, -1.0))
+    up = cam.matrix_world.to_quaternion() @ mathutils.Vector((0.0, 0.0, 1.0))
+
+    light_obj.location = cam.location + forward * distance + up * height  # slightly above
+    light_obj.rotation_euler = cam.rotation_euler
+
+    # Set light energy
+    light_obj.data.energy = energy
+
+    print(f"[INFO] Light '{light_name}' placed near camera '{camera_name}'")
+    return light_obj
 
 
 def set_eevee_background(scene=None,R=1.0,G=1.0,B=1.0):
@@ -141,16 +189,24 @@ class MocapNETSetupCameraOperator(bpy.types.Operator):
         width = scene.mnet_width
         height = scene.mnet_height
 
+        camera_name="Camera"
+        light_name="Light"
+
         setup_camera_from_intrinsics(
             fx=fx, fy=fy, cx=cx, cy=cy,
             width=width, height=height,
+            camera_name=camera_name,
             camera_location=(0.0, -4.0, 1.7),
             camera_rotation=(math.radians(90), 0.0, 0.0)
         )
 
-        
+     
         # Set Eevee background to white
         set_eevee_background(scene,0.01,0.01,0.01)
+        
+        # Place light 1 meter in front of the camera, slightly above
+        place_light_near_camera(distance=1.0, camera_name=camera_name, light_name=light_name,
+                                energy=2000, light_type='AREA')
 
         self.report({'INFO'}, f"Scene color set to {scene.world.color}")
 
