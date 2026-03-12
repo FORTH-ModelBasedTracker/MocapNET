@@ -5,7 +5,8 @@ from collections import defaultdict
 #To count frames on a video..
 #ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=nb_read_frames -of default=nokey=1:noprint_wrappers=1 video.avi
 
-root_dir = "/media/ammar/games2/Datasets/test"
+SKIP_DIRS = {"allTrackingResults"}
+root_dirs = ["/media/ammar/games2/Datasets/test"]
 confidence_threshold = 0.5
 
 BODY_25_NAMES = {
@@ -126,7 +127,12 @@ def process_keypoints(arr, bucket, conf_thresh):
         stats[bucket]["frames_with_low_conf"] += 1
 
 
-for root, dirs, files in os.walk(root_dir):
+for root_dir in root_dirs:
+  for root, dirs, files in os.walk(root_dir, topdown=True):
+    dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
+ 
+    print("VISITING:", root)
+
     for f in files:
         if not f.endswith("_keypoints.json"):
             continue
