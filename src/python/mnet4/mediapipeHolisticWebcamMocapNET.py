@@ -41,6 +41,8 @@ MEDIAPIPE_RHAND_LANDMARK_NAMES = getHolisticRHandNameList()
 
 
 def embed_to_1920x1080(img, canvas_w=1920, canvas_h=1080):
+    if img is None:
+      return None
     h, w = img.shape[:2]
 
     # Scale to fit inside canvas while preserving aspect ratio
