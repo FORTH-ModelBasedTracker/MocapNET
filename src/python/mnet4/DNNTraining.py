@@ -15,16 +15,16 @@ import json
 
 
 import tensorflow as tf
-from tensorflow import keras
+import keras
 
 #from tensorflow.keras.backend.tensorflow_backend import set_session
 
 #from tensorflow.keras import backend as K
-from tensorflow.keras.layers import Input, Dense
-from tensorflow.keras.models import Model
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.models import model_from_json
-from tensorflow.keras.utils import plot_model
+from keras.layers import Input, Dense
+from keras.models import Model
+from keras.models import Sequential
+from keras.models import model_from_json
+from keras.utils import plot_model
 
 import tensorflow.keras.callbacks
 import numpy as np
@@ -78,9 +78,9 @@ def setTensorflowBackendToHalfFloats():
    policy = mixed_precision.Policy('mixed_float16')
    mixed_precision.set_policy(policy)
 
-   tf.keras.backend.set_floatx(dtype)
+   keras.backend.set_floatx(dtype)
    # default is 1e-7 which is too small for float16.  Without adjusting the epsilon, we will get NaN predictions because of divide by zero problems
-   tf.keras.backend.set_epsilon(1e-4)
+   keras.backend.set_epsilon(1e-4)
 
    print('Compute dtype: %s' % policy.compute_dtype)
    print('Variable dtype: %s' % policy.variable_dtype)
@@ -470,9 +470,9 @@ def logTrainingResults(
 
 def regularTraining(tensorboardLabel,mocapNETNetwork,numberOfEpochs,batchSize,earlyStoppingPatience,trainInput,trainOutput,testInput,testOutput,minD,modelIsTrivial=False,haveTestSet=False,useHalfFloats=False):
        #We use a checkpoint system to return best model..
-       if (os.path.isfile("bestW.hdf5")):
+       if (os.path.isfile("best.weights.h5")):
            print(bcolors.WARNING,"Found a forgotten checkpoint file, erasing it to avoid trouble",bcolors.ENDC)
-           os.system('rm bestW.hdf5')
+           os.system('rm best.weights.h5')
        
        #whatToMonitor='mean_absolute_error'  
        #minimumDelta=0.05 
@@ -499,7 +499,7 @@ def regularTraining(tensorboardLabel,mocapNETNetwork,numberOfEpochs,batchSize,ea
                                                    ) 
        #-------------------------------------------------------------------------
        checkpointer = keras.callbacks.ModelCheckpoint(
-                                                      filepath="bestW.hdf5",
+                                                      filepath="best.weights.h5",
                                                       monitor=whatToMonitor,
                                                       mode='min',
                                                       verbose=1,
@@ -549,12 +549,12 @@ def regularTraining(tensorboardLabel,mocapNETNetwork,numberOfEpochs,batchSize,ea
              metrics["train_rsquared_end"] = getRSquaredForNeuralNetwork(mocapNETNetwork,trainInput,trainOutput)
              metrics["test_rsquared_end"]  = getRSquaredForNeuralNetwork(mocapNETNetwork,testInput,testOutput)
        #------------------------------------------------------------------------
-       if (checkIfFileExists('bestW.hdf5')):
+       if (checkIfFileExists('best.weights.h5')):
           print("We use the best possible model from our ModelCheckpoint")  
-          mocapNETNetwork.load_weights('bestW.hdf5')
-          os.system('rm bestW.hdf5') #Get rid of the checkpoint as soon as we are done reading it
+          mocapNETNetwork.load_weights('best.weights.h5')
+          os.system('rm best.weights.h5') #Get rid of the checkpoint as soon as we are done reading it
        else:
-          print("No bestW.hdf5 file found, just using last iteration..")  
+          print("No best.weights.h5 file found, just using last iteration..")  
        #------------------------------------------------------------------------
        return history,mocapNETNetwork,metrics
 #-------------------------------------------------------------------------------------------------------------------------------------------------
@@ -637,11 +637,11 @@ def onlineHardExampleMiningTraining(tensorboardLabel,mocapNETNetwork,numberOfEpo
     dtypeSelected=np.float32
     if (useHalfFloats):
        dtypeSelected=np.float16       
-    totalHistory,mocapNETNetwork = regularTraining(tensorboardLabel,mocapNETNetwork,halfEpochs,batchSize,earlyStoppingPatience,trainInput,trainOutput,testInput,testOutput,minD,haveTestSet=haveTestSet,useHalfFloats=useHalfFloats)
+    totalHistory,mocapNETNetwork,metrics = regularTraining(tensorboardLabel,mocapNETNetwork,halfEpochs,batchSize,earlyStoppingPatience,trainInput,trainOutput,testInput,testOutput,minD,haveTestSet=haveTestSet,useHalfFloats=useHalfFloats)
     
     if (numberOfEpochs==1):
        print(" Trivial output will not mine etc. ")
-       return totalHistory
+       return totalHistory,mocapNETNetwork,metrics
 
     bestTrainingMAE=0.0
     successfulUpdates=0
@@ -656,6 +656,7 @@ def onlineHardExampleMiningTraining(tensorboardLabel,mocapNETNetwork,numberOfEpo
  
     print("Backing up model with mae ",mean)
     mocapNETNetwork.save_weights("modelBackup.h5")
+    print("Backup complete ")
     bestTrainingMAE=mean      
 
     for i in range(0,miningEpochs):
@@ -671,7 +672,7 @@ def onlineHardExampleMiningTraining(tensorboardLabel,mocapNETNetwork,numberOfEpo
          #If more than 10% of the dataset is difficult
          if (ratioOfDatasetThatIsDifficult>0.5):
             print(bcolors.FAIL," More than half of the dataset is hard (%u samples) so we train on all samples as hard %u/%u" % (len(difficultPosesIndexes),i,miningEpochs),bcolors.ENDC)  
-            regularHistory,mocapNETNetwork = regularTraining(tensorboardLabel,mocapNETNetwork,HARD_EPOCHS,batchSize,5,trainInput,trainOutput,testInput,testOutput,minD,haveTestSet=haveTestSet,useHalfFloats=useHalfFloats) #difficultInput,difficultOutput 
+            regularHistory,mocapNETNetwork,metrics = regularTraining(tensorboardLabel,mocapNETNetwork,HARD_EPOCHS,batchSize,5,trainInput,trainOutput,testInput,testOutput,minD,haveTestSet=haveTestSet,useHalfFloats=useHalfFloats) #difficultInput,difficultOutput 
             totalHistory   = appendHistory(totalHistory,regularHistory)
          elif (ratioOfDatasetThatIsDifficult>0.1):
             difficultInput  = np.full([len(difficultPosesIndexes),inputSize],fill_value=0,dtype=dtypeSelected,order='C') 
@@ -683,7 +684,7 @@ def onlineHardExampleMiningTraining(tensorboardLabel,mocapNETNetwork,numberOfEpo
                      difficultOutput[z,field]=trainOutput[difficultPosesIndexes[z],field]
  
             print(bcolors.OKBLUE," Will now train on %u difficult samples %u/%u" % (len(difficultPosesIndexes),i,miningEpochs),bcolors.ENDC)
-            newHistory,mocapNETNetwork   = regularTraining(tensorboardLabel,mocapNETNetwork,HARD_EPOCHS,batchSize,5,difficultInput,difficultOutput,testInput,testOutput,minD,haveTestSet=haveTestSet,useHalfFloats=useHalfFloats)
+            newHistory,mocapNETNetwork,metrics   = regularTraining(tensorboardLabel,mocapNETNetwork,HARD_EPOCHS,batchSize,5,difficultInput,difficultOutput,testInput,testOutput,minD,haveTestSet=haveTestSet,useHalfFloats=useHalfFloats)
             totalHistory = appendHistory(totalHistory,newHistory)
             del difficultInput
             del difficultOutput
@@ -695,11 +696,11 @@ def onlineHardExampleMiningTraining(tensorboardLabel,mocapNETNetwork,numberOfEpo
                bestTrainingMAE=mean 
 
             print(" Will now train on all samples not to forget them" )       
-            regularHistory,mocapNETNetwork = regularTraining(tensorboardLabel,mocapNETNetwork,REGULAR_EPOCHS_AFTER_HARD,batchSize,earlyStoppingPatience,trainInput,trainOutput,testInput,testOutput,minD,haveTestSet=haveTestSet,useHalfFloats=useHalfFloats)
+            regularHistory,mocapNETNetwork,metrics = regularTraining(tensorboardLabel,mocapNETNetwork,REGULAR_EPOCHS_AFTER_HARD,batchSize,earlyStoppingPatience,trainInput,trainOutput,testInput,testOutput,minD,haveTestSet=haveTestSet,useHalfFloats=useHalfFloats)
             totalHistory   = appendHistory(totalHistory,regularHistory)
          else:
             print(bcolors.OKGREEN,"The training has gone pretty well for all samples..",bcolors.ENDC)
-            regularHistory,mocapNETNetwork = regularTraining(tensorboardLabel,mocapNETNetwork,1,batchSize,1,trainInput,trainOutput,testInput,testOutput,minD,haveTestSet=haveTestSet,useHalfFloats=useHalfFloats)
+            regularHistory,mocapNETNetwork,metrics = regularTraining(tensorboardLabel,mocapNETNetwork,1,batchSize,1,trainInput,trainOutput,testInput,testOutput,minD,haveTestSet=haveTestSet,useHalfFloats=useHalfFloats)
             totalHistory   = appendHistory(totalHistory,regularHistory)
             break
          

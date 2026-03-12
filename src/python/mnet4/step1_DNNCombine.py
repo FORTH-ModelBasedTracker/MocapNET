@@ -12,13 +12,13 @@ import sys
 import time
 
 import tensorflow as tf
-from tensorflow import keras
+import keras
 
-from tensorflow.keras.layers import Input, Dense
-from tensorflow.keras.models import Model
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.models import model_from_json
-from tensorflow.keras.utils  import plot_model
+from keras.layers import Input, Dense
+from keras.models import Model
+from keras.models import Sequential
+from keras.models import model_from_json
+from keras.utils  import plot_model
 
 import numpy as np 
 from readCSV  import parseConfiguration,checkIfConfigurationHierarchyIsTheSameAsLabelList,readGroundTruthFile,selectOnlySpecificColumnsOfNumpyArray
@@ -466,7 +466,9 @@ def step1_DNNCombine(useCSVBackend,groundTruth):
     #------------------------------------------------------------------------------
     print(bcolors.OKBLUE,"Saving Combined model to ",outputDirectoryForCombinedModels,"..",bcolors.ENDC)
     startAt = time.time()
-    merged.save(outputDirectoryForCombinedModels, save_format='tf') # <- Actually Save Neural Network to File
+    #merged.save(outputDirectoryForCombinedModels, save_format='tf') # <- Actually Save Neural Network to File
+    merged.save('%s/model.keras' % (outputDirectoryForCombinedModels))
+    merged.export(outputDirectoryForCombinedModels, "tf_saved_model")
     endAt = time.time()
     print(bcolors.OKGREEN,"Save operation took %0.2f mins "%((endAt-startAt)/60),bcolors.ENDC)
 
