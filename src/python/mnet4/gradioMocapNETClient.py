@@ -23,6 +23,7 @@ startAt = 0
 hcd = True
 hcd_it = 40
 hcd_lr = 0.01
+aspect_correction = True
 
 # Parse command line arguments
 argumentStart = 1
@@ -50,6 +51,9 @@ if len(sys.argv) > 1:
         elif sys.argv[i] in ("--output", "-o"):
             output_file = sys.argv[i + 1]
             argumentStart += 2
+        elif sys.argv[i] == "--no-aspect-correction":
+            aspect_correction = False
+            argumentStart += 1
 
 # Add any individual files passed as positional arguments
 for i in range(argumentStart, len(sys.argv)):
@@ -79,6 +83,7 @@ for i in range(startAt, len(files)):
             hcd=hcd,
             hcd_it=hcd_it,
             hcd_lr=hcd_lr,
+            aspect_correction=aspect_correction,
             history=[],
             api_name="/predict"
         )

@@ -4,7 +4,7 @@ import sys
 import gradio as gr
 import numpy as np
 import cv2
-from mediapipeHolisticWebcamMocapNET import MediaPipeHolistic
+from mediapipeHolisticWebcamMocapNET import MediaPipeHolistic, embed_to_1920x1080
 
 
 
@@ -125,7 +125,7 @@ def log_image(frame, directory="server_log"):
  
 
 # Function to process the image and generate a description
-def describe_image(image, threshold, hcd, hcd_it,  hcd_lr, history):
+def describe_image(image, threshold, hcd, hcd_it,  hcd_lr, aspect_correction, history):
     log_image(image)
 
     mnet.smoothingSampling = 0 #Disable smoothing for gradio server
@@ -133,10 +133,12 @@ def describe_image(image, threshold, hcd, hcd_it,  hcd_lr, history):
     mnet.hcdIterations   = hcd_it
     mnet.hcdLearningRate = hcd_lr
     sourceWidth  = image.shape[1]
-    sourceHeight = image.shape[0] 
+    sourceHeight = image.shape[0]
     currentAspectRatio = sourceWidth/sourceHeight
     trainedAspectRatio = 1920/1080
-    #image = img_resizeWithCrop(image,1920,1080) 
+
+    if aspect_correction:
+        image = embed_to_1920x1080(image)
 
     #if ( aspectCorrection!=1.0 ):
     #   width  = int(image.shape[1]*aspectCorrection)
@@ -197,7 +199,8 @@ def gradio_interface():
                 hcd_it = gr.Slider(label=t("HCD Iterations"), minimum=0, maximum=100, value=40, step=1, interactive=True)
                 hcd_lr = gr.Slider(label=t("HCD Learning Rate"), minimum=0.001, maximum=0.1, value=0.01, step=0.01, interactive=True)
                 hcd = gr.Checkbox(label=t("Do HCD"), value=True)
-                generate_button = gr.Button(t("Process")) 
+                aspect_correction = gr.Checkbox(label="Aspect ratio correction", value=True)
+                generate_button = gr.Button(t("Process"))
 
             # Right column with the interface
             with gr.Column(scale=2):
@@ -208,7 +211,7 @@ def gradio_interface():
             # Define the action for the generate button
             generate_button.click(
                     fn=describe_image, 
-                    inputs=[image_input, threshold, hcd, hcd_it, hcd_lr, chat_history],
+                    inputs=[image_input, threshold, hcd, hcd_it, hcd_lr, aspect_correction, chat_history],
                     outputs=[chat_history, mnet_output],
                     api_name="predict"
                 )
