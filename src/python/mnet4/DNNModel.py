@@ -11,13 +11,13 @@ import os
 import time
 
 import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras.layers import concatenate, Add, Input, Dense, GlobalMaxPooling1D, GlobalAveragePooling1D, Flatten, Reshape, AlphaDropout, Dropout, Lambda, MaxPooling1D, MaxPooling2D, Conv2D, ZeroPadding1D
-from tensorflow.keras.models import Model,Sequential, model_from_json
-from tensorflow.keras.utils  import plot_model
+import keras
+from keras.layers import concatenate, Add, Input, Dense, GlobalMaxPooling1D, GlobalAveragePooling1D, Flatten, Reshape, AlphaDropout, Dropout, Lambda, MaxPooling1D, MaxPooling2D, Conv2D, ZeroPadding1D
+from keras.models import Model,Sequential, model_from_json
+from keras.utils  import plot_model
 
-from tensorflow.keras import layers
-from tensorflow.keras import activations
+from keras import layers
+from keras import activations
 
 from tools import bcolors,createDirectory,tensorflowFriendlyModelName
 
@@ -92,7 +92,7 @@ def average_error_modulo_360(yTrue,yPred):
 #-------------------------------------------------------------
 #-------------------------------------------------------------
 theActivationMethod='selu' # hard_mish 'selu' 'swish' 
-initializer = tf.keras.initializers.LecunNormal() #'lecun_normal'
+initializer = keras.initializers.LecunNormal() #'lecun_normal'
 #-------------------------------------------------------------
 #-------------------------------------------------------------
 def startProfiling():
@@ -126,18 +126,18 @@ def getActivationRandomization(configuration):
 
     if (theRandomizationMethod=="auto"):
         if (theActivationMethod=='selu'):
-           initializer = tf.keras.initializers.LecunNormal(seed=thisSeed)
+           initializer = keras.initializers.LecunNormal(seed=thisSeed)
            print("Automatic resolution SeLU -> LeCun Normal")
         elif (theActivationMethod=='swish'):
            #Draws samples from a uniform distribution within [-limit, limit], where limit = sqrt(6 / fan_in) (fan_in is the number of input units in the weight tensor).
-           initializer=tf.keras.initializers.HeUniform(seed=thisSeed) #https://www.cv-foundation.org/openaccess/content_iccv_2015/html/He_Delving_Deep_into_ICCV_2015_paper.html
+           initializer=keras.initializers.HeUniform(seed=thisSeed) #https://www.cv-foundation.org/openaccess/content_iccv_2015/html/He_Delving_Deep_into_ICCV_2015_paper.html
            print("Automatic resolution SWISH -> He Uniform")
     elif (theRandomizationMethod=="glorot_uniform"): #Xavier
-        initializer=tf.keras.initializers.GlorotUniform(seed=thisSeed)
+        initializer=keras.initializers.GlorotUniform(seed=thisSeed)
     elif (theRandomizationMethod=="lecun_normal"):
-        initializer=tf.keras.initializers.LecunNormal(seed=thisSeed)
+        initializer=keras.initializers.LecunNormal(seed=thisSeed)
     elif (theRandomizationMethod=="he_uniform"): #Kaiming
-        initializer=tf.keras.initializers.HeUniform(seed=thisSeed)
+        initializer=keras.initializers.HeUniform(seed=thisSeed)
     else:
         print(bcolors.FAIL,"Please add ",theActivationMethod,"/",theRandomizationMethod," to getActivationRandomization",bcolors.ENDC)
         sys.exit(1)
@@ -282,17 +282,17 @@ def loadNewModel(path):
     #loaded_model = tf.saved_model.load(path)
 	#loaded_model.compile(loss='mse', optimizer='rmsprop', metrics=['mae', 'acc'])
     #return loaded_model
-    return tf.keras.models.load_model(path)
+    return keras.models.load_model(path)
 #=================================================================================================================================================================================== 
 #=================================================================================================================================================================================== 
 #=================================================================================================================================================================================== 
 """
 Load the model to the supplied path (first try TF, then JSON/H5)
 """
-def loadModel(path,filename):
+def loadModelOLD(path,filename):
     if (os.path.isfile('%s/saved_model.pb' % (path))):
         print(bcolors.OKGREEN,"Loading TF Model %s/saved_model.pb from disk " % (path),bcolors.ENDC)
-        loaded_model = tf.keras.models.load_model(path,custom_objects={'mean_quad_error':mean_quad_error})
+        loaded_model = keras.models.load_model(path,custom_objects={'mean_quad_error':mean_quad_error})
         return loaded_model
     elif (os.path.isfile('%s/%s.json' % (path,filename))) and (os.path.isfile('%s/%s.h5' % (path,filename))):
         print(bcolors.FAIL,"File %s/%s.json does not exist\n",bcolors.ENDC)
@@ -309,12 +309,10 @@ def loadModel(path,filename):
         print(bcolors.FAIL,"Could not find model %s \n" % path,bcolors.ENDC)
         sys.exit(1)
 #=================================================================================================================================================================================== 
-#=================================================================================================================================================================================== 
-#=================================================================================================================================================================================== 
 """
 Save the model to the supplied path
 """
-def saveModel(path,model,name="model"):
+def saveModelOLD(path,model,name="model"):
     createDirectory(path)
     # serialize model to JSON
     model_json = model.to_json()
@@ -328,6 +326,39 @@ def saveModel(path,model,name="model"):
     model.save(path, save_format='tf') #save directory..
     print("Saved model to disk at %s/saved_model.pb (TF)" % (path))
 #=================================================================================================================================================================================== 
+#===================================================================================================================================================================================
+def loadModel(path,filename):
+    from tools import bcolors
+    print(bcolors.OKGREEN,"Loading %s model.. " % path,bcolors.ENDC)
+    try:
+       #Regular keras loading until V3 that breaks
+       import keras
+       model_path = '%s/%s.keras' % (path,filename)
+       model = keras.saving.load_model(model_path, custom_objects={'mean_quad_error':mean_quad_error} , compile=True, safe_mode=True)
+    except Exception as e:
+       #Fallback to TF2 saved_model loading
+       print(bcolors.FAIL,"An exception occurred trying to load keras model:", str(e),bcolors.ENDC)
+       print(bcolors.OKGREEN,"Falling back to TF saved_model loader.. ",bcolors.ENDC)
+       model = tf.saved_model.load(path)
+       signatures = model.signatures
+       signature_keys = signatures.keys()
+       if 'serving_default' in signature_keys:
+         signature_key = 'serving_default'
+       else:
+         signature_key = list(signature_keys)[0]
+
+    return model
+#=================================================================================================================================================================================== 
+#=================================================================================================================================================================================== 
+def saveModel(path,model,name="model"):
+    createDirectory(path)
+
+    print(bcolors.OKGREEN,"Saving result as keras model..",bcolors.ENDC)
+    model.save('%s/%s.keras' % (path,name))
+
+    # Save the exported tensorflow model
+    print(bcolors.OKGREEN,"Saving result as tensorflow model..",bcolors.ENDC)
+    model.export(path, "tf_saved_model")
 #=================================================================================================================================================================================== 
 #=================================================================================================================================================================================== 
 """
@@ -402,7 +433,7 @@ def tag(kind="layer",name="mnet",index=0,number=0):
 #----------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------
 def newCategorizeOneHotModel(modelName,inputDimension,nonNSDMInputSize,numberOfChannelsPerNSDMElement,outputSize,networkCompression):
-    print('newCategorizeOneHotModel has input ',inputDimension,' elements and output of ',outputSize,' elements e:',tf.keras.backend.epsilon())
+    print('newCategorizeOneHotModel has input ',inputDimension,' elements and output of ',outputSize,' elements e:',keras.backend.epsilon())
     print('Learning Rate is 0.00001, Dropout Rate is ',dropoutRate,' ')
     modelName = tensorflowFriendlyModelName(modelName)
     print("Model renamed to ",modelName," to make sure it doesn't call tensorflow problems ")
@@ -414,7 +445,7 @@ def newCategorizeOneHotModel(modelName,inputDimension,nonNSDMInputSize,numberOfC
     #splitInput = sliceL(1,positionalInput,inputDimension)(inputs)    
     #inputDimension = inputDimension-positionalInput
     
-    #initializer = tf.keras.initializers.lecun_normal(seed=0)
+    #initializer = keras.initializers.lecun_normal(seed=0)
  
     outputArrayIndex=0
   
@@ -496,22 +527,22 @@ def newCategorizeOneHotModel(modelName,inputDimension,nonNSDMInputSize,numberOfC
     xOut =   Dense(int(outputSize)                                              , kernel_initializer=kinit, activation=act, name='classifier_%s_%u_layer_%u'%(modelName,outputArrayIndex,layerNumber) )(xH) 
 
     #-----------------------------------------------------------------------------------------------------------------------------------
-    predictions = tf.keras.layers.Dense(int(outputSize),name='Category' , kernel_initializer='normal', activation='softmax')(xOut)
+    predictions = keras.layers.Dense(int(outputSize),name='Category' , kernel_initializer='normal', activation='softmax')(xOut)
     #-----------------------------------------------------------------------------------------------------------------------------------
 
     # This creates a model that includes
     # the Input layer and three Dense layers
     model = Model(name=modelName, inputs=inputs, outputs=predictions) 
 
-    #from tf.keras.metrics import categorical_accuracy
+    #from keras.metrics import categorical_accuracy
     #model.compile(optimizer='adam', loss='binary_crossentropy', metrics=[categorical_accuracy]) 
 	 
     #special slower learning..
     #For 3.8M samples 0.00001 is a good value..
     if (optimizer=="adam"):
-       activeOptimizer=tf.keras.optimizers.Adam(learning_rate=learningRate,epsilon=tf.keras.backend.epsilon())
+       activeOptimizer=keras.optimizers.Adam(learning_rate=learningRate,epsilon=keras.backend.epsilon())
     else:
-       activeOptimizer=tf.keras.optimizers.RMSprop(learning_rate=learningRate, rho=0.9, epsilon=tf.keras.backend.epsilon()) # epsilon=1e-6, lr=0.00025 is the old value
+       activeOptimizer=keras.optimizers.RMSprop(learning_rate=learningRate, rho=0.9, epsilon=keras.backend.epsilon()) # epsilon=1e-6, lr=0.00025 is the old value
     #-------------------------------------------------------------------------------------------------------
     model.compile(optimizer=activeOptimizer, loss='categorical_crossentropy', metrics=['accuracy']) 
     #-------------------------------------------------------------------------------------------------------	  
@@ -728,11 +759,11 @@ def newDeepRotModel(configuration,modelName,outputArrayIndex,inputDimension,nonN
 
     if (probabilisticMode):
        #-----------------------------------------------------------------------------------------------------------------------------------
-       predictions = tf.keras.layers.Dense(int(outputSize), name='output_rotation_%u_%s'%(outputArrayIndex,modelName), kernel_initializer='normal', activation='softmax')(xOut)
+       predictions = keras.layers.Dense(int(outputSize), name='output_rotation_%u_%s'%(outputArrayIndex,modelName), kernel_initializer='normal', activation='softmax')(xOut)
        #-----------------------------------------------------------------------------------------------------------------------------------
     else:
        #And also have a weight to scale it.
-       predictions = tf.keras.layers.Dense(int(outputSize),kernel_initializer='normal', activation='linear', name='output_rotation_%u_%s'%(outputArrayIndex,modelName))(xOut)
+       predictions = keras.layers.Dense(int(outputSize),kernel_initializer='normal', activation='linear', name='output_rotation_%u_%s'%(outputArrayIndex,modelName))(xOut)
        #-----------------------------------------------------------------------------------------------------------------------------------
 
  
@@ -740,9 +771,9 @@ def newDeepRotModel(configuration,modelName,outputArrayIndex,inputDimension,nonN
     model = Model(name=modelName, inputs=inputs, outputs=predictions) 
     #model.compile(optimizer='adam', loss='mse', metrics=['mae']) 
     if (optimizer=="adam"):
-       activeOptimizer=tf.keras.optimizers.Adam(learning_rate=learningRate,epsilon=tf.keras.backend.epsilon())
+       activeOptimizer=keras.optimizers.Adam(learning_rate=learningRate,epsilon=keras.backend.epsilon())
     else:
-       activeOptimizer=tf.keras.optimizers.RMSprop(learning_rate=learningRate, rho=0.9, epsilon=tf.keras.backend.epsilon()) # epsilon=1e-6, lr=0.00025 is the old value
+       activeOptimizer=keras.optimizers.RMSprop(learning_rate=learningRate, rho=0.9, epsilon=keras.backend.epsilon()) # epsilon=1e-6, lr=0.00025 is the old value
     #-------------------------------------------------------------------------------------------------------
     
     if (quantize):
@@ -781,7 +812,7 @@ def newTrivialModel(modelName,outputArrayIndex,inputDimension,outputSize):
     modelName = tensorflowFriendlyModelName(modelName)
     print("Model renamed to ",modelName," to make sure it doesn't call tensorflow problems ")
     inputs = Input(shape=(inputDimension,))
-    trivialInitializer = tf.keras.initializers.Zeros()
+    trivialInitializer = keras.initializers.Zeros()
 
     #The trivial model is basically dead and useless and we want to simplify it as much as possible
     #so that it occupies as little space in our network as possible
@@ -789,8 +820,15 @@ def newTrivialModel(modelName,outputArrayIndex,inputDimension,outputSize):
     #There are two ways to do this, first is by a tf split and the second by doing a Lambda function that ignores most inputs
     #-----------------------------------------------------------------------------------------------------------------------------------
     if (useLambdas==0): 
-       ignoreInput = tf.split(inputs,inputDimension,num=inputDimension,axis=1,name='ignore_layer_for_%u_%s'%(outputArrayIndex,modelName)) #split inputs to single elements
-       splitInput  = ignoreInput[0] #try to do same thing without lambdas 
+       #This broke at TF 2.16.1
+       #ignoreInput = tf.split(inputs,inputDimension,num=inputDimension,axis=1,name='ignore_layer_for_%u_%s'%(outputArrayIndex,modelName)) #split inputs to single elements
+       #splitInput  = ignoreInput[0] #try to do same thing without lambdas 
+
+       # Define the cropping layer
+
+       reshaped_inputs = keras.layers.Reshape((inputDimension, 1))(inputs)
+       splitInput = keras.layers.Cropping1D(cropping=(1))(reshaped_inputs)
+
     else:
        #partOfInputToKeep=int(inputDimension)   
        partOfInputToKeep=1 
@@ -800,7 +838,7 @@ def newTrivialModel(modelName,outputArrayIndex,inputDimension,outputSize):
     #Now connect our single input with a mock layer with one set of weights so that it can learn to send zeros out :P  
     #-----------------------------------------------------------------------------------------------------------------------------------
     xOut =   Dense(int(outputSize), kernel_initializer=trivialInitializer , activation='linear', name='mock_layer_for_%u_%s'%(outputArrayIndex,modelName) )(splitInput) 
-    predictions = tf.keras.layers.Dense(int(outputSize), name='output_trivial_%u_%s'%(outputArrayIndex,modelName) )(xOut)
+    predictions = keras.layers.Dense(int(outputSize), name='output_trivial_%u_%s'%(outputArrayIndex,modelName) )(xOut)
     #----------------------------------------------------------------------------------------------------------------------------------- 
 
     # This creates a model that includes 
@@ -835,16 +873,16 @@ def combineModels(configuration,directory,outputFilename,modelInputSize,modelOut
 
     print(bcolors.OKGREEN)
     print("Combining model Input:%s / Output:%s / modelInputSize:(1,%u) / modelOutputSize:(1,%u) / Models Combined:(%u->%u) "%(inputLabel,outputLabel,modelInputSize,modelOutputSize,startModel,endModel))
-    print("Input Shape is : ")
-    print(singleInput.get_shape())
+    #print("Input Shape is : ")
+    #print(singleInput.get_shape())
     print(bcolors.ENDC)
 
     #Initialize our RMSProp optimizer
     #----------------------------------------------------------------------------------------------------------------------------------------
     if (optimizer=="adam"):
-       activeOptimizer=tf.keras.optimizers.Adam(learning_rate=learningRate,epsilon=tf.keras.backend.epsilon())
+       activeOptimizer=keras.optimizers.Adam(learning_rate=learningRate,epsilon=keras.backend.epsilon())
     else:
-       activeOptimizer=tf.keras.optimizers.RMSprop(learning_rate=learningRate, rho=0.9, epsilon=tf.keras.backend.epsilon()) # epsilon=1e-6, lr=0.00025 is the old value
+       activeOptimizer=keras.optimizers.RMSprop(learning_rate=learningRate, rho=0.9, epsilon=keras.backend.epsilon()) # epsilon=1e-6, lr=0.00025 is the old value
     #-------------------------------------------------------------------------------------------------------
 
     #Start combining models
@@ -915,7 +953,7 @@ def combineModels(configuration,directory,outputFilename,modelInputSize,modelOut
 
     if (doPNGPlot):
      try:
-      tf.keras.utils.plot_model(mergedModel, expand_nested=True)
+      keras.utils.plot_model(mergedModel, expand_nested=True)
      except:
       print("Please install pydot for network graph plot!")
       os.system('touch model.png') #<- just make a foo png  
@@ -1076,16 +1114,16 @@ def autobuilder(inputSize,outputSize,modelName="mnet",outputArrayIndex=0,depth=1
     currentSize = outputSize
     visualizeLayer(depth,currentSize,dropout=0)
     #-----------------------------------------------------------------------------------------------------------------------------------
-    predictions = tf.keras.layers.Dense(int(outputSize),kernel_initializer='normal', activation='linear', name='output_%u_%s'%(outputArrayIndex,modelName))(layers[len(layers)-1])
+    predictions = keras.layers.Dense(int(outputSize),kernel_initializer='normal', activation='linear', name='output_%u_%s'%(outputArrayIndex,modelName))(layers[len(layers)-1])
     #-----------------------------------------------------------------------------------------------------------------------------------
 
     # the Input layer and three Dense layers
     model = Model(name=modelName, inputs=inputs, outputs=predictions) 
     #-------------------------------------------------------------------------------------------------------
     if (optimizer=="adam"):
-       activeOptimizer=tf.keras.optimizers.Adam(learning_rate=learningRate,epsilon=tf.keras.backend.epsilon())
+       activeOptimizer=keras.optimizers.Adam(learning_rate=learningRate,epsilon=keras.backend.epsilon())
     else:
-       activeOptimizer=tf.keras.optimizers.RMSprop(learning_rate=learningRate, rho=0.9, epsilon=tf.keras.backend.epsilon()) # epsilon=1e-6, lr=0.00025 is the old value
+       activeOptimizer=keras.optimizers.RMSprop(learning_rate=learningRate, rho=0.9, epsilon=keras.backend.epsilon()) # epsilon=1e-6, lr=0.00025 is the old value
     #-------------------------------------------------------------------------------------------------------
  
 
@@ -1188,7 +1226,7 @@ if __name__ == '__main__':
 
     model = autobuilder(inputSize,outputSize,modelName=label,depth=depth,lambdaF=lambdaF,skip=skip)
     try:
-      tf.keras.utils.plot_model(model,show_shapes=False,rankdir='LR',expand_nested=True)
+      keras.utils.plot_model(model,show_shapes=False,rankdir='LR',expand_nested=True)
     except:
       print("Please install pydot for network graph plot!")
       os.system('touch model.png') #<- just make a foo png  

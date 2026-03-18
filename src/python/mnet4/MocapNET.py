@@ -203,9 +203,9 @@ def getSymmetricLHandOutputs():
  bn["finger5-3.l_xrotation"]   =  (-1.0,"finger5-3.r_xrotation")    #41
  bn["finger5-3.l_yrotation"]   =  (-1.0,"finger5-3.r_yrotation")    #42
  #--------------------------------------------------------------------
- bn["lthumbBase_zrotation"]    =  (-1.0,"rthumbBase_zrotation")      #43 +?
- bn["lthumbBase_xrotation"]    =  (-1.0,"rthumbBase_xrotation")      #44 +?
- bn["lthumbBase_yrotation"]    =  (-1.0,"rthumbBase_yrotation")     #45
+ bn["lthumbbase_zrotation"]    =  (-1.0,"rthumbbase_zrotation")      #43 +?
+ bn["lthumbbase_xrotation"]    =  (-1.0,"rthumbbase_xrotation")      #44 +?
+ bn["lthumbbase_yrotation"]    =  (-1.0,"rthumbbase_yrotation")     #45
  bn["lthumb_zrotation"]        =  (-1.0,"rthumb_zrotation")         #46
  bn["lthumb_xrotation"]        =  (-1.0,"rthumb_xrotation")         #47
  bn["lthumb_yrotation"]        =  (-1.0,"rthumb_yrotation")         #48

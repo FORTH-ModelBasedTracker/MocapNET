@@ -39,6 +39,32 @@ MEDIAPIPE_LHAND_LANDMARK_NAMES = getHolisticLHandNameList()
 MEDIAPIPE_RHAND_LANDMARK_NAMES = getHolisticRHandNameList()
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+def embed_to_1920x1080(img, canvas_w=1920, canvas_h=1080):
+    if img is None:
+      return None
+    h, w = img.shape[:2]
+
+    # Scale to fit inside canvas while preserving aspect ratio
+    scale = min(canvas_w / w, canvas_h / h)
+    new_w = int(w * scale)
+    new_h = int(h * scale)
+
+    resized = cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_AREA)
+
+    # Create black canvas
+    if len(img.shape) == 2:
+        canvas = np.zeros((canvas_h, canvas_w), dtype=img.dtype)
+    else:
+        canvas = np.zeros((canvas_h, canvas_w, img.shape[2]), dtype=img.dtype)
+
+    # Center the resized image
+    x_offset = (canvas_w - new_w) // 2
+    y_offset = (canvas_h - new_h) // 2
+
+    canvas[y_offset:y_offset + new_h, x_offset:x_offset + new_w] = resized
+    return canvas
+
 class MediaPipePose():
   def __init__(self,doMediapipeVisualization = False):
                #Tensorflow attempt to be reasonable
@@ -394,6 +420,9 @@ def streamPosesFromCameraToMocapNET():
   illustrate       = False
   dumpData         = False
   doBody           = True
+  doUpperBody      = True
+  doLowerBody      = True
+  embedInputFrameToTrainingAspectRatio = True
   doFace           = False
   doREye           = False
   doMouth          = False
@@ -426,6 +455,8 @@ def streamPosesFromCameraToMocapNET():
               headless = True
            if (sys.argv[i]=="--live"):
               liveDemo = True
+           if (sys.argv[i]=="--raw"):
+              embedInputFrameToTrainingAspectRatio = False
            if (sys.argv[i]=="--mt"):
               multiThreaded = True
            if (sys.argv[i]=="--calib"):
@@ -467,7 +498,15 @@ def streamPosesFromCameraToMocapNET():
               dumpData=True
               saveVideo=True
            if (sys.argv[i]=="--nobody"):
-              doBody=False
+              doBody           = False
+              doUpperBody      = False
+              doLowerBody      = False
+           if (sys.argv[i]=="--noupperbody"):
+              doBody      = False
+              doUpperBody = False
+           if (sys.argv[i]=="--nolowerbody"):
+              doBody      = False
+              doLowerBody = False
            if (sys.argv[i]=="--face"):
               doFace=True
            if (sys.argv[i]=="--eyes") or (sys.argv[i]=="--reye"):
@@ -513,6 +552,8 @@ def streamPosesFromCameraToMocapNET():
                                  smoothingCutoff     = smoothingCutoff,   
                                  bvhScale            = scale,
                                  doBody              = doBody,
+                                 doUpperbody         = doUpperBody,
+                                 doLowerbody         = doLowerBody,
                                  doFace              = doFace,
                                  doREye              = doREye,
                                  doMouth             = doMouth,
@@ -587,6 +628,9 @@ def streamPosesFromCameraToMocapNET():
   totalProcessingTimeSamples = 0
   while cap.isOpened():
     success, image = cap.read()
+
+    if (embedInputFrameToTrainingAspectRatio):
+        image = embed_to_1920x1080(image)
 
     #Frame skipping..!
     if (frameSkip>0):
