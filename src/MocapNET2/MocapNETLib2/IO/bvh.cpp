@@ -552,7 +552,7 @@ int getBVHJointOffset(unsigned int currentJoint,float * x,float *y,float *z)
 unsigned int getBVHParentJoint(unsigned int currentJoint)
 {
 #if USE_BVH
-    return bhv_getJointParent(&bvhMotion,currentJoint);
+    return bvh_getJointParent(&bvhMotion,currentJoint);
 #endif
     return 0;
 }
