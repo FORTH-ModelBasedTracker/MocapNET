@@ -91,6 +91,13 @@ unzip -o mnet4_-314.zip #<- upgrade to 324 mnet4_318.zip
 wget http://ammar.gr/mocapnet/mnet4/mediapipe.zip -O mediapipe.zip
 unzip -o mediapipe.zip
 
+#The mediapipe Tasks API keeps its models outside of the pip package, mediapipeTasks.py downloads whatever is
+#missing the first time it runs, we just grab them here so that the first run does not have to wait for them..
+mkdir -p mediapipeModels
+wget -nc https://storage.googleapis.com/mediapipe-models/holistic_landmarker/holistic_landmarker/float16/latest/holistic_landmarker.task -O mediapipeModels/holistic_landmarker.task
+wget -nc https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task   -O mediapipeModels/pose_landmarker_lite.task
+wget -nc https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task             -O mediapipeModels/face_landmarker.task
+
 #To get :
 # python3 -m evaluateMocapNET --config dataset/body_configuration.json --all body --engine onnx 
 #  to work

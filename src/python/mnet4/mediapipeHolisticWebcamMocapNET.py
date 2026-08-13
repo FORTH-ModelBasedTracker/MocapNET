@@ -9,7 +9,6 @@ License : "FORTH"
 #pip install mediapipe pandas pillow matplotlib opencv-python
 
 import cv2
-import mediapipe as mp
 import numpy as np
 import time
 import sys
@@ -20,9 +19,12 @@ from NSDM     import NSDMLabels,createNSDMUsingRules
 from tools    import secondsToHz,eprint
 from MocapNET import MocapNET
 
-mp_drawing   = mp.solutions.drawing_utils
-mp_holistic  = mp.solutions.holistic
-mp_face_mesh = mp.solutions.face_mesh
+#Mediapipe removed the mp.solutions API after 0.10.21, mediapipeTasks reimplements the parts we use on top of the Tasks API
+import mediapipeTasks as mp
+
+mp_drawing   = mp.drawing_utils
+mp_holistic  = mp.holistic
+mp_face_mesh = mp.face_mesh
 #------------------------------------------------------------------------------------------------
 LEFT_EYE     = [362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385,384, 398 ]
 LEFT_IRIS    = [474,475, 476, 477]
@@ -69,14 +71,16 @@ class MediaPipePose():
   def __init__(self,doMediapipeVisualization = False):
                #Tensorflow attempt to be reasonable
                #------------------------------------------
-               self.mp         = mp_holistic.Holistic(static_image_mode=True)
+               #This class only estimates a body, the Holistic estimator that used to be constructed here was never
+               #used and with the Tasks API it would also mean downloading/loading its bundle for nothing..
                #------------------------------------------
                self.doMediapipeVisualization = doMediapipeVisualization
                self.output     = dict()
-               self.mp_drawing = mp.solutions.drawing_utils
-               self.mp_drawing_styles = mp.solutions.drawing_styles
-               self.mp_pose = mp.solutions.pose
-               self.pose = self.mp_pose.Pose(static_image_mode=True,smooth_landmarks=True,model_complexity=0,enable_segmentation=True,min_detection_confidence=0.5)
+               self.mp_drawing = mp.drawing_utils
+               self.mp_drawing_styles = mp.drawing_styles
+               self.mp_pose = mp.pose
+               #The segmentation mask is not consumed anywhere downstream so we don't pay for it..
+               self.pose = self.mp_pose.Pose(static_image_mode=True,smooth_landmarks=True,model_complexity=0,enable_segmentation=False,min_detection_confidence=0.5)
                #------------------------------------------
   def get2DOutput(self):
         return self.output
@@ -146,14 +150,7 @@ class MediaPipePose():
               image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
               if (self.doMediapipeVisualization):
-             
-                try:
-                     self.mp_drawing.draw_landmarks(annotated_image, results.face_landmarks      , mp_holistic.FACEMESH_TESSELATION) #This used to be called FACE_CONNECTIONS
-                except:
-                     self.mp_drawing.draw_landmarks(annotated_image, results.face_landmarks      , mp_holistic.FACE_CONNECTIONS) #This used to be called FACE_CONNECTIONS
-
-                self.mp_drawing.draw_landmarks(image, results.left_hand_landmarks,  mp_holistic.HAND_CONNECTIONS)
-                self.mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+                #The Pose estimator only returns a body, the face/hand landmarks come from the Holistic class..
                 self.mp_drawing.draw_landmarks(
                                          image,
                                          results.pose_landmarks,
@@ -196,17 +193,13 @@ class MediaPipeHolistic():
                                                         min_tracking_confidence=0.2
                                                      )
                #------------------------------------------
-               #self.mpHands    = mp.solutions.hands.Hands( 
+               #self.mpHands    = mp.hands.Hands(
                #                                            min_detection_confidence=0.5,
                #                                            min_tracking_confidence=0.5
                #                                          )
                #------------------------------------------
-               self.mpFace     = mp_face_mesh.FaceMesh(
-                                                        max_num_faces=1,
-                                                        refine_landmarks=True,
-                                                        min_detection_confidence=0.3,
-                                                        min_tracking_confidence=0.3
-                                                      )
+               #The holistic task always returns the refined 478 landmark face ( the last 10 are the irises ),
+               #so the extra FaceMesh estimator that used to be needed to get the eyes is gone..
                #------------------------------------------
                self.doMediapipeVisualization = doMediapipeVisualization
                self.output     = dict()
@@ -228,7 +221,6 @@ class MediaPipeHolistic():
 
   def convertImageToMocapNETInput(self,image):
     holisticEstimator  = self.mp
-    faceEstimator = self.mpFace
     #handEstimator = self.mpHands
 
     if (type(image)==type(None)):
@@ -254,7 +246,6 @@ class MediaPipeHolistic():
     #================= MEDIAPIPE ================== 
     #==============================================
     results  = holisticEstimator.process(image)
-    resultsF = faceEstimator.process(image) #Extra Face
     #resultsH = handEstimator.process(image)
     #==============================================
 
@@ -276,11 +267,7 @@ class MediaPipeHolistic():
 
     #--------------------------------------------------------------------------------------------------
     if (self.doMediapipeVisualization):
-      #Compensate for name mediapipe change.. 
-      try:
-       mp_drawing.draw_landmarks(annotated_image, results.face_landmarks     , mp_holistic.FACEMESH_TESSELATION) #This used to be called FACE_CONNECTIONS
-      except:
-       mp_drawing.draw_landmarks(annotated_image, results.face_landmarks     , mp_holistic.FACE_CONNECTIONS) #This used to be called FACE_CONNECTIONS
+      mp_drawing.draw_landmarks(annotated_image, results.face_landmarks      , mp_holistic.FACEMESH_TESSELATION)
       #--------------------------------------------------------------------------------------------------
       mp_drawing.draw_landmarks(annotated_image, results.left_hand_landmarks , mp_holistic.HAND_CONNECTIONS)
       mp_drawing.draw_landmarks(annotated_image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
@@ -303,8 +290,8 @@ class MediaPipeHolistic():
     #EYES
     #-------------------------------------------------------------------------------------------- 
     img_h, img_w = image.shape[:2]
-    if resultsF.multi_face_landmarks:
-                      mesh_points=np.array([np.multiply([p.x, p.y], [img_w, img_h]).astype(int) for p in resultsF.multi_face_landmarks[0].landmark])
+    if (results.face_landmarks is not None) and (len(results.face_landmarks.landmark)>max(LEFT_IRIS+RIGHT_IRIS)):
+                      mesh_points=np.array([np.multiply([p.x, p.y], [img_w, img_h]).astype(int) for p in results.face_landmarks.landmark])
                       (l_cx, l_cy), l_radius = cv2.minEnclosingCircle(mesh_points[LEFT_IRIS])
                       (r_cx, r_cy), r_radius = cv2.minEnclosingCircle(mesh_points[RIGHT_IRIS])
                       center_left  = np.array([l_cx, l_cy], dtype=np.int32)
